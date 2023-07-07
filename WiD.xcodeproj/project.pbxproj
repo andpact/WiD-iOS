@@ -14,6 +14,9 @@
 		EA60B8172A56991800B49641 /* WiDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8162A56991800B49641 /* WiDTests.swift */; };
 		EA60B8212A56991800B49641 /* WiDUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8202A56991800B49641 /* WiDUITests.swift */; };
 		EA60B8232A56991800B49641 /* WiDUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */; };
+		EAC5D7212A56A76E00FA2499 /* WiDCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */; };
+		EAC5D7252A56A94100FA2499 /* WiD.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7242A56A94100FA2499 /* WiD.swift */; };
+		EADF79162A583C8E000753B2 /* WiDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADF79152A583C8E000753B2 /* WiDService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,9 @@
 		EA60B81C2A56991800B49641 /* WiDUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WiDUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA60B8202A56991800B49641 /* WiDUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDUITests.swift; sourceTree = "<group>"; };
 		EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDCreateView.swift; sourceTree = "<group>"; };
+		EAC5D7242A56A94100FA2499 /* WiD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiD.swift; sourceTree = "<group>"; };
+		EADF79152A583C8E000753B2 /* WiDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,8 +100,10 @@
 		EA60B8042A56991700B49641 /* WiD */ = {
 			isa = PBXGroup;
 			children = (
+				EADF79172A583CCE000753B2 /* SService */,
+				EAC5D7272A56AAB000FA2499 /* View */,
+				EAC5D7262A56AA9400FA2499 /* Model */,
 				EA60B8052A56991700B49641 /* WiDApp.swift */,
-				EA60B8072A56991700B49641 /* ContentView.swift */,
 				EA60B8092A56991800B49641 /* Assets.xcassets */,
 				EA60B80B2A56991800B49641 /* Preview Content */,
 			);
@@ -125,6 +133,31 @@
 				EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */,
 			);
 			path = WiDUITests;
+			sourceTree = "<group>";
+		};
+		EAC5D7262A56AA9400FA2499 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EAC5D7242A56A94100FA2499 /* WiD.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		EAC5D7272A56AAB000FA2499 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EA60B8072A56991700B49641 /* ContentView.swift */,
+				EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EADF79172A583CCE000753B2 /* SService */ = {
+			isa = PBXGroup;
+			children = (
+				EADF79152A583C8E000753B2 /* WiDService.swift */,
+			);
+			path = SService;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,7 +290,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EADF79162A583C8E000753B2 /* WiDService.swift in Sources */,
+				EAC5D7252A56A94100FA2499 /* WiD.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
+				EAC5D7212A56A76E00FA2499 /* WiDCreateView.swift in Sources */,
 				EA60B8062A56991700B49641 /* WiDApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
