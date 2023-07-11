@@ -8,9 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selectedTab = 0
     
     var body: some View {
-        Text("Hello ContentView")
+        TabView(selection: $selectedTab) {
+            WiDCreateView()
+                .tabItem {
+                    Label("등록", systemImage: "plus")
+                }
+                .tag(0)
+            
+            WiDReadView()
+                .tabItem {
+                    Label("목록", systemImage: "list.bullet")
+                }
+                .tag(1)
+        }
     }
 }
 
