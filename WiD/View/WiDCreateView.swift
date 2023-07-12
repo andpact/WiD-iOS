@@ -8,24 +8,11 @@
 import SwiftUI
 
 struct WiDCreateView: View {
-    private let titleArray: [String] = [
-        "STUDY",
-        "WORK",
-        "READING",
-        "EXERCISE",
-        "HOBBY",
-        "MEAL",
-        "SHOWER",
-        "TRAVEL",
-        "SLEEP",
-        "OTHER"
-    ]
-    @State private var titleIndex: Int = 0
     
     private let wiDService = WiDService()
     
     private let date: Date = Date()
-    @State private var title: String = ""
+    @State private var title: Title = .study
     private let detail: String = ""
     @State private var startTime: Date = Date()
     @State private var finishTime: Date = Date()
@@ -53,16 +40,16 @@ struct WiDCreateView: View {
                     Text("제목")
                     
                     Button(action: {
-                        decreaseTitleIndex()
+                        decreaseTitle()
                     }) {
                         Image(systemName: "chevron.left")
                     }
-                    
-                    Text(titleArray[titleIndex])
+
+                    Text(title.stringValue)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    
+
                     Button(action: {
-                        increaseTitleIndex()
+                        increaseTitle()
                     }) {
                         Image(systemName: "chevron.right")
                     }
@@ -102,7 +89,8 @@ struct WiDCreateView: View {
                 
                 Button(action: {
                     finishTimer.connect().cancel()
-                    wiD = WiD(id: 0, title: title, detail: detail, date: date, start: startTime, finish: finishTime, duration: duration)
+                    duration += 60 * 60 * 1 // 1시간 추가
+                    wiD = WiD(id: 0, title: title.stringValue, detail: detail, date: date, start: startTime, finish: finishTime, duration: duration)
                     wiDService.insertWiD(wid: wiD)
                 }) {
                     Text("종료")
@@ -119,7 +107,6 @@ struct WiDCreateView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
             }
-            
         }
         .onReceive(startTimer) { input in
             startTime = Date()
@@ -127,9 +114,6 @@ struct WiDCreateView: View {
         .onReceive(finishTimer) { input in
             finishTime = Date()
             duration = finishTime.timeIntervalSince(startTime)
-        }
-        .onAppear() {
-            title = titleArray[titleIndex]
         }
         .frame(maxHeight: .infinity)
 //        .padding(50)
@@ -149,20 +133,54 @@ struct WiDCreateView: View {
         return dateFormatter.string(from: date)
     }
     
-    private func decreaseTitleIndex() {
-        titleIndex -= 1
-        if titleIndex < 0 {
-            titleIndex = titleArray.count - 1
+    private func decreaseTitle() {
+        switch title {
+        case .study:
+            title = .other
+        case .work:
+            title = .study
+        case .reading:
+            title = .work
+        case .exercise:
+            title = .reading
+        case .hobby:
+            title = .exercise
+        case .meal:
+            title = .hobby
+        case .shower:
+            title = .meal
+        case .travel:
+            title = .shower
+        case .sleep:
+            title = .travel
+        case .other:
+            title = .sleep
         }
-        title = titleArray[titleIndex]
     }
-    
-    private func increaseTitleIndex() {
-        titleIndex += 1
-        if titleArray.count <= titleIndex {
-            titleIndex = 0
+
+    private func increaseTitle() {
+        switch title {
+        case .study:
+            title = .work
+        case .work:
+            title = .reading
+        case .reading:
+            title = .exercise
+        case .exercise:
+            title = .hobby
+        case .hobby:
+            title = .meal
+        case .meal:
+            title = .shower
+        case .shower:
+            title = .travel
+        case .travel:
+            title = .sleep
+        case .sleep:
+            title = .other
+        case .other:
+            title = .study
         }
-        title = titleArray[titleIndex]
     }
     
     func formatTime(_ date: Date, format: String) -> String {

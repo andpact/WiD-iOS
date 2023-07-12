@@ -106,4 +106,36 @@ class WiDService {
         
         return wids
     }
+    
+    func deleteWiD(withID id: Int) {
+        let deleteWiDQuery = "DELETE FROM WiD WHERE id = ?"
+        
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, deleteWiDQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_int(statement, 1, Int32(id))
+            
+            if sqlite3_step(statement) != SQLITE_DONE {
+                print("Failed to delete WiD.")
+            } else {
+                print("Success to delete WiD.")
+            }
+            
+            sqlite3_finalize(statement)
+        }
+    }
+    
+    func deleteAllWiDs() {
+        let deleteAllQuery = "DELETE FROM WiD"
+        
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, deleteAllQuery, -1, &statement, nil) == SQLITE_OK {
+            if sqlite3_step(statement) != SQLITE_DONE {
+                print("Failed to delete all WiDs.")
+            } else {
+                print("Success to delete all WiDs.")
+            }
+            
+            sqlite3_finalize(statement)
+        }
+    }
 }

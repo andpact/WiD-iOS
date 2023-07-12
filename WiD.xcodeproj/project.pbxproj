@@ -14,6 +14,7 @@
 		EA60B8172A56991800B49641 /* WiDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8162A56991800B49641 /* WiDTests.swift */; };
 		EA60B8212A56991800B49641 /* WiDUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8202A56991800B49641 /* WiDUITests.swift */; };
 		EA60B8232A56991800B49641 /* WiDUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */; };
+		EA663F0C2A5E74E200B51844 /* Title.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA663F0B2A5E74E200B51844 /* Title.swift */; };
 		EA70DD742A59089D00B4B167 /* WiDReadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA70DD732A59089D00B4B167 /* WiDReadView.swift */; };
 		EAC5D7212A56A76E00FA2499 /* WiDCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */; };
 		EAC5D7252A56A94100FA2499 /* WiD.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7242A56A94100FA2499 /* WiD.swift */; };
@@ -48,6 +49,7 @@
 		EA60B81C2A56991800B49641 /* WiDUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WiDUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA60B8202A56991800B49641 /* WiDUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDUITests.swift; sourceTree = "<group>"; };
 		EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EA663F0B2A5E74E200B51844 /* Title.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Title.swift; sourceTree = "<group>"; };
 		EA70DD732A59089D00B4B167 /* WiDReadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadView.swift; sourceTree = "<group>"; };
 		EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDCreateView.swift; sourceTree = "<group>"; };
 		EAC5D7242A56A94100FA2499 /* WiD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiD.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 		EAC5D7262A56AA9400FA2499 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				EA663F0B2A5E74E200B51844 /* Title.swift */,
 				EAC5D7242A56A94100FA2499 /* WiD.swift */,
 			);
 			path = Model;
@@ -295,6 +298,7 @@
 			files = (
 				EADF79162A583C8E000753B2 /* WiDService.swift in Sources */,
 				EAC5D7252A56A94100FA2499 /* WiD.swift in Sources */,
+				EA663F0C2A5E74E200B51844 /* Title.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
 				EA70DD742A59089D00B4B167 /* WiDReadView.swift in Sources */,
 				EAC5D7212A56A76E00FA2499 /* WiDCreateView.swift in Sources */,
