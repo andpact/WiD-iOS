@@ -64,6 +64,46 @@ class WiDService {
         }
     }
     
+    func selectWiDByID(id: Int) -> WiD? {
+        let selectWiDByIDQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE id = ?"
+        
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, selectWiDByIDQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_int(statement, 1, Int32(id))
+            
+            if sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+                
+                let title = String(cString: sqlite3_column_text(statement, 1))
+                let detail = String(cString: sqlite3_column_text(statement, 2))
+                
+                let dateString = String(cString: sqlite3_column_text(statement, 3))
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                let date = dateFormatter.date(from: dateString)!
+                
+                let startTimeString = String(cString: sqlite3_column_text(statement, 4))
+                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm:ss"
+                let start = timeFormatter.date(from: startTimeString)!
+                let finish = timeFormatter.date(from: finishTimeString)!
+                
+                let duration = sqlite3_column_double(statement, 6)
+                
+                let wid = WiD(id: id, title: title, detail: detail, date: date, start: start, finish: finish, duration: duration)
+                
+                sqlite3_finalize(statement)
+                
+                print("Success to select WiD by ID.")
+                return wid
+            }
+        }
+        
+        sqlite3_finalize(statement)
+        return nil
+    }
+    
     func selectWiDsByDate(date: Date) -> [WiD] {
         let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE date = ?"
         

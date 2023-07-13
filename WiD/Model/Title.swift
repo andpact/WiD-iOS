@@ -7,30 +7,19 @@
 
 import Foundation
 
-enum Title {
-    case study
-    case work
-    case reading
-    case exercise
-    case hobby
-    case meal
-    case shower
-    case travel
-    case sleep
-    case other
+enum Title: String {
+    case STUDY
+    case WORK
+    case READING
+    case EXERCISE
+    case HOBBY
+    case MEAL
+    case SHOWER
+    case TRAVEL
+    case SLEEP
+    case OTHER
     
     var stringValue: String {
-        switch self {
-        case .study: return "STUDY"
-        case .work: return "WORK"
-        case .reading: return "READING"
-        case .exercise: return "EXERCISE"
-        case .hobby: return "HOBBY"
-        case .meal: return "MEAL"
-        case .shower: return "SHOWER"
-        case .travel: return "TRAVEL"
-        case .sleep: return "SLEEP"
-        case .other: return "OTHER"
-        }
+        return self.rawValue
     }
 }

@@ -13,116 +13,214 @@ struct WiDReadView: View {
     
     @State private var currentDate: Date = Date()
     
-//    @State private var totalDurationForTitle: [String: TimeInterval] = [:]
-//
-//    private let allTitleCases: [Title] = [.study, .work, .reading, .exercise, .hobby, .meal, .shower, .travel, .sleep, .other]
-//
-//    init() {
-//        for title in allTitleCases {
-//            totalDurationForTitle[title.stringValue] = 0
-//        }
-//    }
+    @State private var clickedWiD: WiD = WiD(id: 0, title: "STUDY", detail: "", date: Date(), start: Date(), finish: Date(), duration: 0)
+    @State private var clickedWiDId: Int = 0
+    @State private var hasClickedWiD: Bool = false
     
     var body: some View {
-        VStack {
-            HStack {
-                HStack {
-                    Text(formatDate(currentDate, format: "yyyy.MM.dd"))
-                    
-                    Text(formatWeekday(currentDate))
-                }
-                .frame(maxWidth: .infinity)
-                
-                Text("현재")
-                
-                Button(action: {
-                    currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
-                    fetchWiDs()
-                }) {
-                    Image(systemName: "chevron.left")
-                }
-                
-                Button(action: {
-                    currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-                    fetchWiDs()
-                }) {
-                    Image(systemName: "chevron.right")
-                }
-            }
-            .border(Color.black)
-            
-            PieChartView(data: fetchChartData())
-                .border(Color.black)
-            
-//            VStack {
-//                HStack {
-//                    Text("제목")
-//                        .frame(maxWidth: .infinity)
-//                    Text("총합")
-//                        .frame(maxWidth: .infinity)
-//                }
-//
-//                ForEach(totalDurationForTitle.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
-//                    if value > 0 {
-//                        HStack {
-//                            Text(key)
-//                                .frame(maxWidth: .infinity)
-//                            Text(formatDuration(value))
-//                                .frame(maxWidth: .infinity)
-//                        }
-//                    }
-//                }
-//            }
-//            .border(Color.black)
-            
+        ZStack {
             VStack {
                 HStack {
-                    Text("순서")
-                        .frame(maxWidth: .infinity)
-                    Text("제목")
-                        .frame(maxWidth: .infinity)
-                    Text("시작")
-                        .frame(maxWidth: .infinity)
-                    Text("종료")
-                        .frame(maxWidth: .infinity)
-                    Text("경과")
-                        .frame(maxWidth: .infinity)
-                    Text("자세히")
-                        .frame(maxWidth: .infinity)
-                }
-                
-                ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wid) in
                     HStack {
-                        Text("\(index + 1)")
+                        Text(formatDate(currentDate, format: "yyyy.MM.dd"))
+                        
+                        Text(formatWeekday(currentDate))
+                    }
+                    .frame(maxWidth: .infinity)
+                    
+                    Button(action: {
+                        
+                    }) {
+                        Text("현재")
+                    }
+                    
+                    Button(action: {
+                        currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+                        fetchWiDs()
+                    }) {
+                        Image(systemName: "chevron.left")
+                    }
+                    
+                    Button(action: {
+                        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                        fetchWiDs()
+                    }) {
+                        Image(systemName: "chevron.right")
+                    }
+                }
+                .border(Color.black)
+                
+                PieChartView(data: fetchChartData())
+                    .border(Color.red)
+                
+    //            VStack {
+    //                HStack {
+    //                    Text("제목")
+    //                        .frame(maxWidth: .infinity)
+    //                    Text("총합")
+    //                        .frame(maxWidth: .infinity)
+    //                }
+    //            }
+    //            .border(Color.black)
+                
+                VStack {
+                    HStack {
+                        Text("순서")
                             .frame(maxWidth: .infinity)
-                        Text(wid.title)
+                        Text("제목")
                             .frame(maxWidth: .infinity)
-                        Text(formatTime(wid.start, format: "HH:mm"))
+                        Text("시작")
                             .frame(maxWidth: .infinity)
-                        Text(formatTime(wid.finish, format: "HH:mm"))
+                        Text("종료")
                             .frame(maxWidth: .infinity)
-                        Text(formatDuration(wid.duration))
+                        Text("경과")
                             .frame(maxWidth: .infinity)
-                        Text("...")
+                        Text("자세히")
                             .frame(maxWidth: .infinity)
+                    }
+
+                    ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wid) in
+                        HStack {
+                            Text("\(index + 1)")
+                                .frame(maxWidth: .infinity)
+                            Text(wid.title)
+                                .frame(maxWidth: .infinity)
+                            Text(formatTime(wid.start, format: "HH:mm"))
+                                .frame(maxWidth: .infinity)
+                            Text(formatTime(wid.finish, format: "HH:mm"))
+                                .frame(maxWidth: .infinity)
+                            Text(formatDuration(wid.duration, isClickedWiD: false))
+                                .frame(maxWidth: .infinity)
+                            Text("...")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .onTapGesture {
+                            clickedWiDId = wid.id
+                            hasClickedWiD.toggle()
+                            if let selectedWiD = wiDService.selectWiDByID(id: wid.id) {
+                                clickedWiD = selectedWiD
+                            }
+                        }
+                    }
+                }
+                .frame(maxHeight: .infinity)
+                .border(Color.black)
+                
+                Button(action: {
+                    deleteAllWiDs()
+                }) {
+                    Text("모두 삭제")
+                        .foregroundColor(.red)
+                }
+            }
+            .frame(maxHeight: .infinity)
+            .border(Color.black)
+            .padding()
+            .onAppear {
+                fetchWiDs()
+            }
+            .opacity(hasClickedWiD ? 0.5 : 1)
+            .disabled(hasClickedWiD)
+            
+            VStack {
+                VStack {
+                    HStack {
+                        Text("WiD")
+                            .font(.system(size: 30))
+
+                        Circle()
+                            .foregroundColor(Color(clickedWiD.title))
+                            .frame(width: 20, height: 20)
+                    }
+                    HStack {
+                        Image(systemName: "calendar")
+                            .imageScale(.large)
+                        Text("날짜")
+                            .font(.system(size: 30))
+
+                        HStack {
+                            Text(formatDate(clickedWiD.date, format: "yyyy.M.d"))
+                                .font(.system(size: 30))
+                            
+                            Text(formatWeekday(clickedWiD.date))
+                                .font(.system(size: 30))
+                        }
+                    }
+
+                    HStack {
+                        Image(systemName: "doc.text.magnifyingglass")
+                            .imageScale(.large)
+                        Text("제목")
+                            .font(.system(size: 30))
+
+                        Text(clickedWiD.title)
+                            .font(.system(size: 30))
+                    }
+
+                    HStack {
+                        Image(systemName: "clock")
+                            .imageScale(.large)
+                        Text("시작")
+                            .font(.system(size: 30))
+
+                        Text(formatTime(clickedWiD.start, format: "HH:mm:ss"))
+                            .font(.system(size: 30))
+                    }
+
+                    HStack {
+                        Image(systemName: "stopwatch")
+                            .imageScale(.large)
+                        Text("종료")
+                            .font(.system(size: 30))
+
+                        Text(formatTime(clickedWiD.finish, format: "HH:mm:ss"))
+                            .font(.system(size: 30))
+                    }
+
+                    HStack {
+                        Image(systemName: "hourglass")
+                            .imageScale(.large)
+                        Text("소요")
+                            .font(.system(size: 30))
+
+                        Text(formatDuration(clickedWiD.duration, isClickedWiD: true))
+                            .font(.system(size: 30))
+                    }
+                }
+                .border(Color.black)
+
+                HStack {
+                    Button(action: {
+                        // "다운로드" 버튼이 클릭되었을 때 실행될 동작
+                    }) {
+                        Image(systemName: "arrow.down.to.line")
+                            .renderingMode(.original)
+                            .imageScale(.large)
+                    }
+                    
+                    Button(action: {
+                        hasClickedWiD.toggle()
+                        wiDService.deleteWiD(withID: clickedWiDId)
+                        fetchWiDs()
+                    }) {
+                        Image(systemName: "trash")
+                            .renderingMode(.original)
+                            .imageScale(.large)
+                    }
+                    
+                    Button(action: {
+                        hasClickedWiD.toggle()
+                        clickedWiD = WiD(id: 0, title: "STUDY", detail: "", date: Date(), start: Date(), finish: Date(), duration: 0)
+                        clickedWiDId = 0
+                    }) {
+                        Image(systemName: "arrow.left.circle")
+                            .renderingMode(.original)
+                            .imageScale(.large)
                     }
                 }
             }
-//            .frame(maxHeight: .infinity)
-            .border(Color.black)
-            
-            Button(action: {
-                deleteAllWiDs()
-            }) {
-                Text("모두 삭제")
-                    .foregroundColor(.red)
-            }
-        }
-        .frame(maxHeight: .infinity)
-        .border(Color.black)
-        .padding()
-        .onAppear {
-            fetchWiDs()
+            .opacity(hasClickedWiD ? 1 : 0)
+            .disabled(!hasClickedWiD)
         }
     }
     
@@ -144,20 +242,64 @@ struct WiDReadView: View {
         return dateFormatter.string(from: date)
     }
     
-    func formatDuration(_ interval: TimeInterval) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute, .second]
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior = .pad
-        return formatter.string(from: interval) ?? ""
+    func formatDuration(_ interval: TimeInterval, isClickedWiD: Bool) -> String {
+        let seconds = Int(interval) % 60
+        let minutes = (Int(interval) / 60) % 60
+        let hours = Int(interval) / (60 * 60)
+
+        var formattedDuration = ""
+
+        if isClickedWiD {
+            if 0 < hours {
+                if 0 == minutes && 0 == seconds {
+                    formattedDuration = String(format: "%d시간", hours)
+                } else if 0 < minutes && 0 == seconds {
+                    formattedDuration = String(format: "%d시간 %d분", hours, minutes)
+                } else if 0 < hours && 0 == minutes && 0 < seconds {
+                    formattedDuration = String(format: "%d시간 %d초", hours, seconds)
+                } else {
+                    formattedDuration = String(format: "%d시간 %d분 %d초", hours, minutes, seconds)
+                }
+            } else if 0 < minutes {
+                if 0 == seconds {
+                    formattedDuration = String(format: "%d분", minutes)
+                } else {
+                    formattedDuration = String(format: "%d분 %d초", minutes, seconds)
+                }
+            } else {
+                formattedDuration = String(format: "%d초", seconds)
+            }
+        } else {
+            if 0 < hours {
+                if 0 == minutes && 0 == seconds {
+                    formattedDuration = String(format: "%d시간", hours)
+                } else if 0 < minutes && 0 == seconds {
+                    formattedDuration = String(format: "%d시간 %d분", hours, minutes)
+                } else if 0 < hours && 0 == minutes && 0 < seconds {
+                    formattedDuration = String(format: "%d시간 %d초", hours, seconds)
+                } else {
+                    formattedDuration = String(format: "%d시간 %d분", hours, minutes)
+                }
+            } else if 0 < minutes {
+                if 0 == seconds {
+                    formattedDuration = String(format: "%d분", minutes)
+                } else {
+                    formattedDuration = String(format: "%d분 %d초", minutes, seconds)
+                }
+            } else {
+                formattedDuration = String(format: "%d초", seconds)
+            }
+        }
+
+        return formattedDuration
     }
-    
+
     func fetchWiDs() {
         wiDs = wiDService.selectWiDsByDate(date: currentDate)
     }
     
     func fetchChartData() -> [ChartData] {
-        
+
         let totalMinutes: TimeInterval = 60.0 * 24.0 // 24시간(1440분)으로 표현함. 원래 TimeInterval 단위는 초(second)
 
         var startMinutes: Int = 0
@@ -169,11 +311,6 @@ struct WiDReadView: View {
             chartDataArray.append(noDataChartData)
         } else {
             for wid in wiDs {
-                // Calculate the total duration for each title
-//                if let currentTotalDuration = totalDurationForTitle[wid.title] {
-//                    totalDurationForTitle[wid.title] = currentTotalDuration + wid.duration
-//                }
-                
                 let startMinutesComponents = Calendar.current.dateComponents([.hour, .minute], from: wid.start)
                 let startMinutesValue = (startMinutesComponents.hour ?? 0) * 60 + (startMinutesComponents.minute ?? 0)
 
@@ -222,15 +359,34 @@ struct PieChartView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
+                // 원형 차트
                 ForEach(0..<data.count, id: \.self) { index in
                     PieSlice(startAngle: getStartAngle(for: index), endAngle: getEndAngle(for: index))
                         .foregroundColor(data[index].color)
                 }
+
+                // 중앙에 원
+                Circle()
+                    .frame(width: geometry.size.width * 0.3, height: geometry.size.width * 0.3)
+                    .foregroundColor(.white)
+                
+                // 숫자 텍스트
+                ForEach(1...24, id: \.self) { number in
+                    let angle = getAngle(for: number)
+                    let radius = geometry.size.width * 0.4 / 2 // 원의 반지름
+                    
+                    let x = cos(angle.radians) * radius
+                    let y = sin(angle.radians) * radius
+                    
+                    Text("\(number)")
+                        .position(x: geometry.size.width / 4 + x, y: geometry.size.width / 4 + y)
+                }
             }
-            .frame(width: geometry.size.width, height: geometry.size.width)
+            .border(Color.blue)
+            .frame(width: geometry.size.width * 0.5, height: geometry.size.width * 0.5)
         }
     }
-    
+
     func getStartAngle(for index: Int) -> Angle {
         var startAngle: Angle = .degrees(-90)
         for i in 0..<index {
@@ -246,6 +402,12 @@ struct PieChartView: View {
         }
         return endAngle
     }
+    
+    func getAngle(for number: Int) -> Angle {
+        let degreesPerNumber = 360.0 / 24
+        let angle = degreesPerNumber * Double(number) - 90
+        return .degrees(angle)
+    }
 }
 
 struct ChartData {
@@ -256,16 +418,16 @@ struct ChartData {
 struct PieSlice: Shape {
     var startAngle: Angle
     var endAngle: Angle
-    
+
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let center = CGPoint(x: rect.midX, y: rect.midY)
         let radius = min(rect.width, rect.height) / 2
-        
+
         path.move(to: center)
         path.addArc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
         path.closeSubpath()
-        
+
         return path
     }
 }
