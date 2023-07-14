@@ -127,7 +127,7 @@ struct WiDCreateView: View {
                 
                 Button(action: { // 종료 버튼
                     finishTimer.upstream.connect().cancel()
-                    duration += 60 * 60 * 1 // 1시간 추가
+//                    duration += 60 * 60 * 1 // 1시간 추가
                     wiD = WiD(id: 0, title: title.stringValue, detail: detail, date: date, start: startTime, finish: finishTime, duration: duration)
                     wiDService.insertWiD(wid: wiD)
                     isRecordingDone.toggle()
@@ -162,7 +162,7 @@ struct WiDCreateView: View {
         }
         .frame(maxHeight: .infinity)
         .border(Color.black)
-        .padding()
+        .padding(.horizontal)
     }
     
     func formatDate(_ date: Date, format: String) -> String {

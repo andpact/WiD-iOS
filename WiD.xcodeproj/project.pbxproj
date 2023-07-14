@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA215CDE2A60F9AF005C5D30 /* WiDSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */; };
+		EA215CE02A60FCAF005C5D30 /* WiDReadWeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */; };
+		EA215CE22A60FCBB005C5D30 /* WiDReadMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */; };
+		EA215CE42A60FCD6005C5D30 /* WiDReadHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */; };
 		EA60B8062A56991700B49641 /* WiDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8052A56991700B49641 /* WiDApp.swift */; };
 		EA60B8082A56991700B49641 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8072A56991700B49641 /* ContentView.swift */; };
 		EA60B80A2A56991800B49641 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA60B8092A56991800B49641 /* Assets.xcassets */; };
@@ -15,7 +19,7 @@
 		EA60B8212A56991800B49641 /* WiDUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8202A56991800B49641 /* WiDUITests.swift */; };
 		EA60B8232A56991800B49641 /* WiDUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */; };
 		EA663F0C2A5E74E200B51844 /* Title.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA663F0B2A5E74E200B51844 /* Title.swift */; };
-		EA70DD742A59089D00B4B167 /* WiDReadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA70DD732A59089D00B4B167 /* WiDReadView.swift */; };
+		EA70DD742A59089D00B4B167 /* WiDReadDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA70DD732A59089D00B4B167 /* WiDReadDayView.swift */; };
 		EAC5D7212A56A76E00FA2499 /* WiDCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */; };
 		EAC5D7252A56A94100FA2499 /* WiD.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7242A56A94100FA2499 /* WiD.swift */; };
 		EADF79162A583C8E000753B2 /* WiDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADF79152A583C8E000753B2 /* WiDService.swift */; };
@@ -39,6 +43,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDSearchView.swift; sourceTree = "<group>"; };
+		EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadWeekView.swift; sourceTree = "<group>"; };
+		EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadMonthView.swift; sourceTree = "<group>"; };
+		EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadHolderView.swift; sourceTree = "<group>"; };
 		EA60B8022A56991700B49641 /* WiD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WiD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA60B8052A56991700B49641 /* WiDApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDApp.swift; sourceTree = "<group>"; };
 		EA60B8072A56991700B49641 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -50,7 +58,7 @@
 		EA60B8202A56991800B49641 /* WiDUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDUITests.swift; sourceTree = "<group>"; };
 		EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		EA663F0B2A5E74E200B51844 /* Title.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Title.swift; sourceTree = "<group>"; };
-		EA70DD732A59089D00B4B167 /* WiDReadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadView.swift; sourceTree = "<group>"; };
+		EA70DD732A59089D00B4B167 /* WiDReadDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadDayView.swift; sourceTree = "<group>"; };
 		EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDCreateView.swift; sourceTree = "<group>"; };
 		EAC5D7242A56A94100FA2499 /* WiD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiD.swift; sourceTree = "<group>"; };
 		EADF79152A583C8E000753B2 /* WiDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDService.swift; sourceTree = "<group>"; };
@@ -153,7 +161,11 @@
 			children = (
 				EA60B8072A56991700B49641 /* ContentView.swift */,
 				EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */,
-				EA70DD732A59089D00B4B167 /* WiDReadView.swift */,
+				EA70DD732A59089D00B4B167 /* WiDReadDayView.swift */,
+				EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */,
+				EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */,
+				EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */,
+				EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -298,10 +310,14 @@
 			files = (
 				EADF79162A583C8E000753B2 /* WiDService.swift in Sources */,
 				EAC5D7252A56A94100FA2499 /* WiD.swift in Sources */,
+				EA215CE02A60FCAF005C5D30 /* WiDReadWeekView.swift in Sources */,
 				EA663F0C2A5E74E200B51844 /* Title.swift in Sources */,
+				EA215CDE2A60F9AF005C5D30 /* WiDSearchView.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
-				EA70DD742A59089D00B4B167 /* WiDReadView.swift in Sources */,
+				EA70DD742A59089D00B4B167 /* WiDReadDayView.swift in Sources */,
 				EAC5D7212A56A76E00FA2499 /* WiDCreateView.swift in Sources */,
+				EA215CE42A60FCD6005C5D30 /* WiDReadHolderView.swift in Sources */,
+				EA215CE22A60FCBB005C5D30 /* WiDReadMonthView.swift in Sources */,
 				EA60B8062A56991700B49641 /* WiDApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -14,15 +14,21 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             WiDCreateView()
                 .tabItem {
-                    Label("등록", systemImage: "plus")
+                    Label("등록", systemImage: "square.and.pencil")
                 }
                 .tag(0)
             
-            WiDReadView()
+            WiDReadHolderView()
                 .tabItem {
-                    Label("목록", systemImage: "list.bullet")
+                    Label("목록", systemImage: "list.dash")
                 }
                 .tag(1)
+            
+            WiDSearchView()
+                .tabItem {
+                    Label("검색", systemImage: "magnifyingglass")
+                }
+                .tag(2)
         }
     }
 }

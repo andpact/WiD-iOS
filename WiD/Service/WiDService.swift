@@ -147,6 +147,24 @@ class WiDService {
         return wids
     }
     
+    func updateWiD(withID id: Int, detail: String) {
+            let updateWiDQuery = "UPDATE WiD SET detail = ? WHERE id = ?"
+
+            var statement: OpaquePointer?
+            if sqlite3_prepare_v2(db, updateWiDQuery, -1, &statement, nil) == SQLITE_OK {
+                sqlite3_bind_text(statement, 1, (detail as NSString).utf8String, -1, nil)
+                sqlite3_bind_int(statement, 2, Int32(id))
+
+                if sqlite3_step(statement) != SQLITE_DONE {
+                    print("Failed to update WiD.")
+                } else {
+                    print("Success to update WiD.")
+                }
+
+                sqlite3_finalize(statement)
+            }
+        }
+    
     func deleteWiD(withID id: Int) {
         let deleteWiDQuery = "DELETE FROM WiD WHERE id = ?"
         
