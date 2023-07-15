@@ -106,7 +106,7 @@ struct WiDCreateView: View {
                     Text("소요")
                         .font(.system(size: 30))
 
-                    Text(formatDuration(duration))
+                    Text(formatDuration(duration, isClickedWiD: true))
                         .font(.system(size: 30))
                         .opacity(isRecording ? 1 : 0)
                 }
@@ -127,7 +127,7 @@ struct WiDCreateView: View {
                 
                 Button(action: { // 종료 버튼
                     finishTimer.upstream.connect().cancel()
-//                    duration += 60 * 60 * 1 // 1시간 추가
+                    duration += 60 * 60 * 1 // 1시간 추가
                     wiD = WiD(id: 0, title: title.stringValue, detail: detail, date: date, start: startTime, finish: finishTime, duration: duration)
                     wiDService.insertWiD(wid: wiD)
                     isRecordingDone.toggle()
@@ -160,21 +160,9 @@ struct WiDCreateView: View {
             finishTime = Date()
             duration = finishTime.timeIntervalSince(startTime)
         }
-        .frame(maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .border(Color.black)
         .padding(.horizontal)
-    }
-    
-    func formatDate(_ date: Date, format: String) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        return dateFormatter.string(from: date)
-    }
-    
-    func formatWeekday(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E"
-        return dateFormatter.string(from: date)
     }
     
     private func decreaseTitle() {
@@ -225,42 +213,6 @@ struct WiDCreateView: View {
             case .OTHER:
             title = .STUDY
         }
-    }
-    
-    func formatTime(_ date: Date, format: String) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        return dateFormatter.string(from: date)
-    }
-    
-    func formatDuration(_ interval: TimeInterval) -> String {
-        let seconds = Int(interval) % 60
-        let minutes = (Int(interval) / 60) % 60
-        let hours = Int(interval) / (60 * 60)
-
-        var formattedDuration = ""
-
-        if 0 < hours {
-            if 0 == minutes && 0 == seconds {
-                formattedDuration = String(format: "%d시간", hours)
-            } else if 0 < minutes && 0 == seconds {
-                formattedDuration = String(format: "%d시간 %d분", hours, minutes)
-            } else if 0 < hours && 0 == minutes && 0 < seconds {
-                formattedDuration = String(format: "%d시간 %d초", hours, seconds)
-            } else {
-                formattedDuration = String(format: "%d시간 %d분 %d초", hours, minutes, seconds)
-            }
-        } else if 0 < minutes {
-            if 0 == seconds {
-                formattedDuration = String(format: "%d분", minutes)
-            } else {
-                formattedDuration = String(format: "%d분 %d초", minutes, seconds)
-            }
-        } else {
-            formattedDuration = String(format: "%d초", seconds)
-        }
-
-        return formattedDuration
     }
 }
 

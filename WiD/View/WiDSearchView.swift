@@ -9,7 +9,14 @@ import SwiftUI
 
 struct WiDSearchView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("WiDSearchView")
+                
+                
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .border(Color.black)
+        .padding(.horizontal)
     }
 }
 

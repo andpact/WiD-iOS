@@ -86,9 +86,7 @@ struct WiDReadView: View {
     var body: some View {
         switch currentTab {
         case .DAY:
-            NavigationView {
-                WiDReadDayView()
-            }
+            WiDReadDayView()
         case .WEEK:
             WiDReadWeekView()
         case .MONTH:

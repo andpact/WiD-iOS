@@ -147,6 +147,45 @@ class WiDService {
         return wids
     }
     
+    func selectWiDsByDetail(detail: String) -> [WiD] {
+        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE detail = ?"
+
+        var wids = [WiD]()
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, selectWiDsQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_text(statement, 1, (detail as NSString).utf8String, -1, nil)
+
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+
+                let title = String(cString: sqlite3_column_text(statement, 1))
+                let detail = String(cString: sqlite3_column_text(statement, 2))
+
+                let dateString = String(cString: sqlite3_column_text(statement, 3))
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                let date = dateFormatter.date(from: dateString)!
+
+                let startTimeString = String(cString: sqlite3_column_text(statement, 4))
+                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm:ss"
+                let start = timeFormatter.date(from: startTimeString)!
+                let finish = timeFormatter.date(from: finishTimeString)!
+
+                let duration = sqlite3_column_double(statement, 6)
+
+                let wid = WiD(id: id, title: title, detail: detail, date: date, start: start, finish: finish, duration: duration)
+                wids.append(wid)
+            }
+
+            sqlite3_finalize(statement)
+            print("Success to select WiDs by detail.")
+        }
+
+        return wids
+    }
+    
     func updateWiD(withID id: Int, detail: String) {
             let updateWiDQuery = "UPDATE WiD SET detail = ? WHERE id = ?"
 
