@@ -32,16 +32,25 @@ func weekNumber(for date: Date) -> Int {
     return components.weekOfYear ?? 1
 }
 
-func updateFirstDayOfWeek(for currentDate: Date) -> Date {
+func getFirstDayOfWeek(for date: Date) -> Date {
     let calendar = Calendar.current
-    let weekday = calendar.component(.weekday, from: currentDate)
+    let weekday = calendar.component(.weekday, from: date)
     let daysToSubtract = (weekday - 2 + 7) % 7
     
-    guard let firstDayOfWeek = calendar.date(byAdding: .day, value: -daysToSubtract, to: currentDate) else {
-        return currentDate
+    guard let firstDayOfWeek = calendar.date(byAdding: .day, value: -daysToSubtract, to: date) else {
+        return date
     }
     
     return firstDayOfWeek
+}
+
+func getFirstDayOfMonth(for date: Date) -> Date {
+    let calendar = Calendar.current
+    let components = calendar.dateComponents([.year, .month], from: date)
+    guard let firstDayOfMonth = calendar.date(from: components) else {
+        return date
+    }
+    return firstDayOfMonth
 }
 
 func formatTime(_ date: Date, format: String) -> String {
