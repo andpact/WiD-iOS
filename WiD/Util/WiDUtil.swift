@@ -48,6 +48,7 @@ struct WiDView: View {
                                 .font(.system(size: 30))
 
                             Text(formatWeekday(clickedWiD?.date ?? Date()))
+                                .foregroundColor(Calendar.current.component(.weekday, from: clickedWiD?.date ?? Date()) == 1 ? .red : (Calendar.current.component(.weekday, from: clickedWiD?.date ?? Date()) == 7 ? .blue : .black))
                                 .font(.system(size: 30))
                         }
                     }

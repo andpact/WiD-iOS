@@ -17,6 +17,24 @@ struct WiDReadDayView: View {
         }
     }
     
+    private var totalDurationDictionary: [String: TimeInterval] {
+        var result: [String: TimeInterval] = [:]
+
+        for wiD in wiDs {
+            if let currentDuration = result[wiD.title] {
+                result[wiD.title] = currentDuration + wiD.duration
+            } else {
+                result[wiD.title] = wiD.duration
+            }
+        }
+
+        return result
+    }
+    
+    private var sortedTotalDurationDictionary: [(key: String, value: TimeInterval)] {
+        totalDurationDictionary.sorted { $0.value > $1.value }
+    }
+    
     var body: some View {
         VStack {
             HStack {
@@ -24,6 +42,7 @@ struct WiDReadDayView: View {
                     Text(formatDate(currentDate, format: "yyyy.MM.dd"))
                     
                     Text(formatWeekday(currentDate))
+                        .foregroundColor(Calendar.current.component(.weekday, from: currentDate) == 1 ? .red : (Calendar.current.component(.weekday, from: currentDate) == 7 ? .blue : .black))
                 }
                 .frame(maxWidth: .infinity)
                 
@@ -48,20 +67,25 @@ struct WiDReadDayView: View {
             }
             .border(Color.black)
             
-            ZStack {
+            HStack {
                 PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true)
                     .border(Color.red)
+                
+                VStack {
+                    HStack {
+                        Text("제목")
+                        
+                        Text("총합")
+                    }
+                    ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
+                        HStack {
+                            Text(title)
+                            Text(formatDuration(duration, isClickedWiD: false))
+                        }
+                    }
+                }
+                .border(Color.black)
             }
-
-//            VStack {
-//                HStack {
-//                    Text("제목")
-//                        .frame(maxWidth: .infinity)
-//                    Text("총합")
-//                        .frame(maxWidth: .infinity)
-//                }
-//            }
-//            .border(Color.black)
             
             VStack {
                 HStack {
@@ -79,20 +103,21 @@ struct WiDReadDayView: View {
                         .frame(maxWidth: .infinity)
                 }
 
-                ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wid) in
-                    NavigationLink(destination: WiDView(clickedWiDId: wid.id)) {
+                ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
+                    
+                    NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                         HStack {
                             Text("\(index + 1)")
                                 .frame(maxWidth: .infinity)
-                            Text(wid.title)
+                            Text(wiD.title)
                                 .frame(maxWidth: .infinity)
-                            Text(formatTime(wid.start, format: "HH:mm"))
+                            Text(formatTime(wiD.start, format: "HH:mm"))
                                 .frame(maxWidth: .infinity)
-                            Text(formatTime(wid.finish, format: "HH:mm"))
+                            Text(formatTime(wiD.finish, format: "HH:mm"))
                                 .frame(maxWidth: .infinity)
-                            Text(formatDuration(wid.duration, isClickedWiD: false))
+                            Text(formatDuration(wiD.duration, isClickedWiD: false))
                                 .frame(maxWidth: .infinity)
-                            Text("(\(wid.detail.count))")
+                            Text("(\(wiD.detail.count))")
                                 .frame(maxWidth: .infinity)
                         }
                     }

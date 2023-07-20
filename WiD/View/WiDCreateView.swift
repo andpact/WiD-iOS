@@ -49,6 +49,7 @@ struct WiDCreateView: View {
 
                         Text(formatWeekday(date))
                             .font(.system(size: 30))
+                            .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
                     }
                 }
 

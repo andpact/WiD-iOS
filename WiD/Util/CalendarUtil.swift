@@ -13,6 +13,7 @@ func formatDate(_ date: Date, format: String) -> String {
     return dateFormatter.string(from: date)
 }
 
+// 해당 날짜의 요일 반환
 func formatWeekday(_ date: Date) -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "E"
@@ -26,12 +27,14 @@ func formatWeekdayLetter(_ index: Int) -> String {
     return weekdaySymbols[adjustedIndex]
 }
 
+// 해당 날짜가 올해의 몇 번째 주인지 반환
 func weekNumber(for date: Date) -> Int {
     let calendar = Calendar.current
     let components = calendar.dateComponents([.weekOfYear], from: date)
     return components.weekOfYear ?? 1
 }
 
+// 해당 날짜가 속한 주의 첫 번째 날짜 반환
 func getFirstDayOfWeek(for date: Date) -> Date {
     let calendar = Calendar.current
     let weekday = calendar.component(.weekday, from: date)
@@ -44,6 +47,7 @@ func getFirstDayOfWeek(for date: Date) -> Date {
     return firstDayOfWeek
 }
 
+// 해당 날짜가 속한 달의 첫 번째 날짜 반환
 func getFirstDayOfMonth(for date: Date) -> Date {
     let calendar = Calendar.current
     let components = calendar.dateComponents([.year, .month], from: date)
@@ -51,6 +55,23 @@ func getFirstDayOfMonth(for date: Date) -> Date {
         return date
     }
     return firstDayOfMonth
+}
+
+// 해당 날짜가 속한 달의 모든 날짜 반환
+func getDaysOfMonth(for date: Date) -> [Date] {
+    let calendar = Calendar.current
+    let range = calendar.range(of: .day, in: .month, for: date)!
+    let days = range.map { day -> Date in
+        calendar.date(bySetting: .day, value: day, of: date)!
+    }
+    return days
+}
+
+// 해당 날짜가 속한 주에서 몇 번째 날짜인지 반환
+func getWeekdayOffset(for date: Date) -> Int {
+    let calendar = Calendar.current
+    let weekday = calendar.component(.weekday, from: date)
+    return (weekday + 6) % 7
 }
 
 func formatTime(_ date: Date, format: String) -> String {

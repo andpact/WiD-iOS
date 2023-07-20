@@ -48,7 +48,7 @@ struct PieChartView: View {
                         .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
                 }
             }
-//            .border(Color.blue)
+            .border(Color.blue)
             .frame(width: geometry.size.width * 1, height: geometry.size.width * 1)
         }
     }

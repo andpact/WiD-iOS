@@ -148,12 +148,18 @@ class WiDService {
     }
     
     func selectWiDsByDetail(detail: String) -> [WiD] {
-        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE detail = ?"
+        // If the search detail is empty, return an empty array
+        guard !detail.isEmpty else {
+            return []
+        }
+
+        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE detail LIKE ?"
 
         var wids = [WiD]()
         var statement: OpaquePointer?
         if sqlite3_prepare_v2(db, selectWiDsQuery, -1, &statement, nil) == SQLITE_OK {
-            sqlite3_bind_text(statement, 1, (detail as NSString).utf8String, -1, nil)
+            let searchString = "%\(detail)%"
+            sqlite3_bind_text(statement, 1, (searchString as NSString).utf8String, -1, nil)
 
             while sqlite3_step(statement) == SQLITE_ROW {
                 let id = Int(sqlite3_column_int(statement, 0))
