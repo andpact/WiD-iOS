@@ -65,7 +65,6 @@ struct WiDReadDayView: View {
                 }
                 .disabled(Calendar.current.isDateInToday(currentDate))
             }
-            .border(Color.black)
             
             HStack {
                 PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true)
@@ -73,61 +72,90 @@ struct WiDReadDayView: View {
                 
                 VStack {
                     HStack {
+                        Rectangle()
+                            .fill(Color("light_gray"))
+                            .frame(width: 10, height: 20)
+                        
                         Text("제목")
                         
                         Text("총합")
                     }
+                    .frame(maxWidth: .infinity)
+                    .background(Color("light_gray"))
+                    .cornerRadius(10)
+                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                    
                     ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
                         HStack {
-                            Text(title)
+                            Rectangle()
+                                .fill(Color(title))
+                                .frame(width: 10, height: 20)
+                            
+                            Text(titleDictionary[title] ?? "")
+                            
                             Text(formatDuration(duration, isClickedWiD: false))
                         }
+                        .frame(maxWidth: .infinity)
+                        .background(Color("light_gray"))
+                        .cornerRadius(10)
+                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     }
                 }
-                .border(Color.black)
             }
             
             VStack {
                 HStack {
+                    Rectangle()
+                        .fill(Color("light_gray"))
+                        .frame(width: 10, height: 20)
+                    
                     Text("순서")
-                        .frame(maxWidth: .infinity)
+
                     Text("제목")
-                        .frame(maxWidth: .infinity)
+
                     Text("시작")
-                        .frame(maxWidth: .infinity)
+
                     Text("종료")
-                        .frame(maxWidth: .infinity)
+
                     Text("경과")
-                        .frame(maxWidth: .infinity)
+
                     Text("자세히")
-                        .frame(maxWidth: .infinity)
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color("light_gray"))
+                .cornerRadius(10)
+                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
                     
                     NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                         HStack {
+                            Rectangle()
+                                .fill(Color(wiD.title))
+                                .frame(width: 10, height: 20)
+                            
                             Text("\(index + 1)")
-                                .frame(maxWidth: .infinity)
-                            Text(wiD.title)
-                                .frame(maxWidth: .infinity)
+
+                            Text(titleDictionary[wiD.title] ?? "")
+
                             Text(formatTime(wiD.start, format: "HH:mm"))
-                                .frame(maxWidth: .infinity)
+
                             Text(formatTime(wiD.finish, format: "HH:mm"))
-                                .frame(maxWidth: .infinity)
+
                             Text(formatDuration(wiD.duration, isClickedWiD: false))
-                                .frame(maxWidth: .infinity)
+
                             Text("(\(wiD.detail.count))")
-                                .frame(maxWidth: .infinity)
                         }
+                        .frame(maxWidth: .infinity)
+                        .background(Color("light_gray"))
+                        .cornerRadius(10)
+                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     }
                 }
             }
             .frame(maxHeight: .infinity)
-            .border(Color.black)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .border(Color.black)
         .padding(.horizontal)
         .onAppear() {
             wiDs = wiDService.selectWiDsByDate(date: currentDate)

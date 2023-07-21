@@ -138,34 +138,43 @@ struct WiDReadMonthView: View {
             
             VStack {
                 HStack {
+                    Rectangle()
+                        .fill(Color("light_gray"))
+                        .frame(width: 10, height: 20)
+                    
                     Text("제목")
-                        .frame(maxWidth: .infinity)
                     
                     Text("최고")
-                        .frame(maxWidth: .infinity)
                     
                     Text("총합")
-                        .frame(maxWidth: .infinity)
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color("light_gray"))
+                .cornerRadius(10)
+                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                 
                 ForEach(sortedTotalDurationDictionary, id: \.key) { (title, totalDuration) in
                     if let bestDuration = bestDurationDictionary[title], let bestDay = bestDayDictionary[title] {
                         HStack {
-                            Text(title)
-                                .frame(maxWidth: .infinity)
+                            Rectangle()
+                                .fill(Color(title))
+                                .frame(width: 10, height: 20)
+                            
+                            Text(titleDictionary[title] ?? "")
                             
                             Text(formatDuration(bestDuration, isClickedWiD: false) + " (\(formatDate(bestDay, format: "d일")))")
-                                .frame(maxWidth: .infinity)
                             
                             Text(formatDuration(totalDuration, isClickedWiD: false))
-                                .frame(maxWidth: .infinity)
                         }
+                        .frame(maxWidth: .infinity)
+                        .background(Color("light_gray"))
+                        .cornerRadius(10)
+                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     }
                 }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .border(Color.black)
         .padding(.horizontal)
         .onAppear() {
             let daysOfMonth = getDaysOfMonth(for: currentDate)

@@ -12,7 +12,8 @@ struct WiDCreateView: View {
     private let wiDService = WiDService()
     
     private let date: Date = Date()
-    @State private var title: Title = .STUDY
+    @State private var title: String = titleArray[0]
+    @State private var titleIndex: Int = 0
     private let detail: String = ""
     @State private var startTime: Date = Date()
     @State private var finishTime: Date = Date()
@@ -32,32 +33,43 @@ struct WiDCreateView: View {
                 HStack {
                     Text("WiD")
                         .font(.system(size: 30))
+                    
+                    Spacer()
 
                     Circle()
-                        .foregroundColor(Color(title.stringValue))
+                        .foregroundColor(Color(title))
                         .frame(width: 20, height: 20)
                 }
+                .padding(.horizontal)
+                
                 HStack {
                     Image(systemName: "calendar")
                         .imageScale(.large)
+                        .frame(width: 25)
+                    
                     Text("날짜")
-                        .font(.system(size: 30))
+                        .font(.system(size: 25))
 
                     HStack {
                         Text(formatDate(date, format: "yyyy.MM.dd"))
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
 
                         Text(formatWeekday(date))
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
                             .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
                     }
+                    .frame(maxWidth: .infinity)
                 }
+                .padding(.horizontal)
+                .padding(.bottom)
 
                 HStack {
                     Image(systemName: "doc.text.magnifyingglass")
                         .imageScale(.large)
+                        .frame(width: 25)
+                    
                     Text("제목")
-                        .font(.system(size: 30))
+                        .font(.system(size: 25))
 
                     Button(action: {
                         decreaseTitle()
@@ -66,9 +78,11 @@ struct WiDCreateView: View {
                     }
                     .disabled(isRecording)
                     .opacity(isRecording ? 0 : 1)
+                    .padding(.horizontal)
 
-                    Text(title.stringValue)
-                        .font(.system(size: 30))
+                    Text(titleDictionary[title] ?? "")
+                        .font(.system(size: 25))
+                        .frame(maxWidth: .infinity)
 
                     Button(action: {
                         increaseTitle()
@@ -77,43 +91,63 @@ struct WiDCreateView: View {
                     }
                     .disabled(isRecording)
                     .opacity(isRecording ? 0 : 1)
+                    .padding(.horizontal)
                 }
+                .padding(.horizontal)
+                .padding(.bottom)
 
                 HStack {
                     Image(systemName: "clock")
                         .imageScale(.large)
+                        .frame(width: 25)
+                    
                     Text("시작")
-                        .font(.system(size: 30))
+                        .font(.system(size: 25))
 
                     Text(formatTime(startTime, format: "HH:mm:ss"))
-                        .font(.system(size: 30))
+                        .font(.system(size: 25))
                         .opacity(isRecording ? 0.5 : 1)
+                        .frame(maxWidth: .infinity)
                 }
+                .padding(.horizontal)
+                .padding(.bottom)
 
                 HStack {
                     Image(systemName: "stopwatch")
                         .imageScale(.large)
+                        .frame(width: 25)
+                    
                     Text("종료")
-                        .font(.system(size: 30))
+                        .font(.system(size: 25))
 
                     Text(formatTime(finishTime, format: "HH:mm:ss"))
-                        .font(.system(size: 30))
+                        .font(.system(size: 25))
                         .opacity(isRecording ? 1 : 0)
+                        .frame(maxWidth: .infinity)
                 }
+                .padding(.horizontal)
+                .padding(.bottom)
 
                 HStack {
                     Image(systemName: "hourglass")
                         .imageScale(.large)
+                        .frame(width: 25)
+                    
                     Text("소요")
-                        .font(.system(size: 30))
+                        .font(.system(size: 25))
 
                     Text(formatDuration(duration, isClickedWiD: true))
-                        .font(.system(size: 30))
+                        .font(.system(size: 25))
                         .opacity(isRecording ? 1 : 0)
+                        .frame(maxWidth: .infinity)
                 }
+                .padding(.horizontal)
+                .padding(.bottom)
 
             }
-            .border(Color.black)
+            .background(Color("light_purple"))
+            .cornerRadius(10)
+            .padding(.horizontal)
 
             HStack {
                 Button(action: { // 시작 버튼
@@ -123,20 +157,20 @@ struct WiDCreateView: View {
                     Image(systemName: "play.fill")
                         .imageScale(.large)
                 }
-                .frame(maxWidth: .infinity, alignment: .center)
+                .frame(maxWidth: .infinity)
                 .disabled(isRecording)
                 
                 Button(action: { // 종료 버튼
                     finishTimer.upstream.connect().cancel()
                     duration += 60 * 60 * 1 // 1시간 추가
-                    wiD = WiD(id: 0, title: title.stringValue, detail: detail, date: date, start: startTime, finish: finishTime, duration: duration)
+                    wiD = WiD(id: 0, title: title, detail: detail, date: date, start: startTime, finish: finishTime, duration: duration)
                     wiDService.insertWiD(wid: wiD)
                     isRecordingDone.toggle()
                 }) {
                     Image(systemName: "stop.fill")
                         .imageScale(.large)
                 }
-                .frame(maxWidth: .infinity, alignment: .center)
+                .frame(maxWidth: .infinity)
                 .disabled(!isRecording || isRecordingDone)
                 
                 Button(action: { // 초기화 버튼
@@ -150,9 +184,10 @@ struct WiDCreateView: View {
                     Image(systemName: "arrow.clockwise.circle.fill")
                         .imageScale(.large)
                 }
-                .frame(maxWidth: .infinity, alignment: .center)
+                .frame(maxWidth: .infinity)
                 .disabled(!isRecording || !isRecordingDone)
             }
+            .padding(.horizontal)
         }
         .onReceive(startTimer) { input in
             startTime = Date()
@@ -162,58 +197,23 @@ struct WiDCreateView: View {
             duration = finishTime.timeIntervalSince(startTime)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .border(Color.black)
         .padding(.horizontal)
     }
     
     private func decreaseTitle() {
-        switch title {
-            case .STUDY:
-            title = .OTHER
-            case .WORK:
-            title = .STUDY
-            case .READING:
-            title = .WORK
-            case .EXERCISE:
-            title = .READING
-            case .HOBBY:
-            title = .EXERCISE
-            case .MEAL:
-            title = .HOBBY
-            case .SHOWER:
-            title = .MEAL
-            case .TRAVEL:
-            title = .SHOWER
-            case .SLEEP:
-            title = .TRAVEL
-            case .OTHER:
-            title = .SLEEP
+        titleIndex -= 1
+        if titleIndex < 0 {
+            titleIndex = titleArray.count - 1
         }
+        title = titleArray[titleIndex]
     }
 
     private func increaseTitle() {
-        switch title {
-            case .STUDY:
-            title = .WORK
-            case .WORK:
-            title = .READING
-            case .READING:
-            title = .EXERCISE
-            case .EXERCISE:
-            title = .HOBBY
-            case .HOBBY:
-            title = .MEAL
-            case .MEAL:
-            title = .SHOWER
-            case .SHOWER:
-            title = .TRAVEL
-            case .TRAVEL:
-            title = .SLEEP
-            case .SLEEP:
-            title = .OTHER
-            case .OTHER:
-            title = .STUDY
+        titleIndex += 1
+        if titleIndex >= titleArray.count {
+            titleIndex = 0
         }
+        title = titleArray[titleIndex]
     }
 }
 

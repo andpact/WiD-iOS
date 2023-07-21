@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+struct WiD {
+    var id: Int
+    var title: String
+    var detail: String
+    var date: Date
+    var start: Date
+    var finish: Date
+    var duration: TimeInterval
+}
+
 struct WiDView: View {
     @Environment(\.presentationMode) var presentationMode
     private let wiDService = WiDService()
@@ -26,79 +36,114 @@ struct WiDView: View {
     }
 
     var body: some View {
-        NavigationView { // NavigationView 추가
+        NavigationView {
             VStack {
                 VStack {
                     HStack {
                         Text("WiD")
                             .font(.system(size: 30))
+                        
+                        Spacer()
 
                         Circle()
                             .foregroundColor(Color(clickedWiD?.title ?? "STUDY"))
                             .frame(width: 20, height: 20)
                     }
+                    .padding(.horizontal)
+                    
                     HStack {
                         Image(systemName: "calendar")
                             .imageScale(.large)
+                            .frame(width: 25)
+                        
                         Text("날짜")
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
 
                         HStack {
                             Text(formatDate(clickedWiD?.date ?? Date(), format: "yyyy.MM.dd"))
-                                .font(.system(size: 30))
+                                .font(.system(size: 25))
 
                             Text(formatWeekday(clickedWiD?.date ?? Date()))
                                 .foregroundColor(Calendar.current.component(.weekday, from: clickedWiD?.date ?? Date()) == 1 ? .red : (Calendar.current.component(.weekday, from: clickedWiD?.date ?? Date()) == 7 ? .blue : .black))
-                                .font(.system(size: 30))
+                                .font(.system(size: 25))
                         }
+                        .frame(maxWidth: .infinity)
                     }
+                    .padding(.horizontal)
+                    .padding(.bottom)
 
                     HStack {
                         Image(systemName: "doc.text.magnifyingglass")
                             .imageScale(.large)
+                            .frame(width: 25)
+                        
                         Text("제목")
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
 
-                        Text(clickedWiD?.title ?? "")
-                            .font(.system(size: 30))
+                        Text(titleDictionary[clickedWiD?.title ?? ""] ?? "")
+                            .font(.system(size: 25))
+                            .frame(maxWidth: .infinity)
                     }
+                    .padding(.horizontal)
+                    .padding(.bottom)
 
                     HStack {
                         Image(systemName: "clock")
                             .imageScale(.large)
+                            .frame(width: 25)
+                        
                         Text("시작")
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
 
                         Text(formatTime(clickedWiD?.start ?? Date(), format: "HH:mm:ss"))
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
+                            .frame(maxWidth: .infinity)
                     }
+                    .padding(.horizontal)
+                    .padding(.bottom)
 
                     HStack {
                         Image(systemName: "stopwatch")
                             .imageScale(.large)
+                            .frame(width: 25)
+                        
                         Text("종료")
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
 
                         Text(formatTime(clickedWiD?.finish ?? Date(), format: "HH:mm:ss"))
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
+                            .frame(maxWidth: .infinity)
                     }
+                    .padding(.horizontal)
+                    .padding(.bottom)
 
                     HStack {
                         Image(systemName: "hourglass")
                             .imageScale(.large)
+                            .frame(width: 25)
+                        
                         Text("소요")
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
 
                         Text(formatDuration(clickedWiD?.duration ?? 0, isClickedWiD: true))
-                            .font(.system(size: 30))
+                            .font(.system(size: 25))
+                            .frame(maxWidth: .infinity)
                     }
+                    .padding(.horizontal)
+                    .padding(.bottom)
                     
                     if isExpanded {
                         VStack {
                             HStack {
+                                Image(systemName: "doc.text.magnifyingglass")
+                                    .imageScale(.large)
+                                    .frame(width: 25)
+                                
                                 Text("세부 사항")
-                                    .font(.system(size: 30))
+                                    .font(.system(size: 25))
                                     .foregroundColor(.black)
+                                
+                                Spacer()
                                 
                                 Button(action: {
                                     if isEditing {
@@ -113,12 +158,18 @@ struct WiDView: View {
                             
                             if !isEditing {
                                 Text(inputText == "" ? "세부 사항 입력.." : inputText) // 디테일 텍스트 뷰
+                                    .frame(maxWidth: .infinity)
+                                    .border(Color.black)
+
                             } else {
                                 TextField("세부 사항 입력..", text: $inputText) // 디테일 텍스트 필드
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .padding()
+//                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+//                                    .textFieldStyle(DefaultTextFieldStyle())
+                                    .border(Color.black)
                             }
                         }
+                        .padding(.horizontal)
+                        .padding(.bottom)
                     }
                     
                     Button(action: {
@@ -129,8 +180,12 @@ struct WiDView: View {
                             .renderingMode(.original)
                             .imageScale(.large)
                     }
+                    .padding(.bottom)
                 }
-                .border(Color.black)
+                .background(Color("light_purple"))
+                .cornerRadius(10)
+                .padding(.horizontal)
+
 
                 HStack {
                     Button(action: {
@@ -140,7 +195,7 @@ struct WiDView: View {
                             .renderingMode(.original)
                             .imageScale(.large)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(maxWidth: .infinity)
 
                     Button(action: {
                         wiDService.deleteWiD(withID: clickedWiDId)
@@ -150,7 +205,7 @@ struct WiDView: View {
                             .renderingMode(.original)
                             .imageScale(.large)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(maxWidth: .infinity)
 
                     Button(action: {
                         presentationMode.wrappedValue.dismiss() // 뒤로 가기
@@ -159,13 +214,20 @@ struct WiDView: View {
                             .renderingMode(.original)
                             .imageScale(.large)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(maxWidth: .infinity)
                 }
+                .padding(.horizontal)
             }
             .frame(maxHeight: .infinity)
             .border(Color.black)
             .padding(.horizontal)
         }
         .navigationBarBackButtonHidden()
+    }
+}
+
+struct WiDView_Previews: PreviewProvider {
+    static var previews: some View {
+        WiDView(clickedWiDId: 0)
     }
 }

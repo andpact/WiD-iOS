@@ -41,7 +41,7 @@ struct WiDSearchView: View {
                         NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                             VStack {
                                 HStack {
-                                    Text(wiD.title)
+                                    Text(titleDictionary[wiD.title] ?? "")
                                         .frame(maxWidth: .infinity)
                                     Text(formatTime(wiD.start, format: "HH:mm"))
                                         .frame(maxWidth: .infinity)
