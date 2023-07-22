@@ -20,9 +20,8 @@ struct WiDSearchView: View {
                 Text("검색된 내용이 없습니다.")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                VStack {
+                VStack(alignment: .leading) {
                     ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
-                        
                         if index == 0 || !Calendar.current.isDate(wiD.date, inSameDayAs: wiDs[index - 1].date) {
                             HStack {
                                 if Calendar.current.isDateInToday(wiD.date) {
@@ -36,6 +35,7 @@ struct WiDSearchView: View {
                                         .foregroundColor(Calendar.current.component(.weekday, from: wiD.date) == 1 ? .red : (Calendar.current.component(.weekday, from: wiD.date) == 7 ? .blue : .black))
                                 }
                             }
+                            .padding(.top)
                         }
                         
                         NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
@@ -57,15 +57,20 @@ struct WiDSearchView: View {
                                     Text(wiD.detail)
                                         .frame(maxWidth: .infinity)
                                 }
+                                .padding(.top)
                             }
+                            .background(Color("light_gray"))
+                            .cornerRadius(10)
+                            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                         }
+                        .padding(.top)
                     }
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .border(Color.black)
         .padding(.horizontal)
         .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification)) { _ in
             wiDs = wiDService.selectWiDsByDetail(detail: searchText)
@@ -88,7 +93,7 @@ struct SearchBar: View {
                 .background(Color(.systemGray5))
                 .cornerRadius(8)
         }
-        .padding()
+        .padding(.top)
     }
 }
 

@@ -37,6 +37,7 @@ struct WiDReadDayView: View {
     
     var body: some View {
         VStack {
+            // 날짜 표시
             HStack {
                 HStack {
                     Text(formatDate(currentDate, format: "yyyy.MM.dd"))
@@ -57,6 +58,7 @@ struct WiDReadDayView: View {
                 }) {
                     Image(systemName: "chevron.left")
                 }
+                .padding(.horizontal)
                 
                 Button(action: {
                     currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
@@ -66,9 +68,10 @@ struct WiDReadDayView: View {
                 .disabled(Calendar.current.isDateInToday(currentDate))
             }
             
-            HStack {
+            // 파이 차트 및 제목 별 총합 표시
+            HStack(alignment: .top) {
                 PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true)
-                    .border(Color.red)
+                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                 
                 VStack {
                     HStack {
@@ -79,8 +82,8 @@ struct WiDReadDayView: View {
                         Text("제목")
                         
                         Text("총합")
+                            .padding(.horizontal)
                     }
-                    .frame(maxWidth: .infinity)
                     .background(Color("light_gray"))
                     .cornerRadius(10)
                     .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
@@ -95,20 +98,21 @@ struct WiDReadDayView: View {
                             
                             Text(formatDuration(duration, isClickedWiD: false))
                         }
-                        .frame(maxWidth: .infinity)
                         .background(Color("light_gray"))
                         .cornerRadius(10)
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     }
                 }
             }
+            .padding(.top)
             
+            // 각 WiD 표시
             VStack {
                 HStack {
                     Rectangle()
                         .fill(Color("light_gray"))
                         .frame(width: 10, height: 20)
-                    
+
                     Text("순서")
 
                     Text("제목")
@@ -127,13 +131,12 @@ struct WiDReadDayView: View {
                 .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
-                    
                     NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                         HStack {
                             Rectangle()
                                 .fill(Color(wiD.title))
                                 .frame(width: 10, height: 20)
-                            
+
                             Text("\(index + 1)")
 
                             Text(titleDictionary[wiD.title] ?? "")
@@ -152,8 +155,9 @@ struct WiDReadDayView: View {
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     }
                 }
+                Spacer()
             }
-            .frame(maxHeight: .infinity)
+            .padding(.top)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)

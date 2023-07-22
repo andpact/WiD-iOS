@@ -159,13 +159,10 @@ struct WiDView: View {
                             if !isEditing {
                                 Text(inputText == "" ? "세부 사항 입력.." : inputText) // 디테일 텍스트 뷰
                                     .frame(maxWidth: .infinity)
-                                    .border(Color.black)
-
+                                    .border(Color.gray)
                             } else {
                                 TextField("세부 사항 입력..", text: $inputText) // 디테일 텍스트 필드
-//                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                                    .textFieldStyle(DefaultTextFieldStyle())
-                                    .border(Color.black)
+                                    .border(Color.gray)
                             }
                         }
                         .padding(.horizontal)

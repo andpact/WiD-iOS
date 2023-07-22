@@ -81,6 +81,7 @@ struct WiDReadMonthView: View {
     
     var body: some View {
         VStack {
+            // 날짜 표시
             HStack {
                 Text(formatDate(currentDate, format: "yyyy.MM"))
                     .frame(maxWidth: .infinity)
@@ -96,6 +97,7 @@ struct WiDReadMonthView: View {
                 }) {
                     Image(systemName: "chevron.left")
                 }
+                .padding(.horizontal)
                 
                 Button(action: {
                     currentDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
@@ -105,8 +107,8 @@ struct WiDReadMonthView: View {
                 .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfMonth(for: Date()), toGranularity: .month))
 
             }
-            .border(Color.black)
             
+            // 요일 표시
             HStack(spacing: 0) {
                 ForEach(0...6, id: \.self) { index in
                     let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
@@ -116,17 +118,15 @@ struct WiDReadMonthView: View {
                         .foregroundColor(textColor)
                 }
             }
-            .frame(maxWidth: .infinity)
+            .padding(.top)
             
-            // 파이차트
-            LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 10) {
+            // 파이 차트 표시
+            LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
                 let firstDayOfMonth = getFirstDayOfMonth(for: currentDate)
                 let weekdayOffset = getWeekdayOffset(for: firstDayOfMonth)
                 
                 ForEach(0..<weekdayOffset, id: \.self) { _ in
-                    // Empty chart for days before the first day of the month
                     PieChartView(data: [], date: firstDayOfMonth, isForOne: false)
-                        .frame(width: 50, height: 50)
                 }
                 
                 ForEach(getDaysOfMonth(for: currentDate), id: \.self) { day in
@@ -136,6 +136,7 @@ struct WiDReadMonthView: View {
             }
             .frame(maxWidth: .infinity)
             
+            // 제목 별 총합 표시
             VStack {
                 HStack {
                     Rectangle()
@@ -172,7 +173,9 @@ struct WiDReadMonthView: View {
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     }
                 }
+                Spacer()
             }
+            .padding(.top)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)

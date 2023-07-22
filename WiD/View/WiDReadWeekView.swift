@@ -80,6 +80,7 @@ struct WiDReadWeekView: View {
     
     var body: some View {
         VStack {
+            // 날짜 표시
             HStack {
                 HStack {
                     Text(formatDate(currentDate, format: "yyyy년"))
@@ -99,6 +100,7 @@ struct WiDReadWeekView: View {
                 }) {
                     Image(systemName: "chevron.left")
                 }
+                .padding(.horizontal)
 
                 Button(action: {
                     currentDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: currentDate) ?? currentDate
@@ -107,8 +109,8 @@ struct WiDReadWeekView: View {
                 }
                 .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfWeek(for: Date()), toGranularity: .weekOfYear))
             }
-            .border(Color.black)
             
+            // 요일 표시
             HStack(spacing: 0) {
                 ForEach(1...7, id: \.self) { index in
                     let textColor = index == 7 ? Color.red : (index == 6 ? Color.blue : Color.black)
@@ -118,16 +120,16 @@ struct WiDReadWeekView: View {
                         .foregroundColor(textColor)
                 }
             }
-            .frame(maxWidth: .infinity)
+            .padding(.top)
             
+            // 파이 차트 표시
             HStack(spacing: 0) {
                 ForEach(0..<7) { index in
                     PieChartView(data: fetchChartData(date: Calendar.current.date(byAdding: .day, value: index, to: currentDate) ?? currentDate), date: Calendar.current.date(byAdding: .day, value: index, to: currentDate) ?? currentDate, isForOne: false)
                 }
             }
-            .frame(maxWidth: .infinity)
-            .border(Color.red)
             
+            // 제목 별 총합 표시
             VStack {
                 HStack {
                     Rectangle()
@@ -164,9 +166,11 @@ struct WiDReadWeekView: View {
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                     }
                 }
+                Spacer()
             }
+            .padding(.top)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
         .onAppear() {
             var allWiDs: [WiD] = []

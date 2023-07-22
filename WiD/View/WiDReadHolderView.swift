@@ -68,7 +68,7 @@ struct WiDReadHolderView: View {
                         self.selectedPicker = item
                     }
                 }
-                .padding(.horizontal)
+//                .padding(.top)
             }
         }
     }

@@ -12,8 +12,6 @@ struct PieChartView: View {
     var date: Date
     var isForOne: Bool
     
-//    파이 차트가 그려지는 것을 두 가지 버전(하나만 그려지는, 여러개 그려지는)으로 나타내야 함. isOne 변수로.
-    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -33,10 +31,10 @@ struct PieChartView: View {
                     ForEach(1...24, id: \.self) { number in
                         let angle = getAngle(for: number)
                         let radius = geometry.size.width * 0.45 // 원의 반지름
-                        
+
                         let x = cos(angle.radians) * radius
                         let y = sin(angle.radians) * radius
-                        
+
                         Text("\(number)")
                             .font(.system(size: 8))
                             .position(x: geometry.size.width / 2 + x, y: geometry.size.width / 2 + y)
@@ -49,9 +47,8 @@ struct PieChartView: View {
                         .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
                 }
             }
-            .border(Color.blue)
-            .frame(width: geometry.size.width * 1, height: geometry.size.width * 1)
         }
+        .aspectRatio(contentMode: .fit)
     }
 
     func getStartAngle(for index: Int) -> Angle {
