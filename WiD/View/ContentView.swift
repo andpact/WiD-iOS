@@ -31,6 +31,9 @@ struct ContentView: View {
                     }
                     .tag(2)
             }
+//            .onAppear {
+//                UITabBar.appearance().backgroundColor = .purple
+//            }
         }
     }
 }

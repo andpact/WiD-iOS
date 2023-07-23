@@ -27,6 +27,9 @@ struct WiDCreateView: View {
     @State private var isRecording = false
     @State private var isRecordingDone = false
     
+    @State private var showMinAlert = false
+    @State private var showMaxAlert = false
+    
     var body: some View {
         VStack {
             VStack {
@@ -146,41 +149,28 @@ struct WiDCreateView: View {
 
             }
             .background(Color("light_purple"))
-            .cornerRadius(10)
+            .cornerRadius(5)
             .padding(.horizontal)
 
             HStack {
-                Button(action: { // 시작 버튼
-                    startTimer.upstream.connect().cancel()
-                    isRecording.toggle()
-                }) {
+//                시작 버튼
+                Button(action: startRecording) {
                     Image(systemName: "play.fill")
                         .imageScale(.large)
                 }
                 .frame(maxWidth: .infinity)
                 .disabled(isRecording)
-                
-                Button(action: { // 종료 버튼
-                    finishTimer.upstream.connect().cancel()
-                    duration += 60 * 60 * 1 // 1시간 추가
-                    wiD = WiD(id: 0, title: title, detail: detail, date: date, start: startTime, finish: finishTime, duration: duration)
-                    wiDService.insertWiD(wid: wiD)
-                    isRecordingDone.toggle()
-                }) {
+
+//                종료 버튼
+                Button(action: stopRecording) {
                     Image(systemName: "stop.fill")
                         .imageScale(.large)
                 }
                 .frame(maxWidth: .infinity)
                 .disabled(!isRecording || isRecordingDone)
-                
-                Button(action: { // 초기화 버튼
-                    startTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-                    finishTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-                    duration = 0
-                    wiD = WiD(id: 0, title: "", detail: "", date: Date(), start: Date(), finish: Date(), duration: 0)
-                    isRecording.toggle()
-                    isRecordingDone.toggle()
-                }) {
+
+//                초기화 버튼
+                Button(action: resetRecording) {
                     Image(systemName: "arrow.clockwise.circle.fill")
                         .imageScale(.large)
                 }
@@ -195,9 +185,52 @@ struct WiDCreateView: View {
         .onReceive(finishTimer) { input in
             finishTime = Date()
             duration = finishTime.timeIntervalSince(startTime)
+            
+            let durationLimit: TimeInterval = 12 * 60 * 60 // 12 hours in seconds
+            if durationLimit <= duration {
+                stopRecording()
+                showMaxAlert = true
+                resetRecording()
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
+        .alert(isPresented: Binding<Bool>.constant(showMinAlert || showMaxAlert)) {
+            switch (showMinAlert, showMaxAlert) {
+            case (true, false):
+                return Alert(
+                    title: Text("WiD 기록 종료"),
+                    message: Text("1분 이상의 WiD를 기록해주세요."),
+                    dismissButton: .default(Text("확인")) {
+                        showMinAlert = false
+                    }
+                )
+            case (false, true):
+                return Alert(
+                    title: Text("WiD 기록 종료"),
+                    message: Text("12시간이 초과되어 WiD가 자동으로 등록되었습니다."),
+                    dismissButton: .default(Text("확인")) {
+                        showMaxAlert = false
+                    }
+                )
+            default:
+                return Alert(title: Text(""), message: nil, dismissButton: .default(Text("확인")))
+            }
+        }
+//        .alert(isPresented: $showMinAlert) {
+//            Alert(
+//                title: Text("기록 종료"),
+//                message: Text("1분 이상의 WiD를 기록해주세요."),
+//                dismissButton: .default(Text("확인"))
+//            )
+//        }
+//        .alert(isPresented: $showMaxAlert) {
+//            Alert(
+//                title: Text("기록 종료"),
+//                message: Text("12시간이 초과되어 WiD가 자동으로 등록되었습니다."),
+//                dismissButton: .default(Text("확인"))
+//            )
+//        }
     }
     
     private func decreaseTitle() {
@@ -214,6 +247,54 @@ struct WiDCreateView: View {
             titleIndex = 0
         }
         title = titleArray[titleIndex]
+    }
+    
+    private func startRecording() {
+        startTimer.upstream.connect().cancel()
+        isRecording.toggle()
+    }
+
+    private func stopRecording() {
+        finishTimer.upstream.connect().cancel()
+        if duration < 60 {
+            showMinAlert = true
+            resetRecording()
+        } else {
+            let calendar = Calendar.current
+            let startComponents = calendar.dateComponents([.year, .month, .day], from: startTime)
+            let finishComponents = calendar.dateComponents([.year, .month, .day], from: finishTime)
+
+            if let startDate = calendar.date(from: startComponents),
+               let finishDate = calendar.date(from: finishComponents) {
+
+                // Check if the duration spans across multiple days
+                if calendar.isDate(startDate, inSameDayAs: finishDate) {
+                    // WiD duration is within the same day
+                    let wiD = WiD(id: 0, title: title, detail: detail, date: startDate, start: startTime, finish: finishTime, duration: duration)
+                    wiDService.insertWiD(wid: wiD)
+                } else {
+                    // WiD duration spans across multiple days
+                    let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
+                    let firstDayWiD = WiD(id: 0, title: title, detail: detail, date: startDate, start: startTime, finish: midnightEndDate, duration: midnightEndDate.timeIntervalSince(startTime))
+                    wiDService.insertWiD(wid: firstDayWiD)
+
+                    let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
+                    let midnightEndDateNextDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nextDayStartDate)!
+                    let secondDayWiD = WiD(id: 0, title: title, detail: detail, date: nextDayStartDate, start: midnightEndDateNextDay, finish: finishTime, duration: finishTime.timeIntervalSince(midnightEndDateNextDay))
+                    wiDService.insertWiD(wid: secondDayWiD)
+                }
+            }
+        }
+        isRecordingDone.toggle()
+    }
+
+    private func resetRecording() {
+        startTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+        finishTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+        duration = 0
+        wiD = WiD(id: 0, title: "", detail: "", date: Date(), start: Date(), finish: Date(), duration: 0)
+        isRecording.toggle()
+        isRecordingDone.toggle()
     }
 }
 

@@ -11,15 +11,17 @@ struct PieChartView: View {
     var data: [ChartData]
     var date: Date
     var isForOne: Bool
+    var isEmpty: Bool
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // 원형 차트
                 ForEach(0..<data.count, id: \.self) { index in
                     PieSlice(startAngle: getStartAngle(for: index), endAngle: getEndAngle(for: index))
                         .foregroundColor(data[index].color)
+                        
                 }
+//                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 // 중앙에 원
                 Circle()
@@ -39,12 +41,18 @@ struct PieChartView: View {
                             .font(.system(size: 8))
                             .position(x: geometry.size.width / 2 + x, y: geometry.size.width / 2 + y)
                     }
-                } else {
-                    // 날짜 텍스트
-                    Text(formatDate(date, format: "d"))
-                        .font(.system(size: geometry.size.width * 0.2, weight: .bold, design: .default))
-                        .foregroundColor(.black)
+                    
+                    Text("오후 | 오전")
                         .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
+                    
+                } else {                    
+                    if !isEmpty {
+                        // 날짜 텍스트
+                        Text(formatDate(date, format: "d"))
+                            .font(.system(size: geometry.size.width * 0.2, weight: .bold, design: .default))
+                            .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
+
+                    }
                 }
             }
         }

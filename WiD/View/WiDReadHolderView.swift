@@ -68,9 +68,10 @@ struct WiDReadHolderView: View {
                         self.selectedPicker = item
                     }
                 }
-//                .padding(.top)
             }
         }
+        .padding(.top)
+//        .background(Color("light_purple"))
     }
 }
 

@@ -60,7 +60,7 @@ struct WiDSearchView: View {
                                 .padding(.top)
                             }
                             .background(Color("light_gray"))
-                            .cornerRadius(10)
+                            .cornerRadius(5)
                             .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                         }
                         .padding(.top)

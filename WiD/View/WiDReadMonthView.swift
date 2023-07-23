@@ -109,7 +109,7 @@ struct WiDReadMonthView: View {
             }
             
             // 요일 표시
-            HStack(spacing: 0) {
+            HStack {
                 ForEach(0...6, id: \.self) { index in
                     let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
                     
@@ -124,53 +124,65 @@ struct WiDReadMonthView: View {
             LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
                 let firstDayOfMonth = getFirstDayOfMonth(for: currentDate)
                 let weekdayOffset = getWeekdayOffset(for: firstDayOfMonth)
-                
+
                 ForEach(0..<weekdayOffset, id: \.self) { _ in
-                    PieChartView(data: [], date: firstDayOfMonth, isForOne: false)
+                    PieChartView(data: [], date: firstDayOfMonth, isForOne: false, isEmpty: true)
                 }
-                
+
                 ForEach(getDaysOfMonth(for: currentDate), id: \.self) { day in
-                    PieChartView(data: fetchChartData(date: day), date: day, isForOne: false)
-                        .frame(width: 50, height: 50)
+                    PieChartView(data: fetchChartData(date: day), date: day, isForOne: false, isEmpty: false)
                 }
             }
-            .frame(maxWidth: .infinity)
-            
+
             // 제목 별 총합 표시
             VStack {
                 HStack {
                     Rectangle()
                         .fill(Color("light_gray"))
-                        .frame(width: 10, height: 20)
+                        .frame(width: 7, height: 20)
                     
                     Text("제목")
+                        .frame(width: 50)
                     
                     Text("최고")
+                        .frame(maxWidth: .infinity)
                     
                     Text("총합")
+                        .frame(width: 110)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
-                .cornerRadius(10)
+                .cornerRadius(5)
                 .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                 
-                ForEach(sortedTotalDurationDictionary, id: \.key) { (title, totalDuration) in
-                    if let bestDuration = bestDurationDictionary[title], let bestDay = bestDayDictionary[title] {
-                        HStack {
-                            Rectangle()
-                                .fill(Color(title))
-                                .frame(width: 10, height: 20)
-                            
-                            Text(titleDictionary[title] ?? "")
-                            
-                            Text(formatDuration(bestDuration, isClickedWiD: false) + " (\(formatDate(bestDay, format: "d일")))")
-                            
-                            Text(formatDuration(totalDuration, isClickedWiD: false))
-                        }
+                if sortedTotalDurationDictionary.isEmpty {
+                    Spacer()
+                    Text("표시할 데이터가 없습니다.")
+                        .foregroundColor(.gray)
                         .frame(maxWidth: .infinity)
-                        .background(Color("light_gray"))
-                        .cornerRadius(10)
-                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+
+                } else {
+                    ForEach(sortedTotalDurationDictionary, id: \.key) { (title, totalDuration) in
+                        if let bestDuration = bestDurationDictionary[title], let bestDay = bestDayDictionary[title] {
+                            HStack {
+                                Rectangle()
+                                    .fill(Color(title))
+                                    .frame(width: 7, height: 20)
+
+                                Text(titleDictionary[title] ?? "")
+                                    .frame(width: 50)
+
+                                Text(formatDuration(bestDuration, isClickedWiD: false) + " (\(formatDate(bestDay, format: "d일")))")
+                                    .frame(maxWidth: .infinity)
+
+                                Text(formatDuration(totalDuration, isClickedWiD: false))
+                                    .frame(width: 110)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .background(Color("light_gray"))
+                            .cornerRadius(5)
+                            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        }
                     }
                 }
                 Spacer()
