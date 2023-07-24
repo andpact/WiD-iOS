@@ -216,7 +216,6 @@ struct WiDView: View {
                 .padding(.horizontal)
             }
             .frame(maxHeight: .infinity)
-            .border(Color.black)
             .padding(.horizontal)
         }
         .navigationBarBackButtonHidden()

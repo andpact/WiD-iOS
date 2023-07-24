@@ -19,34 +19,47 @@ struct WiDSearchView: View {
             if wiDs.isEmpty {
                 Text("검색된 내용이 없습니다.")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .foregroundColor(.gray)
             } else {
-                VStack(alignment: .leading) {
+                ScrollView {
                     ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
                         if index == 0 || !Calendar.current.isDate(wiD.date, inSameDayAs: wiDs[index - 1].date) {
                             HStack {
                                 if Calendar.current.isDateInToday(wiD.date) {
                                     Text("오늘")
+                                    
+                                    Spacer()
                                 } else if Calendar.current.isDateInYesterday(wiD.date) {
                                     Text("어제")
+                                    
+                                    Spacer()
                                 } else {
                                     Text(formatDate(wiD.date, format: "yyyy.MM.dd"))
                                     
                                     Text(formatWeekday(wiD.date))
                                         .foregroundColor(Calendar.current.component(.weekday, from: wiD.date) == 1 ? .red : (Calendar.current.component(.weekday, from: wiD.date) == 7 ? .blue : .black))
+                                    
+                                    Spacer()
                                 }
                             }
-                            .padding(.top)
                         }
                         
                         NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                             VStack {
                                 HStack {
+                                    Rectangle()
+                                        .fill(Color(wiD.title))
+                                        .frame(width: 7, height: 20)
+                                    
                                     Text(titleDictionary[wiD.title] ?? "")
-                                        .frame(maxWidth: .infinity)
+                                        .frame(width: 30)
+                                    
                                     Text(formatTime(wiD.start, format: "HH:mm"))
                                         .frame(maxWidth: .infinity)
+                                    
                                     Text(formatTime(wiD.finish, format: "HH:mm"))
                                         .frame(maxWidth: .infinity)
+                                    
                                     Text(formatDuration(wiD.duration, isClickedWiD: false))
                                         .frame(maxWidth: .infinity)
                                 }
@@ -55,19 +68,18 @@ struct WiDSearchView: View {
                                     Text("세부 사항")
                                     
                                     Text(wiD.detail)
-                                        .frame(maxWidth: .infinity)
+                                    
+                                    Spacer()
                                 }
-                                .padding(.top)
                             }
+                            .foregroundColor(.black)
                             .background(Color("light_gray"))
                             .cornerRadius(5)
-                            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                            .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                         }
-                        .padding(.top)
                     }
-                    Spacer()
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                Spacer()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -77,7 +89,7 @@ struct WiDSearchView: View {
         }
     }
     
-    func searchTextDidChange(isEditing: Bool) {
+    private func searchTextDidChange(isEditing: Bool) {
         wiDs = wiDService.selectWiDsByDetail(detail: searchText)
     }
 }

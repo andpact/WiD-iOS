@@ -35,7 +35,7 @@ struct WiDCreateView: View {
             VStack {
                 HStack {
                     Text("WiD")
-                        .font(.system(size: 30))
+                        .font(.custom("Acme-Regular", size: 30))
                     
                     Spacer()
 

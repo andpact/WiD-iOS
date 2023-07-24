@@ -24,6 +24,7 @@
 		EA663F0C2A5E74E200B51844 /* TitleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA663F0B2A5E74E200B51844 /* TitleUtil.swift */; };
 		EA70DD742A59089D00B4B167 /* WiDReadDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA70DD732A59089D00B4B167 /* WiDReadDayView.swift */; };
 		EAC5D7212A56A76E00FA2499 /* WiDCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */; };
+		EADCDC472A6DF98100D8AED2 /* Acme-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */; };
 		EADF79162A583C8E000753B2 /* WiDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADF79152A583C8E000753B2 /* WiDService.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,8 @@
 		EA663F0B2A5E74E200B51844 /* TitleUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleUtil.swift; sourceTree = "<group>"; };
 		EA70DD732A59089D00B4B167 /* WiDReadDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadDayView.swift; sourceTree = "<group>"; };
 		EAC5D7202A56A76E00FA2499 /* WiDCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDCreateView.swift; sourceTree = "<group>"; };
+		EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Acme-Regular.ttf"; sourceTree = "<group>"; };
+		EADCDC482A6DF9C100D8AED2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EADF79152A583C8E000753B2 /* WiDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,6 +130,8 @@
 		EA60B8042A56991700B49641 /* WiD */ = {
 			isa = PBXGroup;
 			children = (
+				EADCDC482A6DF9C100D8AED2 /* Info.plist */,
+				EADCDC452A6DF95100D8AED2 /* Font */,
 				EA0458242A625CB00065B98E /* Util */,
 				EADF79172A583CCE000753B2 /* Service */,
 				EAC5D7272A56AAB000FA2499 /* View */,
@@ -174,6 +179,14 @@
 				EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		EADCDC452A6DF95100D8AED2 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */,
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 		EADF79172A583CCE000753B2 /* Service */ = {
@@ -289,6 +302,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA60B80D2A56991800B49641 /* Preview Assets.xcassets in Resources */,
+				EADCDC472A6DF98100D8AED2 /* Acme-Regular.ttf in Resources */,
 				EA60B80A2A56991800B49641 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -488,6 +502,7 @@
 				DEVELOPMENT_TEAM = 6HAZ636CW5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WiD/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -517,6 +532,7 @@
 				DEVELOPMENT_TEAM = 6HAZ636CW5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WiD/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
