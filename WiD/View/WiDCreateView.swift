@@ -11,13 +11,20 @@ struct WiDCreateView: View {
     
     private let wiDService = WiDService()
     
-    private let date: Date = Date()
+    @State private var date: Date = Date()
     @State private var title: String = titleArray[0]
     @State private var titleIndex: Int = 0
     private let detail: String = ""
     @State private var startTime: Date = Date()
     @State private var finishTime: Date = Date()
     @State private var duration: TimeInterval = 0
+    
+    @State private var timerLeft = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+    @State private var timeLeftIndex: Int = 0
+    private let timeLeftTitle: [String] = ["오늘", "이번 주", "이번 달", "올해"]
+    private let timeLeftMiddle: [String] = ["이", "가", "이", "가"]
+    @State private var timeLeftPercentage: String = ""
+    @State private var timeLeftEnd: String = ""
     
     @State private var startTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var finishTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -32,10 +39,24 @@ struct WiDCreateView: View {
     
     var body: some View {
         VStack {
+            HStack {
+                Text(timeLeftTitle[timeLeftIndex])
+                    .bold()
+                    .padding(.trailing, -8)
+                
+                Text(timeLeftMiddle[timeLeftIndex])
+                
+                Text(timeLeftPercentage)
+                    .bold()
+                
+                Text(timeLeftEnd)
+            }
+            
             VStack {
                 HStack {
                     Text("WiD")
                         .font(.custom("Acme-Regular", size: 30))
+                        .padding(.top)
                     
                     Spacer()
 
@@ -179,10 +200,126 @@ struct WiDCreateView: View {
             }
             .padding(.horizontal)
         }
-        .onReceive(startTimer) { input in
-            startTime = Date()
+        .onAppear() {
+            timeLeftEnd = "남았습니다."
+            
+            let currentTime = Date()
+            let calendar = Calendar.current
+            
+            let startOfDay = calendar.startOfDay(for: currentTime)
+            let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
+            let totalTime = endOfDay.timeIntervalSince(calendar.startOfDay(for: currentTime))
+            let remainingTime = endOfDay.timeIntervalSince(currentTime)
+            let percentage = Double(remainingTime / totalTime) * 100
+            if remainingTime < 1800 { // 30 minutes = 1800 seconds
+                timeLeftPercentage = "곧"
+                timeLeftEnd = "지나갑니다."
+            } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
+                timeLeftPercentage = String(format: "%.0f%%", percentage)
+            } else {
+                timeLeftPercentage = String(format: "%.1f%%", percentage)
+            }
         }
-        .onReceive(finishTimer) { input in
+        .onReceive(timerLeft) { _ in
+            timeLeftIndex = (timeLeftIndex + 1) % timeLeftTitle.count
+            timeLeftEnd = "남았습니다."
+            
+            let currentTime = Date()
+            let calendar = Calendar.current
+
+            switch timeLeftIndex {
+            case 0: // 오늘
+                let startOfDay = calendar.startOfDay(for: currentTime)
+                let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
+                
+                let totalTime = endOfDay.timeIntervalSince(calendar.startOfDay(for: currentTime))
+                let remainingTime = endOfDay.timeIntervalSince(currentTime)
+                let percentage = Double(remainingTime / totalTime) * 100
+                if remainingTime < 1800 { // 30 minutes = 1800 seconds
+                    timeLeftPercentage = "곧"
+                    timeLeftEnd = "지나갑니다."
+                } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
+                    timeLeftPercentage = String(format: "%.0f%%", percentage)
+                } else {
+                    timeLeftPercentage = String(format: "%.1f%%", percentage)
+                }
+            case 1: // 이번 주
+                let mondayWeekday = 2 // Monday is represented by 2 in `weekday` component
+
+                // Find the closest Monday
+                var startOfWeek = currentTime
+                while calendar.component(.weekday, from: startOfWeek) != mondayWeekday {
+                    startOfWeek = calendar.date(byAdding: .day, value: -1, to: startOfWeek)!
+                }
+                startOfWeek = calendar.startOfDay(for: startOfWeek)
+
+                // Find the closest Sunday
+                var endOfWeek = currentTime
+                while calendar.component(.weekday, from: endOfWeek) != 1 { // Sunday is represented by 1 in `weekday` component
+                    endOfWeek = calendar.date(byAdding: .day, value: 1, to: endOfWeek)!
+                }
+                endOfWeek = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: endOfWeek)!
+
+                let totalTime = endOfWeek.timeIntervalSince(startOfWeek)
+                let remainingTime = endOfWeek.timeIntervalSince(currentTime)
+                let percentage = Double(remainingTime / totalTime) * 100
+                if remainingTime < 1800 { // 30 minutes = 1800 seconds
+                    timeLeftPercentage = "곧"
+                    timeLeftEnd = "지나갑니다."
+                } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
+                    timeLeftPercentage = String(format: "%.0f%%", percentage)
+                } else {
+                    timeLeftPercentage = String(format: "%.1f%%", percentage)
+                }
+            case 2: // 이번 달
+
+                // Get the first day of the current month with time set to 00:00:00
+                let startOfMonth = calendar.startOfDay(for: calendar.date(from: calendar.dateComponents([.year, .month], from: currentTime))!)
+
+                // Get the last day of the current month with time set to 23:59:59
+                let lastDayComponents = DateComponents(year: calendar.component(.year, from: currentTime), month: calendar.component(.month, from: currentTime) + 1, day: 0)
+                let endOfMonth = calendar.startOfDay(for: calendar.date(from: lastDayComponents)!.addingTimeInterval(-1))
+                
+                let totalTime = endOfMonth.timeIntervalSince(startOfMonth)
+                let remainingTime = endOfMonth.timeIntervalSince(currentTime)
+                let percentage = Double(remainingTime / totalTime) * 100
+                if remainingTime < 1800 { // 30 minutes = 1800 seconds
+                    timeLeftPercentage = "곧"
+                    timeLeftEnd = "지나갑니다."
+                } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
+                    timeLeftPercentage = String(format: "%.0f%%", percentage)
+                } else {
+                    timeLeftPercentage = String(format: "%.1f%%", percentage)
+                }
+            case 3: // 올해
+
+                // Get the first day of the current year with time set to 00:00:00
+                let startOfYear = calendar.startOfDay(for: calendar.date(from: calendar.dateComponents([.year], from: currentTime))!)
+
+                // Get the last day of the current year with time set to 23:59:59
+                let lastDayComponents = DateComponents(year: calendar.component(.year, from: currentTime) + 1, month: 0, day: 0)
+                let endOfYear = calendar.startOfDay(for: calendar.date(from: lastDayComponents)!.addingTimeInterval(-1))
+
+                let totalTime = endOfYear.timeIntervalSince(startOfYear)
+                let remainingTime = endOfYear.timeIntervalSince(currentTime)
+                let percentage = Double(remainingTime / totalTime) * 100
+                if remainingTime < 1800 { // 30 minutes = 1800 seconds
+                    timeLeftPercentage = "곧"
+                    timeLeftEnd = "지나갑니다."
+                } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
+                    timeLeftPercentage = String(format: "%.0f%%", percentage)
+                } else {
+                    timeLeftPercentage = String(format: "%.1f%%", percentage)
+                }
+            default:
+                break
+            }
+        }
+        .onReceive(startTimer) { _ in
+            startTime = Date()
+            date = Date() // 날짜도 갱신되어야 함.
+        }
+        .onReceive(finishTimer) { _ in
             finishTime = Date()
             duration = finishTime.timeIntervalSince(startTime)
             
@@ -199,7 +336,7 @@ struct WiDCreateView: View {
             switch (showMinAlert, showMaxAlert) {
             case (true, false):
                 return Alert(
-                    title: Text("WiD 기록 종료"),
+                    title: Text("기록 종료"),
                     message: Text("1분 이상의 WiD를 기록해주세요."),
                     dismissButton: .default(Text("확인")) {
                         showMinAlert = false
@@ -207,7 +344,7 @@ struct WiDCreateView: View {
                 )
             case (false, true):
                 return Alert(
-                    title: Text("WiD 기록 종료"),
+                    title: Text("기록 종료"),
                     message: Text("12시간이 초과되어 WiD가 자동으로 등록되었습니다."),
                     dismissButton: .default(Text("확인")) {
                         showMaxAlert = false

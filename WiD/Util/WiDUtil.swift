@@ -24,6 +24,11 @@ struct WiDView: View {
     @State private var inputText: String = ""
     @State private var isExpanded: Bool = false
     
+    var inputTextCount: String {
+        let count = inputText.count
+        return "\(count)/90"
+    }
+    
     @State private var isEditing: Bool = false
     
     private let clickedWiDId: Int
@@ -41,7 +46,8 @@ struct WiDView: View {
                 VStack {
                     HStack {
                         Text("WiD")
-                            .font(.system(size: 30))
+                            .font(.custom("Acme-Regular", size: 30))
+                            .padding(.top)
                         
                         Spacer()
 
@@ -139,14 +145,14 @@ struct WiDView: View {
                                     .imageScale(.large)
                                     .frame(width: 25)
                                 
-                                Text("세부 사항")
+                                Text("설명")
                                     .font(.system(size: 25))
                                     .foregroundColor(.black)
                                 
                                 Spacer()
                                 
                                 Button(action: {
-                                    if isEditing {
+                                    if isEditing && inputText.count <= 90 {
                                         wiDService.updateWiD(withID: clickedWiDId, detail: inputText)
                                     }
                                     isEditing.toggle()
@@ -154,16 +160,25 @@ struct WiDView: View {
                                     Text(isEditing ? "완료" : "수정")
                                         .font(.system(size: 20))
                                 }
+                                .disabled(isEditing && 90 < inputText.count)
                             }
                             
                             if !isEditing {
-                                Text(inputText == "" ? "세부 사항 입력.." : inputText) // 디테일 텍스트 뷰
-                                    .frame(maxWidth: .infinity)
-                                    .border(Color.gray)
+                                Text(inputText == "" ? "설명 추가.." : inputText) // 디테일 텍스트 뷰
+                                    .padding(5)
+                                    .padding(.top, 4)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                    .border(.gray)
                             } else {
-                                TextField("세부 사항 입력..", text: $inputText) // 디테일 텍스트 필드
-                                    .border(Color.gray)
+                                TextEditor(text: $inputText) // 디테일 텍스트 에디터
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                    .border(.gray)
                             }
+                            
+                            Text(inputTextCount)
+                                .foregroundColor(inputText.count > 90 ? .red : .gray)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .padding(.top, -5)
                         }
                         .padding(.horizontal)
                         .padding(.bottom)
@@ -171,6 +186,11 @@ struct WiDView: View {
                     
                     Button(action: {
                         isExpanded.toggle()
+                        
+                        if (isEditing) {
+                            inputText = clickedWiD?.detail ?? ""
+                        }
+                        
                         isEditing = false
                     }) {
                         Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
@@ -180,7 +200,7 @@ struct WiDView: View {
                     .padding(.bottom)
                 }
                 .background(Color("light_purple"))
-                .cornerRadius(10)
+                .cornerRadius(5)
                 .padding(.horizontal)
 
 
@@ -216,7 +236,7 @@ struct WiDView: View {
                 .padding(.horizontal)
             }
             .frame(maxHeight: .infinity)
-            .padding(.horizontal)
+            .padding()
         }
         .navigationBarBackButtonHidden()
     }

@@ -80,10 +80,12 @@ struct WiDReadDayView: View {
                         
                         Text("제목")
                             .frame(width: 30)
+                            .border(.black)
                         
                         Spacer()
                         
-                        Text("총합")
+                        Text("총합 (%)")
+                            .border(.black)
                         
                         Spacer()
                     }
@@ -93,15 +95,36 @@ struct WiDReadDayView: View {
                     .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                     
                     if sortedTotalDurationDictionary.isEmpty {
-                        VStack {
-                            Text("표시할")
-
-                            Text("데이터가")
-
-                            Text("없습니다.")
+//                        VStack {
+//                            Text("표시할")
+//
+//                            Text("데이터가")
+//
+//                            Text("없습니다.")
+//                        }
+//                        .foregroundColor(.gray)
+//                        .frame(maxHeight: .infinity)
+                        
+                        HStack {
+                            Rectangle()
+                                .fill(.red)
+                                .frame(width: 7, height: 20)
+                            
+                            Text("공부")
+                                .frame(width: 30)
+                                .border(.black)
+                            
+                            Spacer()
+                            
+                            Text("99시간 99분(99%)")
+                                .border(.black)
+                            
+                            Spacer()
                         }
-                        .foregroundColor(.gray)
-                        .padding(.top, 45)
+                        .frame(maxWidth: .infinity)
+                        .background(Color("light_gray"))
+                        .cornerRadius(5)
+                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                     } else {
                         ScrollView {
@@ -125,11 +148,12 @@ struct WiDReadDayView: View {
                                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                             }
                         }
-                        .frame(maxHeight: 145)
                     }
                 }
                 .frame(maxWidth: 155)
+//                .frame(maxWidth: .infinity)
             }
+            .frame(maxHeight: 180)
             
             // 각 WiD 표시
             VStack {
@@ -137,24 +161,31 @@ struct WiDReadDayView: View {
                     Rectangle()
                         .fill(Color("light_gray"))
                         .frame(width: 7, height: 20)
+                        .border(.black)
 
                     Text("순서")
                         .frame(width: 30)
+                        .border(.black)
 
                     Text("제목")
                         .frame(width: 30)
+                        .border(.black)
 
                     Text("시작")
-                        .frame(width: 46)
+                        .frame(width: 50)
+                        .border(.black)
 
                     Text("종료")
-                        .frame(width: 46)
+                        .frame(width: 50)
+                        .border(.black)
 
-                    Text("경과")
+                    Text("경과 (%)")
                         .frame(maxWidth: .infinity)
+                        .border(.black)
 
-                    Text("자세히")
-                        .frame(width: 45)
+                    Text("설명")
+                        .frame(width: 35)
+                        .border(.black)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
@@ -162,9 +193,45 @@ struct WiDReadDayView: View {
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 if wiDs.isEmpty {
-                    Spacer()
-                    Text("표시할 WiD가 없습니다.")
-                        .foregroundColor(.gray)
+//                    Spacer()
+//                    Text("표시할 WiD가 없습니다.")
+//                        .foregroundColor(.gray)
+                    
+                    HStack {
+                        Rectangle()
+                            .fill(.red)
+                            .frame(width: 7, height: 20)
+                            .border(.black)
+
+                        Text("10")
+                            .frame(width: 30)
+                            .border(.black)
+
+                        Text("공부")
+                            .frame(width: 30)
+                            .border(.black)
+
+                        Text("99:99")
+                            .frame(width: 50)
+                            .border(.black)
+
+                        Text("99:99")
+                            .frame(width: 50)
+                            .border(.black)
+
+                        Text("99시간 99분 (99%)")
+                            .frame(maxWidth: .infinity)
+                            .border(.black)
+
+                        Text("99")
+                            .frame(width: 35)
+                            .border(.black)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color("light_gray"))
+                    .cornerRadius(5)
+                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                    
                 } else {
                     ScrollView {
                         ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
@@ -181,16 +248,16 @@ struct WiDReadDayView: View {
                                         .frame(width: 30)
 
                                     Text(formatTime(wiD.start, format: "HH:mm"))
-                                        .frame(width: 46)
+                                        .frame(width: 50)
 
                                     Text(formatTime(wiD.finish, format: "HH:mm"))
-                                        .frame(width: 46)
+                                        .frame(width: 50)
 
                                     Text(formatDuration(wiD.duration, isClickedWiD: false))
                                         .frame(maxWidth: .infinity)
 
-                                    Text("(\(wiD.detail.count))")
-                                        .frame(width: 45)
+                                    Text("\(wiD.detail.count)")
+                                        .frame(width: 35)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .foregroundColor(.black)

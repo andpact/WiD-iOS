@@ -17,7 +17,7 @@ struct WiDSearchView: View {
             SearchBar(text: $searchText, onEditingChanged: searchTextDidChange)
             
             if wiDs.isEmpty {
-                Text("검색된 내용이 없습니다.")
+                Text("검색된 WiD가 없습니다.")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .foregroundColor(.gray)
             } else {
@@ -65,7 +65,7 @@ struct WiDSearchView: View {
                                 }
                                 
                                 HStack {
-                                    Text("세부 사항")
+                                    Text("설명")
                                     
                                     Text(wiD.detail)
                                     
@@ -100,7 +100,7 @@ struct SearchBar: View {
 
     var body: some View {
         HStack {
-            TextField("세부 사항으로 검색..", text: $text, onEditingChanged: onEditingChanged)
+            TextField("설명으로 검색..", text: $text, onEditingChanged: onEditingChanged)
                 .padding(8)
                 .background(Color(.systemGray5))
                 .cornerRadius(8)

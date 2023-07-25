@@ -139,10 +139,10 @@ struct WiDReadWeekView: View {
                     Text("제목")
                         .frame(width: 50)
                     
-                    Text("최고")
+                    Text("최고 (%)")
                         .frame(maxWidth: .infinity)
                     
-                    Text("총합")
+                    Text("총합 (%)")
                         .frame(width: 110)
                     
                 }
