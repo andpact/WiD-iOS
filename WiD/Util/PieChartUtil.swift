@@ -42,8 +42,10 @@ struct PieChartView: View {
                             .position(x: geometry.size.width / 2 + x, y: geometry.size.width / 2 + y)
                     }
                     
-                    Text("오후 | 오전")
+                    Text("WiD")
+                        .font(.custom("Acme-Regular", size: 30))
                         .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
+                        .foregroundColor(data.count == 1 ? .gray : .black)
                     
                 } else {                    
                     if !isEmpty {
@@ -116,8 +118,7 @@ func fetchChartData(date: Date) -> [ChartData] {
 
     // 비어 있는 시간대에 대한 ChartData 생성
     if wiDs.isEmpty {
-//        let noDataChartData = ChartData(value: .degrees(360.0), color: .gray) // 색상은 필요에 따라 변경 가능
-        let noDataChartData = ChartData(value: .degrees(360.0), color: Color("light_gray")) // 색상은 필요에 따라 변경 가능
+        let noDataChartData = ChartData(value: .degrees(360.0), color: Color("light_gray"))
         chartDataArray.append(noDataChartData)
     } else {
         for wid in wiDs {
@@ -127,7 +128,6 @@ func fetchChartData(date: Date) -> [ChartData] {
             // 비어 있는 시간대의 엔트리 추가
             if startMinutesValue > startMinutes {
                 let emptyMinutes = startMinutesValue - startMinutes
-//                let emptyChartData = ChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: .gray)
                 let emptyChartData = ChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
                 chartDataArray.append(emptyChartData)
             }
@@ -140,15 +140,13 @@ func fetchChartData(date: Date) -> [ChartData] {
             // 시작 시간 업데이트
             startMinutes = startMinutesValue + durationMinutes
         }
+        
+        // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
+        if startMinutes < 24 * 60 {
+            let emptyMinutes = 24 * 60 - startMinutes
+            let emptyChartData = ChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
+            chartDataArray.append(emptyChartData)
+        }
     }
-
-    // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
-    if startMinutes < 24 * 60 {
-        let emptyMinutes = 24 * 60 - startMinutes
-//        let emptyChartData = ChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: .gray)
-        let emptyChartData = ChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
-        chartDataArray.append(emptyChartData)
-    }
-
     return chartDataArray
 }

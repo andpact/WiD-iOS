@@ -262,7 +262,8 @@ struct WiDCreateView: View {
 
                 let totalTime = endOfWeek.timeIntervalSince(startOfWeek)
                 let remainingTime = endOfWeek.timeIntervalSince(currentTime)
-                let percentage = Double(remainingTime / totalTime) * 100
+//                let percentage = Double(remainingTime / totalTime) * 100 // TimeInterval 객체는 Double 타입임.
+                let percentage = remainingTime / totalTime * 100
                 if remainingTime < 1800 { // 30 minutes = 1800 seconds
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."

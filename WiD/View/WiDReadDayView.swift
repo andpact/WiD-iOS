@@ -95,40 +95,43 @@ struct WiDReadDayView: View {
                     .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                     
                     if sortedTotalDurationDictionary.isEmpty {
-//                        VStack {
-//                            Text("표시할")
-//
-//                            Text("데이터가")
-//
-//                            Text("없습니다.")
-//                        }
-//                        .foregroundColor(.gray)
-//                        .frame(maxHeight: .infinity)
-                        
-                        HStack {
-                            Rectangle()
-                                .fill(.red)
-                                .frame(width: 7, height: 20)
-                            
-                            Text("공부")
-                                .frame(width: 30)
-                                .border(.black)
-                            
-                            Spacer()
-                            
-                            Text("99시간 99분(99%)")
-                                .border(.black)
-                            
-                            Spacer()
+                        VStack {
+                            Text("표시할")
+
+                            Text("데이터가")
+
+                            Text("없습니다.")
                         }
-                        .frame(maxWidth: .infinity)
-                        .background(Color("light_gray"))
-                        .cornerRadius(5)
-                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        .foregroundColor(.gray)
+                        .frame(maxHeight: .infinity)
+                        
+//                        HStack {
+//                            Rectangle()
+//                                .fill(.red)
+//                                .frame(width: 7, height: 20)
+//
+//                            Text("공부")
+//                                .frame(width: 30)
+//                                .border(.black)
+//
+//                            Spacer()
+//
+//                            Text("99시간 99분(99%)")
+//                                .border(.black)
+//
+//                            Spacer()
+//                        }
+//                        .frame(maxWidth: .infinity)
+//                        .background(Color("light_gray"))
+//                        .cornerRadius(5)
+//                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                     } else {
                         ScrollView {
                             ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
+                                let totalDurationOfDay = 60 * 60 * 24
+                                let percentage = (Double(duration) / Double(totalDurationOfDay)) * 100
+                                
                                 HStack {
                                     Rectangle()
                                         .fill(Color(title))
@@ -139,7 +142,7 @@ struct WiDReadDayView: View {
                                     
                                     Spacer()
                                     
-                                    Text(formatDuration(duration, isClickedWiD: false))
+                                    Text(formatDuration(duration, isClickedWiD: false) + " (\(percentage))")
                                     
                                     Spacer()
                                 }
@@ -193,50 +196,54 @@ struct WiDReadDayView: View {
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 if wiDs.isEmpty {
-//                    Spacer()
-//                    Text("표시할 WiD가 없습니다.")
-//                        .foregroundColor(.gray)
+                    Spacer()
+                    Text("표시할 WiD가 없습니다.")
+                        .foregroundColor(.gray)
                     
-                    HStack {
-                        Rectangle()
-                            .fill(.red)
-                            .frame(width: 7, height: 20)
-                            .border(.black)
-
-                        Text("10")
-                            .frame(width: 30)
-                            .border(.black)
-
-                        Text("공부")
-                            .frame(width: 30)
-                            .border(.black)
-
-                        Text("99:99")
-                            .frame(width: 50)
-                            .border(.black)
-
-                        Text("99:99")
-                            .frame(width: 50)
-                            .border(.black)
-
-                        Text("99시간 99분 (99%)")
-                            .frame(maxWidth: .infinity)
-                            .border(.black)
-
-                        Text("99")
-                            .frame(width: 35)
-                            .border(.black)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .background(Color("light_gray"))
-                    .cornerRadius(5)
-                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+//                    HStack {
+//                        Rectangle()
+//                            .fill(.red)
+//                            .frame(width: 7, height: 20)
+//                            .border(.black)
+//
+//                        Text("10")
+//                            .frame(width: 30)
+//                            .border(.black)
+//
+//                        Text("공부")
+//                            .frame(width: 30)
+//                            .border(.black)
+//
+//                        Text("99:99")
+//                            .frame(width: 50)
+//                            .border(.black)
+//
+//                        Text("99:99")
+//                            .frame(width: 50)
+//                            .border(.black)
+//
+//                        Text("99시간 99분 (99%)")
+//                            .frame(maxWidth: .infinity)
+//                            .border(.black)
+//
+//                        Text("99")
+//                            .frame(width: 35)
+//                            .border(.black)
+//                    }
+//                    .frame(maxWidth: .infinity)
+//                    .background(Color("light_gray"))
+//                    .cornerRadius(5)
+//                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                     
                 } else {
                     ScrollView {
                         ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
                             NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                                 HStack {
+                                    let totalDurationOfDay = 24 * 60 * 60
+                                    
+                                    let percentage = (Double(wiD.duration) / Double(totalDurationOfDay)) * 100
+                                    
                                     Rectangle()
                                         .fill(Color(wiD.title))
                                         .frame(width: 7, height: 20)
@@ -253,7 +260,7 @@ struct WiDReadDayView: View {
                                     Text(formatTime(wiD.finish, format: "HH:mm"))
                                         .frame(width: 50)
 
-                                    Text(formatDuration(wiD.duration, isClickedWiD: false))
+                                    Text(formatDuration(wiD.duration, isClickedWiD: false) + " (\(percentage))")
                                         .frame(maxWidth: .infinity)
 
                                     Text("\(wiD.detail.count)")

@@ -14,12 +14,12 @@ struct WiDReadMonthView: View {
     
     @State private var currentDate: Date = getFirstDayOfMonth(for: Date()) {
         didSet {
-            let daysOfMonth = getDaysOfMonth(for: currentDate)
+            let daysOfMonthArray = getDaysOfMonthArray(for: currentDate)
 
             var allWiDs: [WiD] = []
 
             // Loop through the dates for each day of the month
-            for date in daysOfMonth {
+            for date in daysOfMonthArray {
                 let wiDsForDate = wiDService.selectWiDsByDate(date: date)
                 allWiDs.append(contentsOf: wiDsForDate)
             }
@@ -129,7 +129,7 @@ struct WiDReadMonthView: View {
                     PieChartView(data: [], date: firstDayOfMonth, isForOne: false, isEmpty: true)
                 }
 
-                ForEach(getDaysOfMonth(for: currentDate), id: \.self) { day in
+                ForEach(getDaysOfMonthArray(for: currentDate), id: \.self) { day in
                     PieChartView(data: fetchChartData(date: day), date: day, isForOne: false, isEmpty: false)
                 }
             }
@@ -142,13 +142,13 @@ struct WiDReadMonthView: View {
                         .frame(width: 7, height: 20)
                     
                     Text("제목")
-                        .frame(width: 50)
+                        .frame(width: 30)
                     
                     Text("최고 (%)")
                         .frame(maxWidth: .infinity)
                     
                     Text("총합 (%)")
-                        .frame(width: 110)
+                        .frame(maxWidth: .infinity)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
@@ -165,19 +165,24 @@ struct WiDReadMonthView: View {
                     ScrollView {
                         ForEach(sortedTotalDurationDictionary, id: \.key) { (title, totalDuration) in
                             if let bestDuration = bestDurationDictionary[title], let bestDay = bestDayDictionary[title] {
+                                
+                                let totalDurationOfWeek = 60 * 60 * 24 * 7 * numberOfDaysInMonth(for: currentDate)
+                                let bestDurationPercentage = (Double(bestDuration) / Double(totalDurationOfWeek)) * 100
+                                let totalDurationPercentage = (Double(totalDuration) / Double(totalDurationOfWeek)) * 100
+                                
                                 HStack {
                                     Rectangle()
                                         .fill(Color(title))
                                         .frame(width: 7, height: 20)
 
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 50)
+                                        .frame(width: 30)
 
-                                    Text(formatDuration(bestDuration, isClickedWiD: false) + " (\(formatDate(bestDay, format: "d일")))")
+                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
                                         .frame(maxWidth: .infinity)
-
-                                    Text(formatDuration(totalDuration, isClickedWiD: false))
-                                        .frame(width: 110)
+                                    
+                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
+                                        .frame(maxWidth: .infinity)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))
@@ -194,7 +199,7 @@ struct WiDReadMonthView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
         .onAppear() {
-            let daysOfMonth = getDaysOfMonth(for: currentDate)
+            let daysOfMonth = getDaysOfMonthArray(for: currentDate)
 
             var allWiDs: [WiD] = []
 

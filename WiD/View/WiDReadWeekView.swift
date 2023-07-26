@@ -135,21 +135,43 @@ struct WiDReadWeekView: View {
                     Rectangle()
                         .fill(Color("light_gray"))
                         .frame(width: 7, height: 20)
-                    
+
                     Text("제목")
-                        .frame(width: 50)
-                    
+                        .frame(width: 30)
+
                     Text("최고 (%)")
                         .frame(maxWidth: .infinity)
-                    
+
                     Text("총합 (%)")
-                        .frame(width: 110)
-                    
+                        .frame(maxWidth: .infinity)
+
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
                 .cornerRadius(5)
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                
+//                HStack {
+//                    Rectangle()
+//                        .fill(.red)
+//                        .frame(width: 7, height: 20)
+//
+//                    Text("공부")
+//                        .frame(width: 30)
+//                        .border(.black)
+//
+//
+//                    Text("99일/99시간 99분 (99.9)")
+//                        .border(.black)
+//
+//
+//                    Text("999시간 99분 (99.9)")
+//                        .border(.black)
+//                }
+//                .frame(maxWidth: .infinity)
+//                .background(Color("light_gray"))
+//                .cornerRadius(5)
+//                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                 
                 if sortedTotalDurationDictionary.isEmpty {
                     Spacer()
@@ -161,19 +183,24 @@ struct WiDReadWeekView: View {
                     ScrollView {
                         ForEach(sortedTotalDurationDictionary, id: \.key) { (title, totalDuration) in
                             if let bestDuration = bestDurationDictionary[title], let bestDay = bestDayDictionary[title] {
+                                
+                                let totalDurationOfWeek = 60 * 60 * 24 * 7
+                                let bestDurationPercentage = (Double(bestDuration) / Double(totalDurationOfWeek)) * 100
+                                let totalDurationPercentage = (Double(totalDuration) / Double(totalDurationOfWeek)) * 100
+                                
                                 HStack {
                                     Rectangle()
                                         .fill(Color(title))
                                         .frame(width: 7, height: 20)
 
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 50)
-
-                                    Text(formatDuration(bestDuration, isClickedWiD: false) + " (\(formatDate(bestDay, format: "d일")))")
+                                        .frame(width: 30)
+                                    
+                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
                                         .frame(maxWidth: .infinity)
-
-                                    Text(formatDuration(totalDuration, isClickedWiD: false))
-                                        .frame(width: 110)
+                                    
+                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
+                                        .frame(maxWidth: .infinity)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))

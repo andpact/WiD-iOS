@@ -57,8 +57,8 @@ func getFirstDayOfMonth(for date: Date) -> Date {
     return firstDayOfMonth
 }
 
-// 해당 날짜가 속한 달의 모든 날짜 반환
-func getDaysOfMonth(for date: Date) -> [Date] {
+// 해당 날짜가 속한 달의 모든 날짜의 배열 반환
+func getDaysOfMonthArray(for date: Date) -> [Date] {
     let calendar = Calendar.current
     let range = calendar.range(of: .day, in: .month, for: date)!
     let days = range.map { day -> Date in
@@ -72,6 +72,12 @@ func getWeekdayOffset(for date: Date) -> Int {
     let calendar = Calendar.current
     let weekday = calendar.component(.weekday, from: date)
     return (weekday + 6) % 7
+}
+
+func numberOfDaysInMonth(for date: Date) -> Int {
+    let calendar = Calendar.current
+    let monthRange = calendar.range(of: .day, in: .month, for: date)!
+    return monthRange.count
 }
 
 func formatTime(_ date: Date, format: String) -> String {
