@@ -185,7 +185,9 @@ struct WiDView: View {
                     }
                     
                     Button(action: {
-                        isExpanded.toggle()
+                        withAnimation {
+                            isExpanded.toggle()
+                        }
                         
                         if (isEditing) {
                             inputText = clickedWiD?.detail ?? ""
@@ -199,16 +201,16 @@ struct WiDView: View {
                     }
                     .padding(.bottom)
                 }
-                .background(Color("light_purple"))
+                .background(Color("light_gray"))
                 .cornerRadius(5)
                 .padding(.horizontal)
-
+                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 HStack {
                     Button(action: {
                         // "다운로드" 버튼이 클릭되었을 때 실행될 동작
                     }) {
-                        Image(systemName: "arrow.down.to.line")
+                        Image(systemName: "photo.on.rectangle")
                             .renderingMode(.original)
                             .imageScale(.large)
                     }
@@ -234,6 +236,7 @@ struct WiDView: View {
                     .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal)
+                .padding(.top)
             }
             .frame(maxHeight: .infinity)
             .padding()

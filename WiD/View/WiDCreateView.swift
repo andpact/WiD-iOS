@@ -169,9 +169,10 @@ struct WiDCreateView: View {
                 .padding(.bottom)
 
             }
-            .background(Color("light_purple"))
+            .background(Color("light_gray"))
             .cornerRadius(5)
             .padding(.horizontal)
+            .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
             HStack {
 //                시작 버튼
@@ -199,6 +200,7 @@ struct WiDCreateView: View {
                 .disabled(!isRecording || !isRecordingDone)
             }
             .padding(.horizontal)
+            .padding(.top)
         }
         .onAppear() {
             timeLeftEnd = "남았습니다."
@@ -376,7 +378,9 @@ struct WiDCreateView: View {
         if titleIndex < 0 {
             titleIndex = titleArray.count - 1
         }
-        title = titleArray[titleIndex]
+        withAnimation {
+            title = titleArray[titleIndex]
+        }
     }
 
     private func increaseTitle() {
@@ -384,7 +388,9 @@ struct WiDCreateView: View {
         if titleIndex >= titleArray.count {
             titleIndex = 0
         }
-        title = titleArray[titleIndex]
+        withAnimation {
+            title = titleArray[titleIndex]
+        }
     }
     
     private func startRecording() {

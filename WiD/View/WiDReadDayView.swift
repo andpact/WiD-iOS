@@ -48,24 +48,39 @@ struct WiDReadDayView: View {
                 .frame(maxWidth: .infinity)
                 
                 Button(action: {
-                    currentDate = Date()
+                    
                 }) {
-                    Text("현재")
+                    Image(systemName: "photo.on.rectangle")
                 }
+                .padding(.horizontal, 8)
                 
                 Button(action: {
-                    currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+                    withAnimation {
+                        currentDate = Date()
+                    }
+                }) {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .padding(.horizontal, 8)
+                
+                Button(action: {
+                    withAnimation {
+                        currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+                    }
                 }) {
                     Image(systemName: "chevron.left")
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 8)
                 
                 Button(action: {
-                    currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                    withAnimation {
+                        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                    }
                 }) {
                     Image(systemName: "chevron.right")
                 }
                 .disabled(Calendar.current.isDateInToday(currentDate))
+                .padding(.horizontal, 8)
             }
             
             // 파이 차트 및 제목 별 총합 표시
@@ -80,12 +95,10 @@ struct WiDReadDayView: View {
                         
                         Text("제목")
                             .frame(width: 30)
-                            .border(.black)
                         
                         Spacer()
                         
-                        Text("총합 (%)")
-                            .border(.black)
+                        Text("총합")
                         
                         Spacer()
                     }
@@ -129,8 +142,8 @@ struct WiDReadDayView: View {
                     } else {
                         ScrollView {
                             ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
-                                let totalDurationOfDay = 60 * 60 * 24
-                                let percentage = (Double(duration) / Double(totalDurationOfDay)) * 100
+//                                let totalDurationOfDay = 60 * 60 * 24
+//                                let percentage = (Double(duration) / Double(totalDurationOfDay)) * 100
                                 
                                 HStack {
                                     Rectangle()
@@ -142,7 +155,8 @@ struct WiDReadDayView: View {
                                     
                                     Spacer()
                                     
-                                    Text(formatDuration(duration, isClickedWiD: false) + " (\(percentage))")
+//                                    Text(formatDuration(duration, isClickedWiD: false) + " (\(percentage))")
+                                    Text(formatDuration(duration, isClickedWiD: false))
                                     
                                     Spacer()
                                 }
@@ -164,31 +178,24 @@ struct WiDReadDayView: View {
                     Rectangle()
                         .fill(Color("light_gray"))
                         .frame(width: 7, height: 20)
-                        .border(.black)
 
                     Text("순서")
                         .frame(width: 30)
-                        .border(.black)
 
                     Text("제목")
                         .frame(width: 30)
-                        .border(.black)
 
                     Text("시작")
                         .frame(width: 50)
-                        .border(.black)
 
                     Text("종료")
                         .frame(width: 50)
-                        .border(.black)
 
-                    Text("경과 (%)")
+                    Text("경과")
                         .frame(maxWidth: .infinity)
-                        .border(.black)
 
                     Text("설명")
                         .frame(width: 35)
-                        .border(.black)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
@@ -240,9 +247,9 @@ struct WiDReadDayView: View {
                         ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
                             NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                                 HStack {
-                                    let totalDurationOfDay = 24 * 60 * 60
-                                    
-                                    let percentage = (Double(wiD.duration) / Double(totalDurationOfDay)) * 100
+//                                    let totalDurationOfDay = 24 * 60 * 60
+//
+//                                    let percentage = (Double(wiD.duration) / Double(totalDurationOfDay)) * 100
                                     
                                     Rectangle()
                                         .fill(Color(wiD.title))
@@ -260,7 +267,8 @@ struct WiDReadDayView: View {
                                     Text(formatTime(wiD.finish, format: "HH:mm"))
                                         .frame(width: 50)
 
-                                    Text(formatDuration(wiD.duration, isClickedWiD: false) + " (\(percentage))")
+//                                    Text(formatDuration(wiD.duration, isClickedWiD: false) + " (\(percentage))")
+                                    Text(formatDuration(wiD.duration, isClickedWiD: false))
                                         .frame(maxWidth: .infinity)
 
                                     Text("\(wiD.detail.count)")

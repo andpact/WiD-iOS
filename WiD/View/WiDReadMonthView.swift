@@ -87,25 +87,39 @@ struct WiDReadMonthView: View {
                     .frame(maxWidth: .infinity)
                 
                 Button(action: {
-                    currentDate = getFirstDayOfMonth(for: Date())
+                    
                 }) {
-                    Text("현재")
+                    Image(systemName: "photo.on.rectangle")
                 }
+                .padding(.horizontal, 8)
                 
                 Button(action: {
-                    currentDate = Calendar.current.date(byAdding: .month, value: -1, to: currentDate) ?? currentDate
+                    withAnimation {
+                        currentDate = getFirstDayOfMonth(for: Date())
+                    }
+                }) {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .padding(.horizontal, 8)
+                
+                Button(action: {
+                    withAnimation {
+                        currentDate = Calendar.current.date(byAdding: .month, value: -1, to: currentDate) ?? currentDate
+                    }
                 }) {
                     Image(systemName: "chevron.left")
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 8)
                 
                 Button(action: {
-                    currentDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
+                    withAnimation {
+                        currentDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
+                    }
                 }) {
                     Image(systemName: "chevron.right")
                 }
+                .padding(.horizontal, 8)
                 .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfMonth(for: Date()), toGranularity: .month))
-
             }
             
             // 요일 표시
@@ -144,10 +158,10 @@ struct WiDReadMonthView: View {
                     Text("제목")
                         .frame(width: 30)
                     
-                    Text("최고 (%)")
+                    Text("최고")
                         .frame(maxWidth: .infinity)
                     
-                    Text("총합 (%)")
+                    Text("총합")
                         .frame(maxWidth: .infinity)
                 }
                 .frame(maxWidth: .infinity)
@@ -166,9 +180,9 @@ struct WiDReadMonthView: View {
                         ForEach(sortedTotalDurationDictionary, id: \.key) { (title, totalDuration) in
                             if let bestDuration = bestDurationDictionary[title], let bestDay = bestDayDictionary[title] {
                                 
-                                let totalDurationOfWeek = 60 * 60 * 24 * 7 * numberOfDaysInMonth(for: currentDate)
-                                let bestDurationPercentage = (Double(bestDuration) / Double(totalDurationOfWeek)) * 100
-                                let totalDurationPercentage = (Double(totalDuration) / Double(totalDurationOfWeek)) * 100
+//                                let totalDurationOfWeek = 60 * 60 * 24 * 7
+//                                let bestDurationPercentage = (Double(bestDuration) / Double(totalDurationOfWeek)) * 100
+//                                let totalDurationPercentage = (Double(totalDuration) / Double(totalDurationOfWeek)) * 100
                                 
                                 HStack {
                                     Rectangle()
@@ -177,11 +191,13 @@ struct WiDReadMonthView: View {
 
                                     Text(titleDictionary[title] ?? "")
                                         .frame(width: 30)
-
-                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
+                                    
+//                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
+                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false))
                                         .frame(maxWidth: .infinity)
                                     
-                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
+//                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
+                                    Text(formatDuration(totalDuration, isClickedWiD: false))
                                         .frame(maxWidth: .infinity)
                                 }
                                 .frame(maxWidth: .infinity)

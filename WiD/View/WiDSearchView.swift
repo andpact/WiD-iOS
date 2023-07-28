@@ -27,21 +27,22 @@ struct WiDSearchView: View {
                             HStack {
                                 if Calendar.current.isDateInToday(wiD.date) {
                                     Text("오늘")
-                                    
-                                    Spacer()
                                 } else if Calendar.current.isDateInYesterday(wiD.date) {
                                     Text("어제")
-                                    
-                                    Spacer()
                                 } else {
                                     Text(formatDate(wiD.date, format: "yyyy.MM.dd"))
                                     
                                     Text(formatWeekday(wiD.date))
                                         .foregroundColor(Calendar.current.component(.weekday, from: wiD.date) == 1 ? .red : (Calendar.current.component(.weekday, from: wiD.date) == 7 ? .blue : .black))
-                                    
-                                    Spacer()
+                                }
+                                Spacer()
+                                
+                                if index == 0 {
+                                    Text("검색 결과 \(wiDs.count)개")
+                                        .font(.caption)
                                 }
                             }
+                            .padding(.top, 6)
                         }
                         
                         NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
@@ -85,7 +86,9 @@ struct WiDSearchView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
         .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification)) { _ in
-            wiDs = wiDService.selectWiDsByDetail(detail: searchText)
+            withAnimation {
+                wiDs = wiDService.selectWiDsByDetail(detail: searchText)
+            }
         }
     }
     
