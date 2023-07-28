@@ -56,7 +56,6 @@ struct WiDCreateView: View {
                 HStack {
                     Text("WiD")
                         .font(.custom("Acme-Regular", size: 30))
-                        .padding(.top)
                     
                     Spacer()
 
@@ -65,6 +64,7 @@ struct WiDCreateView: View {
                         .frame(width: 20, height: 20)
                 }
                 .padding(.horizontal)
+                .padding(.top)
                 
                 HStack {
                     Image(systemName: "calendar")
@@ -88,7 +88,8 @@ struct WiDCreateView: View {
                 .padding(.bottom)
 
                 HStack {
-                    Image(systemName: "doc.text.magnifyingglass")
+//                    Image(systemName: "doc.text.magnifyingglass")
+                    Image(systemName: "bookmark")
                         .imageScale(.large)
                         .frame(width: 25)
                     

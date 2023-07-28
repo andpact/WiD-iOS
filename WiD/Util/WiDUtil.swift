@@ -24,6 +24,8 @@ struct WiDView: View {
     @State private var inputText: String = ""
     @State private var isExpanded: Bool = false
     
+    @State private var padding: CGFloat = 16
+    
     var inputTextCount: String {
         let count = inputText.count
         return "\(count)/90"
@@ -47,7 +49,6 @@ struct WiDView: View {
                     HStack {
                         Text("WiD")
                             .font(.custom("Acme-Regular", size: 30))
-                            .padding(.top)
                         
                         Spacer()
 
@@ -56,6 +57,7 @@ struct WiDView: View {
                             .frame(width: 20, height: 20)
                     }
                     .padding(.horizontal)
+                    .padding(.top, padding)
                     
                     HStack {
                         Image(systemName: "calendar")
@@ -76,10 +78,11 @@ struct WiDView: View {
                         .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom)
+                    .padding(.bottom, padding)
 
                     HStack {
-                        Image(systemName: "doc.text.magnifyingglass")
+//                        Image(systemName: "doc.text.magnifyingglass")
+                        Image(systemName: "bookmark")
                             .imageScale(.large)
                             .frame(width: 25)
                         
@@ -91,7 +94,7 @@ struct WiDView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom)
+                    .padding(.bottom, padding)
 
                     HStack {
                         Image(systemName: "clock")
@@ -106,7 +109,7 @@ struct WiDView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom)
+                    .padding(.bottom, padding)
 
                     HStack {
                         Image(systemName: "stopwatch")
@@ -121,7 +124,7 @@ struct WiDView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom)
+                    .padding(.bottom, padding)
 
                     HStack {
                         Image(systemName: "hourglass")
@@ -136,12 +139,12 @@ struct WiDView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom)
+                    .padding(.bottom, padding)
                     
                     if isExpanded {
                         VStack {
-                            HStack {
-                                Image(systemName: "doc.text.magnifyingglass")
+                            HStack(alignment: .center) {
+                                Image(systemName: "text.bubble")
                                     .imageScale(.large)
                                     .frame(width: 25)
                                 
@@ -181,12 +184,13 @@ struct WiDView: View {
                                 .padding(.top, -5)
                         }
                         .padding(.horizontal)
-                        .padding(.bottom)
+                        .padding(.bottom, padding)
                     }
                     
                     Button(action: {
                         withAnimation {
                             isExpanded.toggle()
+                            padding = isExpanded ? 4 : 16
                         }
                         
                         if (isEditing) {
@@ -199,7 +203,7 @@ struct WiDView: View {
                             .renderingMode(.original)
                             .imageScale(.large)
                     }
-                    .padding(.bottom)
+                    .padding(.bottom, padding)
                 }
                 .background(Color("light_gray"))
                 .cornerRadius(5)
@@ -235,8 +239,7 @@ struct WiDView: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
-                .padding(.horizontal)
-                .padding(.top)
+                .padding()
             }
             .frame(maxHeight: .infinity)
             .padding()

@@ -70,8 +70,6 @@ struct WiDReadHolderView: View {
                 }
             }
         }
-        .padding(.top)
-//        .background(Color("light_purple"))
     }
 }
 

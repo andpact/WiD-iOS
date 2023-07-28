@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import GoogleMobileAds
 
 struct ContentView: View {
     @State private var selectedTab = 0
     
     var body: some View {
         VStack {
-            Text("광고 삽입")
+            admob()
             
             NavigationView {
                 TabView(selection: $selectedTab) {
@@ -37,6 +38,29 @@ struct ContentView: View {
             }
         }
     }
+}
+
+struct GADBanner: UIViewControllerRepresentable {
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        let view = GADBannerView(adSize: GADAdSizeBanner)
+        let viewController = UIViewController()
+//        view.adUnitID = "ca-app-pub-3641806776840744/8651524057" // WiD 용 상단 배너 광고 단위 ID
+        view.adUnitID = "ca-app-pub-3940256099942544/2934735716" // 테스트 용 상단 배너 광고 단위 ID
+        view.rootViewController = viewController
+        viewController.view.addSubview(view)
+        viewController.view.frame = CGRect(origin: .zero, size: GADAdSizeBanner.size)
+        view.load(GADRequest())
+        return viewController
+    }
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    
+    }
+}
+
+@ViewBuilder func admob() -> some View {
+    // admob
+    GADBanner().frame(width: GADAdSizeBanner.size.width, height: GADAdSizeBanner.size.height)
 }
 
 struct ContentView_Previews: PreviewProvider {
