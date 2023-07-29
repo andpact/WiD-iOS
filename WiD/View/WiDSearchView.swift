@@ -22,8 +22,8 @@ struct WiDSearchView: View {
                     .foregroundColor(.gray)
             } else {
                 ScrollView {
-                    ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
-                        if index == 0 || !Calendar.current.isDate(wiD.date, inSameDayAs: wiDs[index - 1].date) {
+                    ForEach(Array(wiDs.enumerated().reversed()), id: \.element.id) { (index, wiD) in
+                        if index == wiDs.count - 1 || !Calendar.current.isDate(wiD.date, inSameDayAs: wiDs[index + 1].date) {
                             HStack {
                                 if Calendar.current.isDateInToday(wiD.date) {
                                     Text("오늘")
@@ -37,7 +37,7 @@ struct WiDSearchView: View {
                                 }
                                 Spacer()
                                 
-                                if index == 0 {
+                                if index == wiDs.count - 1 {
                                     Text("검색 결과 \(wiDs.count)개")
                                         .font(.caption)
                                 }
@@ -46,31 +46,37 @@ struct WiDSearchView: View {
                         }
                         
                         NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                            VStack {
-                                HStack {
-                                    Rectangle()
-                                        .fill(Color(wiD.title))
-                                        .frame(width: 7, height: 20)
-                                    
-                                    Text(titleDictionary[wiD.title] ?? "")
-                                        .frame(width: 30)
-                                    
-                                    Text(formatTime(wiD.start, format: "HH:mm"))
-                                        .frame(maxWidth: .infinity)
-                                    
-                                    Text(formatTime(wiD.finish, format: "HH:mm"))
-                                        .frame(maxWidth: .infinity)
-                                    
-                                    Text(formatDuration(wiD.duration, isClickedWiD: false))
-                                        .frame(maxWidth: .infinity)
-                                }
+                            HStack {
+                                Rectangle()
+                                    .fill(Color(wiD.title))
+                                    .frame(width: 7, height: 45)
                                 
-                                HStack {
-                                    Text("설명")
+                                VStack(spacing: 5) {
+                                    HStack {
+                                        Text(titleDictionary[wiD.title] ?? "")
+                                            .frame(width: 30)
+                                        
+                                        Text(formatTime(wiD.start, format: "HH:mm"))
+                                            .frame(maxWidth: .infinity)
+                                        
+                                        Text(formatTime(wiD.finish, format: "HH:mm"))
+                                            .frame(maxWidth: .infinity)
+                                        
+                                        Text(formatDuration(wiD.duration, isClickedWiD: false))
+                                            .frame(maxWidth: .infinity)
+                                    }
                                     
-                                    Text(wiD.detail)
-                                    
-                                    Spacer()
+                                    HStack {
+                                        Text("설명")
+                                            .frame(width: 30)
+                                        
+                                        Text(" : ")
+                                        
+                                        Text(wiD.detail)
+                                            .lineLimit(1)
+                                        
+                                        Spacer()
+                                    }
                                 }
                             }
                             .foregroundColor(.black)

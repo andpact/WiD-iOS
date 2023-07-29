@@ -47,12 +47,12 @@ struct WiDReadDayView: View {
                 }
                 .frame(maxWidth: .infinity)
                 
-                Button(action: {
-                    
-                }) {
-                    Image(systemName: "photo.on.rectangle")
-                }
-                .padding(.horizontal, 8)
+//                Button(action: {
+//                    // 스크린 샷 버튼을 클릭했을 때 동작
+//                }) {
+//                    Image(systemName: "photo.on.rectangle")
+//                }
+//                .padding(.horizontal, 8)
                 
                 Button(action: {
                     withAnimation {
@@ -117,27 +117,6 @@ struct WiDReadDayView: View {
                         }
                         .foregroundColor(.gray)
                         .frame(maxHeight: .infinity)
-                        
-//                        HStack {
-//                            Rectangle()
-//                                .fill(.red)
-//                                .frame(width: 7, height: 20)
-//
-//                            Text("공부")
-//                                .frame(width: 30)
-//                                .border(.black)
-//
-//                            Spacer()
-//
-//                            Text("99시간 99분(99%)")
-//                                .border(.black)
-//
-//                            Spacer()
-//                        }
-//                        .frame(maxWidth: .infinity)
-//                        .background(Color("light_gray"))
-//                        .cornerRadius(5)
-//                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                     } else {
                         ScrollView {
@@ -206,41 +185,6 @@ struct WiDReadDayView: View {
                     Spacer()
                     Text("표시할 WiD가 없습니다.")
                         .foregroundColor(.gray)
-                    
-//                    HStack {
-//                        Rectangle()
-//                            .fill(.red)
-//                            .frame(width: 7, height: 20)
-//                            .border(.black)
-//
-//                        Text("10")
-//                            .frame(width: 30)
-//                            .border(.black)
-//
-//                        Text("공부")
-//                            .frame(width: 30)
-//                            .border(.black)
-//
-//                        Text("99:99")
-//                            .frame(width: 50)
-//                            .border(.black)
-//
-//                        Text("99:99")
-//                            .frame(width: 50)
-//                            .border(.black)
-//
-//                        Text("99시간 99분 (99%)")
-//                            .frame(maxWidth: .infinity)
-//                            .border(.black)
-//
-//                        Text("99")
-//                            .frame(width: 35)
-//                            .border(.black)
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    .background(Color("light_gray"))
-//                    .cornerRadius(5)
-//                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                     
                 } else {
                     ScrollView {

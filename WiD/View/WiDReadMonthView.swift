@@ -86,12 +86,12 @@ struct WiDReadMonthView: View {
                 Text(formatDate(currentDate, format: "yyyy.MM"))
                     .frame(maxWidth: .infinity)
                 
-                Button(action: {
-                    
-                }) {
-                    Image(systemName: "photo.on.rectangle")
-                }
-                .padding(.horizontal, 8)
+//                Button(action: {
+//                    // 스크린 샷 버튼을 클릭했을 때 동작
+//                }) {
+//                    Image(systemName: "photo.on.rectangle")
+//                }
+//                .padding(.horizontal, 8)
                 
                 Button(action: {
                     withAnimation {

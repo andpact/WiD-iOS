@@ -211,14 +211,14 @@ struct WiDView: View {
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 HStack {
-                    Button(action: {
-                        // "다운로드" 버튼이 클릭되었을 때 실행될 동작
-                    }) {
-                        Image(systemName: "photo.on.rectangle")
-                            .renderingMode(.original)
-                            .imageScale(.large)
-                    }
-                    .frame(maxWidth: .infinity)
+//                    Button(action: { // 스크린 샷 버튼
+//                        
+//                    }) {
+//                        Image(systemName: "photo.on.rectangle")
+//                            .renderingMode(.original)
+//                            .imageScale(.large)
+//                    }
+//                    .frame(maxWidth: .infinity)
 
                     Button(action: {
                         wiDService.deleteWiD(withID: clickedWiDId)
@@ -233,8 +233,7 @@ struct WiDView: View {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss() // 뒤로 가기
                     }) {
-                        Image(systemName: "arrow.left.circle")
-                            .renderingMode(.original)
+                        Image(systemName: "arrow.left")
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity)

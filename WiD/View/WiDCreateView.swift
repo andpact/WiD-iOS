@@ -29,10 +29,8 @@ struct WiDCreateView: View {
     @State private var startTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var finishTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    @State private var wiD: WiD = WiD(id: 0, title: "", detail: "", date: Date(), start: Date(), finish: Date(), duration: 0)
-    
-    @State private var isRecording = false
-    @State private var isRecordingDone = false
+    @State private var isAfterStart = false // 기록이 진행 중인지
+    @State private var isAfterStop = false // 기록이 종료 되었는지
     
     @State private var showMinAlert = false
     @State private var showMaxAlert = false
@@ -101,8 +99,8 @@ struct WiDCreateView: View {
                     }) {
                         Image(systemName: "chevron.left")
                     }
-                    .disabled(isRecording)
-                    .opacity(isRecording ? 0 : 1)
+                    .disabled(isAfterStart)
+                    .opacity(isAfterStart ? 0 : 1)
                     .padding(.horizontal)
 
                     Text(titleDictionary[title] ?? "")
@@ -114,8 +112,8 @@ struct WiDCreateView: View {
                     }) {
                         Image(systemName: "chevron.right")
                     }
-                    .disabled(isRecording)
-                    .opacity(isRecording ? 0 : 1)
+                    .disabled(isAfterStart)
+                    .opacity(isAfterStart ? 0 : 1)
                     .padding(.horizontal)
                 }
                 .padding(.horizontal)
@@ -131,7 +129,7 @@ struct WiDCreateView: View {
 
                     Text(formatTime(startTime, format: "HH:mm:ss"))
                         .font(.system(size: 25))
-                        .opacity(isRecording ? 0.5 : 1)
+                        .opacity(isAfterStart ? 0.5 : 1)
                         .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal)
@@ -147,7 +145,7 @@ struct WiDCreateView: View {
 
                     Text(formatTime(finishTime, format: "HH:mm:ss"))
                         .font(.system(size: 25))
-                        .opacity(isRecording ? 1 : 0)
+                        .opacity(isAfterStart ? 1 : 0)
                         .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal)
@@ -163,7 +161,7 @@ struct WiDCreateView: View {
 
                     Text(formatDuration(duration, isClickedWiD: true))
                         .font(.system(size: 25))
-                        .opacity(isRecording ? 1 : 0)
+                        .opacity(isAfterStart ? 1 : 0)
                         .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal)
@@ -182,7 +180,7 @@ struct WiDCreateView: View {
                         .imageScale(.large)
                 }
                 .frame(maxWidth: .infinity)
-                .disabled(isRecording)
+                .disabled(isAfterStart)
 
 //                종료 버튼
                 Button(action: stopRecording) {
@@ -190,7 +188,7 @@ struct WiDCreateView: View {
                         .imageScale(.large)
                 }
                 .frame(maxWidth: .infinity)
-                .disabled(!isRecording || isRecordingDone)
+                .disabled(!isAfterStart || isAfterStop)
 
 //                초기화 버튼
                 Button(action: resetRecording) {
@@ -198,7 +196,7 @@ struct WiDCreateView: View {
                         .imageScale(.large)
                 }
                 .frame(maxWidth: .infinity)
-                .disabled(!isRecording || !isRecordingDone)
+                .disabled(!isAfterStart || !isAfterStop)
             }
             .padding(.horizontal)
             .padding(.top)
@@ -214,13 +212,32 @@ struct WiDCreateView: View {
             let totalTime = endOfDay.timeIntervalSince(calendar.startOfDay(for: currentTime))
             let remainingTime = endOfDay.timeIntervalSince(currentTime)
             let percentage = Double(remainingTime / totalTime) * 100
+            let roundedpercentage = (percentage * 10).rounded() / 10
             if remainingTime < 1800 { // 30 minutes = 1800 seconds
                 timeLeftPercentage = "곧"
                 timeLeftEnd = "지나갑니다."
-            } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
-                timeLeftPercentage = String(format: "%.0f%%", percentage)
+            } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
+                timeLeftPercentage = String(format: "%.0f%%", roundedpercentage)
             } else {
-                timeLeftPercentage = String(format: "%.1f%%", percentage)
+                timeLeftPercentage = String(format: "%.1f%%", roundedpercentage)
+            }
+            
+            if let savedDate = UserDefaults.standard.object(forKey: "date") as? Date {
+                date = savedDate
+            }
+            
+            if let savedTitle = UserDefaults.standard.string(forKey: "title") {
+                title = savedTitle
+            }
+            
+            if let savedStartTime = UserDefaults.standard.object(forKey: "startTime") as? Date {
+                startTime = savedStartTime
+            }
+            
+            isAfterStart = UserDefaults.standard.bool(forKey: "canStop")
+            
+            if isAfterStart {
+                startTimer.upstream.connect().cancel()
             }
         }
         .onReceive(timerLeft) { _ in
@@ -238,13 +255,14 @@ struct WiDCreateView: View {
                 let totalTime = endOfDay.timeIntervalSince(calendar.startOfDay(for: currentTime))
                 let remainingTime = endOfDay.timeIntervalSince(currentTime)
                 let percentage = Double(remainingTime / totalTime) * 100
+                let roundedpercentage = (percentage * 10).rounded() / 10
                 if remainingTime < 1800 { // 30 minutes = 1800 seconds
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."
-                } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
-                    timeLeftPercentage = String(format: "%.0f%%", percentage)
+                } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
+                    timeLeftPercentage = String(format: "%.0f%%", roundedpercentage)
                 } else {
-                    timeLeftPercentage = String(format: "%.1f%%", percentage)
+                    timeLeftPercentage = String(format: "%.1f%%", roundedpercentage)
                 }
             case 1: // 이번 주
                 let mondayWeekday = 2 // Monday is represented by 2 in `weekday` component
@@ -265,15 +283,15 @@ struct WiDCreateView: View {
 
                 let totalTime = endOfWeek.timeIntervalSince(startOfWeek)
                 let remainingTime = endOfWeek.timeIntervalSince(currentTime)
-//                let percentage = Double(remainingTime / totalTime) * 100 // TimeInterval 객체는 Double 타입임.
-                let percentage = remainingTime / totalTime * 100
+                let percentage = Double(remainingTime / totalTime) * 100 // TimeInterval 객체는 Double 타입임.
+                let roundedpercentage = (percentage * 10).rounded() / 10
                 if remainingTime < 1800 { // 30 minutes = 1800 seconds
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."
-                } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
-                    timeLeftPercentage = String(format: "%.0f%%", percentage)
+                } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
+                    timeLeftPercentage = String(format: "%.0f%%", roundedpercentage)
                 } else {
-                    timeLeftPercentage = String(format: "%.1f%%", percentage)
+                    timeLeftPercentage = String(format: "%.1f%%", roundedpercentage)
                 }
             case 2: // 이번 달
 
@@ -287,13 +305,14 @@ struct WiDCreateView: View {
                 let totalTime = endOfMonth.timeIntervalSince(startOfMonth)
                 let remainingTime = endOfMonth.timeIntervalSince(currentTime)
                 let percentage = Double(remainingTime / totalTime) * 100
+                let roundedpercentage = (percentage * 10).rounded() / 10
                 if remainingTime < 1800 { // 30 minutes = 1800 seconds
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."
-                } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
-                    timeLeftPercentage = String(format: "%.0f%%", percentage)
+                } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
+                    timeLeftPercentage = String(format: "%.0f%%", roundedpercentage)
                 } else {
-                    timeLeftPercentage = String(format: "%.1f%%", percentage)
+                    timeLeftPercentage = String(format: "%.1f%%", roundedpercentage)
                 }
             case 3: // 올해
 
@@ -307,13 +326,14 @@ struct WiDCreateView: View {
                 let totalTime = endOfYear.timeIntervalSince(startOfYear)
                 let remainingTime = endOfYear.timeIntervalSince(currentTime)
                 let percentage = Double(remainingTime / totalTime) * 100
+                let roundedpercentage = (percentage * 10).rounded() / 10
                 if remainingTime < 1800 { // 30 minutes = 1800 seconds
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."
-                } else if percentage.truncatingRemainder(dividingBy: 1) == 0 {
-                    timeLeftPercentage = String(format: "%.0f%%", percentage)
+                } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
+                    timeLeftPercentage = String(format: "%.0f%%", roundedpercentage)
                 } else {
-                    timeLeftPercentage = String(format: "%.1f%%", percentage)
+                    timeLeftPercentage = String(format: "%.1f%%", roundedpercentage)
                 }
             default:
                 break
@@ -327,11 +347,10 @@ struct WiDCreateView: View {
             finishTime = Date()
             duration = finishTime.timeIntervalSince(startTime)
             
-            let durationLimit: TimeInterval = 12 * 60 * 60 // 12 hours in seconds
+            let durationLimit: TimeInterval = 60 * 60 * 12
             if durationLimit <= duration {
                 stopRecording()
                 showMaxAlert = true
-                resetRecording()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -358,20 +377,6 @@ struct WiDCreateView: View {
                 return Alert(title: Text(""), message: nil, dismissButton: .default(Text("확인")))
             }
         }
-//        .alert(isPresented: $showMinAlert) {
-//            Alert(
-//                title: Text("기록 종료"),
-//                message: Text("1분 이상의 WiD를 기록해주세요."),
-//                dismissButton: .default(Text("확인"))
-//            )
-//        }
-//        .alert(isPresented: $showMaxAlert) {
-//            Alert(
-//                title: Text("기록 종료"),
-//                message: Text("12시간이 초과되어 WiD가 자동으로 등록되었습니다."),
-//                dismissButton: .default(Text("확인"))
-//            )
-//        }
     }
     
     private func decreaseTitle() {
@@ -396,10 +401,18 @@ struct WiDCreateView: View {
     
     private func startRecording() {
         startTimer.upstream.connect().cancel()
-        isRecording.toggle()
+        isAfterStart.toggle()
+        UserDefaults.standard.set(date, forKey: "date")
+        UserDefaults.standard.set(title, forKey: "title")
+        UserDefaults.standard.set(startTime, forKey: "startTime")
+        UserDefaults.standard.set(isAfterStart, forKey: "canStop")
     }
 
     private func stopRecording() {
+        UserDefaults.standard.removeObject(forKey: "date")
+        UserDefaults.standard.removeObject(forKey: "title")
+        UserDefaults.standard.removeObject(forKey: "startTime")
+        UserDefaults.standard.removeObject(forKey: "canStop")
         finishTimer.upstream.connect().cancel()
         if duration < 60 {
             showMinAlert = true
@@ -430,16 +443,15 @@ struct WiDCreateView: View {
                 }
             }
         }
-        isRecordingDone.toggle()
+        isAfterStop.toggle()
     }
 
     private func resetRecording() {
         startTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         finishTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         duration = 0
-        wiD = WiD(id: 0, title: "", detail: "", date: Date(), start: Date(), finish: Date(), duration: 0)
-        isRecording.toggle()
-        isRecordingDone.toggle()
+        isAfterStart.toggle()
+        isAfterStop.toggle()
     }
 }
 

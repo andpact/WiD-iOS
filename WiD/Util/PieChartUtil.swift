@@ -53,6 +53,7 @@ struct PieChartView: View {
                         Text(formatDate(date, format: "d"))
                             .font(.system(size: geometry.size.width * 0.2, weight: .bold, design: .default))
                             .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
+                            .foregroundColor(data.count == 1 ? .gray : .black)
 
                     }
                 }
