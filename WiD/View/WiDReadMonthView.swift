@@ -121,6 +121,7 @@ struct WiDReadMonthView: View {
                 .padding(.horizontal, 8)
                 .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfMonth(for: Date()), toGranularity: .month))
             }
+            .padding(.bottom, 8)
             
             // 요일 표시
             HStack {
@@ -132,7 +133,6 @@ struct WiDReadMonthView: View {
                         .foregroundColor(textColor)
                 }
             }
-            .padding(.top)
             
             // 파이 차트 표시
             LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
@@ -147,6 +147,7 @@ struct WiDReadMonthView: View {
                     PieChartView(data: fetchChartData(date: day), date: day, isForOne: false, isEmpty: false)
                 }
             }
+            .padding(.bottom, 8)
 
             // 제목 별 총합 표시
             VStack {
@@ -156,13 +157,13 @@ struct WiDReadMonthView: View {
                         .frame(width: 7, height: 20)
                     
                     Text("제목")
-                        .frame(width: 30)
+                        .frame(width: 50)
                     
                     Text("최고")
                         .frame(maxWidth: .infinity)
                     
                     Text("총합")
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: 110)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
@@ -174,7 +175,6 @@ struct WiDReadMonthView: View {
                     Text("표시할 데이터가 없습니다.")
                         .foregroundColor(.gray)
                         .frame(maxWidth: .infinity)
-
                 } else {
                     ScrollView {
                         ForEach(sortedTotalDurationDictionary, id: \.key) { (title, totalDuration) in
@@ -190,7 +190,7 @@ struct WiDReadMonthView: View {
                                         .frame(width: 7, height: 20)
 
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 30)
+                                        .frame(width: 50)
                                     
 //                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
                                     Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false))
@@ -198,7 +198,7 @@ struct WiDReadMonthView: View {
                                     
 //                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
                                     Text(formatDuration(totalDuration, isClickedWiD: false))
-                                        .frame(maxWidth: .infinity)
+                                        .frame(maxWidth: 110)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))
@@ -210,7 +210,6 @@ struct WiDReadMonthView: View {
                 }
                 Spacer()
             }
-            .padding(.top)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)

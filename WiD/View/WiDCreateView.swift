@@ -29,11 +29,11 @@ struct WiDCreateView: View {
     @State private var startTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var finishTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    @State private var isAfterStart = false // 기록이 진행 중인지
-    @State private var isAfterStop = false // 기록이 종료 되었는지
+    @State private var isAfterStart: Bool = false // 기록이 진행 중인지
+    @State private var isAfterStop: Bool = false // 기록이 종료 되었는지
     
-    @State private var showMinAlert = false
-    @State private var showMaxAlert = false
+    @State private var showMinAlert: Bool = false
+    @State private var showMaxAlert: Bool = false
     
     var body: some View {
         VStack {
@@ -86,8 +86,7 @@ struct WiDCreateView: View {
                 .padding(.bottom)
 
                 HStack {
-//                    Image(systemName: "doc.text.magnifyingglass")
-                    Image(systemName: "bookmark")
+                    Image(systemName: "text.book.closed")
                         .imageScale(.large)
                         .frame(width: 25)
                     
@@ -208,12 +207,15 @@ struct WiDCreateView: View {
             let calendar = Calendar.current
             
             let startOfDay = calendar.startOfDay(for: currentTime)
-            let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
-            let totalTime = endOfDay.timeIntervalSince(calendar.startOfDay(for: currentTime))
+            let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: currentTime)!
+            
+            let totalTime = endOfDay.timeIntervalSince(startOfDay)
             let remainingTime = endOfDay.timeIntervalSince(currentTime)
+            
             let percentage = Double(remainingTime / totalTime) * 100
             let roundedpercentage = (percentage * 10).rounded() / 10
-            if remainingTime < 1800 { // 30 minutes = 1800 seconds
+
+            if roundedpercentage.rounded() < 1 {
                 timeLeftPercentage = "곧"
                 timeLeftEnd = "지나갑니다."
             } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
@@ -250,13 +252,15 @@ struct WiDCreateView: View {
             switch timeLeftIndex {
             case 0: // 오늘
                 let startOfDay = calendar.startOfDay(for: currentTime)
-                let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
+                let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: currentTime)!
                 
-                let totalTime = endOfDay.timeIntervalSince(calendar.startOfDay(for: currentTime))
+                let totalTime = endOfDay.timeIntervalSince(startOfDay)
                 let remainingTime = endOfDay.timeIntervalSince(currentTime)
+                
                 let percentage = Double(remainingTime / totalTime) * 100
                 let roundedpercentage = (percentage * 10).rounded() / 10
-                if remainingTime < 1800 { // 30 minutes = 1800 seconds
+
+                if roundedpercentage.rounded() < 1 {
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."
                 } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
@@ -283,9 +287,11 @@ struct WiDCreateView: View {
 
                 let totalTime = endOfWeek.timeIntervalSince(startOfWeek)
                 let remainingTime = endOfWeek.timeIntervalSince(currentTime)
+                
                 let percentage = Double(remainingTime / totalTime) * 100 // TimeInterval 객체는 Double 타입임.
                 let roundedpercentage = (percentage * 10).rounded() / 10
-                if remainingTime < 1800 { // 30 minutes = 1800 seconds
+
+                if roundedpercentage.rounded() < 1 {
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."
                 } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
@@ -295,18 +301,17 @@ struct WiDCreateView: View {
                 }
             case 2: // 이번 달
 
-                // Get the first day of the current month with time set to 00:00:00
                 let startOfMonth = calendar.startOfDay(for: calendar.date(from: calendar.dateComponents([.year, .month], from: currentTime))!)
-
-                // Get the last day of the current month with time set to 23:59:59
                 let lastDayComponents = DateComponents(year: calendar.component(.year, from: currentTime), month: calendar.component(.month, from: currentTime) + 1, day: 0)
-                let endOfMonth = calendar.startOfDay(for: calendar.date(from: lastDayComponents)!.addingTimeInterval(-1))
+                let endOfMonth = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: calendar.startOfDay(for: calendar.date(from: lastDayComponents)!.addingTimeInterval(-1)))! // 다음 달 1일에서 -1일을 해서 이번 달 마지막 날로 이동 후, 23:59:59로 변경
                 
                 let totalTime = endOfMonth.timeIntervalSince(startOfMonth)
                 let remainingTime = endOfMonth.timeIntervalSince(currentTime)
+                
                 let percentage = Double(remainingTime / totalTime) * 100
                 let roundedpercentage = (percentage * 10).rounded() / 10
-                if remainingTime < 1800 { // 30 minutes = 1800 seconds
+
+                if roundedpercentage.rounded() < 1 {
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."
                 } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
@@ -316,18 +321,17 @@ struct WiDCreateView: View {
                 }
             case 3: // 올해
 
-                // Get the first day of the current year with time set to 00:00:00
                 let startOfYear = calendar.startOfDay(for: calendar.date(from: calendar.dateComponents([.year], from: currentTime))!)
-
-                // Get the last day of the current year with time set to 23:59:59
                 let lastDayComponents = DateComponents(year: calendar.component(.year, from: currentTime) + 1, month: 0, day: 0)
-                let endOfYear = calendar.startOfDay(for: calendar.date(from: lastDayComponents)!.addingTimeInterval(-1))
+                let endOfYear = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: calendar.startOfDay(for: calendar.date(from: lastDayComponents)!.addingTimeInterval(-1)))! // 다음 해 1일에서 -1일을 해서 올해 마지막 날로 이동 후, 23:59:59로 변경
 
                 let totalTime = endOfYear.timeIntervalSince(startOfYear)
                 let remainingTime = endOfYear.timeIntervalSince(currentTime)
+                
                 let percentage = Double(remainingTime / totalTime) * 100
                 let roundedpercentage = (percentage * 10).rounded() / 10
-                if remainingTime < 1800 { // 30 minutes = 1800 seconds
+
+                if roundedpercentage.rounded() < 1 {
                     timeLeftPercentage = "곧"
                     timeLeftEnd = "지나갑니다."
                 } else if roundedpercentage.truncatingRemainder(dividingBy: 1) == 0 {
@@ -341,7 +345,7 @@ struct WiDCreateView: View {
         }
         .onReceive(startTimer) { _ in
             startTime = Date()
-            date = Date() // 날짜도 갱신되어야 함.
+            date = Date() // 날짜도 갱신되어야 자정을 지났을 때 날짜가 갱신됨.
         }
         .onReceive(finishTimer) { _ in
             finishTime = Date()
@@ -349,6 +353,7 @@ struct WiDCreateView: View {
             
             let durationLimit: TimeInterval = 60 * 60 * 12
             if durationLimit <= duration {
+                duration = durationLimit // 앱 종료 후 다시 켰을 때 12시간이 지나면 duration을 12시간으로 할당해버림.
                 stopRecording()
                 showMaxAlert = true
             }

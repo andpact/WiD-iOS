@@ -82,6 +82,7 @@ struct WiDReadDayView: View {
                 .disabled(Calendar.current.isDateInToday(currentDate))
                 .padding(.horizontal, 8)
             }
+            .padding(.bottom, 8)
             
             // 파이 차트 및 제목 별 총합 표시
             HStack(alignment: .top) {
@@ -117,7 +118,6 @@ struct WiDReadDayView: View {
                         }
                         .foregroundColor(.gray)
                         .frame(maxHeight: .infinity)
-
                     } else {
                         ScrollView {
                             ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
@@ -147,9 +147,9 @@ struct WiDReadDayView: View {
                     }
                 }
                 .frame(maxWidth: 155)
-//                .frame(maxWidth: .infinity)
             }
             .frame(maxHeight: 180)
+            .padding(.bottom, 8)
             
             // 각 WiD 표시
             VStack {
@@ -229,7 +229,6 @@ struct WiDReadDayView: View {
                 }
                 Spacer()
             }
-            .padding(.top)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)

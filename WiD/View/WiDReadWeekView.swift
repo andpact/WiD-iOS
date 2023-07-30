@@ -124,6 +124,7 @@ struct WiDReadWeekView: View {
                 .padding(.horizontal, 8)
                 .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfWeek(for: Date()), toGranularity: .weekOfYear))
             }
+            .padding(.bottom, 8)
             
             // 요일 표시
             HStack {
@@ -135,7 +136,6 @@ struct WiDReadWeekView: View {
                         .foregroundColor(textColor)
                 }
             }
-            .padding(.top)
             
             // 파이 차트 표시
             HStack(spacing: 7) {
@@ -143,6 +143,7 @@ struct WiDReadWeekView: View {
                     PieChartView(data: fetchChartData(date: Calendar.current.date(byAdding: .day, value: index, to: currentDate) ?? currentDate), date: Calendar.current.date(byAdding: .day, value: index, to: currentDate) ?? currentDate, isForOne: false, isEmpty: false)
                 }
             }
+            .padding(.bottom, 8)
             
             // 제목 별 총합 표시
             VStack {
@@ -152,14 +153,13 @@ struct WiDReadWeekView: View {
                         .frame(width: 7, height: 20)
 
                     Text("제목")
-                        .frame(width: 30)
+                        .frame(width: 50)
 
                     Text("최고")
                         .frame(maxWidth: .infinity)
 
                     Text("총합")
-                        .frame(maxWidth: .infinity)
-
+                        .frame(maxWidth: 110)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
@@ -172,15 +172,16 @@ struct WiDReadWeekView: View {
 //                        .frame(width: 7, height: 20)
 //
 //                    Text("공부")
-//                        .frame(width: 30)
+//                        .frame(width: 50)
 //                        .border(.black)
 //
 //
-//                    Text("99일/99시간 99분 (99.9)")
+//                    Text("99일 / 99시간 99분")
+//                        .frame(maxWidth: .infinity)
 //                        .border(.black)
 //
-//
-//                    Text("999시간 99분 (99.9)")
+//                    Text("999시간 99분")
+//                        .frame(maxWidth: 110)
 //                        .border(.black)
 //                }
 //                .frame(maxWidth: .infinity)
@@ -209,7 +210,7 @@ struct WiDReadWeekView: View {
                                         .frame(width: 7, height: 20)
 
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 30)
+                                        .frame(width: 50)
                                     
 //                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
                                     Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false))
@@ -217,7 +218,7 @@ struct WiDReadWeekView: View {
                                     
 //                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
                                     Text(formatDuration(totalDuration, isClickedWiD: false))
-                                        .frame(maxWidth: .infinity)
+                                        .frame(maxWidth: 110)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))
@@ -229,7 +230,6 @@ struct WiDReadWeekView: View {
                 }
                 Spacer()
             }
-            .padding(.top)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)

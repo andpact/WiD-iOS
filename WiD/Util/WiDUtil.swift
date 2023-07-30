@@ -81,8 +81,7 @@ struct WiDView: View {
                     .padding(.bottom, padding)
 
                     HStack {
-//                        Image(systemName: "doc.text.magnifyingglass")
-                        Image(systemName: "bookmark")
+                        Image(systemName: "text.book.closed")
                             .imageScale(.large)
                             .frame(width: 25)
                         
@@ -160,6 +159,9 @@ struct WiDView: View {
                                     }
                                     isEditing.toggle()
                                 }) {
+                                    Image(systemName: isEditing ? "checkmark.square" : "square.and.pencil")
+                                        .padding(.trailing, -4)
+                                    
                                     Text(isEditing ? "완료" : "수정")
                                         .font(.system(size: 20))
                                 }
@@ -190,7 +192,7 @@ struct WiDView: View {
                     Button(action: {
                         withAnimation {
                             isExpanded.toggle()
-                            padding = isExpanded ? 4 : 16
+                            padding = isExpanded ? 2 : 16
                         }
                         
                         if (isEditing) {
@@ -203,7 +205,8 @@ struct WiDView: View {
                             .renderingMode(.original)
                             .imageScale(.large)
                     }
-                    .padding(.bottom, padding)
+                    .padding(.bottom)
+                    .accentColor(.black)
                 }
                 .background(Color("light_gray"))
                 .cornerRadius(5)
@@ -237,6 +240,7 @@ struct WiDView: View {
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity)
+                    .accentColor(.black)
                 }
                 .padding()
             }
