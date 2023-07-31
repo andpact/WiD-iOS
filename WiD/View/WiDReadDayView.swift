@@ -39,20 +39,28 @@ struct WiDReadDayView: View {
         VStack {
             // 날짜 표시
             HStack {
+                Text("WiD")
+                    .font(.custom("Acme-Regular", size: 20))
+                    .padding(.horizontal, 8)
+                    .foregroundColor(.white)
+                    .background(.black)
+                    .cornerRadius(5)
+                    .padding(.horizontal, 8)
+
                 HStack {
-                    Text(formatDate(currentDate, format: "yyyy.MM.dd"))
+                    Text(formatDate(currentDate, format: "yyyy년 M월 d일"))
                     
-                    Text(formatWeekday(currentDate))
-                        .foregroundColor(Calendar.current.component(.weekday, from: currentDate) == 1 ? .red : (Calendar.current.component(.weekday, from: currentDate) == 7 ? .blue : .black))
+                    HStack(spacing: 0) {
+                        Text("(")
+                        
+                        Text(formatWeekday(currentDate))
+                            .foregroundColor(Calendar.current.component(.weekday, from: currentDate) == 1 ? .red : (Calendar.current.component(.weekday, from: currentDate) == 7 ? .blue : .black))
+
+                        Text(")")
+                    }
                 }
+                .padding(.horizontal, -16)
                 .frame(maxWidth: .infinity)
-                
-//                Button(action: {
-//                    // 스크린 샷 버튼을 클릭했을 때 동작
-//                }) {
-//                    Image(systemName: "photo.on.rectangle")
-//                }
-//                .padding(.horizontal, 8)
                 
                 Button(action: {
                     withAnimation {
@@ -185,7 +193,6 @@ struct WiDReadDayView: View {
                     Spacer()
                     Text("표시할 WiD가 없습니다.")
                         .foregroundColor(.gray)
-                    
                 } else {
                     ScrollView {
                         ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
@@ -233,7 +240,9 @@ struct WiDReadDayView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
         .onAppear() {
-            wiDs = wiDService.selectWiDsByDate(date: currentDate)
+            withAnimation {
+                wiDs = wiDService.selectWiDsByDate(date: currentDate)
+            }
         }
     }
 }

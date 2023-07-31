@@ -42,8 +42,7 @@ struct PieChartView: View {
                             .position(x: geometry.size.width / 2 + x, y: geometry.size.width / 2 + y)
                     }
                     
-                    Text("WiD")
-                        .font(.custom("Acme-Regular", size: 30))
+                    Text("오후 | 오전")
                         .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
                         .foregroundColor(data.count == 1 ? .gray : .black)
                     

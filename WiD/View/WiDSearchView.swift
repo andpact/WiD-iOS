@@ -9,8 +9,8 @@ import SwiftUI
 
 struct WiDSearchView: View {
     private let wiDService = WiDService()
-    @State private var searchText: String = ""
     @State private var wiDs: [WiD] = []
+    @State private var searchText: String = ""
     
     var body: some View {
         VStack {
@@ -25,22 +25,25 @@ struct WiDSearchView: View {
                     ScrollView {
                         ForEach(Array(wiDs.enumerated().reversed()), id: \.element.id) { (index, wiD) in
                             if index == wiDs.count - 1 || !Calendar.current.isDate(wiD.date, inSameDayAs: wiDs[index + 1].date) {
-                                HStack {
+                                HStack(spacing: 0) {
                                     if Calendar.current.isDateInToday(wiD.date) {
                                         Text("오늘")
                                     } else if Calendar.current.isDateInYesterday(wiD.date) {
                                         Text("어제")
                                     } else {
-                                        Text(formatDate(wiD.date, format: "yyyy.MM.dd"))
+                                        Text(formatDate(wiD.date, format: "yyyy년 M월 d일 "))
+                                        
+                                        Text("(")
                                         
                                         Text(formatWeekday(wiD.date))
                                             .foregroundColor(Calendar.current.component(.weekday, from: wiD.date) == 1 ? .red : (Calendar.current.component(.weekday, from: wiD.date) == 7 ? .blue : .black))
+                                        
+                                        Text(")")
                                     }
                                     Spacer()
                                 }
                                 .padding(.top, 6)
                             }
-                            
                             NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                                 HStack {
                                     Rectangle()
@@ -95,6 +98,11 @@ struct WiDSearchView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
+        .onAppear() {
+            withAnimation {
+                wiDs = wiDService.selectWiDsByDetail(detail: searchText) // 삭제 후 돌아오면 삭제된 WiD가 표시되니까 다시 WiD 리스트를 가져옴.
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification)) { _ in
             withAnimation {
                 wiDs = wiDService.selectWiDsByDetail(detail: searchText)
@@ -116,9 +124,8 @@ struct SearchBar: View {
             TextField("설명으로 검색..", text: $text, onEditingChanged: onEditingChanged)
                 .padding(8)
                 .background(Color(.systemGray5))
-                .cornerRadius(8)
+                .cornerRadius(5)
         }
-        .padding(.top)
     }
 }
 

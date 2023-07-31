@@ -12,13 +12,15 @@ struct WiDReadWeekView: View {
     
     @State private var wiDs: [WiD] = []
     
-    @State private var currentDate: Date = getFirstDayOfWeek(for: Date()) {
+    @State private var currentDate: Date = Date() // 현재 날짜가 몇 번째 주인지 표시하기 위한 용도.
+        
+    @State private var firstDayOfWeek: Date = getFirstDayOfWeek(for: Date()) { // 파이 차트를 표시하기 위한 용도
         didSet {
             var allWiDs: [WiD] = []
             
             // Loop through the dates for each day of the week
             for index in 0..<7 {
-                let date = Calendar.current.date(byAdding: .day, value: index, to: currentDate) ?? currentDate
+                let date = Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek
                 let wiDsForDate = wiDService.selectWiDsByDate(date: date)
                 allWiDs.append(contentsOf: wiDsForDate)
             }
@@ -82,23 +84,25 @@ struct WiDReadWeekView: View {
         VStack {
             // 날짜 표시
             HStack {
+                Text("WiD")
+                    .font(.custom("Acme-Regular", size: 20))
+                    .padding(.horizontal, 8)
+                    .foregroundColor(.white)
+                    .background(.black)
+                    .cornerRadius(5)
+                    .padding(.horizontal, 8)
+                
                 HStack {
                     Text(formatDate(currentDate, format: "yyyy년"))
                         
                     Text("\(weekNumber(for: currentDate))번째 주")
                 }
                 .frame(maxWidth: .infinity)
-
-//                Button(action: {
-//                    // 스크린 샷 버튼을 클릭했을 때 동작
-//                }) {
-//                    Image(systemName: "photo.on.rectangle")
-//                }
-//                .padding(.horizontal, 8)
                 
                 Button(action: {
                     withAnimation {
-                        currentDate = getFirstDayOfWeek(for: Date())
+                        currentDate = Date()
+                        firstDayOfWeek = getFirstDayOfWeek(for: Date())
                     }
                 }) {
                     Image(systemName: "arrow.clockwise")
@@ -107,6 +111,7 @@ struct WiDReadWeekView: View {
                 
                 Button(action: {
                     withAnimation {
+                        firstDayOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: firstDayOfWeek) ?? firstDayOfWeek
                         currentDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: currentDate) ?? currentDate
                     }
                 }) {
@@ -116,13 +121,14 @@ struct WiDReadWeekView: View {
 
                 Button(action: {
                     withAnimation {
+                        firstDayOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: firstDayOfWeek) ?? firstDayOfWeek
                         currentDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: currentDate) ?? currentDate
                     }
                 }) {
                     Image(systemName: "chevron.right")
                 }
                 .padding(.horizontal, 8)
-                .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfWeek(for: Date()), toGranularity: .weekOfYear))
+                .disabled(Calendar.current.isDate(firstDayOfWeek, equalTo: getFirstDayOfWeek(for: Date()), toGranularity: .weekOfYear))
             }
             .padding(.bottom, 8)
             
@@ -140,7 +146,7 @@ struct WiDReadWeekView: View {
             // 파이 차트 표시
             HStack(spacing: 7) {
                 ForEach(0..<7) { index in
-                    PieChartView(data: fetchChartData(date: Calendar.current.date(byAdding: .day, value: index, to: currentDate) ?? currentDate), date: Calendar.current.date(byAdding: .day, value: index, to: currentDate) ?? currentDate, isForOne: false, isEmpty: false)
+                    PieChartView(data: fetchChartData(date: Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek), date: Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek, isForOne: false, isEmpty: false)
                 }
             }
             .padding(.bottom, 8)
@@ -238,12 +244,13 @@ struct WiDReadWeekView: View {
             
             // Loop through the dates for each day of the week
             for index in 0..<7 {
-                let date = Calendar.current.date(byAdding: .day, value: index, to: currentDate) ?? currentDate
+                let date = Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek
                 let wiDsForDate = wiDService.selectWiDsByDate(date: date)
                 allWiDs.append(contentsOf: wiDsForDate)
             }
-            
-            wiDs = allWiDs
+            withAnimation {
+                wiDs = allWiDs
+            }
         }
     }
 }

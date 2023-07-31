@@ -32,8 +32,7 @@ struct WiDCreateView: View {
     @State private var isAfterStart: Bool = false // 기록이 진행 중인지
     @State private var isAfterStop: Bool = false // 기록이 종료 되었는지
     
-    @State private var showMinAlert: Bool = false
-    @State private var showMaxAlert: Bool = false
+    @State private var showMaxDurationAlert: Bool = false
     
     var body: some View {
         VStack {
@@ -353,35 +352,20 @@ struct WiDCreateView: View {
             
             let durationLimit: TimeInterval = 60 * 60 * 12
             if durationLimit <= duration {
-                duration = durationLimit // 앱 종료 후 다시 켰을 때 12시간이 지나면 duration을 12시간으로 할당해버림.
+                duration = durationLimit // 앱 종료 후 다시 켰을 때 12시간이 지나있으면 duration을 12시간으로 할당해버림.
                 stopRecording()
-                showMaxAlert = true
+                showMaxDurationAlert = true
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
-        .alert(isPresented: Binding<Bool>.constant(showMinAlert || showMaxAlert)) {
-            switch (showMinAlert, showMaxAlert) {
-            case (true, false):
-                return Alert(
-                    title: Text("기록 종료"),
-                    message: Text("1분 이상의 WiD를 기록해주세요."),
-                    dismissButton: .default(Text("확인")) {
-                        showMinAlert = false
-                    }
-                )
-            case (false, true):
-                return Alert(
-                    title: Text("기록 종료"),
-                    message: Text("12시간이 초과되어 WiD가 자동으로 등록되었습니다."),
-                    dismissButton: .default(Text("확인")) {
-                        showMaxAlert = false
-                    }
-                )
-            default:
-                return Alert(title: Text(""), message: nil, dismissButton: .default(Text("확인")))
-            }
-        }
+        .alert(isPresented: $showMaxDurationAlert) {
+           Alert(
+               title: Text("기록 종료"),
+               message: Text("12시간이 초과되어 WiD가 자동으로 등록되었습니다."),
+               dismissButton: .default(Text("확인"))
+           )
+       }
     }
     
     private func decreaseTitle() {
@@ -407,6 +391,7 @@ struct WiDCreateView: View {
     private func startRecording() {
         startTimer.upstream.connect().cancel()
         isAfterStart.toggle()
+        
         UserDefaults.standard.set(date, forKey: "date")
         UserDefaults.standard.set(title, forKey: "title")
         UserDefaults.standard.set(startTime, forKey: "startTime")
@@ -418,40 +403,38 @@ struct WiDCreateView: View {
         UserDefaults.standard.removeObject(forKey: "title")
         UserDefaults.standard.removeObject(forKey: "startTime")
         UserDefaults.standard.removeObject(forKey: "canStop")
+        
         finishTimer.upstream.connect().cancel()
-        if duration < 60 {
-            showMinAlert = true
-            resetRecording()
-        } else {
-            let calendar = Calendar.current
-            let startComponents = calendar.dateComponents([.year, .month, .day], from: startTime)
-            let finishComponents = calendar.dateComponents([.year, .month, .day], from: finishTime)
+        
+        let calendar = Calendar.current
+        let startComponents = calendar.dateComponents([.year, .month, .day], from: startTime)
+        let finishComponents = calendar.dateComponents([.year, .month, .day], from: finishTime)
 
-            if let startDate = calendar.date(from: startComponents),
-               let finishDate = calendar.date(from: finishComponents) {
+        if let startDate = calendar.date(from: startComponents),
+           let finishDate = calendar.date(from: finishComponents) {
 
-                // Check if the duration spans across multiple days
-                if calendar.isDate(startDate, inSameDayAs: finishDate) {
-                    // WiD duration is within the same day
-                    let wiD = WiD(id: 0, title: title, detail: detail, date: startDate, start: startTime, finish: finishTime, duration: duration)
-                    wiDService.insertWiD(wid: wiD)
-                } else {
-                    // WiD duration spans across multiple days
-                    let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
-                    let firstDayWiD = WiD(id: 0, title: title, detail: detail, date: startDate, start: startTime, finish: midnightEndDate, duration: midnightEndDate.timeIntervalSince(startTime))
-                    wiDService.insertWiD(wid: firstDayWiD)
+            // Check if the duration spans across multiple days
+            if calendar.isDate(startDate, inSameDayAs: finishDate) {
+                // WiD duration is within the same day
+                let wiD = WiD(id: 0, title: title, detail: detail, date: startDate, start: startTime, finish: finishTime, duration: duration)
+                wiDService.insertWiD(wid: wiD)
+            } else {
+                // WiD duration spans across multiple days
+                let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
+                let firstDayWiD = WiD(id: 0, title: title, detail: detail, date: startDate, start: startTime, finish: midnightEndDate, duration: midnightEndDate.timeIntervalSince(startTime))
+                wiDService.insertWiD(wid: firstDayWiD)
 
-                    let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-                    let midnightEndDateNextDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nextDayStartDate)!
-                    let secondDayWiD = WiD(id: 0, title: title, detail: detail, date: nextDayStartDate, start: midnightEndDateNextDay, finish: finishTime, duration: finishTime.timeIntervalSince(midnightEndDateNextDay))
-                    wiDService.insertWiD(wid: secondDayWiD)
-                }
+                let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
+                let midnightEndDateNextDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nextDayStartDate)!
+                let secondDayWiD = WiD(id: 0, title: title, detail: detail, date: nextDayStartDate, start: midnightEndDateNextDay, finish: finishTime, duration: finishTime.timeIntervalSince(midnightEndDateNextDay))
+                wiDService.insertWiD(wid: secondDayWiD)
             }
         }
         isAfterStop.toggle()
     }
 
     private func resetRecording() {
+        startTime = Date() // 이 코드가 없으면 startTime이 startTimer에 의해 1초의 딜레이를 가지고 갱신되기 때문에 리셋하자마자 초기화해버림.
         startTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         finishTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         duration = 0

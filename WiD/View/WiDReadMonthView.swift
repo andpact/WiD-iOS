@@ -83,15 +83,16 @@ struct WiDReadMonthView: View {
         VStack {
             // 날짜 표시
             HStack {
-                Text(formatDate(currentDate, format: "yyyy.MM"))
-                    .frame(maxWidth: .infinity)
+                Text("WiD")
+                    .font(.custom("Acme-Regular", size: 20))
+                    .padding(.horizontal, 8)
+                    .foregroundColor(.white)
+                    .background(.black)
+                    .cornerRadius(5)
+                    .padding(.horizontal, 8)
                 
-//                Button(action: {
-//                    // 스크린 샷 버튼을 클릭했을 때 동작
-//                }) {
-//                    Image(systemName: "photo.on.rectangle")
-//                }
-//                .padding(.horizontal, 8)
+                Text(formatDate(currentDate, format: "yyyy년 M월"))
+                    .frame(maxWidth: .infinity)
                 
                 Button(action: {
                     withAnimation {
@@ -224,7 +225,9 @@ struct WiDReadMonthView: View {
                 allWiDs.append(contentsOf: wiDsForDate)
             }
 
-            wiDs = allWiDs
+            withAnimation {
+                wiDs = allWiDs
+            }
         }
     }
 }
