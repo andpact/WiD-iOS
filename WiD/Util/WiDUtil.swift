@@ -24,6 +24,9 @@ struct WiDView: View {
     @State private var inputText: String = ""
     @State private var isExpanded: Bool = false
     
+    @State private var beforeDelete: Bool = false
+    @State private var deleteTimer: Timer?
+    
     @State private var padding: CGFloat = 16
     
     var inputTextCount: String {
@@ -224,12 +227,32 @@ struct WiDView: View {
 //                    .frame(maxWidth: .infinity)
 
                     Button(action: {
-                        wiDService.deleteWiD(withID: clickedWiDId)
-                        presentationMode.wrappedValue.dismiss() // 뒤로 가기
+                        if beforeDelete {
+                            wiDService.deleteWiD(withID: clickedWiDId)
+                            presentationMode.wrappedValue.dismiss() // 뒤로 가기
+                        }
+                        beforeDelete.toggle()
+                        
+                        // Reset beforeDelete back to false after 3 seconds
+                        if beforeDelete {
+                            deleteTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+                                beforeDelete = false
+                                deleteTimer?.invalidate()
+                                deleteTimer = nil
+                            }
+                        } else {
+                            // Invalidate the timer if the button is tapped before 3 seconds
+                            deleteTimer?.invalidate()
+                            deleteTimer = nil
+                        }
                     }) {
-                        Image(systemName: "trash")
-                            .renderingMode(.original)
-                            .imageScale(.large)
+                        if beforeDelete {
+                            Text("한번 더 눌러 삭제")
+                                .foregroundColor(.red)
+                        } else {
+                            Image(systemName: "trash")
+                                .imageScale(.large)
+                        }
                     }
                     .frame(maxWidth: .infinity)
 
@@ -242,7 +265,9 @@ struct WiDView: View {
                     .frame(maxWidth: .infinity)
                     .accentColor(.black)
                 }
+                .frame(maxHeight: 20)
                 .padding()
+                
             }
             .frame(maxHeight: .infinity)
             .padding()

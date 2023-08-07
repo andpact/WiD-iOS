@@ -38,7 +38,7 @@ struct PieChartView: View {
                         let y = sin(angle.radians) * radius
 
                         Text("\(number)")
-                            .font(.system(size: 8))
+                            .font(.system(size: 10))
                             .position(x: geometry.size.width / 2 + x, y: geometry.size.width / 2 + y)
                     }
                     

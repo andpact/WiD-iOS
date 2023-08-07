@@ -27,7 +27,6 @@ struct WiDReadDayView: View {
                 result[wiD.title] = wiD.duration
             }
         }
-
         return result
     }
     
