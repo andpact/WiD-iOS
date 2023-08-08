@@ -164,20 +164,18 @@ struct WiDCreateView: View {
                 }
                 .padding(.horizontal)
                 .padding(.bottom)
-
             }
             .background(Color("light_gray"))
             .cornerRadius(5)
-            .padding(.horizontal)
             .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
             HStack {
 //                임시 데이터 생성 버튼
-                Button(action: insertTmpWiD) {
-                    Image(systemName: "play")
-                        .imageScale(.large)
-                }
-                .frame(maxWidth: .infinity)
+//                Button(action: insertTmpWiD) {
+//                    Image(systemName: "play")
+//                        .imageScale(.large)
+//                }
+//                .frame(maxWidth: .infinity)
                 
 //                시작 버튼
                 Button(action: startRecording) {
@@ -203,8 +201,7 @@ struct WiDCreateView: View {
                 .frame(maxWidth: .infinity)
                 .disabled(!isAfterStart || !isAfterStop)
             }
-            .padding(.horizontal)
-            .padding(.top)
+            .padding(.vertical)
         }
         .onAppear() {
             timeLeftEnd = "남았습니다."
@@ -364,7 +361,8 @@ struct WiDCreateView: View {
                 showMaxDurationAlert = true
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        .frame(maxWidth: .infinity)
+        .frame(maxWidth: 300)
         .padding(.horizontal)
         .alert(isPresented: $showMaxDurationAlert) {
            Alert(
@@ -450,24 +448,53 @@ struct WiDCreateView: View {
     }
     
     private func insertTmpWiD() {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//
+//        let date = dateFormatter.date(from: "2023-08-07 00:00:00")!
+        
+//        var wiDs: [WiD] = []
+//
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 00:00:00")!, finish: dateFormatter.date(from: "2023-08-07 07:23:00")!, duration: 7 * 3600 + 23 * 60))
+//        wiDs.append(WiD(id: 0, title: "SHOWER", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 07:33:00")!, finish: dateFormatter.date(from: "2023-08-07 08:01:00")!, duration: 28 * 60))
+//        wiDs.append(WiD(id: 0, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 08:12:00")!, finish: dateFormatter.date(from: "2023-08-07 08:35:00")!, duration: 23 * 60))
+//        wiDs.append(WiD(id: 0, title: "EXERCISE", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 09:02:00")!, finish: dateFormatter.date(from: "2023-08-07 10:44:00")!, duration: 1 * 3600 + 42 * 60))
+//        wiDs.append(WiD(id: 0, title: "READING", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 11:20:00")!, finish: dateFormatter.date(from: "2023-08-07 12:57:00")!, duration: 1 * 3600 + 37 * 60))
+//        wiDs.append(WiD(id: 0, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 13:12:00")!, finish: dateFormatter.date(from: "2023-08-07 13:45:00")!, duration: 33 * 60))
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 13:55:00")!, finish: dateFormatter.date(from: "2023-08-07 18:32:00")!, duration: 4 * 3600 + 37 * 60))
+//        wiDs.append(WiD(id: 0, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 18:54:00")!, finish: dateFormatter.date(from: "2023-08-07 19:29:00")!, duration: 35 * 60))
+//        wiDs.append(WiD(id: 0, title: "HOBBY", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 20:03:00")!, finish: dateFormatter.date(from: "2023-08-07 22:04:00")!, duration: 2 * 3600 + 1 * 60))
+//        wiDs.append(WiD(id: 0, title: "SHOWER", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 22:14:00")!, finish: dateFormatter.date(from: "2023-08-07 22:40:00")!, duration: 26 * 60))
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 22:49:00")!, finish: dateFormatter.date(from: "2023-08-07 23:59:00")!, duration: 1 * 3600 + 10 * 60))
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
-        let date = dateFormatter.date(from: "2023-08-07 00:00:00")!
+        let date = dateFormatter.date(from: "2023-08-08 00:00:00")!
+        let titles: [Title] = [.STUDY, .WORK, .READING, .EXERCISE, .HOBBY, .MEAL, .SHOWER, .CLEANING, .TRAVEL, .SLEEP]
+        let timeIntervalPerTitle = (24 * 3600) / TimeInterval(titles.count)
+        
+        var startTime = date
         
         var wiDs: [WiD] = []
         
-        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 00:00:00")!, finish: dateFormatter.date(from: "2023-08-07 07:23:00")!, duration: 7 * 3600 + 23 * 60))
-        wiDs.append(WiD(id: 1, title: "SHOWER", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 07:33:00")!, finish: dateFormatter.date(from: "2023-08-07 08:01:00")!, duration: 28 * 60))
-        wiDs.append(WiD(id: 2, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 08:12:00")!, finish: dateFormatter.date(from: "2023-08-07 08:35:00")!, duration: 23 * 60))
-        wiDs.append(WiD(id: 3, title: "EXERCISE", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 09:02:00")!, finish: dateFormatter.date(from: "2023-08-07 10:44:00")!, duration: 1 * 3600 + 42 * 60))
-        wiDs.append(WiD(id: 4, title: "READING", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 11:20:00")!, finish: dateFormatter.date(from: "2023-08-07 12:57:00")!, duration: 1 * 3600 + 37 * 60))
-        wiDs.append(WiD(id: 5, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 13:12:00")!, finish: dateFormatter.date(from: "2023-08-07 13:45:00")!, duration: 33 * 60))
-        wiDs.append(WiD(id: 6, title: "STUDY", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 13:55:00")!, finish: dateFormatter.date(from: "2023-08-07 18:32:00")!, duration: 4 * 3600 + 37 * 60))
-        wiDs.append(WiD(id: 7, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 18:54:00")!, finish: dateFormatter.date(from: "2023-08-07 19:29:00")!, duration: 35 * 60))
-        wiDs.append(WiD(id: 8, title: "HOBBY", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 20:03:00")!, finish: dateFormatter.date(from: "2023-08-07 22:04:00")!, duration: 2 * 3600 + 1 * 60))
-        wiDs.append(WiD(id: 9, title: "SHOWER", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 22:14:00")!, finish: dateFormatter.date(from: "2023-08-07 22:40:00")!, duration: 26 * 60))
-        wiDs.append(WiD(id: 10, title: "SLEEP", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 22:49:00")!, finish: dateFormatter.date(from: "2023-08-07 23:59:00")!, duration: 1 * 3600 + 10 * 60))
+        for title in titles {
+            let finishTime = startTime.addingTimeInterval(timeIntervalPerTitle)
+            
+            let wiD = WiD(
+                id: 0,
+                title: title.rawValue,
+                detail: "",
+                date: date,
+                start: startTime,
+                finish: finishTime,
+                duration: finishTime.timeIntervalSince(startTime)
+            )
+            
+            wiDs.append(wiD)
+            
+            startTime = finishTime
+        }
         
         for wiD in wiDs {
             wiDService.insertWiD(wid: wiD)

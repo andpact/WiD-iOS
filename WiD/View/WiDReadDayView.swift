@@ -95,22 +95,18 @@ struct WiDReadDayView: View {
             HStack(alignment: .top) {
                 PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
                 
-                VStack(alignment: .center) {
+                VStack {
                     HStack {
                         Rectangle()
                             .fill(Color("light_gray"))
                             .frame(width: 7, height: 20)
                         
                         Text("제목")
-                            .frame(width: 30)
-                        
-                        Spacer()
+                            .frame(minWidth: 30, maxWidth: .infinity)
                         
                         Text("총합")
-                        
-                        Spacer()
+                            .frame(minWidth: 91, maxWidth: .infinity)
                     }
-                    .frame(maxWidth: .infinity)
                     .background(Color("light_gray"))
                     .cornerRadius(5)
                     .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
@@ -124,7 +120,7 @@ struct WiDReadDayView: View {
                             Text("없습니다.")
                         }
                         .foregroundColor(.gray)
-                        .frame(maxHeight: .infinity)
+                        .frame(height: 145)
                     } else {
                         ScrollView {
                             ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
@@ -137,25 +133,22 @@ struct WiDReadDayView: View {
                                         .frame(width: 7, height: 20)
                                     
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 30)
-                                    
-                                    Spacer()
+                                        .frame(minWidth: 30, maxWidth: .infinity)
                                     
 //                                    Text(formatDuration(duration, isClickedWiD: false) + " (\(percentage))")
-                                    Text(formatDuration(duration, isClickedWiD: false))
                                     
-                                    Spacer()
+                                    Text(formatDuration(duration, isClickedWiD: false))
+                                        .frame(minWidth: 91, maxWidth: .infinity)
                                 }
                                 .background(Color("light_gray"))
                                 .cornerRadius(5)
                                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                             }
                         }
+                        .frame(height: 145)
                     }
                 }
-                .frame(maxWidth: 155)
             }
-            .frame(maxHeight: 180)
             .padding(.bottom, 8)
             
             // 각 WiD 표시
@@ -164,29 +157,79 @@ struct WiDReadDayView: View {
                     Rectangle()
                         .fill(Color("light_gray"))
                         .frame(width: 7, height: 20)
+                        .border(.black)
 
                     Text("순서")
-                        .frame(width: 30)
+                        .frame(minWidth: 30, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("제목")
-                        .frame(width: 30)
+                        .frame(minWidth: 30, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("시작")
-                        .frame(width: 50)
+                        .frame(minWidth: 50, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("종료")
-                        .frame(width: 50)
+                        .frame(minWidth: 50, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("경과")
-                        .frame(maxWidth: .infinity)
+                        .frame(minWidth: 91, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("설명")
-                        .frame(width: 35)
+                        .frame(minWidth: 30, maxWidth: .infinity)
+                        .border(.black)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
                 .cornerRadius(5)
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                
+//                HStack {
+//                    Rectangle()
+//                        .fill(.red)
+//                        .frame(width: 7, height: 20)
+//
+//                    Text("99")
+////                        .frame(width: 30)
+//                        .frame(minWidth: 30, maxWidth: .infinity)
+//                        .border(.black)
+//
+//                    Text("공부")
+////                        .frame(width: 30)
+//                        .frame(minWidth: 30, maxWidth: .infinity)
+//                        .border(.black)
+//
+//                    Text("99:99")
+////                        .frame(width: 50)
+//                        .frame(minWidth: 50, maxWidth: .infinity)
+//                        .border(.black)
+//
+//                    Text("99:99")
+////                        .frame(width: 50)
+//                        .frame(minWidth: 50, maxWidth: .infinity)
+//                        .border(.black)
+//
+//                    Text("99시간 99분")
+////                        .frame(maxWidth: .infinity)
+//                        .frame(minWidth: 91, maxWidth: .infinity)
+//                        .border(.black)
+//                        .lineLimit(1)
+//
+//                    Text("999999")
+////                        .frame(width: 30)
+//                        .frame(minWidth: 30, maxWidth: .infinity)
+//                        .border(.black)
+//                        .lineLimit(1)
+//                        .truncationMode(.tail)
+//                }
+//                .frame(maxWidth: .infinity)
+//                .background(Color("light_gray"))
+//                .cornerRadius(5)
+//                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 if wiDs.isEmpty {
                     Spacer()
@@ -206,23 +249,26 @@ struct WiDReadDayView: View {
                                         .frame(width: 7, height: 20)
 
                                     Text("\(index + 1)")
-                                        .frame(width: 30)
+                                        .frame(minWidth: 30, maxWidth: .infinity)
 
                                     Text(titleDictionary[wiD.title] ?? "")
-                                        .frame(width: 30)
+                                        .frame(minWidth: 30, maxWidth: .infinity)
 
                                     Text(formatTime(wiD.start, format: "HH:mm"))
-                                        .frame(width: 50)
+                                        .frame(minWidth: 50, maxWidth: .infinity)
 
                                     Text(formatTime(wiD.finish, format: "HH:mm"))
-                                        .frame(width: 50)
+                                        .frame(minWidth: 50, maxWidth: .infinity)
 
 //                                    Text(formatDuration(wiD.duration, isClickedWiD: false) + " (\(percentage))")
                                     Text(formatDuration(wiD.duration, isClickedWiD: false))
-                                        .frame(maxWidth: .infinity)
+                                        .frame(minWidth: 91, maxWidth: .infinity)
+                                        .lineLimit(1)
 
                                     Text("\(wiD.detail.count)")
-                                        .frame(width: 35)
+                                        .frame(minWidth: 30, maxWidth: .infinity)
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .foregroundColor(.black)
