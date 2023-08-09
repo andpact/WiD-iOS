@@ -85,6 +85,7 @@ struct WiDSearchView: View {
                             }
                         }
                     }
+                    
                     Text("검색된 WiD \(wiDs.count)개")
                         .font(.caption)
                         .padding(4)

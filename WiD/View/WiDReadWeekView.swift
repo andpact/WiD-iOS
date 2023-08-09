@@ -108,6 +108,7 @@ struct WiDReadWeekView: View {
                     Image(systemName: "arrow.clockwise")
                 }
                 .padding(.horizontal, 8)
+                .disabled(Calendar.current.isDate(firstDayOfWeek, equalTo: getFirstDayOfWeek(for: Date()), toGranularity: .weekOfYear))
                 
                 Button(action: {
                     withAnimation {
@@ -159,41 +160,18 @@ struct WiDReadWeekView: View {
                         .frame(width: 7, height: 20)
 
                     Text("제목")
-                        .frame(width: 50)
+                        .frame(width: 70)
 
                     Text("최고")
                         .frame(maxWidth: .infinity)
 
                     Text("총합")
-                        .frame(maxWidth: 110)
+                        .frame(maxWidth: .infinity)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
                 .cornerRadius(5)
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
-                
-//                HStack {
-//                    Rectangle()
-//                        .fill(.red)
-//                        .frame(width: 7, height: 20)
-//
-//                    Text("공부")
-//                        .frame(width: 50)
-//                        .border(.black)
-//
-//
-//                    Text("99일 / 99시간 99분")
-//                        .frame(maxWidth: .infinity)
-//                        .border(.black)
-//
-//                    Text("999시간 99분")
-//                        .frame(maxWidth: 110)
-//                        .border(.black)
-//                }
-//                .frame(maxWidth: .infinity)
-//                .background(Color("light_gray"))
-//                .cornerRadius(5)
-//                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                 
                 if sortedTotalDurationDictionary.isEmpty {
                     Spacer()
@@ -216,15 +194,16 @@ struct WiDReadWeekView: View {
                                         .frame(width: 7, height: 20)
 
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 50)
+                                        .frame(width: 70)
                                     
 //                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
-                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false))
+                                    Text(formatDuration(bestDuration, isClickedWiD: false) + "(\(formatDate(bestDay, format: "d일")))")
                                         .frame(maxWidth: .infinity)
                                     
 //                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
+                                    
                                     Text(formatDuration(totalDuration, isClickedWiD: false))
-                                        .frame(maxWidth: 110)
+                                        .frame(maxWidth: .infinity)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))

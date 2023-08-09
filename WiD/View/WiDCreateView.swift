@@ -98,7 +98,6 @@ struct WiDCreateView: View {
                         Image(systemName: "chevron.left")
                     }
                     .disabled(isAfterStart)
-                    .opacity(isAfterStart ? 0 : 1)
                     .padding(.horizontal)
 
                     Text(titleDictionary[title] ?? "")
@@ -111,7 +110,6 @@ struct WiDCreateView: View {
                         Image(systemName: "chevron.right")
                     }
                     .disabled(isAfterStart)
-                    .opacity(isAfterStart ? 0 : 1)
                     .padding(.horizontal)
                 }
                 .padding(.horizontal)
@@ -177,7 +175,6 @@ struct WiDCreateView: View {
 //                }
 //                .frame(maxWidth: .infinity)
                 
-//                시작 버튼
                 Button(action: startRecording) {
                     Image(systemName: "play.fill")
                         .imageScale(.large)
@@ -185,7 +182,6 @@ struct WiDCreateView: View {
                 .frame(maxWidth: .infinity)
                 .disabled(isAfterStart)
 
-//                종료 버튼
                 Button(action: stopRecording) {
                     Image(systemName: "stop.fill")
                         .imageScale(.large)
@@ -193,7 +189,6 @@ struct WiDCreateView: View {
                 .frame(maxWidth: .infinity)
                 .disabled(!isAfterStart || isAfterStop)
 
-//                초기화 버튼
                 Button(action: resetRecording) {
                     Image(systemName: "arrow.clockwise.circle.fill")
                         .imageScale(.large)
@@ -203,6 +198,8 @@ struct WiDCreateView: View {
             }
             .padding(.vertical)
         }
+        .frame(maxWidth: 300)
+        .padding(.horizontal)
         .onAppear() {
             timeLeftEnd = "남았습니다."
             
@@ -361,9 +358,6 @@ struct WiDCreateView: View {
                 showMaxDurationAlert = true
             }
         }
-//        .frame(maxWidth: .infinity)
-        .frame(maxWidth: 300)
-        .padding(.horizontal)
         .alert(isPresented: $showMaxDurationAlert) {
            Alert(
                title: Text("기록 종료"),

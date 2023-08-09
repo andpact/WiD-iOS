@@ -31,7 +31,7 @@ struct WiDView: View {
     
     var inputTextCount: String {
         let count = inputText.count
-        return "\(count)/90"
+        return "\(count)/200"
     }
     
     @State private var isEditing: Bool = false
@@ -157,7 +157,7 @@ struct WiDView: View {
                                 Spacer()
                                 
                                 Button(action: {
-                                    if isEditing && inputText.count <= 90 {
+                                    if isEditing && inputText.count <= 200 {
                                         wiDService.updateWiD(withID: clickedWiDId, detail: inputText)
                                     }
                                     isEditing.toggle()
@@ -168,23 +168,26 @@ struct WiDView: View {
                                     Text(isEditing ? "완료" : "수정")
                                         .font(.system(size: 20))
                                 }
-                                .disabled(isEditing && 90 < inputText.count)
+                                .disabled(isEditing && 200 < inputText.count)
                             }
                             
                             if !isEditing {
-                                Text(inputText == "" ? "설명 추가.." : inputText) // 디테일 텍스트 뷰
-                                    .padding(5)
-                                    .padding(.top, 4)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                                    .border(.gray)
+                                ScrollView {
+                                    Text(inputText == "" ? "설명 추가.." : inputText) // 디테일 텍스트 뷰
+                                        .padding(5)
+                                        .padding(.top, 4)
+                                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                                }
+                                .frame(maxHeight: 150)
+                                .border(.gray)
                             } else {
                                 TextEditor(text: $inputText) // 디테일 텍스트 에디터
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                    .frame(maxWidth: .infinity, maxHeight: 150,  alignment: .topLeading)
                                     .border(.gray)
                             }
                             
                             Text(inputTextCount)
-                                .foregroundColor(inputText.count > 90 ? .red : .gray)
+                                .foregroundColor(inputText.count > 200 ? .red : .gray)
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .padding(.top, -5)
                         }
@@ -213,7 +216,6 @@ struct WiDView: View {
                 }
                 .background(Color("light_gray"))
                 .cornerRadius(5)
-                .padding(.horizontal)
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 HStack {
@@ -267,10 +269,9 @@ struct WiDView: View {
                 }
                 .frame(maxHeight: 20)
                 .padding()
-                
             }
-            .frame(maxHeight: .infinity)
-            .padding()
+            .frame(maxWidth: 300)
+            .padding(.horizontal)
         }
         .navigationBarBackButtonHidden()
     }

@@ -17,22 +17,22 @@ struct WiDReadDayView: View {
         }
     }
     
-    private var totalDurationDictionary: [String: TimeInterval] {
-        var result: [String: TimeInterval] = [:]
-
-        for wiD in wiDs {
-            if let currentDuration = result[wiD.title] {
-                result[wiD.title] = currentDuration + wiD.duration
-            } else {
-                result[wiD.title] = wiD.duration
-            }
-        }
-        return result
-    }
+//    private var totalDurationDictionary: [String: TimeInterval] {
+//        var result: [String: TimeInterval] = [:]
+//
+//        for wiD in wiDs {
+//            if let currentDuration = result[wiD.title] {
+//                result[wiD.title] = currentDuration + wiD.duration
+//            } else {
+//                result[wiD.title] = wiD.duration
+//            }
+//        }
+//        return result
+//    }
     
-    private var sortedTotalDurationDictionary: [(key: String, value: TimeInterval)] {
-        totalDurationDictionary.sorted { $0.value > $1.value }
-    }
+//    private var sortedTotalDurationDictionary: [(key: String, value: TimeInterval)] {
+//        totalDurationDictionary.sorted { $0.value > $1.value }
+//    }
     
     var body: some View {
         VStack {
@@ -69,6 +69,7 @@ struct WiDReadDayView: View {
                     Image(systemName: "arrow.clockwise")
                 }
                 .padding(.horizontal, 8)
+                .disabled(Calendar.current.isDateInToday(currentDate))
                 
                 Button(action: {
                     withAnimation {
@@ -91,65 +92,68 @@ struct WiDReadDayView: View {
             }
             .padding(.bottom, 8)
             
-            // 파이 차트 및 제목 별 총합 표시
-            HStack(alignment: .top) {
-                PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
+            PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
+                .padding(.bottom, 8)
                 
-                VStack {
-                    HStack {
-                        Rectangle()
-                            .fill(Color("light_gray"))
-                            .frame(width: 7, height: 20)
-                        
-                        Text("제목")
-                            .frame(minWidth: 30, maxWidth: .infinity)
-                        
-                        Text("총합")
-                            .frame(minWidth: 91, maxWidth: .infinity)
-                    }
-                    .background(Color("light_gray"))
-                    .cornerRadius(5)
-                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
-                    
-                    if sortedTotalDurationDictionary.isEmpty {
-                        VStack {
-                            Text("표시할")
-
-                            Text("데이터가")
-
-                            Text("없습니다.")
-                        }
-                        .foregroundColor(.gray)
-                        .frame(height: 145)
-                    } else {
-                        ScrollView {
-                            ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
-//                                let totalDurationOfDay = 60 * 60 * 24
-//                                let percentage = (Double(duration) / Double(totalDurationOfDay)) * 100
-                                
-                                HStack {
-                                    Rectangle()
-                                        .fill(Color(title))
-                                        .frame(width: 7, height: 20)
-                                    
-                                    Text(titleDictionary[title] ?? "")
-                                        .frame(minWidth: 30, maxWidth: .infinity)
-                                    
-//                                    Text(formatDuration(duration, isClickedWiD: false) + " (\(percentage))")
-                                    
-                                    Text(formatDuration(duration, isClickedWiD: false))
-                                        .frame(minWidth: 91, maxWidth: .infinity)
-                                }
-                                .background(Color("light_gray"))
-                                .cornerRadius(5)
-                                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
-                            }
-                        }
-                        .frame(height: 145)
-                    }
-                }
-            }
-            .padding(.bottom, 8)
+            // 파이 차트 및 제목 별 총합 표시
+//            HStack(alignment: .top) {
+//                PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
+                
+//                VStack {
+//                    HStack {
+//                        Rectangle()
+//                            .fill(Color("light_gray"))
+//                            .frame(width: 7, height: 20)
+//
+//                        Text("제목")
+//                            .frame(minWidth: 30)
+//
+//                        Text("총합")
+//                            .frame(minWidth: 91)
+//                    }
+//                    .background(Color("light_gray"))
+//                    .cornerRadius(5)
+//                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+//
+//                    if sortedTotalDurationDictionary.isEmpty {
+//                        VStack {
+//                            Text("표시할")
+//
+//                            Text("데이터가")
+//
+//                            Text("없습니다.")
+//                        }
+//                        .foregroundColor(.gray)
+//                    } else {
+//                        ScrollView {
+//                            ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
+////                                let totalDurationOfDay = 60 * 60 * 24
+////                                let percentage = (Double(duration) / Double(totalDurationOfDay)) * 100
+//
+//                                HStack {
+//                                    Rectangle()
+//                                        .fill(Color(title))
+//                                        .frame(width: 7, height: 20)
+//
+//                                    Text(titleDictionary[title] ?? "")
+//                                        .frame(minWidth: 30)
+//
+////                                    Text(formatDuration(duration, isClickedWiD: false) + " (\(percentage))")
+//
+//                                    Text(formatDuration(duration, isClickedWiD: false))
+//                                        .frame(minWidth: 91)
+//                                }
+//                                .background(Color("light_gray"))
+//                                .cornerRadius(5)
+//                                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+//                            }
+//                        }
+////                        .frame(height: 145)
+//                    }
+//                }
+//                .border(.red)
+//            }
+//            .padding(.bottom, 8)
             
             // 각 WiD 표시
             VStack {
@@ -157,84 +161,35 @@ struct WiDReadDayView: View {
                     Rectangle()
                         .fill(Color("light_gray"))
                         .frame(width: 7, height: 20)
-                        .border(.black)
 
                     Text("순서")
-                        .frame(minWidth: 30, maxWidth: .infinity)
-                        .border(.black)
+                        .frame(minWidth: 30)
 
                     Text("제목")
                         .frame(minWidth: 30, maxWidth: .infinity)
-                        .border(.black)
 
                     Text("시작")
                         .frame(minWidth: 50, maxWidth: .infinity)
-                        .border(.black)
 
                     Text("종료")
                         .frame(minWidth: 50, maxWidth: .infinity)
-                        .border(.black)
 
                     Text("경과")
                         .frame(minWidth: 91, maxWidth: .infinity)
-                        .border(.black)
 
                     Text("설명")
                         .frame(minWidth: 30, maxWidth: .infinity)
-                        .border(.black)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
                 .cornerRadius(5)
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
-                
-//                HStack {
-//                    Rectangle()
-//                        .fill(.red)
-//                        .frame(width: 7, height: 20)
-//
-//                    Text("99")
-////                        .frame(width: 30)
-//                        .frame(minWidth: 30, maxWidth: .infinity)
-//                        .border(.black)
-//
-//                    Text("공부")
-////                        .frame(width: 30)
-//                        .frame(minWidth: 30, maxWidth: .infinity)
-//                        .border(.black)
-//
-//                    Text("99:99")
-////                        .frame(width: 50)
-//                        .frame(minWidth: 50, maxWidth: .infinity)
-//                        .border(.black)
-//
-//                    Text("99:99")
-////                        .frame(width: 50)
-//                        .frame(minWidth: 50, maxWidth: .infinity)
-//                        .border(.black)
-//
-//                    Text("99시간 99분")
-////                        .frame(maxWidth: .infinity)
-//                        .frame(minWidth: 91, maxWidth: .infinity)
-//                        .border(.black)
-//                        .lineLimit(1)
-//
-//                    Text("999999")
-////                        .frame(width: 30)
-//                        .frame(minWidth: 30, maxWidth: .infinity)
-//                        .border(.black)
-//                        .lineLimit(1)
-//                        .truncationMode(.tail)
-//                }
-//                .frame(maxWidth: .infinity)
-//                .background(Color("light_gray"))
-//                .cornerRadius(5)
-//                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 if wiDs.isEmpty {
                     Spacer()
                     Text("표시할 WiD가 없습니다.")
                         .foregroundColor(.gray)
+                    
                 } else {
                     ScrollView {
                         ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
@@ -249,7 +204,7 @@ struct WiDReadDayView: View {
                                         .frame(width: 7, height: 20)
 
                                     Text("\(index + 1)")
-                                        .frame(minWidth: 30, maxWidth: .infinity)
+                                        .frame(minWidth: 30)
 
                                     Text(titleDictionary[wiD.title] ?? "")
                                         .frame(minWidth: 30, maxWidth: .infinity)
