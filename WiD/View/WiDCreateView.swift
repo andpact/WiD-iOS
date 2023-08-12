@@ -170,7 +170,7 @@ struct WiDCreateView: View {
             HStack {
 //                임시 데이터 생성 버튼
 //                Button(action: insertTmpWiD) {
-//                    Image(systemName: "play")
+//                    Image(systemName: "star.circle.fill")
 //                        .imageScale(.large)
 //                }
 //                .frame(maxWidth: .infinity)
@@ -441,59 +441,195 @@ struct WiDCreateView: View {
         isAfterStop.toggle()
     }
     
-    private func insertTmpWiD() {
+//    private func insertTmpWiD() {
 //        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        dateFormatter.dateFormat = "yyyy.MM.dd HH:mm:ss"
 //
-//        let date = dateFormatter.date(from: "2023-08-07 00:00:00")!
-        
 //        var wiDs: [WiD] = []
 //
-//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 00:00:00")!, finish: dateFormatter.date(from: "2023-08-07 07:23:00")!, duration: 7 * 3600 + 23 * 60))
-//        wiDs.append(WiD(id: 0, title: "SHOWER", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 07:33:00")!, finish: dateFormatter.date(from: "2023-08-07 08:01:00")!, duration: 28 * 60))
-//        wiDs.append(WiD(id: 0, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 08:12:00")!, finish: dateFormatter.date(from: "2023-08-07 08:35:00")!, duration: 23 * 60))
-//        wiDs.append(WiD(id: 0, title: "EXERCISE", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 09:02:00")!, finish: dateFormatter.date(from: "2023-08-07 10:44:00")!, duration: 1 * 3600 + 42 * 60))
-//        wiDs.append(WiD(id: 0, title: "READING", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 11:20:00")!, finish: dateFormatter.date(from: "2023-08-07 12:57:00")!, duration: 1 * 3600 + 37 * 60))
-//        wiDs.append(WiD(id: 0, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 13:12:00")!, finish: dateFormatter.date(from: "2023-08-07 13:45:00")!, duration: 33 * 60))
-//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 13:55:00")!, finish: dateFormatter.date(from: "2023-08-07 18:32:00")!, duration: 4 * 3600 + 37 * 60))
-//        wiDs.append(WiD(id: 0, title: "MEAL", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 18:54:00")!, finish: dateFormatter.date(from: "2023-08-07 19:29:00")!, duration: 35 * 60))
-//        wiDs.append(WiD(id: 0, title: "HOBBY", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 20:03:00")!, finish: dateFormatter.date(from: "2023-08-07 22:04:00")!, duration: 2 * 3600 + 1 * 60))
-//        wiDs.append(WiD(id: 0, title: "SHOWER", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 22:14:00")!, finish: dateFormatter.date(from: "2023-08-07 22:40:00")!, duration: 26 * 60))
-//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: date, start: dateFormatter.date(from: "2023-08-07 22:49:00")!, finish: dateFormatter.date(from: "2023-08-07 23:59:00")!, duration: 1 * 3600 + 10 * 60))
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
-        let date = dateFormatter.date(from: "2023-08-08 00:00:00")!
-        let titles: [Title] = [.STUDY, .WORK, .READING, .EXERCISE, .HOBBY, .MEAL, .SHOWER, .CLEANING, .TRAVEL, .SLEEP]
-        let timeIntervalPerTitle = (24 * 3600) / TimeInterval(titles.count)
-        
-        var startTime = date
-        
-        var wiDs: [WiD] = []
-        
-        for title in titles {
-            let finishTime = startTime.addingTimeInterval(timeIntervalPerTitle)
-            
-            let wiD = WiD(
-                id: 0,
-                title: title.rawValue,
-                detail: "",
-                date: date,
-                start: startTime,
-                finish: finishTime,
-                duration: finishTime.timeIntervalSince(startTime)
-            )
-            
-            wiDs.append(wiD)
-            
-            startTime = finishTime
-        }
-        
-        for wiD in wiDs {
-            wiDService.insertWiD(wid: wiD)
-        }
-    }
+////        ======================================================= 2023.07.24 월
+//
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: dateFormatter.date(from: "2023.07.24 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.24 01:23:23")!,
+//                        finish: dateFormatter.date(from: "2023.07.24 07:54:26")!,
+//                        duration: 6 * 3600 + 31 * 60 + 3))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.24 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.24 09:10:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.24 12:34:22")!,
+//                        duration: 3 * 3600 + 23 * 60 + 29))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.24 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.24 14:12:28")!,
+//                        finish: dateFormatter.date(from: "2023.07.24 17:54:38")!,
+//                        duration: 3 * 3600 + 42 * 60 + 10))
+//
+//        wiDs.append(WiD(id: 0, title: "EXERCISE", detail: "", date: dateFormatter.date(from: "2023.07.24 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.24 19:03:18")!,
+//                        finish: dateFormatter.date(from: "2023.07.24 20:37:25")!,
+//                        duration: 1 * 3600 + 34 * 60 + 7))
+//
+//        wiDs.append(WiD(id: 0, title: "HOBBY", detail: "", date: dateFormatter.date(from: "2023.07.24 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.24 21:12:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.24 23:38:59")!,
+//                        duration: 2 * 3600 + 26 * 60 + 6))
+//
+////        ======================================================= 2023.07.25 화
+//
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: dateFormatter.date(from: "2023.07.25 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.25 00:33:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.25 07:34:46")!,
+//                        duration: 7 * 3600 + 0 * 60 + 53))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.25 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.25 08:12:13")!,
+//                        finish: dateFormatter.date(from: "2023.07.25 12:24:25")!,
+//                        duration: 4 * 3600 + 12 * 60 + 12))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.25 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.25 14:32:58")!,
+//                        finish: dateFormatter.date(from: "2023.07.25 17:34:48")!,
+//                        duration: 3 * 3600 + 1 * 60 + 50))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.25 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.25 18:42:18")!,
+//                        finish: dateFormatter.date(from: "2023.07.25 22:44:18")!,
+//                        duration: 4 * 3600 + 2 * 60 + 0))
+//
+////        ======================================================= 2023.07.26 수
+//
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: dateFormatter.date(from: "2023.07.26 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.26 00:53:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.26 07:24:46")!,
+//                        duration: 6 * 3600 + 30 * 60 + 53))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.26 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.26 08:42:13")!,
+//                        finish: dateFormatter.date(from: "2023.07.26 12:34:25")!,
+//                        duration: 3 * 3600 + 52 * 60 + 12))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.26 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.26 13:52:58")!,
+//                        finish: dateFormatter.date(from: "2023.07.26 17:24:48")!,
+//                        duration: 3 * 3600 + 31 * 60 + 50))
+//
+//        wiDs.append(WiD(id: 0, title: "READING", detail: "", date: dateFormatter.date(from: "2023.07.26 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.26 19:55:18")!,
+//                        finish: dateFormatter.date(from: "2023.07.26 22:34:18")!,
+//                        duration: 2 * 3600 + 39 * 60 + 0))
+//
+////        ======================================================= 2023.07.27 목
+//
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: dateFormatter.date(from: "2023.07.27 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.27 01:03:23")!,
+//                        finish: dateFormatter.date(from: "2023.07.27 07:14:26")!,
+//                        duration: 6 * 3600 + 11 * 60 + 3))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.27 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.27 08:13:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.27 12:24:22")!,
+//                        duration: 4 * 3600 + 10 * 60 + 29))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.27 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.27 13:52:28")!,
+//                        finish: dateFormatter.date(from: "2023.07.27 17:44:38")!,
+//                        duration: 3 * 3600 + 52 * 60 + 10))
+//
+//        wiDs.append(WiD(id: 0, title: "EXERCISE", detail: "", date: dateFormatter.date(from: "2023.07.27 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.27 18:53:18")!,
+//                        finish: dateFormatter.date(from: "2023.07.27 20:27:25")!,
+//                        duration: 1 * 3600 + 34 * 60 + 7))
+//
+//        wiDs.append(WiD(id: 0, title: "READING", detail: "", date: dateFormatter.date(from: "2023.07.27 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.27 21:22:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.27 23:18:59")!,
+//                        duration: 1 * 3600 + 56 * 60 + 6))
+//
+////        ======================================================= 2023.07.28 금
+//
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: dateFormatter.date(from: "2023.07.28 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.28 00:33:23")!,
+//                        finish: dateFormatter.date(from: "2023.07.28 07:24:26")!,
+//                        duration: 6 * 3600 + 51 * 60 + 3))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.28 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.28 08:03:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.28 12:25:22")!,
+//                        duration: 4 * 3600 + 21 * 60 + 29))
+//
+//        wiDs.append(WiD(id: 0, title: "STUDY", detail: "", date: dateFormatter.date(from: "2023.07.28 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.28 13:32:28")!,
+//                        finish: dateFormatter.date(from: "2023.07.28 17:24:38")!,
+//                        duration: 3 * 3600 + 52 * 60 + 10))
+//
+//        wiDs.append(WiD(id: 0, title: "EXERCISE", detail: "", date: dateFormatter.date(from: "2023.07.28 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.28 18:33:18")!,
+//                        finish: dateFormatter.date(from: "2023.07.28 20:07:25")!,
+//                        duration: 1 * 3600 + 34 * 60 + 7))
+//
+//        wiDs.append(WiD(id: 0, title: "HOBBY", detail: "", date: dateFormatter.date(from: "2023.07.28 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.28 21:02:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.28 23:08:59")!,
+//                        duration: 2 * 3600 + 6 * 60 + 6))
+//
+////        ======================================================= 2023.07.29 토
+//
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: dateFormatter.date(from: "2023.07.29 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.29 00:13:23")!,
+//                        finish: dateFormatter.date(from: "2023.07.29 08:24:26")!,
+//                        duration: 8 * 3600 + 11 * 60 + 3))
+//
+//        wiDs.append(WiD(id: 0, title: "EXERCISE", detail: "", date: dateFormatter.date(from: "2023.07.29 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.29 08:53:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.29 10:45:22")!,
+//                        duration: 1 * 3600 + 51 * 60 + 29))
+//
+//        wiDs.append(WiD(id: 0, title: "HOBBY", detail: "", date: dateFormatter.date(from: "2023.07.29 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.29 11:12:28")!,
+//                        finish: dateFormatter.date(from: "2023.07.29 12:44:38")!,
+//                        duration: 1 * 3600 + 32 * 60 + 10))
+//
+//        wiDs.append(WiD(id: 0, title: "HOBBY", detail: "", date: dateFormatter.date(from: "2023.07.29 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.29 13:33:18")!,
+//                        finish: dateFormatter.date(from: "2023.07.29 17:57:25")!,
+//                        duration: 4 * 3600 + 24 * 60 + 7))
+//
+//        wiDs.append(WiD(id: 0, title: "READING", detail: "", date: dateFormatter.date(from: "2023.07.29 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.29 18:22:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.29 21:38:59")!,
+//                        duration: 3 * 3600 + 16 * 60 + 6))
+//
+////        ======================================================= 2023.07.30 일
+//
+//        wiDs.append(WiD(id: 0, title: "SLEEP", detail: "", date: dateFormatter.date(from: "2023.07.30 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.30 00:33:23")!,
+//                        finish: dateFormatter.date(from: "2023.07.30 08:14:26")!,
+//                        duration: 7 * 3600 + 41 * 60 + 3))
+//
+//        wiDs.append(WiD(id: 0, title: "EXERCISE", detail: "", date: dateFormatter.date(from: "2023.07.30 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.30 08:23:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.30 10:15:22")!,
+//                        duration: 1 * 3600 + 51 * 60 + 29))
+//
+//        wiDs.append(WiD(id: 0, title: "HOBBY", detail: "", date: dateFormatter.date(from: "2023.07.30 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.30 10:42:28")!,
+//                        finish: dateFormatter.date(from: "2023.07.30 12:34:38")!,
+//                        duration: 1 * 3600 + 52 * 60 + 10))
+//
+//        wiDs.append(WiD(id: 0, title: "HOBBY", detail: "", date: dateFormatter.date(from: "2023.07.30 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.30 13:23:18")!,
+//                        finish: dateFormatter.date(from: "2023.07.30 17:47:25")!,
+//                        duration: 4 * 3600 + 24 * 60 + 7))
+//
+//        wiDs.append(WiD(id: 0, title: "READING", detail: "", date: dateFormatter.date(from: "2023.07.30 00:00:00")!,
+//                        start: dateFormatter.date(from: "2023.07.30 18:24:53")!,
+//                        finish: dateFormatter.date(from: "2023.07.30 21:28:59")!,
+//                        duration: 3 * 3600 + 4 * 60 + 6))
+//
+//        for wiD in wiDs {
+//            wiDService.insertWiD(wid: wiD)
+//        }
+//    }
 }
 
 struct WiDCreateView_Previews: PreviewProvider {

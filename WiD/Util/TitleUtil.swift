@@ -13,9 +13,6 @@ enum Title: String {
     case READING
     case EXERCISE
     case HOBBY
-    case MEAL
-    case SHOWER
-    case CLEANING
     case TRAVEL
     case SLEEP
     
@@ -31,12 +28,6 @@ enum Title: String {
             return "운동"
         case .HOBBY:
             return "취미"
-        case .MEAL:
-            return "식사"
-        case .SHOWER:
-            return "샤워"
-        case .CLEANING:
-            return "청소"
         case .TRAVEL:
             return "이동"
         case .SLEEP:
@@ -51,9 +42,6 @@ let titleArray: [String] = [
     Title.READING.rawValue,
     Title.EXERCISE.rawValue,
     Title.HOBBY.rawValue,
-    Title.MEAL.rawValue,
-    Title.SHOWER.rawValue,
-    Title.CLEANING.rawValue,
     Title.TRAVEL.rawValue,
     Title.SLEEP.rawValue,
 ]
@@ -64,9 +52,6 @@ let titleDictionary: [String: String] = [
     Title.READING.rawValue: Title.READING.koreanValue,
     Title.EXERCISE.rawValue: Title.EXERCISE.koreanValue,
     Title.HOBBY.rawValue: Title.HOBBY.koreanValue,
-    Title.MEAL.rawValue: Title.MEAL.koreanValue,
-    Title.SHOWER.rawValue: Title.SHOWER.koreanValue,
-    Title.CLEANING.rawValue: Title.CLEANING.koreanValue,
     Title.TRAVEL.rawValue: Title.TRAVEL.koreanValue,
     Title.SLEEP.rawValue: Title.SLEEP.koreanValue
 ]

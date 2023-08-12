@@ -159,13 +159,13 @@ struct WiDReadMonthView: View {
                         .frame(width: 7, height: 20)
                     
                     Text("제목")
-                        .frame(width: 70)
+                        .frame(width: 50)
                     
                     Text("최고")
                         .frame(maxWidth: .infinity)
                     
                     Text("총합")
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: 110)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
@@ -192,7 +192,7 @@ struct WiDReadMonthView: View {
                                         .frame(width: 7, height: 20)
 
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 70)
+                                        .frame(width: 50)
                                     
 //                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
                                     Text(formatDuration(bestDuration, isClickedWiD: false) + "(\(formatDate(bestDay, format: "d일")))")
@@ -201,7 +201,7 @@ struct WiDReadMonthView: View {
 //                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
                                     
                                     Text(formatDuration(totalDuration, isClickedWiD: false))
-                                        .frame(maxWidth: .infinity)
+                                        .frame(maxWidth: 110)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))

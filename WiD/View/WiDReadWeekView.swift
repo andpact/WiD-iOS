@@ -160,18 +160,56 @@ struct WiDReadWeekView: View {
                         .frame(width: 7, height: 20)
 
                     Text("제목")
-                        .frame(width: 70)
+                        .frame(width: 50)
 
                     Text("최고")
                         .frame(maxWidth: .infinity)
 
                     Text("총합")
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: 110)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
                 .cornerRadius(5)
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                
+//                HStack {
+//                    Rectangle()
+//                        .fill(.red)
+//                        .frame(width: 7, height: 20)
+//
+//                    Text("일")
+//                        .frame(width: 50)
+//
+//                    Text("99시간 99분(23일)")
+//                        .frame(maxWidth: .infinity)
+//
+//                    Text("999시간 99분")
+//                        .frame(maxWidth: 110)
+//                }
+//                .frame(maxWidth: .infinity)
+//                .background(Color("light_gray"))
+//                .cornerRadius(5)
+//                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+//                
+//                HStack {
+//                    Rectangle()
+//                        .fill(.yellow)
+//                        .frame(width: 7, height: 20)
+//
+//                    Text("공부")
+//                        .frame(width: 50)
+//
+//                    Text("10분(23일)")
+//                        .frame(maxWidth: .infinity)
+//
+//                    Text("10분")
+//                        .frame(maxWidth: 110)
+//                }
+//                .frame(maxWidth: .infinity)
+//                .background(Color("light_gray"))
+//                .cornerRadius(5)
+//                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                 
                 if sortedTotalDurationDictionary.isEmpty {
                     Spacer()
@@ -194,7 +232,7 @@ struct WiDReadWeekView: View {
                                         .frame(width: 7, height: 20)
 
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 70)
+                                        .frame(width: 50)
                                     
 //                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
                                     Text(formatDuration(bestDuration, isClickedWiD: false) + "(\(formatDate(bestDay, format: "d일")))")
@@ -203,7 +241,7 @@ struct WiDReadWeekView: View {
 //                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
                                     
                                     Text(formatDuration(totalDuration, isClickedWiD: false))
-                                        .frame(maxWidth: .infinity)
+                                        .frame(maxWidth: 110)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))
