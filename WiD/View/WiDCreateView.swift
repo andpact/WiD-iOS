@@ -174,7 +174,7 @@ struct WiDCreateView: View {
 //                        .imageScale(.large)
 //                }
 //                .frame(maxWidth: .infinity)
-                
+
                 Button(action: startRecording) {
                     Image(systemName: "play.fill")
                         .imageScale(.large)
@@ -353,7 +353,9 @@ struct WiDCreateView: View {
             
             let durationLimit: TimeInterval = 60 * 60 * 12
             if durationLimit <= duration {
-                duration = durationLimit // 앱 종료 후 다시 켰을 때 12시간이 지나있으면 duration을 12시간으로 할당해버림.
+                finishTime = startTime.addingTimeInterval(durationLimit)
+//                duration = durationLimit // 앱 종료 후 다시 켰을 때 12시간이 지나있으면 duration을 12시간으로 할당해버림.
+                duration = finishTime.timeIntervalSince(startTime)
                 stopRecording()
                 showMaxDurationAlert = true
             }
