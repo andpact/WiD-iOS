@@ -1,7 +1,31 @@
-# 연락
-E-mail : andpact@gmail.com
+# 앱 아이콘
+![ic_WiD](https://github.com/andpact/WiD-iOS/assets/107045604/93d90458-fb9e-4186-9219-e8cd8728842f)
+
+# 앱 소개
+
+이름 : WiD
+
+제공자 : andpact
+
+출시 일 : 2023.08.17 목요일
+
+카테고리 : 생산성
+
+버전 : 1.0.0
+
+업데이트 : 2023.08.17 목요일
+
+OS : iOS 15.0 이상
+
+크기 : 5MB
+
+연령 등급 : 4세 이상
+
+저작권 : ⓒ Copyright 2023. andpact all right reserved.
 
 # 설명
+오늘 무엇을 하셨나요?
+
 시간을 헛되이 보내신 것 같나요?
 
 WiD와 함께라면 안심할 수 있어요.
@@ -11,13 +35,18 @@ WiD와 함께라면 안심할 수 있어요.
 총 7가지 카테고리로 하루를 기록해 보세요.
 
 # 사용법
-### 1. WiD 등록하기
+WiD 등록하기
+
 <img width="288" alt="스크린샷 2023-08-11 오후 4 56 12" src="https://github.com/andpact/WiD-iOS/assets/107045604/3cb6e442-203e-439e-a48f-565d0ba2af38">
 
-### 2. WiD 조회하기
+WiD 조회하기
+
 <img width="288" alt="스크린샷 2023-08-11 오후 5 41 30" src="https://github.com/andpact/WiD-iOS/assets/107045604/64de0626-7254-44b7-92b2-8606ee5a63bd"><br>
 
 <img width="288" alt="스크린샷 2023-08-12 오전 10 01 00" src="https://github.com/andpact/WiD-iOS/assets/107045604/a2ad6366-aa98-4026-9771-68ef25b31713">
+
+# 개발자 연락처
+E-mail : andpact@gmail.com
 
 # 개인정보처리방침
 
