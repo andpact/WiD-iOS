@@ -9,12 +9,12 @@ import SwiftUI
 
 struct WiD {
     var id: Int
-    var title: String
-    var detail: String
     var date: Date
+    var title: String
     var start: Date
     var finish: Date
     var duration: TimeInterval
+    var detail: String
 }
 
 struct WiDView: View {

@@ -86,6 +86,15 @@ func formatTime(_ date: Date, format: String) -> String {
     return dateFormatter.string(from: date)
 }
 
+func formatElapsedTime(_ time: Int) -> String {
+    let hours = time / 3600
+    let minutes = (time % 3600) / 60
+    let seconds = time % 60
+
+    return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+}
+
+
 func formatDuration(_ interval: TimeInterval, isClickedWiD: Bool) -> String {
     let seconds = Int(interval) % 60
     let minutes = (Int(interval) / 60) % 60

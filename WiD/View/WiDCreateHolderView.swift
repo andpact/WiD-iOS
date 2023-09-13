@@ -1,20 +1,20 @@
 //
-//  WiDReadHolderView.swift
+//  WiDCreateHolderView.swift
 //  WiD
 //
-//  Created by jjkim on 2023/07/14.
+//  Created by jjkim on 2023/09/13.
 //
 
 import SwiftUI
 
-struct WiDReadHolderView: View {
-    @State private var selectedPicker: wiDReadHolderTapInfo = .DAY
+struct WiDCreateHolderView: View {
+    @State private var selectedPicker: wiDCreateHolderTapInfo = .STOPWATCH
     @Namespace private var animation
     
     var body: some View {
         VStack {
             animate()
-            WiDReadView(currentTab: selectedPicker)
+            WiDCreateView(currentTab: selectedPicker)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .gesture(
@@ -24,24 +24,20 @@ struct WiDReadHolderView: View {
                         // 왼쪽 스와이프: 다음 탭으로 이동
                         withAnimation(.easeInOut) {
                             switch selectedPicker {
-                            case .DAY:
-                                selectedPicker = .WEEK
-                            case .WEEK:
-                                selectedPicker = .MONTH
-                            case .MONTH:
-                                selectedPicker = .DAY
+                            case .STOPWATCH:
+                                selectedPicker = .TIMER
+                            case .TIMER:
+                                selectedPicker = .STOPWATCH
                             }
                         }
                     } else if value.translation.width > 0 {
                         // 오른쪽 스와이프: 이전 탭으로 이동
                         withAnimation(.easeInOut) {
                             switch selectedPicker {
-                            case .DAY:
-                                selectedPicker = .MONTH
-                            case .WEEK:
-                                selectedPicker = .DAY
-                            case .MONTH:
-                                selectedPicker = .WEEK
+                            case .TIMER:
+                                selectedPicker = .STOPWATCH
+                            case .STOPWATCH:
+                                selectedPicker = .TIMER
                             }
                         }
                     }
@@ -52,7 +48,7 @@ struct WiDReadHolderView: View {
     @ViewBuilder
     private func animate() -> some View {
         HStack {
-            ForEach(wiDReadHolderTapInfo.allCases, id: \.self) { item in
+            ForEach(wiDCreateHolderTapInfo.allCases, id: \.self) { item in
                 VStack {
                     Text(item.rawValue)
                         .frame(maxWidth: .infinity)
@@ -61,7 +57,7 @@ struct WiDReadHolderView: View {
                         Capsule()
                             .foregroundColor(.black)
                             .frame(height: 3)
-                            .matchedGeometryEffect(id: "DAY", in: animation)
+                            .matchedGeometryEffect(id: "STOPWATCH", in: animation)
                     }
                 }
                 .onTapGesture {
@@ -74,29 +70,26 @@ struct WiDReadHolderView: View {
     }
 }
 
-enum wiDReadHolderTapInfo: String, CaseIterable {
-    case DAY = "DAY"
-    case WEEK = "WEEK"
-    case MONTH = "MONTH"
+enum wiDCreateHolderTapInfo: String, CaseIterable {
+    case STOPWATCH = "STOPWATCH"
+    case TIMER = "TIMER"
 }
 
-struct WiDReadView: View {
-    var currentTab: wiDReadHolderTapInfo
+struct WiDCreateView: View {
+    var currentTab: wiDCreateHolderTapInfo
     
     var body: some View {
         switch currentTab {
-        case .DAY:
-            WiDReadDayView()
-        case .WEEK:
-            WiDReadWeekView()
-        case .MONTH:
-            WiDReadMonthView()
+        case .STOPWATCH:
+            WiDCreateStopWatchView()
+        case .TIMER:
+            WiDCreateTimerView()
         }
     }
 }
 
-struct WiDReadHolderView_Previews: PreviewProvider {
+struct WiDCreateHolderView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDReadHolderView()
+        WiDCreateHolderView()
     }
 }

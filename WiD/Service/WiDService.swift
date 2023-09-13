@@ -91,7 +91,7 @@ class WiDService {
                 
                 let duration = sqlite3_column_double(statement, 6)
                 
-                let wid = WiD(id: id, title: title, detail: detail, date: date, start: start, finish: finish, duration: duration)
+                let wid = WiD(id: id, date: date, title: title, start: start, finish: finish, duration: duration, detail: detail)
                 
                 sqlite3_finalize(statement)
                 
@@ -136,7 +136,7 @@ class WiDService {
                 
                 let duration = sqlite3_column_double(statement, 6)
                 
-                let wid = WiD(id: id, title: title, detail: detail, date: date, start: start, finish: finish, duration: duration)
+                let wid = WiD(id: id, date: date, title: title, start: start, finish: finish, duration: duration, detail: detail)
                 wids.append(wid)
             }
             
@@ -181,7 +181,7 @@ class WiDService {
 
                 let duration = sqlite3_column_double(statement, 6)
 
-                let wid = WiD(id: id, title: title, detail: detail, date: date, start: start, finish: finish, duration: duration)
+                let wid = WiD(id: id, date: date, title: title, start: start, finish: finish, duration: duration, detail: detail)
                 wids.append(wid)
             }
 
