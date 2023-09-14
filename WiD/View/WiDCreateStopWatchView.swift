@@ -24,11 +24,12 @@ struct WiDCreateStopWatchView: View {
     @State private var buttonText: String = "시작"
     
     @State private var isRunning: Bool = false
-    
     @State private var timer: Timer?
     
     @State private var elapsedTime = 0
     private let timerInterval = 1
+    
+    @Binding var buttonsVisible: Bool
     
     var body: some View {
         VStack {
@@ -62,6 +63,9 @@ struct WiDCreateStopWatchView: View {
                     Button(action: {
                         if !isRunning {
                             startWiD()
+                            withAnimation {
+                                buttonsVisible = false
+                            }
                         } else {
                             finishWiD()
                         }
@@ -72,7 +76,12 @@ struct WiDCreateStopWatchView: View {
                     }
                     .frame(maxWidth: .infinity)
 
-                    Button(action: resetWiD) {
+                    Button(action: {
+                        resetWiD()
+                        withAnimation {
+                            buttonsVisible = true
+                        }
+                    }) {
                         Text("초기화")
                             .font(.system(size: 30))
                     }
@@ -166,6 +175,8 @@ struct WiDCreateStopWatchView: View {
 
 struct WiDCreateView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDCreateStopWatchView()
+        let buttonsVisible = Binding.constant(true)
+        return WiDCreateStopWatchView(buttonsVisible: buttonsVisible)
+//        WiDCreateStopWatchView()
     }
 }

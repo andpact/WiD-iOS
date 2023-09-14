@@ -25,14 +25,16 @@ struct PieChartView: View {
 
                 // 중앙에 원
                 Circle()
-                    .frame(width: geometry.size.width * 0.6, height: geometry.size.width * 0.6)
+//                    .frame(width: geometry.size.width * 0.6, height: geometry.size.width * 0.6)
+                    .frame(width: geometry.size.width * 0.8, height: geometry.size.width * 0.8)
                     .foregroundColor(.white)
 
                 if isForOne {
                     // 숫자 텍스트
                     ForEach(1...24, id: \.self) { number in
                         let angle = getAngle(for: number)
-                        let radius = geometry.size.width * 0.45 // 원의 반지름
+//                        let radius = geometry.size.width * 0.45 // 원의 반지름
+                        let radius = geometry.size.width * 0.47 // 원의 반지름
 
                         let x = cos(angle.radians) * radius
                         let y = sin(angle.radians) * radius

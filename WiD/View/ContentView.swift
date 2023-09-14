@@ -10,7 +10,7 @@ import GoogleMobileAds
 
 struct ContentView: View {
     @State private var selectedTab = 0
-    @State private var buttonsVisible = false
+    @State var buttonsVisible = true
     
     var body: some View {
         ZStack {
@@ -18,10 +18,9 @@ struct ContentView: View {
             
             NavigationView {
                 TabView(selection: $selectedTab) {
-                    WiDCreateHolderView()
+                    WiDCreateHolderView(buttonsVisible: $buttonsVisible)
                         .tabItem {
                             Label("Add", systemImage: "square.and.pencil")
-//                                .hidden()
                         }
                         .tag(0)
                     
@@ -40,18 +39,19 @@ struct ContentView: View {
                 .accentColor(.black)
             }
             
-//            VStack {
-//                Rectangle()
-//                    .fill(.red)
-//                    .frame(width: .infinity, height: 50)
-//
-//
-//                Spacer()
-//
-//                Rectangle()
-//                    .fill(.red)
-//                    .frame(width: .infinity, height: 50)
-//            }
+            if !buttonsVisible {
+                VStack {
+                    Rectangle()
+                        .fill(Color.white)
+                        .frame(width: .infinity, height: 50)
+
+                    Spacer()
+
+                    Rectangle()
+                        .fill(Color.white)
+                        .frame(width: .infinity, height: 50)
+                }
+            }
         }
     }
 }

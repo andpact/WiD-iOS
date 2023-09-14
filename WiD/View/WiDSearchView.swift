@@ -17,9 +17,51 @@ struct WiDSearchView: View {
             SearchBar(text: $searchText, onEditingChanged: searchTextDidChange)
             
             if wiDs.isEmpty {
-                Text("검색된 WiD가 없습니다.")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundColor(.gray)
+//                Text("검색된 WiD가 없습니다.")
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    .foregroundColor(.gray)
+                
+                HStack {
+                    Rectangle()
+                        .fill(.red)
+                        .frame(width: 7, height: 45)
+                    
+                    VStack(spacing: 5) {
+                        HStack {
+                            Text("공부")
+                                .frame(minWidth: 30, maxWidth: 40)
+                                .border(.black)
+                            
+                            Text("99:99")
+                                .frame(minWidth: 30, maxWidth: .infinity)
+                                .border(.black)
+                            
+                            Text("99:99")
+                                .frame(minWidth: 60, maxWidth: .infinity)
+                                .border(.black)
+                            
+                            Text("99시간 99분")
+                                .frame(minWidth: 130, maxWidth: .infinity)
+                                .border(.black)
+                        }
+                        
+                        HStack {
+                            Text("설명")
+                                .frame(minWidth: 30, maxWidth: 40)
+                            
+                            Text(" : ")
+                            
+                            Text("detail")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                                .border(.blue)
+                        }
+                    }
+                }
+                .foregroundColor(.black)
+                .background(Color("light_gray"))
+                .cornerRadius(5)
             } else {
                 ZStack(alignment: .topTrailing) {
                     ScrollView {
@@ -81,7 +123,6 @@ struct WiDSearchView: View {
                                 .foregroundColor(.black)
                                 .background(Color("light_gray"))
                                 .cornerRadius(5)
-                                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                             }
                         }
                     }

@@ -11,10 +11,16 @@ struct WiDCreateHolderView: View {
     @State private var selectedPicker: wiDCreateHolderTapInfo = .STOPWATCH
     @Namespace private var animation
     
+    @Binding var buttonsVisible: Bool
+    
+    init(buttonsVisible: Binding<Bool>) {
+        self._buttonsVisible = buttonsVisible
+    }
+    
     var body: some View {
         VStack {
             animate()
-            WiDCreateView(currentTab: selectedPicker)
+            WiDCreateView(currentTab: selectedPicker, buttonsVisible: $buttonsVisible)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .gesture(
@@ -77,11 +83,12 @@ enum wiDCreateHolderTapInfo: String, CaseIterable {
 
 struct WiDCreateView: View {
     var currentTab: wiDCreateHolderTapInfo
+    @Binding var buttonsVisible: Bool
     
     var body: some View {
         switch currentTab {
         case .STOPWATCH:
-            WiDCreateStopWatchView()
+            WiDCreateStopWatchView(buttonsVisible: $buttonsVisible)
         case .TIMER:
             WiDCreateTimerView()
         }
@@ -90,6 +97,8 @@ struct WiDCreateView: View {
 
 struct WiDCreateHolderView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDCreateHolderView()
+        let buttonsVisible = Binding.constant(true)
+        return WiDCreateHolderView(buttonsVisible: buttonsVisible)
+//        WiDCreateHolderView()
     }
 }

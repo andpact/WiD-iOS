@@ -94,66 +94,6 @@ struct WiDReadDayView: View {
             
             PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
                 .padding(.bottom, 8)
-                
-            // 파이 차트 및 제목 별 총합 표시
-//            HStack(alignment: .top) {
-//                PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
-                
-//                VStack {
-//                    HStack {
-//                        Rectangle()
-//                            .fill(Color("light_gray"))
-//                            .frame(width: 7, height: 20)
-//
-//                        Text("제목")
-//                            .frame(minWidth: 30)
-//
-//                        Text("총합")
-//                            .frame(minWidth: 91)
-//                    }
-//                    .background(Color("light_gray"))
-//                    .cornerRadius(5)
-//                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
-//
-//                    if sortedTotalDurationDictionary.isEmpty {
-//                        VStack {
-//                            Text("표시할")
-//
-//                            Text("데이터가")
-//
-//                            Text("없습니다.")
-//                        }
-//                        .foregroundColor(.gray)
-//                    } else {
-//                        ScrollView {
-//                            ForEach(sortedTotalDurationDictionary, id: \.key) { (title, duration) in
-////                                let totalDurationOfDay = 60 * 60 * 24
-////                                let percentage = (Double(duration) / Double(totalDurationOfDay)) * 100
-//
-//                                HStack {
-//                                    Rectangle()
-//                                        .fill(Color(title))
-//                                        .frame(width: 7, height: 20)
-//
-//                                    Text(titleDictionary[title] ?? "")
-//                                        .frame(minWidth: 30)
-//
-////                                    Text(formatDuration(duration, isClickedWiD: false) + " (\(percentage))")
-//
-//                                    Text(formatDuration(duration, isClickedWiD: false))
-//                                        .frame(minWidth: 91)
-//                                }
-//                                .background(Color("light_gray"))
-//                                .cornerRadius(5)
-//                                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
-//                            }
-//                        }
-////                        .frame(height: 145)
-//                    }
-//                }
-//                .border(.red)
-//            }
-//            .padding(.bottom, 8)
             
             // 각 WiD 표시
             VStack {
@@ -163,27 +103,72 @@ struct WiDReadDayView: View {
                         .frame(width: 7, height: 20)
 
                     Text("순서")
-                        .frame(minWidth: 30)
+                        .frame(minWidth: 30, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("제목")
                         .frame(minWidth: 30, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("시작")
-                        .frame(minWidth: 50, maxWidth: .infinity)
+                        .frame(minWidth: 70, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("종료")
-                        .frame(minWidth: 50, maxWidth: .infinity)
+                        .frame(minWidth: 70, maxWidth: .infinity)
+                        .border(.black)
 
                     Text("경과")
-                        .frame(minWidth: 91, maxWidth: .infinity)
-
-                    Text("설명")
-                        .frame(minWidth: 30, maxWidth: .infinity)
+                        .frame(minWidth: 110, maxWidth: .infinity)
+                        .border(.black)
                 }
                 .frame(maxWidth: .infinity)
                 .background(Color("light_gray"))
                 .cornerRadius(5)
-                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                
+                HStack {
+                    Rectangle()
+                        .fill(Color.red)
+                        .frame(width: 7, height: 45)
+                    VStack(spacing: 5) {
+                        HStack {
+                            Text("99")
+                                .frame(minWidth: 30, maxWidth: .infinity)
+                                .border(.blue)
+
+                            Text("공부")
+                                .frame(minWidth: 30, maxWidth: .infinity)
+                                .border(.blue)
+
+                            Text("99:99")
+                                .frame(minWidth: 70, maxWidth: .infinity)
+                                .border(.blue)
+
+                            Text("99:99")
+                                .frame(minWidth: 70, maxWidth: .infinity)
+                                .border(.blue)
+
+                            Text("99시간 99분")
+                                .frame(minWidth: 110, maxWidth: .infinity)
+                                .border(.blue)
+                        }
+                        
+                        HStack {
+                            Text("설명")
+                                .frame(minWidth: 30, maxWidth: .infinity)
+                                .border(.blue)
+                            
+                            Text("detailddddd")
+                                .frame(minWidth: 303, maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                                .border(.blue)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .background(Color("light_gray"))
+                .cornerRadius(5)
 
                 if wiDs.isEmpty {
                     Spacer()
@@ -195,41 +180,43 @@ struct WiDReadDayView: View {
                         ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
                             NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                                 HStack {
-//                                    let totalDurationOfDay = 24 * 60 * 60
-//
-//                                    let percentage = (Double(wiD.duration) / Double(totalDurationOfDay)) * 100
-                                    
                                     Rectangle()
                                         .fill(Color(wiD.title))
-                                        .frame(width: 7, height: 20)
+                                        .frame(width: 7, height: 45)
+                                    VStack(spacing: 5) {
+                                        HStack {
+                                            Text("\(index + 1)")
+                                                .frame(minWidth: 20, maxWidth: .infinity)
 
-                                    Text("\(index + 1)")
-                                        .frame(minWidth: 30)
+                                            Text(titleDictionary[wiD.title] ?? "")
+                                                .frame(minWidth: 30, maxWidth: .infinity)
 
-                                    Text(titleDictionary[wiD.title] ?? "")
-                                        .frame(minWidth: 30, maxWidth: .infinity)
+                                            Text(formatTime(wiD.start, format: "HH:mm"))
+                                                .frame(minWidth: 70, maxWidth: .infinity)
 
-                                    Text(formatTime(wiD.start, format: "HH:mm"))
-                                        .frame(minWidth: 50, maxWidth: .infinity)
+                                            Text(formatTime(wiD.finish, format: "HH:mm"))
+                                                .frame(minWidth: 70, maxWidth: .infinity)
 
-                                    Text(formatTime(wiD.finish, format: "HH:mm"))
-                                        .frame(minWidth: 50, maxWidth: .infinity)
-
-//                                    Text(formatDuration(wiD.duration, isClickedWiD: false) + " (\(percentage))")
-                                    Text(formatDuration(wiD.duration, isClickedWiD: false))
-                                        .frame(minWidth: 91, maxWidth: .infinity)
-                                        .lineLimit(1)
-
-                                    Text("\(wiD.detail.count)")
-                                        .frame(minWidth: 30, maxWidth: .infinity)
-                                        .lineLimit(1)
-                                        .truncationMode(.tail)
+                                            Text(formatDuration(wiD.duration, isClickedWiD: false))
+                                                .frame(minWidth: 110, maxWidth: .infinity)
+                                        }
+                                        
+                                        HStack {
+                                            Text("설명")
+                                                .frame(minWidth: 20, maxWidth: .infinity)
+                                            
+                                            Text(" : ")
+                                            
+                                            Text(wiD.detail)
+                                                .frame(minWidth: 302, maxWidth: .infinity, alignment: .leading)
+                                                .lineLimit(1)
+                                                .truncationMode(.tail)
+                                        }
+                                    }
                                 }
                                 .frame(maxWidth: .infinity)
-                                .foregroundColor(.black)
                                 .background(Color("light_gray"))
                                 .cornerRadius(5)
-                                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                             }
                         }
                     }
