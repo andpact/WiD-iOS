@@ -13,43 +13,47 @@ struct ContentView: View {
     @State var buttonsVisible = true
     
     var body: some View {
-        ZStack {
-//            admob()
-            
-            NavigationView {
-                TabView(selection: $selectedTab) {
-                    WiDCreateHolderView(buttonsVisible: $buttonsVisible)
-                        .tabItem {
-                            Label("Add", systemImage: "square.and.pencil")
-                        }
-                        .tag(0)
-                    
-                    WiDReadHolderView()
-                        .tabItem {
-                            Label("List", systemImage: "list.dash")
-                        }
-                        .tag(1)
-                    
-                    WiDSearchView()
-                        .tabItem {
-                            Label("Search", systemImage: "magnifyingglass")
-                        }
-                        .tag(2)
+        GeometryReader { geo in
+            ZStack {
+    //            admob()
+                
+                NavigationView {
+                    TabView(selection: $selectedTab) {
+                        WiDCreateHolderView(buttonsVisible: $buttonsVisible)
+                            .tabItem {
+                                Label("Add", systemImage: "square.and.pencil")
+                            }
+                            .tag(0)
+                        
+                        WiDReadHolderView()
+                            .tabItem {
+                                Label("List", systemImage: "list.dash")
+                            }
+                            .tag(1)
+                        
+                        WiDSearchView()
+                            .tabItem {
+                                Label("Search", systemImage: "magnifyingglass")
+                            }
+                            .tag(2)
+                    }
+                    .accentColor(.black)
                 }
-                .accentColor(.black)
-            }
-            
-            if !buttonsVisible {
-                VStack {
-                    Rectangle()
-                        .fill(Color.white)
-                        .frame(width: .infinity, height: 50)
+                
+                if !buttonsVisible {
+                    VStack {
+                        Rectangle()
+                            .fill(Color.white)
+                            .frame(width: geo.size.width, height: geo.size.height / 15)
+//                            .offset(y: !buttonsVisible ? 0 : 100)
 
-                    Spacer()
+                        Spacer()
 
-                    Rectangle()
-                        .fill(Color.white)
-                        .frame(width: .infinity, height: 50)
+                        Rectangle()
+                            .fill(Color.white)
+                            .frame(width: geo.size.width, height: geo.size.height / 15)
+//                            .offset(y: !buttonsVisible ? 0 : -100)
+                    }
                 }
             }
         }

@@ -28,209 +28,227 @@ struct WiDReadMonthView: View {
         }
     }
     
-    private var totalDurationDictionary: [String: TimeInterval] {
-        var result: [String: TimeInterval] = [:]
+    // 각 제목별 날짜별 종합 시간을 추적하기 위한 맵
+    private var titleDateDurations: [String: [Date: TimeInterval]] {
+        var map = [String: [Date: TimeInterval]]()
 
         for wiD in wiDs {
-            if let currentDuration = result[wiD.title] {
-                result[wiD.title] = currentDuration + wiD.duration
-            } else {
-                result[wiD.title] = wiD.duration
-            }
-        }
+            let title = wiD.title
+            let date = wiD.date
+            let duration = wiD.duration
 
-        return result
+            // 각 제목에 대한 맵 가져오기
+            var titleMap = map[title] ?? [Date: TimeInterval]()
+
+            // 날짜별 시간 누적
+            if let existingDuration = titleMap[date] {
+                titleMap[date] = existingDuration + duration
+            } else {
+                titleMap[date] = duration
+            }
+
+            map[title] = titleMap
+        }
+        return map
     }
     
-    private var sortedTotalDurationDictionary: [(key: String, value: TimeInterval)] {
-        totalDurationDictionary.sorted { $0.value > $1.value }
-    }
-    
-    private var bestDurationDictionary: [String: TimeInterval] {
-        var result: [String: TimeInterval] = [:]
+    // 최저, 최고, 평균, 종합 시간 계산
+    private var titleStats: [String: TitleStats] {
+        var map = [String: TitleStats]()
 
-        for wiD in wiDs {
-            if let currentBestDuration = result[wiD.title] {
-                if wiD.duration > currentBestDuration {
-                    result[wiD.title] = wiD.duration
+        for (title, dateDurations) in titleDateDurations {
+            let minDuration = dateDurations.values.min() ?? 0.0
+            let maxDuration = dateDurations.values.max() ?? 0.0
+            let totalDuration = dateDurations.values.reduce(0.0, +)
+            let averageDuration = dateDurations.isEmpty ? 0.0 : totalDuration / Double(dateDurations.count)
 
-                }
-            } else {
-                result[wiD.title] = wiD.duration
-            }
+            map[title] = TitleStats(minDuration: minDuration, maxDuration: maxDuration, averageDuration: averageDuration, totalDuration: totalDuration)
         }
-
-        return result
-    }
-    
-    private var bestDayDictionary: [String: Date] {
-        var result: [String: Date] = [:]
-
-        for wiD in wiDs {
-            if result[wiD.title] != nil {
-                if wiD.duration > (totalDurationDictionary[wiD.title] ?? 0) {
-                    result[wiD.title] = wiD.date
-                }
-            } else {
-                result[wiD.title] = wiD.date
-            }
-        }
-
-        return result
+        return map
     }
     
     var body: some View {
-        VStack {
-            // 날짜 표시
-            HStack {
-                Text("WiD")
-                    .font(.custom("Acme-Regular", size: 20))
-                    .padding(.horizontal, 8)
-                    .foregroundColor(.white)
-                    .background(.black)
-                    .cornerRadius(5)
-                    .padding(.horizontal, 8)
-                
-                Text(formatDate(currentDate, format: "yyyy년 M월"))
-                    .frame(maxWidth: .infinity)
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = getFirstDayOfMonth(for: Date())
-                    }
-                }) {
-                    Image(systemName: "arrow.clockwise")
-                }
-                .padding(.horizontal, 8)
-                .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfMonth(for: Date()), toGranularity: .month))
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = Calendar.current.date(byAdding: .month, value: -1, to: currentDate) ?? currentDate
-                    }
-                }) {
-                    Image(systemName: "chevron.left")
-                }
-                .padding(.horizontal, 8)
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
-                    }
-                }) {
-                    Image(systemName: "chevron.right")
-                }
-                .padding(.horizontal, 8)
-                .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfMonth(for: Date()), toGranularity: .month))
-            }
-            .padding(.bottom, 8)
-            
-            // 요일 표시
-            HStack {
-                ForEach(0...6, id: \.self) { index in
-                    let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
-                    
-                    Text(formatWeekdayLetter(index))
-                        .frame(maxWidth: .infinity)
-                        .foregroundColor(textColor)
-                }
-            }
-            
-            // 파이 차트 표시
-            LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
-                let firstDayOfMonth = getFirstDayOfMonth(for: currentDate)
-                let weekdayOffset = getWeekdayOffset(for: firstDayOfMonth)
-
-                ForEach(0..<weekdayOffset, id: \.self) { _ in
-                    PieChartView(data: [], date: firstDayOfMonth, isForOne: false, isEmpty: true)
-                }
-
-                ForEach(getDaysOfMonthArray(for: currentDate), id: \.self) { day in
-                    PieChartView(data: fetchChartData(date: day), date: day, isForOne: false, isEmpty: false)
-                }
-            }
-            .padding(.bottom, 8)
-
-            // 제목 별 총합 표시
+        GeometryReader { geo in
             VStack {
+                // 날짜 표시
                 HStack {
-                    Rectangle()
-                        .fill(Color("light_gray"))
-                        .frame(width: 7, height: 20)
+                    Text("WiD")
+                        .font(.custom("Acme-Regular", size: 20))
+                        .padding(.horizontal, 8)
+                        .foregroundColor(.white)
+                        .background(.black)
+                        .cornerRadius(5)
+                        .padding(.horizontal, 8)
                     
-                    Text("제목")
-                        .frame(width: 50)
-                    
-                    Text("최고")
+                    Text(formatDate(currentDate, format: "yyyy년 M월"))
                         .frame(maxWidth: .infinity)
                     
-                    Text("총합")
-                        .frame(maxWidth: 110)
+                    Button(action: {
+                        withAnimation {
+                            currentDate = getFirstDayOfMonth(for: Date())
+                        }
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .padding(.horizontal, 8)
+                    .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfMonth(for: Date()), toGranularity: .month))
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentDate = Calendar.current.date(byAdding: .month, value: -1, to: currentDate) ?? currentDate
+                        }
+                    }) {
+                        Image(systemName: "chevron.left")
+                    }
+                    .padding(.horizontal, 8)
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
+                        }
+                    }) {
+                        Image(systemName: "chevron.right")
+                    }
+                    .padding(.horizontal, 8)
+                    .disabled(Calendar.current.isDate(currentDate, equalTo: getFirstDayOfMonth(for: Date()), toGranularity: .month))
                 }
-                .frame(maxWidth: .infinity)
-                .background(Color("light_gray"))
-                .cornerRadius(5)
-                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                .padding(.bottom, 8)
                 
-                if sortedTotalDurationDictionary.isEmpty {
-                    Spacer()
-                    Text("표시할 데이터가 없습니다.")
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity)
-                } else {
-                    ScrollView {
-                        ForEach(sortedTotalDurationDictionary, id: \.key) { (title, totalDuration) in
-                            if let bestDuration = bestDurationDictionary[title], let bestDay = bestDayDictionary[title] {
-                                
-//                                let totalDurationOfWeek = 60 * 60 * 24 * 7
-//                                let bestDurationPercentage = (Double(bestDuration) / Double(totalDurationOfWeek)) * 100
-//                                let totalDurationPercentage = (Double(totalDuration) / Double(totalDurationOfWeek)) * 100
-                                
-                                HStack {
+                // 요일 표시
+                HStack {
+                    ForEach(0...6, id: \.self) { index in
+                        let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
+                        
+                        Text(formatWeekdayLetter(index))
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(textColor)
+                    }
+                }
+                
+                // 파이 차트 표시
+                LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
+                    let firstDayOfMonth = getFirstDayOfMonth(for: currentDate)
+                    let weekdayOffset = getWeekdayOffset(for: firstDayOfMonth)
+
+                    ForEach(0..<weekdayOffset, id: \.self) { _ in
+                        PieChartView(data: [], date: firstDayOfMonth, isForOne: false, isEmpty: true)
+                    }
+
+                    ForEach(getDaysOfMonthArray(for: currentDate), id: \.self) { day in
+                        PieChartView(data: fetchChartData(date: day), date: day, isForOne: false, isEmpty: false)
+                    }
+                }
+                .padding(.bottom, 8)
+
+                VStack {
+                    HStack(spacing: 0) {
+                        Rectangle()
+                            .fill(Color("light_gray"))
+                            .frame(width: geo.size.width * 0.02, height: 25)
+
+                        Text("제목")
+                            .frame(width: geo.size.width * 0.1)
+
+                        Text("최저")
+                            .frame(width: geo.size.width * 0.22)
+                        
+                        Text("최고")
+                            .frame(width: geo.size.width * 0.22)
+                        
+                        Text("평균")
+                            .frame(width: geo.size.width * 0.22)
+
+                        Text("총합")
+                            .frame(width: geo.size.width * 0.22)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color("light_gray"))
+                    .cornerRadius(5)
+                    
+                    if wiDs.isEmpty {
+                        Spacer()
+
+                        Text("표시할 정보가 없습니다.")
+                            .frame(maxWidth: .infinity)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+                        
+//                        HStack(spacing: 0) {
+//                            Rectangle()
+//                                .fill(.red)
+//                                .frame(width: geo.size.width * 0.02, height: 25)
+//
+//                            Text("공부")
+//                                .frame(width: geo.size.width * 0.1)
+//                                .border(.red)
+//
+//                            Text("99시간")
+//                                .frame(width: geo.size.width * 0.22)
+//                                .border(.red)
+//
+//                            Text("99시간")
+//                                .frame(width: geo.size.width * 0.22)
+//                                .border(.red)
+//
+//                            Text("99시간")
+//                                .frame(width: geo.size.width * 0.22)
+//                                .border(.red)
+//
+//                            Text("99시간")
+//                                .frame(width: geo.size.width * 0.22)
+//                                .border(.red)
+//                        }
+//                        .frame(maxWidth: .infinity)
+//                        .background(Color("light_gray"))
+//                        .cornerRadius(5)
+                    } else {
+                        ScrollView {
+                            ForEach(titleStats.keys.sorted(), id: \.self) { title in
+                                let stats = titleStats[title]!
+                                HStack(spacing: 0) {
                                     Rectangle()
                                         .fill(Color(title))
-                                        .frame(width: 7, height: 20)
+                                        .frame(width: geo.size.width * 0.02, height: 25)
 
                                     Text(titleDictionary[title] ?? "")
-                                        .frame(width: 50)
-                                    
-//                                    Text("\(formatDate(bestDay, format: "d일")) / " + formatDuration(bestDuration, isClickedWiD: false) + " " +  String(format: "(%.1f%)", bestDurationPercentage))
-                                    Text(formatDuration(bestDuration, isClickedWiD: false) + "(\(formatDate(bestDay, format: "d일")))")
-                                        .frame(maxWidth: .infinity)
-                                    
-//                                    Text(formatDuration(totalDuration, isClickedWiD: false) + " " + String(format: "(%.1f%)", totalDurationPercentage))
-                                    
-                                    Text(formatDuration(totalDuration, isClickedWiD: false))
-                                        .frame(maxWidth: 110)
+                                        .frame(width: geo.size.width * 0.1)
+
+                                    Text(formatDuration(stats.minDuration, mode: 1))
+                                        .frame(width: geo.size.width * 0.22)
+
+                                    Text(formatDuration(stats.maxDuration, mode: 1))
+                                        .frame(width: geo.size.width * 0.22)
+
+                                    Text(formatDuration(stats.averageDuration, mode: 1))
+                                        .frame(width: geo.size.width * 0.22)
+
+                                    Text(formatDuration(stats.totalDuration, mode: 1))
+                                        .frame(width: geo.size.width * 0.22)
                                 }
-                                .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))
                                 .cornerRadius(5)
-                                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
                             }
                         }
                     }
+                    Spacer()
                 }
-                Spacer()
+            }
+            .onAppear() {
+                let daysOfMonth = getDaysOfMonthArray(for: currentDate)
+
+                var allWiDs: [WiD] = []
+
+                // Loop through the dates for each day of the month
+                for date in daysOfMonth {
+                    let wiDsForDate = wiDService.selectWiDsByDate(date: date)
+                    allWiDs.append(contentsOf: wiDsForDate)
+                }
+                withAnimation {
+                    wiDs = allWiDs
+                }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
-        .onAppear() {
-            let daysOfMonth = getDaysOfMonthArray(for: currentDate)
-
-            var allWiDs: [WiD] = []
-
-            // Loop through the dates for each day of the month
-            for date in daysOfMonth {
-                let wiDsForDate = wiDService.selectWiDsByDate(date: date)
-                allWiDs.append(contentsOf: wiDsForDate)
-            }
-
-            withAnimation {
-                wiDs = allWiDs
-            }
-        }
     }
 }
 

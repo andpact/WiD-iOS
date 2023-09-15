@@ -13,37 +13,37 @@ struct WiDCreateHolderView: View {
     
     @Binding var buttonsVisible: Bool
     
-    init(buttonsVisible: Binding<Bool>) {
-        self._buttonsVisible = buttonsVisible
-    }
-    
     var body: some View {
         VStack {
             animate()
+                .disabled(!buttonsVisible)
+
             WiDCreateView(currentTab: selectedPicker, buttonsVisible: $buttonsVisible)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .gesture(
             DragGesture()
                 .onEnded { value in
-                    if value.translation.width < 0 {
-                        // 왼쪽 스와이프: 다음 탭으로 이동
-                        withAnimation(.easeInOut) {
-                            switch selectedPicker {
-                            case .STOPWATCH:
-                                selectedPicker = .TIMER
-                            case .TIMER:
-                                selectedPicker = .STOPWATCH
+                    if buttonsVisible {
+                        if value.translation.width < 0 {
+                            // 왼쪽 스와이프: 다음 탭으로 이동
+                            withAnimation(.easeInOut) {
+                                switch selectedPicker {
+                                case .STOPWATCH:
+                                    selectedPicker = .TIMER
+                                case .TIMER:
+                                    selectedPicker = .STOPWATCH
+                                }
                             }
-                        }
-                    } else if value.translation.width > 0 {
-                        // 오른쪽 스와이프: 이전 탭으로 이동
-                        withAnimation(.easeInOut) {
-                            switch selectedPicker {
-                            case .TIMER:
-                                selectedPicker = .STOPWATCH
-                            case .STOPWATCH:
-                                selectedPicker = .TIMER
+                        } else if value.translation.width > 0 {
+                            // 오른쪽 스와이프: 이전 탭으로 이동
+                            withAnimation(.easeInOut) {
+                                switch selectedPicker {
+                                case .TIMER:
+                                    selectedPicker = .STOPWATCH
+                                case .STOPWATCH:
+                                    selectedPicker = .TIMER
+                                }
                             }
                         }
                     }
@@ -90,7 +90,7 @@ struct WiDCreateView: View {
         case .STOPWATCH:
             WiDCreateStopWatchView(buttonsVisible: $buttonsVisible)
         case .TIMER:
-            WiDCreateTimerView()
+            WiDCreateTimerView(buttonsVisible: $buttonsVisible)
         }
     }
 }
@@ -99,6 +99,5 @@ struct WiDCreateHolderView_Previews: PreviewProvider {
     static var previews: some View {
         let buttonsVisible = Binding.constant(true)
         return WiDCreateHolderView(buttonsVisible: buttonsVisible)
-//        WiDCreateHolderView()
     }
 }

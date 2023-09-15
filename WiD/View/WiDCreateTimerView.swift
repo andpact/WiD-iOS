@@ -30,6 +30,8 @@ struct WiDCreateTimerView: View {
     @State private var remainingTime: Int = 0
     private let timerInterval = 1
     
+    @Binding var buttonsVisible: Bool
+    
     @State private var minusButtonDisabled: Bool = true
     @State private var plusButtonDisabled: Bool = false
     
@@ -43,6 +45,8 @@ struct WiDCreateTimerView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                     }
+                    .disabled(!buttonsVisible)
+                    .opacity(buttonsVisible ? 1.0 : 0.0)
                     .padding(.horizontal)
 
                     Text(titleDictionary[title] ?? "")
@@ -55,12 +59,16 @@ struct WiDCreateTimerView: View {
                         Image(systemName: "chevron.right")
                             .imageScale(.large)
                     }
+                    .disabled(!buttonsVisible)
+                    .opacity(buttonsVisible ? 1.0 : 0.0)
                     .padding(.horizontal)
                 }
                 
                 HStack {
                     Button(action: {
-                        remainingTime -= 3600
+                        if (remainingTime > 0) {
+                            remainingTime -= 3600
+                        }
                         if remainingTime <= 0 {
                             minusButtonDisabled = true
                         }
@@ -73,17 +81,20 @@ struct WiDCreateTimerView: View {
                     }
                     .padding(.horizontal)
                     .disabled(minusButtonDisabled)
+                    .opacity(buttonsVisible ? 1.0 : 0.0)
                     
                     Text(formatElapsedTime(remainingTime))
-                        .font(.system(size: 50))
+                        .font(.custom("Tektur-VariableFont_wdth,wght", size: 50))
                         .frame(maxWidth: .infinity)
                     
                     Button(action: {
-                        remainingTime += 3600
+                        if (remainingTime < 12 * 3600) {
+                            remainingTime += 3600
+                        }
                         if remainingTime > 0 {
                             minusButtonDisabled = false
                         }
-                        if remainingTime >= 12 * 3_600 {
+                        if remainingTime >= 12 * 3600 {
                             plusButtonDisabled = true
                         }
                     }) {
@@ -92,6 +103,7 @@ struct WiDCreateTimerView: View {
                     }
                     .padding(.horizontal)
                     .disabled(plusButtonDisabled)
+                    .opacity(buttonsVisible ? 1.0 : 0.0)
                 }
                 
                 HStack {
@@ -104,17 +116,19 @@ struct WiDCreateTimerView: View {
                     }) {
                         Text(buttonText)
                             .font(.system(size: 30))
-                            .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .black))
+                            .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : nil))
                     }
                     .frame(maxWidth: .infinity)
                     .disabled(minusButtonDisabled)
 
-                    Button(action: resetWiD) {
+                    Button(action: {
+                        resetWiD()
+                    }) {
                         Text("초기화")
                             .font(.system(size: 30))
                     }
                     .frame(maxWidth: .infinity)
-                    .disabled(isRunning)
+                    .disabled(isRunning || buttonsVisible)
                 }
             }
             .padding(.horizontal)
@@ -144,18 +158,20 @@ struct WiDCreateTimerView: View {
     }
     
     private func startWiD() {
+        withAnimation {
+            buttonsVisible = false
+        }
+        
         isRunning = true
         buttonText = "중지"
         
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timerInterval), repeats: true) { timer in
             if remainingTime > 0 {
-                remainingTime -= 1
+                remainingTime -= timerInterval
             } else {
-                // 남은 시간이 0이 되면 타이머 중지
-                timer.invalidate()
-                isRunning = false
-                buttonText = "시작"
+                finishWiD()
+                resetWiD()
             }
         }
         
@@ -200,16 +216,19 @@ struct WiDCreateTimerView: View {
     }
 
     private func resetWiD() {
+        withAnimation {
+            buttonsVisible = true
+        }
+        minusButtonDisabled = true
+        
         buttonText = "시작"
         remainingTime = 0
-        
-        timer?.invalidate()
-        timer = nil
     }
 }
 
 struct WiDCreateTimerView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDCreateTimerView()
+        let buttonsVisible = Binding.constant(true)
+        WiDCreateTimerView(buttonsVisible: buttonsVisible)
     }
 }

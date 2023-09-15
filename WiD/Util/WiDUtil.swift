@@ -136,7 +136,7 @@ struct WiDView: View {
                         Text("소요")
                             .font(.system(size: 25))
 
-                        Text(formatDuration(clickedWiD?.duration ?? 0, isClickedWiD: true))
+                        Text(formatDuration(clickedWiD?.duration ?? 0, mode: 3))
                             .font(.system(size: 25))
                             .frame(maxWidth: .infinity)
                     }

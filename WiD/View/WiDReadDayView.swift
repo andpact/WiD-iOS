@@ -35,202 +35,196 @@ struct WiDReadDayView: View {
 //    }
     
     var body: some View {
-        VStack {
-            // 날짜 표시
-            HStack {
-                Text("WiD")
-                    .font(.custom("Acme-Regular", size: 20))
-                    .padding(.horizontal, 8)
-                    .foregroundColor(.white)
-                    .background(.black)
-                    .cornerRadius(5)
-                    .padding(.horizontal, 8)
-
-                HStack {
-                    Text(formatDate(currentDate, format: "yyyy년 M월 d일"))
-                    
-                    HStack(spacing: 0) {
-                        Text("(")
-                        
-                        Text(formatWeekday(currentDate))
-                            .foregroundColor(Calendar.current.component(.weekday, from: currentDate) == 1 ? .red : (Calendar.current.component(.weekday, from: currentDate) == 7 ? .blue : .black))
-
-                        Text(")")
-                    }
-                }
-                .padding(.horizontal, -16)
-                .frame(maxWidth: .infinity)
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = Date()
-                    }
-                }) {
-                    Image(systemName: "arrow.clockwise")
-                }
-                .padding(.horizontal, 8)
-                .disabled(Calendar.current.isDateInToday(currentDate))
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
-                    }
-                }) {
-                    Image(systemName: "chevron.left")
-                }
-                .padding(.horizontal, 8)
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-                    }
-                }) {
-                    Image(systemName: "chevron.right")
-                }
-                .disabled(Calendar.current.isDateInToday(currentDate))
-                .padding(.horizontal, 8)
-            }
-            .padding(.bottom, 8)
-            
-            PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
-                .padding(.bottom, 8)
-            
-            // 각 WiD 표시
+        GeometryReader { geo in
             VStack {
+                // 날짜 표시
                 HStack {
-                    Rectangle()
-                        .fill(Color("light_gray"))
-                        .frame(width: 7, height: 20)
+                    Text("WiD")
+                        .font(.custom("Acme-Regular", size: 20))
+                        .padding(.horizontal, 8)
+                        .foregroundColor(.white)
+                        .background(.black)
+                        .cornerRadius(5)
+                        .padding(.horizontal, 8)
 
-                    Text("순서")
-                        .frame(minWidth: 30, maxWidth: .infinity)
-                        .border(.black)
-
-                    Text("제목")
-                        .frame(minWidth: 30, maxWidth: .infinity)
-                        .border(.black)
-
-                    Text("시작")
-                        .frame(minWidth: 70, maxWidth: .infinity)
-                        .border(.black)
-
-                    Text("종료")
-                        .frame(minWidth: 70, maxWidth: .infinity)
-                        .border(.black)
-
-                    Text("경과")
-                        .frame(minWidth: 110, maxWidth: .infinity)
-                        .border(.black)
-                }
-                .frame(maxWidth: .infinity)
-                .background(Color("light_gray"))
-                .cornerRadius(5)
-                
-                HStack {
-                    Rectangle()
-                        .fill(Color.red)
-                        .frame(width: 7, height: 45)
-                    VStack(spacing: 5) {
-                        HStack {
-                            Text("99")
-                                .frame(minWidth: 30, maxWidth: .infinity)
-                                .border(.blue)
-
-                            Text("공부")
-                                .frame(minWidth: 30, maxWidth: .infinity)
-                                .border(.blue)
-
-                            Text("99:99")
-                                .frame(minWidth: 70, maxWidth: .infinity)
-                                .border(.blue)
-
-                            Text("99:99")
-                                .frame(minWidth: 70, maxWidth: .infinity)
-                                .border(.blue)
-
-                            Text("99시간 99분")
-                                .frame(minWidth: 110, maxWidth: .infinity)
-                                .border(.blue)
-                        }
+                    HStack {
+                        Text(formatDate(currentDate, format: "yyyy년 M월 d일"))
                         
-                        HStack {
-                            Text("설명")
-                                .frame(minWidth: 30, maxWidth: .infinity)
-                                .border(.blue)
+                        HStack(spacing: 0) {
+                            Text("(")
                             
-                            Text("detailddddd")
-                                .frame(minWidth: 303, maxWidth: .infinity, alignment: .leading)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                                .border(.blue)
+                            Text(formatWeekday(currentDate))
+                                .foregroundColor(Calendar.current.component(.weekday, from: currentDate) == 1 ? .red : (Calendar.current.component(.weekday, from: currentDate) == 7 ? .blue : .black))
+
+                            Text(")")
                         }
                     }
-                }
-                .frame(maxWidth: .infinity)
-                .background(Color("light_gray"))
-                .cornerRadius(5)
-
-                if wiDs.isEmpty {
-                    Spacer()
-                    Text("표시할 WiD가 없습니다.")
-                        .foregroundColor(.gray)
+                    .padding(.horizontal, -16)
+                    .frame(maxWidth: .infinity)
                     
-                } else {
-                    ScrollView {
-                        ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
-                            NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                                HStack {
-                                    Rectangle()
-                                        .fill(Color(wiD.title))
-                                        .frame(width: 7, height: 45)
-                                    VStack(spacing: 5) {
-                                        HStack {
-                                            Text("\(index + 1)")
-                                                .frame(minWidth: 20, maxWidth: .infinity)
+                    Button(action: {
+                        withAnimation {
+                            currentDate = Date()
+                        }
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .padding(.horizontal, 8)
+                    .disabled(Calendar.current.isDateInToday(currentDate))
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+                        }
+                    }) {
+                        Image(systemName: "chevron.left")
+                    }
+                    .padding(.horizontal, 8)
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                        }
+                    }) {
+                        Image(systemName: "chevron.right")
+                    }
+                    .disabled(Calendar.current.isDateInToday(currentDate))
+                    .padding(.horizontal, 8)
+                }
+                .padding(.bottom, 8)
+                
+                PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
+                    .padding(.bottom, 8)
+                
+                // 각 WiD 표시
+                VStack {
+                    HStack(spacing: 0) {
+                        Rectangle()
+                            .fill(Color("light_gray"))
+                            .frame(width: geo.size.width * 0.02, height: 25)
 
-                                            Text(titleDictionary[wiD.title] ?? "")
-                                                .frame(minWidth: 30, maxWidth: .infinity)
+                        Text("순서")
+                            .frame(width: geo.size.width * 0.11)
 
-                                            Text(formatTime(wiD.start, format: "HH:mm"))
-                                                .frame(minWidth: 70, maxWidth: .infinity)
+                        Text("제목")
+                            .frame(width: geo.size.width * 0.11)
 
-                                            Text(formatTime(wiD.finish, format: "HH:mm"))
-                                                .frame(minWidth: 70, maxWidth: .infinity)
+                        Text("시작")
+                            .frame(width: geo.size.width * 0.22)
 
-                                            Text(formatDuration(wiD.duration, isClickedWiD: false))
-                                                .frame(minWidth: 110, maxWidth: .infinity)
-                                        }
-                                        
-                                        HStack {
-                                            Text("설명")
-                                                .frame(minWidth: 20, maxWidth: .infinity)
+                        Text("종료")
+                            .frame(width: geo.size.width * 0.22)
+
+                        Text("경과")
+                            .frame(width: geo.size.width * 0.32)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color("light_gray"))
+                    .cornerRadius(5)
+                    
+//                    HStack(spacing: 0) {
+//                        Rectangle()
+//                            .fill(Color.red)
+//                            .frame(width: geo.size.width * 0.02, height: 60)
+//                        VStack(spacing: 5) {
+//                            HStack(spacing: 0) {
+//                                Text("99")
+//                                    .frame(width: geo.size.width * 0.11)
+//
+//                                Text("공부")
+//                                    .frame(width: geo.size.width * 0.11)
+//
+//                                Text("99:99")
+//                                    .frame(width: geo.size.width * 0.22)
+//
+//                                Text("99:99")
+//                                    .frame(width: geo.size.width * 0.22)
+//
+//                                Text("99시간 99분")
+//                                    .frame(width: geo.size.width * 0.32)
+//                            }
+//                            
+//                            Divider()
+//                                .padding(.horizontal, 8)
+//                            
+//                            HStack(spacing: 0) {
+//                                Text("설명")
+//                                    .frame(width: geo.size.width * 0.11)
+//                                
+//                                Text("detailddddd")
+//                                    .frame(width: geo.size.width * 0.87, alignment: .leading)
+//                                    .lineLimit(1)
+//                                    .truncationMode(.tail)
+//                            }
+//                        }
+//                    }
+//                    .frame(maxWidth: .infinity)
+//                    .background(Color("light_gray"))
+//                    .cornerRadius(5)
+
+                    if wiDs.isEmpty {
+                        Spacer()
+                        Text("표시할 WiD가 없습니다.")
+                            .foregroundColor(.gray)
+                    } else {
+                        ScrollView {
+                            ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
+                                NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
+                                    HStack(spacing: 0) {
+                                        Rectangle()
+                                            .fill(Color(wiD.title))
+                                            .frame(width: geo.size.width * 0.02, height: 60)
+                                        VStack(spacing: 5) {
+                                            HStack(spacing: 0) {
+                                                Text("\(index + 1)")
+                                                    .frame(width: geo.size.width * 0.11)
+
+                                                Text(titleDictionary[wiD.title] ?? "")
+                                                    .frame(width: geo.size.width * 0.11)
+
+                                                Text(formatTime(wiD.start, format: "HH:mm"))
+                                                    .frame(width: geo.size.width * 0.22)
+
+                                                Text(formatTime(wiD.finish, format: "HH:mm"))
+                                                    .frame(width: geo.size.width * 0.22)
+
+                                                Text(formatDuration(wiD.duration, mode: 2))
+                                                    .frame(width: geo.size.width * 0.32)
+                                            }
                                             
-                                            Text(" : ")
+                                            Divider()
+                                                .padding(.horizontal, 8)
                                             
-                                            Text(wiD.detail)
-                                                .frame(minWidth: 302, maxWidth: .infinity, alignment: .leading)
-                                                .lineLimit(1)
-                                                .truncationMode(.tail)
+                                            HStack(spacing: 0) {
+                                                Text("설명")
+                                                    .frame(width: geo.size.width * 0.11)
+                                                
+                                                Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
+                                                    .frame(width: geo.size.width * 0.87, alignment: .leading)
+                                                    .lineLimit(1)
+                                                    .truncationMode(.tail)
+                                                    .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
+                                            }
                                         }
                                     }
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color("light_gray"))
+                                    .cornerRadius(5)
                                 }
-                                .frame(maxWidth: .infinity)
-                                .background(Color("light_gray"))
-                                .cornerRadius(5)
                             }
                         }
                     }
+                    Spacer()
                 }
-                Spacer()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .onAppear() {
+                withAnimation {
+                    wiDs = wiDService.selectWiDsByDate(date: currentDate)
+                }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
-        .onAppear() {
-            withAnimation {
-                wiDs = wiDService.selectWiDsByDate(date: currentDate)
-            }
-        }
     }
 }
 

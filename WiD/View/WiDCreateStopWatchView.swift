@@ -41,6 +41,8 @@ struct WiDCreateStopWatchView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                     }
+                    .disabled(!buttonsVisible)
+                    .opacity(buttonsVisible ? 1.0 : 0.0)
                     .padding(.horizontal)
 
                     Text(titleDictionary[title] ?? "")
@@ -53,19 +55,19 @@ struct WiDCreateStopWatchView: View {
                         Image(systemName: "chevron.right")
                             .imageScale(.large)
                     }
+                    .disabled(!buttonsVisible)
+                    .opacity(buttonsVisible ? 1.0 : 0.0)
                     .padding(.horizontal)
                 }
                 
                 Text(formatElapsedTime(elapsedTime))
-                    .font(.system(size: 50))
+//                    .font(.system(size: 50))
+                    .font(.custom("Tektur-VariableFont_wdth,wght", size: 50))
                 
                 HStack {
                     Button(action: {
                         if !isRunning {
                             startWiD()
-                            withAnimation {
-                                buttonsVisible = false
-                            }
                         } else {
                             finishWiD()
                         }
@@ -78,15 +80,12 @@ struct WiDCreateStopWatchView: View {
 
                     Button(action: {
                         resetWiD()
-                        withAnimation {
-                            buttonsVisible = true
-                        }
                     }) {
                         Text("초기화")
                             .font(.system(size: 30))
                     }
                     .frame(maxWidth: .infinity)
-                    .disabled(isRunning)
+                    .disabled(isRunning || buttonsVisible)
                 }
             }
             .padding(.horizontal)
@@ -116,12 +115,21 @@ struct WiDCreateStopWatchView: View {
     }
     
     private func startWiD() {
+        withAnimation() {
+            buttonsVisible = false
+        }
         isRunning = true
         buttonText = "중지"
         
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timerInterval), repeats: true) { timer in
-            elapsedTime += timerInterval
+//            if elapsedTime < 12 * 60 * 60 {
+            if elapsedTime < 5 {
+                elapsedTime += timerInterval
+            } else {
+                finishWiD()
+                resetWiD()
+            }
         }
         
         date = Date()
@@ -165,11 +173,11 @@ struct WiDCreateStopWatchView: View {
     }
 
     private func resetWiD() {
+        withAnimation {
+            buttonsVisible = true
+        }
         elapsedTime = 0
         buttonText = "시작"
-        
-        timer?.invalidate()
-        timer = nil
     }
 }
 
@@ -177,6 +185,5 @@ struct WiDCreateView_Previews: PreviewProvider {
     static var previews: some View {
         let buttonsVisible = Binding.constant(true)
         return WiDCreateStopWatchView(buttonsVisible: buttonsVisible)
-//        WiDCreateStopWatchView()
     }
 }
