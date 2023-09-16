@@ -13,6 +13,8 @@
 		EA0458212A625B840065B98E /* PieChartUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0458202A625B840065B98E /* PieChartUtil.swift */; };
 		EA0458232A625C0C0065B98E /* WiDUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0458222A625C0C0065B98E /* WiDUtil.swift */; };
 		EA181F372A624F1F006EAF72 /* CalendarUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181F362A624F1F006EAF72 /* CalendarUtil.swift */; };
+		EA1AF4AA2AB54EBD00BEBA93 /* AppOpenAdUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1AF4A92AB54EBD00BEBA93 /* AppOpenAdUtil.swift */; };
+		EA1AF4AC2AB55C5500BEBA93 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */; };
 		EA215CDE2A60F9AF005C5D30 /* WiDSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */; };
 		EA215CE02A60FCAF005C5D30 /* WiDReadWeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */; };
 		EA215CE22A60FCBB005C5D30 /* WiDReadMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */; };
@@ -63,6 +65,9 @@
 		EA0458202A625B840065B98E /* PieChartUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartUtil.swift; sourceTree = "<group>"; };
 		EA0458222A625C0C0065B98E /* WiDUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WiDUtil.swift; path = WiD/Util/WiDUtil.swift; sourceTree = SOURCE_ROOT; };
 		EA181F362A624F1F006EAF72 /* CalendarUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtil.swift; sourceTree = "<group>"; };
+		EA1AF4A82AB549A200BEBA93 /* Tektur-VariableFont_wdth,wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tektur-VariableFont_wdth,wght.ttf"; sourceTree = "<group>"; };
+		EA1AF4A92AB54EBD00BEBA93 /* AppOpenAdUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOpenAdUtil.swift; sourceTree = "<group>"; };
+		EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDSearchView.swift; sourceTree = "<group>"; };
 		EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadWeekView.swift; sourceTree = "<group>"; };
 		EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadMonthView.swift; sourceTree = "<group>"; };
@@ -145,6 +150,7 @@
 				EA0458202A625B840065B98E /* PieChartUtil.swift */,
 				EA0458222A625C0C0065B98E /* WiDUtil.swift */,
 				EA663F0B2A5E74E200B51844 /* TitleUtil.swift */,
+				EA1AF4A92AB54EBD00BEBA93 /* AppOpenAdUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -223,6 +229,7 @@
 				EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */,
 				EA9D41732AB18B0D008D6DE2 /* WiDCreateTimerView.swift */,
 				EA9D41752AB18B28008D6DE2 /* WiDCreateHolderView.swift */,
+				EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -231,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */,
+				EA1AF4A82AB549A200BEBA93 /* Tektur-VariableFont_wdth,wght.ttf */,
 			);
 			path = Font;
 			sourceTree = "<group>";
@@ -484,8 +492,10 @@
 			files = (
 				EADF79162A583C8E000753B2 /* WiDService.swift in Sources */,
 				EA215CE02A60FCAF005C5D30 /* WiDReadWeekView.swift in Sources */,
+				EA1AF4AC2AB55C5500BEBA93 /* SplashView.swift in Sources */,
 				EA663F0C2A5E74E200B51844 /* TitleUtil.swift in Sources */,
 				EA9D41742AB18B0D008D6DE2 /* WiDCreateTimerView.swift in Sources */,
+				EA1AF4AA2AB54EBD00BEBA93 /* AppOpenAdUtil.swift in Sources */,
 				EA215CDE2A60F9AF005C5D30 /* WiDSearchView.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
 				EA181F372A624F1F006EAF72 /* CalendarUtil.swift in Sources */,
