@@ -19,7 +19,7 @@ struct WiDCreateHolderView: View {
                 .disabled(!buttonsVisible)
 
             WiDCreateView(currentTab: selectedPicker, buttonsVisible: $buttonsVisible)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.white) // 스와이프 용 배경
         }
         .gesture(
             DragGesture()

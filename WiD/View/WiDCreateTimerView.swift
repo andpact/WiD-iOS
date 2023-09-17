@@ -45,9 +45,9 @@ struct WiDCreateTimerView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                     }
+                    .padding(.horizontal)
                     .disabled(!buttonsVisible)
                     .opacity(buttonsVisible ? 1.0 : 0.0)
-                    .padding(.horizontal)
 
                     Text(titleDictionary[title] ?? "")
                         .font(.system(size: 40))
@@ -59,9 +59,9 @@ struct WiDCreateTimerView: View {
                         Image(systemName: "chevron.right")
                             .imageScale(.large)
                     }
+                    .padding(.horizontal)
                     .disabled(!buttonsVisible)
                     .opacity(buttonsVisible ? 1.0 : 0.0)
-                    .padding(.horizontal)
                 }
                 
                 HStack {
@@ -84,7 +84,7 @@ struct WiDCreateTimerView: View {
                     .opacity(buttonsVisible ? 1.0 : 0.0)
                     
                     Text(formatElapsedTime(remainingTime))
-                        .font(.custom("Tektur-VariableFont_wdth,wght", size: 50))
+                        .font(.custom("Tektur-Regular", size: 50))
                         .frame(maxWidth: .infinity)
                     
                     Button(action: {

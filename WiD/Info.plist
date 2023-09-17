@@ -211,7 +211,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Acme-Regular.ttf</string>
-		<string>Tektur-VariableFont_wdth,wght.ttf</string>
+		<string>Tektur-Regular.ttf</string>
 	</array>
 </dict>
 </plist>

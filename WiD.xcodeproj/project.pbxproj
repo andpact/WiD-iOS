@@ -19,6 +19,7 @@
 		EA215CE02A60FCAF005C5D30 /* WiDReadWeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */; };
 		EA215CE22A60FCBB005C5D30 /* WiDReadMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */; };
 		EA215CE42A60FCD6005C5D30 /* WiDReadHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */; };
+		EA469A7F2AB6A5170000E0CC /* Tektur-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA469A7E2AB6A5170000E0CC /* Tektur-Regular.ttf */; };
 		EA60B8062A56991700B49641 /* WiDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8052A56991700B49641 /* WiDApp.swift */; };
 		EA60B8082A56991700B49641 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8072A56991700B49641 /* ContentView.swift */; };
 		EA60B80A2A56991800B49641 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA60B8092A56991800B49641 /* Assets.xcassets */; };
@@ -65,13 +66,13 @@
 		EA0458202A625B840065B98E /* PieChartUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartUtil.swift; sourceTree = "<group>"; };
 		EA0458222A625C0C0065B98E /* WiDUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WiDUtil.swift; path = WiD/Util/WiDUtil.swift; sourceTree = SOURCE_ROOT; };
 		EA181F362A624F1F006EAF72 /* CalendarUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtil.swift; sourceTree = "<group>"; };
-		EA1AF4A82AB549A200BEBA93 /* Tektur-VariableFont_wdth,wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tektur-VariableFont_wdth,wght.ttf"; sourceTree = "<group>"; };
 		EA1AF4A92AB54EBD00BEBA93 /* AppOpenAdUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOpenAdUtil.swift; sourceTree = "<group>"; };
 		EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDSearchView.swift; sourceTree = "<group>"; };
 		EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadWeekView.swift; sourceTree = "<group>"; };
 		EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadMonthView.swift; sourceTree = "<group>"; };
 		EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadHolderView.swift; sourceTree = "<group>"; };
+		EA469A7E2AB6A5170000E0CC /* Tektur-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tektur-Regular.ttf"; sourceTree = "<group>"; };
 		EA60B8022A56991700B49641 /* WiD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WiD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA60B8052A56991700B49641 /* WiDApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDApp.swift; sourceTree = "<group>"; };
 		EA60B8072A56991700B49641 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -238,7 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */,
-				EA1AF4A82AB549A200BEBA93 /* Tektur-VariableFont_wdth,wght.ttf */,
+				EA469A7E2AB6A5170000E0CC /* Tektur-Regular.ttf */,
 			);
 			path = Font;
 			sourceTree = "<group>";
@@ -360,6 +361,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA469A7F2AB6A5170000E0CC /* Tektur-Regular.ttf in Resources */,
 				EA60B80D2A56991800B49641 /* Preview Assets.xcassets in Resources */,
 				EADCDC472A6DF98100D8AED2 /* Acme-Regular.ttf in Resources */,
 				EA60B80A2A56991800B49641 /* Assets.xcassets in Resources */,

@@ -13,19 +13,20 @@ func formatDate(_ date: Date, format: String) -> String {
     return dateFormatter.string(from: date)
 }
 
-// 해당 날짜의 요일 반환
+// 해당 날짜의 요일 반환 (한국어)
 func formatWeekday(_ date: Date) -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "E"
+    dateFormatter.locale = Locale(identifier: "ko_KR") // 한국 로케일로 설정
     return dateFormatter.string(from: date)
 }
 
 func formatWeekdayLetter(_ index: Int) -> String {
-    let calendar = Calendar.current
-    let weekdaySymbols = calendar.shortWeekdaySymbols
-    let adjustedIndex = (index + calendar.firstWeekday - 1) % 7
-    return weekdaySymbols[adjustedIndex]
+    let weekdays = ["일", "월", "화", "수", "목", "금", "토"]
+    let adjustedIndex = (index + Calendar.current.firstWeekday - 1) % 7
+    return weekdays[adjustedIndex]
 }
+
 
 // 해당 날짜가 올해의 몇 번째 주인지 반환
 func weekNumber(for date: Date) -> Int {

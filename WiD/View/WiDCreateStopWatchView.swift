@@ -62,7 +62,7 @@ struct WiDCreateStopWatchView: View {
                 
                 Text(formatElapsedTime(elapsedTime))
 //                    .font(.system(size: 50))
-                    .font(.custom("Tektur-VariableFont_wdth,wght", size: 50))
+                    .font(.custom("Tektur-Regular", size: 50))
                 
                 HStack {
                     Button(action: {

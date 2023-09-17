@@ -14,46 +14,43 @@ struct PieChartView: View {
     var isEmpty: Bool
     
     var body: some View {
-        GeometryReader { geometry in
+        GeometryReader { geo in
             ZStack {
                 ForEach(0..<data.count, id: \.self) { index in
                     PieSlice(startAngle: getStartAngle(for: index), endAngle: getEndAngle(for: index))
                         .foregroundColor(data[index].color)
                         
                 }
-//                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 // 중앙에 원
                 Circle()
-//                    .frame(width: geometry.size.width * 0.6, height: geometry.size.width * 0.6)
-                    .frame(width: geometry.size.width * 0.8, height: geometry.size.width * 0.8)
+                    .frame(width: geo.size.width * 0.8, height: geo.size.width * 0.8)
                     .foregroundColor(.white)
 
                 if isForOne {
                     // 숫자 텍스트
                     ForEach(1...24, id: \.self) { number in
                         let angle = getAngle(for: number)
-//                        let radius = geometry.size.width * 0.45 // 원의 반지름
-                        let radius = geometry.size.width * 0.47 // 원의 반지름
+                        let radius = geo.size.width * 0.47 // 원의 반지름
 
                         let x = cos(angle.radians) * radius
                         let y = sin(angle.radians) * radius
 
                         Text("\(number)")
                             .font(.system(size: 10))
-                            .position(x: geometry.size.width / 2 + x, y: geometry.size.width / 2 + y)
+                            .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 + y)
                     }
                     
                     Text("오후 | 오전")
-                        .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
+                        .position(x: geo.size.width / 2, y: geo.size.width / 2)
                         .foregroundColor(data.count == 1 ? .gray : .black)
                     
                 } else {                    
                     if !isEmpty {
                         // 날짜 텍스트
                         Text(formatDate(date, format: "d"))
-                            .font(.system(size: geometry.size.width * 0.2, weight: .bold, design: .default))
-                            .position(x: geometry.size.width / 2, y: geometry.size.width / 2)
+                            .font(.system(size: geo.size.width * 0.2, weight: .bold, design: .default))
+                            .position(x: geo.size.width / 2, y: geo.size.width / 2)
                             .foregroundColor(data.count == 1 ? .gray : .black)
 
                     }

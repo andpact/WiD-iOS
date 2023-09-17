@@ -68,7 +68,7 @@ struct WiDSearchView: View {
 //                    .background(Color("light_gray"))
 //                    .cornerRadius(5)
                     
-                    Text("검색된 WiD가 없습니다.")
+                    Text("설명으로 WiD를 검색해 보세요.")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .foregroundColor(.gray)
                 } else {
@@ -141,7 +141,6 @@ struct WiDSearchView: View {
                     Spacer()
                 }
             }
-//            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onAppear() {
                 withAnimation {
                     wiDs = wiDService.selectWiDsByDetail(detail: searchText) // 삭제 후 돌아오면 삭제된 WiD가 표시되니까 다시 WiD 리스트를 가져옴.
@@ -163,7 +162,7 @@ struct WiDSearchView: View {
 
 struct SearchBar: View {
     @Binding var text: String
-    var onEditingChanged: (Bool) -> Void // Callback to inform when editing changes
+    var onEditingChanged: (Bool) -> Void
 
     var body: some View {
         HStack {

@@ -24,12 +24,9 @@ struct WiDApp: App {
             if appOpenAdUtil.isShowingSplashView {
                 SplashView(isInternetConnected: $isInternetConnected)
                     .onAppear {
-                        // 모니터를 시작하고 인터넷 연결 상태를 확인합니다.
                         let queue = DispatchQueue(label: "NetworkMonitor")
                         monitor.start(queue: queue)
-                        
                         monitor.pathUpdateHandler = { path in
-                            // 연결 상태가 변경될 때마다 isInternetConnected 변수를 업데이트합니다.
                             isInternetConnected = (path.status == .satisfied)
                             if isInternetConnected {
                                 appOpenAdUtil.loadAd()

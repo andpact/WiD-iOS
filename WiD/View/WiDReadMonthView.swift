@@ -52,19 +52,23 @@ struct WiDReadMonthView: View {
         return map
     }
     
-    // 최저, 최고, 평균, 종합 시간 계산
-    private var titleStats: [String: TitleStats] {
-        var map = [String: TitleStats]()
-
+    @State private var sortedTitleStats: [TitleStats] = []
+    
+    private func updateSortedTitleStats() {
+        var statsArray: [TitleStats] = []
+        
         for (title, dateDurations) in titleDateDurations {
             let minDuration = dateDurations.values.min() ?? 0.0
             let maxDuration = dateDurations.values.max() ?? 0.0
             let totalDuration = dateDurations.values.reduce(0.0, +)
             let averageDuration = dateDurations.isEmpty ? 0.0 : totalDuration / Double(dateDurations.count)
-
-            map[title] = TitleStats(minDuration: minDuration, maxDuration: maxDuration, averageDuration: averageDuration, totalDuration: totalDuration)
+            
+            // 'title' 정보를 'TitleStats'에 포함하여 추가
+            statsArray.append(TitleStats(title: title, minDuration: minDuration, maxDuration: maxDuration, averageDuration: averageDuration, totalDuration: totalDuration))
         }
-        return map
+        
+        // totalDuration이 높은 순서로 정렬
+        sortedTitleStats = statsArray.sorted(by: { $0.totalDuration > $1.totalDuration })
     }
     
     var body: some View {
@@ -86,6 +90,8 @@ struct WiDReadMonthView: View {
                     Button(action: {
                         withAnimation {
                             currentDate = getFirstDayOfMonth(for: Date())
+                            
+                            updateSortedTitleStats()
                         }
                     }) {
                         Image(systemName: "arrow.clockwise")
@@ -96,6 +102,8 @@ struct WiDReadMonthView: View {
                     Button(action: {
                         withAnimation {
                             currentDate = Calendar.current.date(byAdding: .month, value: -1, to: currentDate) ?? currentDate
+                            
+                            updateSortedTitleStats()
                         }
                     }) {
                         Image(systemName: "chevron.left")
@@ -105,6 +113,8 @@ struct WiDReadMonthView: View {
                     Button(action: {
                         withAnimation {
                             currentDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
+                            
+                            updateSortedTitleStats()
                         }
                     }) {
                         Image(systemName: "chevron.right")
@@ -166,11 +176,8 @@ struct WiDReadMonthView: View {
                     .cornerRadius(5)
                     
                     if wiDs.isEmpty {
-                        Spacer()
-
                         Text("표시할 정보가 없습니다.")
-                            .frame(maxWidth: .infinity)
-                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .foregroundColor(.gray)
                         
 //                        HStack(spacing: 0) {
@@ -203,14 +210,13 @@ struct WiDReadMonthView: View {
 //                        .cornerRadius(5)
                     } else {
                         ScrollView {
-                            ForEach(titleStats.keys.sorted(), id: \.self) { title in
-                                let stats = titleStats[title]!
+                            ForEach(sortedTitleStats, id: \.title) { stats in
                                 HStack(spacing: 0) {
                                     Rectangle()
-                                        .fill(Color(title))
+                                        .fill(Color(stats.title))
                                         .frame(width: geo.size.width * 0.02, height: 25)
 
-                                    Text(titleDictionary[title] ?? "")
+                                    Text(titleDictionary[stats.title] ?? "")
                                         .frame(width: geo.size.width * 0.1)
 
                                     Text(formatDuration(stats.minDuration, mode: 1))
@@ -230,7 +236,6 @@ struct WiDReadMonthView: View {
                             }
                         }
                     }
-                    Spacer()
                 }
             }
             .onAppear() {
@@ -246,6 +251,8 @@ struct WiDReadMonthView: View {
                 withAnimation {
                     wiDs = allWiDs
                 }
+                
+                updateSortedTitleStats()
             }
         }
         .padding(.horizontal)

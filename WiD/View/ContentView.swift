@@ -44,15 +44,18 @@ struct ContentView: View {
                     VStack {
                         Rectangle()
                             .fill(Color.white)
-                            .frame(width: geo.size.width, height: geo.size.height / 15)
+                            .frame(width: .infinity, height: geo.size.height / 15)
 //                            .offset(y: !buttonsVisible ? 0 : 100)
 
                         Spacer()
 
-                        Rectangle()
-                            .fill(Color.white)
-                            .frame(width: geo.size.width, height: geo.size.height / 15)
-//                            .offset(y: !buttonsVisible ? 0 : -100)
+                        ZStack {
+                            Text("WiD")
+                                .font(.custom("Acme-Regular", size: 50))
+                                .frame(maxWidth: .infinity)
+//                                .offset(y: !buttonsVisible ? 0 : -100)
+                        }
+                        .background(.white)
                     }
                 }
             }

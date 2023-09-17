@@ -15,7 +15,7 @@ struct WiDReadHolderView: View {
         VStack {
             animate()
             WiDReadView(currentTab: selectedPicker)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.white) // 스와이프 용 배경
         }
         .gesture(
             DragGesture()
