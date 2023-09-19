@@ -36,104 +36,111 @@ struct WiDCreateTimerView: View {
     @State private var plusButtonDisabled: Bool = false
     
     var body: some View {
-        VStack {
-            VStack(spacing: 40) {
-                HStack {
-                    Button(action: {
-                        prevTitle()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .imageScale(.large)
-                    }
-                    .padding(.horizontal)
-                    .disabled(!buttonsVisible)
-                    .opacity(buttonsVisible ? 1.0 : 0.0)
+        GeometryReader { geo in
+            VStack {
+                VStack(spacing: 40) {
+                    HStack {
+                        Button(action: {
+                            prevTitle()
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.large)
+                        }
+                        .padding(.horizontal)
+                        .disabled(!buttonsVisible)
+                        .opacity(buttonsVisible ? 1.0 : 0.0)
 
-                    Text(titleDictionary[title] ?? "")
-                        .font(.system(size: 40))
-                        .frame(maxWidth: .infinity)
+                        Text(titleDictionary[title] ?? "")
+//                            .font(.system(size: 40))
+                            .font(.system(size: geo.size.width * 0.1))
+                            .frame(maxWidth: .infinity)
 
-                    Button(action: {
-                        nextTitle()
-                    }) {
-                        Image(systemName: "chevron.right")
-                            .imageScale(.large)
+                        Button(action: {
+                            nextTitle()
+                        }) {
+                            Image(systemName: "chevron.right")
+                                .imageScale(.large)
+                        }
+                        .padding(.horizontal)
+                        .disabled(!buttonsVisible)
+                        .opacity(buttonsVisible ? 1.0 : 0.0)
                     }
-                    .padding(.horizontal)
-                    .disabled(!buttonsVisible)
-                    .opacity(buttonsVisible ? 1.0 : 0.0)
-                }
-                
-                HStack {
-                    Button(action: {
-                        if (remainingTime > 0) {
-                            remainingTime -= 3600
-                        }
-                        if remainingTime <= 0 {
-                            minusButtonDisabled = true
-                        }
-                        if remainingTime < 12 * 3_600 {
-                            plusButtonDisabled = false
-                        }
-                    }) {
-                        Image(systemName: "minus")
-                            .imageScale(.large)
-                    }
-                    .padding(.horizontal)
-                    .disabled(minusButtonDisabled)
-                    .opacity(buttonsVisible ? 1.0 : 0.0)
                     
-                    Text(formatElapsedTime(remainingTime))
-                        .font(.custom("Tektur-Regular", size: 50))
-                        .frame(maxWidth: .infinity)
+                    HStack {
+                        Button(action: {
+                            if (remainingTime > 0) {
+                                remainingTime -= 3600
+                            }
+                            if remainingTime <= 0 {
+                                minusButtonDisabled = true
+                            }
+                            if remainingTime < 12 * 3_600 {
+                                plusButtonDisabled = false
+                            }
+                        }) {
+                            Image(systemName: "minus")
+                                .imageScale(.large)
+                        }
+                        .padding(.horizontal)
+                        .disabled(minusButtonDisabled)
+                        .opacity(buttonsVisible ? 1.0 : 0.0)
+                        
+                        Text(formatElapsedTime(remainingTime))
+//                            .font(.custom("Tektur-Regular", size: 50))
+                            .font(.custom("Tektur-Regular", size: geo.size.width * 0.12))
+                            .frame(maxWidth: .infinity)
+                        
+                        Button(action: {
+                            if (remainingTime < 12 * 3600) {
+                                remainingTime += 3600
+                            }
+                            if remainingTime > 0 {
+                                minusButtonDisabled = false
+                            }
+                            if remainingTime >= 12 * 3600 {
+                                plusButtonDisabled = true
+                            }
+                        }) {
+                            Image(systemName: "plus")
+                                .imageScale(.large)
+                        }
+                        .padding(.horizontal)
+                        .disabled(plusButtonDisabled)
+                        .opacity(buttonsVisible ? 1.0 : 0.0)
+                    }
                     
-                    Button(action: {
-                        if (remainingTime < 12 * 3600) {
-                            remainingTime += 3600
+                    HStack {
+                        Button(action: {
+                            if !isRunning {
+                                startWiD()
+                            } else {
+                                finishWiD()
+                            }
+                        }) {
+                            Text(buttonText)
+//                                .font(.system(size: 25))
+                                .font(.system(size: geo.size.width * 0.06))
+                                .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : nil))
                         }
-                        if remainingTime > 0 {
-                            minusButtonDisabled = false
-                        }
-                        if remainingTime >= 12 * 3600 {
-                            plusButtonDisabled = true
-                        }
-                    }) {
-                        Image(systemName: "plus")
-                            .imageScale(.large)
-                    }
-                    .padding(.horizontal)
-                    .disabled(plusButtonDisabled)
-                    .opacity(buttonsVisible ? 1.0 : 0.0)
-                }
-                
-                HStack {
-                    Button(action: {
-                        if !isRunning {
-                            startWiD()
-                        } else {
-                            finishWiD()
-                        }
-                    }) {
-                        Text(buttonText)
-                            .font(.system(size: 30))
-                            .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : nil))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .disabled(minusButtonDisabled)
+                        .frame(maxWidth: .infinity)
+                        .disabled(minusButtonDisabled)
 
-                    Button(action: {
-                        resetWiD()
-                    }) {
-                        Text("초기화")
-                            .font(.system(size: 30))
+                        Button(action: {
+                            resetWiD()
+                        }) {
+                            Text("초기화")
+//                                .font(.system(size: 25))
+                                .font(.system(size: geo.size.width * 0.06))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .disabled(isRunning || buttonsVisible)
                     }
-                    .frame(maxWidth: .infinity)
-                    .disabled(isRunning || buttonsVisible)
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
     }
     

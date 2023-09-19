@@ -32,65 +32,70 @@ struct WiDCreateStopWatchView: View {
     @Binding var buttonsVisible: Bool
     
     var body: some View {
-        VStack {
-            VStack(spacing: 40) {
-                HStack {
-                    Button(action: {
-                        prevTitle()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .imageScale(.large)
-                    }
-                    .disabled(!buttonsVisible)
-                    .opacity(buttonsVisible ? 1.0 : 0.0)
-                    .padding(.horizontal)
+        GeometryReader { geo in
+            VStack {
+                VStack(spacing: 40) {
+                    HStack {
+                        Button(action: {
+                            prevTitle()
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.large)
+                        }
+                        .disabled(!buttonsVisible)
+                        .opacity(buttonsVisible ? 1.0 : 0.0)
+                        .padding(.horizontal)
 
-                    Text(titleDictionary[title] ?? "")
-                        .font(.system(size: 40))
+                        Text(titleDictionary[title] ?? "")
+    //                        .font(.system(size: 40))
+                            .font(.system(size: geo.size.width * 0.1))
+                            .frame(maxWidth: .infinity)
+
+                        Button(action: {
+                            nextTitle()
+                        }) {
+                            Image(systemName: "chevron.right")
+                                .imageScale(.large)
+                        }
+                        .disabled(!buttonsVisible)
+                        .opacity(buttonsVisible ? 1.0 : 0.0)
+                        .padding(.horizontal)
+                    }
+                    
+                    Text(formatElapsedTime(elapsedTime))
+    //                    .font(.custom("Tektur-Regular", size: 50))
+                        .font(.custom("Tektur-Regular", size: geo.size.width * 0.12))
+                    
+                    HStack {
+                        Button(action: {
+                            if !isRunning {
+                                startWiD()
+                            } else {
+                                finishWiD()
+                            }
+                        }) {
+                            Text(buttonText)
+    //                            .font(.system(size: 25))
+                                .font(.system(size: geo.size.width * 0.06))
+                                .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .black))
+                        }
                         .frame(maxWidth: .infinity)
 
-                    Button(action: {
-                        nextTitle()
-                    }) {
-                        Image(systemName: "chevron.right")
-                            .imageScale(.large)
-                    }
-                    .disabled(!buttonsVisible)
-                    .opacity(buttonsVisible ? 1.0 : 0.0)
-                    .padding(.horizontal)
-                }
-                
-                Text(formatElapsedTime(elapsedTime))
-//                    .font(.system(size: 50))
-                    .font(.custom("Tektur-Regular", size: 50))
-                
-                HStack {
-                    Button(action: {
-                        if !isRunning {
-                            startWiD()
-                        } else {
-                            finishWiD()
+                        Button(action: {
+                            resetWiD()
+                        }) {
+                            Text("초기화")
+    //                            .font(.system(size: 25))
+                                .font(.system(size: geo.size.width * 0.06))
                         }
-                    }) {
-                        Text(buttonText)
-                            .font(.system(size: 30))
-                            .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .black))
+                        .frame(maxWidth: .infinity)
+                        .disabled(isRunning || buttonsVisible)
                     }
-                    .frame(maxWidth: .infinity)
-
-                    Button(action: {
-                        resetWiD()
-                    }) {
-                        Text("초기화")
-                            .font(.system(size: 30))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .disabled(isRunning || buttonsVisible)
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
     }
     
@@ -123,8 +128,7 @@ struct WiDCreateStopWatchView: View {
         
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timerInterval), repeats: true) { timer in
-//            if elapsedTime < 12 * 60 * 60 {
-            if elapsedTime < 5 {
+            if elapsedTime < 12 * 60 * 60 {
                 elapsedTime += timerInterval
             } else {
                 finishWiD()

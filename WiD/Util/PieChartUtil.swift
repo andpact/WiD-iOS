@@ -49,7 +49,8 @@ struct PieChartView: View {
                     if !isEmpty {
                         // 날짜 텍스트
                         Text(formatDate(date, format: "d"))
-                            .font(.system(size: geo.size.width * 0.2, weight: .bold, design: .default))
+                            .font(.system(size: geo.size.width * 0.2))
+                            .fontWeight(data.count == 1 ? nil : .bold)
                             .position(x: geo.size.width / 2, y: geo.size.width / 2)
                             .foregroundColor(data.count == 1 ? .gray : .black)
 

@@ -219,15 +219,6 @@ struct WiDView: View {
                 .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
 
                 HStack {
-//                    Button(action: { // 스크린 샷 버튼
-//                        
-//                    }) {
-//                        Image(systemName: "photo.on.rectangle")
-//                            .renderingMode(.original)
-//                            .imageScale(.large)
-//                    }
-//                    .frame(maxWidth: .infinity)
-
                     Button(action: {
                         if beforeDelete {
                             wiDService.deleteWiD(withID: clickedWiDId)
@@ -235,7 +226,6 @@ struct WiDView: View {
                         }
                         beforeDelete.toggle()
                         
-                        // Reset beforeDelete back to false after 3 seconds
                         if beforeDelete {
                             deleteTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
                                 beforeDelete = false
@@ -243,7 +233,6 @@ struct WiDView: View {
                                 deleteTimer = nil
                             }
                         } else {
-                            // Invalidate the timer if the button is tapped before 3 seconds
                             deleteTimer?.invalidate()
                             deleteTimer = nil
                         }

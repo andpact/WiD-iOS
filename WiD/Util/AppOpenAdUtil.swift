@@ -17,7 +17,8 @@ final class AppOpenAdUtil: NSObject, ObservableObject, GADFullScreenContentDeleg
     func loadAd() {
         let request = GADRequest()
         GADAppOpenAd.load(
-            withAdUnitID: "ca-app-pub-3940256099942544/5662855259",
+            withAdUnitID: "ca-app-pub-3940256099942544/5662855259", // 앱 오프닝 광고 단위 ID 테스트 용
+//            withAdUnitID: "ca-app-pub-3641806776840744/8194193597", // 앱 오프닝 광고 단위 ID
             request: request,
             orientation: UIInterfaceOrientation.portrait,
             completionHandler: { (appOpenAdIn, _) in
