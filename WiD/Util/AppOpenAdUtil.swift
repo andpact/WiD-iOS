@@ -34,8 +34,12 @@ final class AppOpenAdUtil: NSObject, ObservableObject, GADFullScreenContentDeleg
     
     func showAdIfAvailable() {
         if let gOpenAd = self.appOpenAd, wasLoadTimeLessThanNHoursAgo(thresholdN: 4) {
+            print("[OPEN AD] will show ad")
             gOpenAd.present(fromRootViewController: (UIApplication.shared.windows.first?.rootViewController)!)
         } else {
+            print("[OPEN AD] failed to load ad")
+            isShowingSplashView = false // 앱 열기 광고를 불러오지 못하면 메인화면으로 전환.
+            
 //            self.loadAd()
         }
     }

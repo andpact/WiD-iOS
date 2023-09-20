@@ -93,7 +93,32 @@ struct WiDSearchView: View {
                                     Spacer()
                                 }
                                 .padding(.top, 6)
+                                
+                                HStack(spacing: 0) {
+                                    Rectangle()
+                                        .fill(Color("light_gray"))
+                                        .frame(width: geo.size.width * 0.02, height: 25)
+
+                                    Text("순서")
+                                        .frame(width: geo.size.width * 0.11)
+
+                                    Text("제목")
+                                        .frame(width: geo.size.width * 0.11)
+
+                                    Text("시작")
+                                        .frame(width: geo.size.width * 0.22)
+
+                                    Text("종료")
+                                        .frame(width: geo.size.width * 0.22)
+
+                                    Text("경과")
+                                        .frame(width: geo.size.width * 0.32)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .background(Color("light_gray"))
+                                .cornerRadius(5)
                             }
+                            
                             NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                                 HStack(spacing: 0) {
                                     Rectangle()
