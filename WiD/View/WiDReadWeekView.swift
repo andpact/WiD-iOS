@@ -27,6 +27,8 @@ struct WiDReadWeekView: View {
         }
     }
     
+    @State private var lastDayOfWeek: Date = getLastDayOfWeek(for: Date())
+    
     // 각 제목별 날짜별 종합 시간을 추적하기 위한 맵
     private var titleDateDurations: [String: [Date: TimeInterval]] {
         var map = [String: [Date: TimeInterval]]()
@@ -84,9 +86,15 @@ struct WiDReadWeekView: View {
                         .padding(.horizontal, 8)
                     
                     HStack {
-                        Text(formatDate(currentDate, format: "yyyy년"))
-                            
-                        Text("\(weekNumber(for: currentDate))번째 주")
+                        Text(formatDate(firstDayOfWeek, format: "M월 d일"))
+                        
+                        Text("~")
+
+                        if Calendar.current.isDate(firstDayOfWeek, equalTo: lastDayOfWeek, toGranularity: .month) {
+                            Text(formatDate(lastDayOfWeek, format: "d일"))
+                        } else {
+                            Text(formatDate(lastDayOfWeek, format: "M월 d일"))
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     
@@ -94,6 +102,7 @@ struct WiDReadWeekView: View {
                         withAnimation {
                             currentDate = Date()
                             firstDayOfWeek = getFirstDayOfWeek(for: Date())
+                            lastDayOfWeek = getLastDayOfWeek(for: Date())
                             
                             updateSortedTitleStats()
                         }
@@ -105,8 +114,9 @@ struct WiDReadWeekView: View {
                     
                     Button(action: {
                         withAnimation {
-                            firstDayOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: firstDayOfWeek) ?? firstDayOfWeek
                             currentDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: currentDate) ?? currentDate
+                            firstDayOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: firstDayOfWeek) ?? firstDayOfWeek
+                            lastDayOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: lastDayOfWeek) ?? lastDayOfWeek
                             
                             updateSortedTitleStats()
                         }
@@ -117,8 +127,9 @@ struct WiDReadWeekView: View {
 
                     Button(action: {
                         withAnimation {
-                            firstDayOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: firstDayOfWeek) ?? firstDayOfWeek
                             currentDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: currentDate) ?? currentDate
+                            firstDayOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: firstDayOfWeek) ?? firstDayOfWeek
+                            lastDayOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: lastDayOfWeek) ?? lastDayOfWeek
                             
                             updateSortedTitleStats()
                         }

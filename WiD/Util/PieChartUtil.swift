@@ -30,13 +30,14 @@ struct PieChartView: View {
                 if isForOne {
                     // 숫자 텍스트
                     ForEach(1...24, id: \.self) { number in
+                        let adjustedNumber = (number - 1) % 12 + 1
                         let angle = getAngle(for: number)
                         let radius = geo.size.width * 0.47 // 원의 반지름
 
                         let x = cos(angle.radians) * radius
                         let y = sin(angle.radians) * radius
 
-                        Text("\(number)")
+                        Text("\(adjustedNumber)")
                             .font(.system(size: 10))
                             .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 + y)
                     }

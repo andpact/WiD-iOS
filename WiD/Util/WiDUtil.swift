@@ -22,17 +22,9 @@ struct WiDView: View {
     private let wiDService = WiDService()
     
     @State private var inputText: String = ""
-    @State private var isExpanded: Bool = false
     
     @State private var beforeDelete: Bool = false
     @State private var deleteTimer: Timer?
-    
-    @State private var padding: CGFloat = 16
-    
-    var inputTextCount: String {
-        let count = inputText.count
-        return "\(count)/200"
-    }
     
     @State private var isEditing: Bool = false
     
@@ -60,7 +52,7 @@ struct WiDView: View {
                             .frame(width: 20, height: 20)
                     }
                     .padding(.horizontal)
-                    .padding(.top, padding)
+                    .padding(.top, 4)
                     
                     HStack {
                         Image(systemName: "calendar")
@@ -81,7 +73,7 @@ struct WiDView: View {
                         .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, padding)
+                    .padding(.bottom, 4)
 
                     HStack {
                         Image(systemName: "text.book.closed")
@@ -91,12 +83,12 @@ struct WiDView: View {
                         Text("제목")
                             .font(.system(size: 25))
 
-                        Text(titleDictionary[clickedWiD?.title ?? ""] ?? "")
+                        Text(titleDictionary[clickedWiD?.title ?? ""] ?? "STUDY")
                             .font(.system(size: 25))
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, padding)
+                    .padding(.bottom, 4)
 
                     HStack {
                         Image(systemName: "clock")
@@ -106,12 +98,12 @@ struct WiDView: View {
                         Text("시작")
                             .font(.system(size: 25))
 
-                        Text(formatTime(clickedWiD?.start ?? Date(), format: "HH:mm:ss"))
+                        Text(formatTime(clickedWiD?.start ?? Date(), format: "a HH:mm:ss"))
                             .font(.system(size: 25))
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, padding)
+                    .padding(.bottom, 4)
 
                     HStack {
                         Image(systemName: "stopwatch")
@@ -121,12 +113,12 @@ struct WiDView: View {
                         Text("종료")
                             .font(.system(size: 25))
 
-                        Text(formatTime(clickedWiD?.finish ?? Date(), format: "HH:mm:ss"))
+                        Text(formatTime(clickedWiD?.finish ?? Date(), format: "a HH:mm:ss"))
                             .font(.system(size: 25))
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, padding)
+                    .padding(.bottom, 4)
 
                     HStack {
                         Image(systemName: "hourglass")
@@ -141,78 +133,52 @@ struct WiDView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, padding)
+                    .padding(.bottom, 4)
                     
-                    if isExpanded {
-                        VStack {
-                            HStack(alignment: .center) {
-                                Image(systemName: "text.bubble")
-                                    .imageScale(.large)
-                                    .frame(width: 25)
-                                
-                                Text("설명")
-                                    .font(.system(size: 25))
-                                    .foregroundColor(.black)
-                                
-                                Spacer()
-                                
-                                Button(action: {
-                                    if isEditing && inputText.count <= 200 {
-                                        wiDService.updateWiD(withID: clickedWiDId, detail: inputText)
-                                    }
-                                    isEditing.toggle()
-                                }) {
-                                    Image(systemName: isEditing ? "checkmark.square" : "square.and.pencil")
-                                        .padding(.trailing, -4)
-                                    
-                                    Text(isEditing ? "완료" : "수정")
-                                        .font(.system(size: 20))
-                                }
-                                .disabled(isEditing && 200 < inputText.count)
-                            }
+                    VStack {
+                        HStack(alignment: .center) {
+                            Image(systemName: "text.bubble")
+                                .imageScale(.large)
+                                .frame(width: 25)
                             
-                            if !isEditing {
-                                ScrollView {
-                                    Text(inputText == "" ? "설명 추가.." : inputText) // 디테일 텍스트 뷰
-                                        .padding(5)
-                                        .padding(.top, 4)
-                                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                            Text("설명")
+                                .font(.system(size: 25))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                if isEditing {
+                                    wiDService.updateWiD(withID: clickedWiDId, detail: inputText)
                                 }
-                                .frame(maxHeight: 150)
+                                isEditing.toggle()
+                            }) {
+                                Image(systemName: isEditing ? "checkmark.square" : "square.and.pencil")
+                                    .padding(.trailing, -4)
+                                
+                                Text(isEditing ? "완료" : "수정")
+                                    .font(.system(size: 20))
+                            }
+                            .disabled(isEditing)
+                        }
+                        
+                        if !isEditing {
+                            ScrollView {
+                                Text(inputText == "" ? "설명 추가.." : inputText)
+                                    .padding(5)
+                                    .padding(.top, 4)
+                                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                            }
+                            .frame(maxHeight: 150)
+                            .border(.gray)
+                        } else {
+                            TextEditor(text: $inputText)
+                                .frame(maxWidth: .infinity, maxHeight: 150, alignment: .topLeading)
                                 .border(.gray)
-                            } else {
-                                TextEditor(text: $inputText) // 디테일 텍스트 에디터
-                                    .frame(maxWidth: .infinity, maxHeight: 150,  alignment: .topLeading)
-                                    .border(.gray)
-                            }
-                            
-                            Text(inputTextCount)
-                                .foregroundColor(inputText.count > 200 ? .red : .gray)
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .padding(.top, -5)
                         }
-                        .padding(.horizontal)
-                        .padding(.bottom, padding)
                     }
-                    
-                    Button(action: {
-                        withAnimation {
-                            isExpanded.toggle()
-                            padding = isExpanded ? 2 : 16
-                        }
-                        
-                        if (isEditing) {
-                            inputText = clickedWiD?.detail ?? ""
-                        }
-                        
-                        isEditing = false
-                    }) {
-                        Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                            .renderingMode(.original)
-                            .imageScale(.large)
-                    }
+                    .padding(.horizontal)
                     .padding(.bottom)
-                    .accentColor(.black)
                 }
                 .background(Color("light_gray"))
                 .cornerRadius(5)
@@ -240,8 +206,7 @@ struct WiDView: View {
                             Text("한번 더 눌러 삭제")
                                 .foregroundColor(.red)
                         } else {
-                            Image(systemName: "trash")
-                                .imageScale(.large)
+                            Text("삭제")
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -249,16 +214,13 @@ struct WiDView: View {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss() // 뒤로 가기
                     }) {
-                        Image(systemName: "arrow.left")
-                            .imageScale(.large)
+                        Text("뒤로 가기")
                     }
                     .frame(maxWidth: .infinity)
-                    .accentColor(.black)
                 }
-                .frame(maxHeight: 20)
                 .padding()
             }
-            .frame(maxWidth: 300)
+            .frame(maxWidth: .infinity)
             .padding(.horizontal)
         }
         .navigationBarBackButtonHidden()

@@ -30,41 +30,41 @@ struct WiDSearchView: View {
                 if wiDs.isEmpty {
 //                    HStack(spacing: 0) {
 //                        Rectangle()
-//                            .fill(.red)
+//                            .fill(Color.red)
 //                            .frame(width: geo.size.width * 0.02, height: 60)
-//
 //                        VStack(spacing: 5) {
 //                            HStack(spacing: 0) {
 //                                Text("99")
 //                                    .frame(width: geo.size.width * 0.11)
-//                                
+//
 //                                Text("공부")
 //                                    .frame(width: geo.size.width * 0.11)
 //
-//                                Text("99:99")
-//                                    .frame(width: geo.size.width * 0.22)
+//                                Text("오전 99:99")
+//                                    .frame(width: geo.size.width * 0.26)
 //
-//                                Text("99:99")
-//                                    .frame(width: geo.size.width * 0.22)
+//                                Text("오후 99:99")
+//                                    .frame(width: geo.size.width * 0.26)
 //
-//                                Text("99시간 99분")
-//                                    .frame(width: geo.size.width * 0.32)
+//                                Text("99.9시간")
+//                                    .frame(width: geo.size.width * 0.24)
 //                            }
-//                            
+//
 //                            Divider()
 //                                .padding(.horizontal, 8)
 //
 //                            HStack(spacing: 0) {
 //                                Text("설명")
-//                                    .frame(width: geo.size.width * 0.13)
+//                                    .frame(width: geo.size.width * 0.11)
 //
-//                                Text("detail")
-//                                    .frame(width: geo.size.width * 0.85, alignment: .leading)
+//                                Text("detailddddd")
+//                                    .frame(width: geo.size.width * 0.87, alignment: .leading)
 //                                    .lineLimit(1)
 //                                    .truncationMode(.tail)
 //                            }
 //                        }
 //                    }
+//                    .frame(maxWidth: .infinity)
 //                    .background(Color("light_gray"))
 //                    .cornerRadius(5)
                     
@@ -106,13 +106,13 @@ struct WiDSearchView: View {
                                         .frame(width: geo.size.width * 0.11)
 
                                     Text("시작")
-                                        .frame(width: geo.size.width * 0.22)
+                                        .frame(width: geo.size.width * 0.26)
 
                                     Text("종료")
-                                        .frame(width: geo.size.width * 0.22)
+                                        .frame(width: geo.size.width * 0.26)
 
                                     Text("경과")
-                                        .frame(width: geo.size.width * 0.32)
+                                        .frame(width: geo.size.width * 0.24)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .background(Color("light_gray"))
@@ -124,23 +124,22 @@ struct WiDSearchView: View {
                                     Rectangle()
                                         .fill(Color(wiD.title))
                                         .frame(width: geo.size.width * 0.02, height: 60)
-                                    
                                     VStack(spacing: 5) {
                                         HStack(spacing: 0) {
                                             Text("\(index + 1)")
                                                 .frame(width: geo.size.width * 0.11)
-                                            
+
                                             Text(titleDictionary[wiD.title] ?? "")
                                                 .frame(width: geo.size.width * 0.11)
-                                            
-                                            Text(formatTime(wiD.start, format: "HH:mm"))
-                                                .frame(width: geo.size.width * 0.22)
-                                            
-                                            Text(formatTime(wiD.finish, format: "HH:mm"))
-                                                .frame(width: geo.size.width * 0.22)
-                                            
-                                            Text(formatDuration(wiD.duration, mode: 2))
-                                                .frame(width: geo.size.width * 0.32)
+
+                                            Text(formatTime(wiD.start, format: "a h:mm"))
+                                                .frame(width: geo.size.width * 0.26)
+
+                                            Text(formatTime(wiD.finish, format: "a h:mm"))
+                                                .frame(width: geo.size.width * 0.26)
+
+                                            Text(formatDuration(wiD.duration, mode: 1))
+                                                .frame(width: geo.size.width * 0.24)
                                         }
                                         
                                         Divider()
@@ -148,12 +147,13 @@ struct WiDSearchView: View {
                                         
                                         HStack(spacing: 0) {
                                             Text("설명")
-                                                .frame(width: geo.size.width * 0.13)
+                                                .frame(width: geo.size.width * 0.11)
                                             
-                                            Text(wiD.detail)
-                                                .frame(width: geo.size.width * 0.85, alignment: .leading)
+                                            Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
+                                                .frame(width: geo.size.width * 0.87, alignment: .leading)
                                                 .lineLimit(1)
                                                 .truncationMode(.tail)
+                                                .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
                                         }
                                     }
                                 }

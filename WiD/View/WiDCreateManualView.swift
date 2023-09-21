@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct WiDCreateManualView: View {
+    private let wiDService = WiDService()
+    
     @State private var date = Date()
     @State private var title: Title = .STUDY
     @State private var start = Date()
     @State private var finish = Date()
     @State private var duration: TimeInterval = 0.0
-    @State private var detail = ""
+    @State private var detail: String = ""
     
     @State private var currentDate = Date()
+    
+    @State private var isDone: Bool = false
     
     enum Title: String, CaseIterable, Identifiable {
         case STUDY
@@ -30,90 +34,178 @@ struct WiDCreateManualView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            DatePicker("", selection: $date, in: ...currentDate, displayedComponents: .date)
-                .labelsHidden()
-//                .background(Color("light_gray"))
-            
-            HStack {
-                Rectangle()
-//                    .fill(Color("light_gray"))
-                    .fill(.red)
-                    .frame(width: 10, height: 25)
+        VStack {
+            VStack {
+                HStack {
+                    Text("WiD")
+                        .font(.custom("Acme-Regular", size: 30))
+                    
+                    Spacer()
+
+                    Circle()
+                        .foregroundColor(Color(title.rawValue))
+                        .frame(width: 20, height: 20)
+                }
+                .padding(.horizontal)
+                .padding(.top, 4)
                 
-                Text("순서")
+                HStack {
+                    Image(systemName: "calendar")
+                        .imageScale(.large)
+                        .frame(width: 25)
+                    
+                    Text("날짜")
+                        .font(.system(size: 25))
+                    
+                    ZStack {
+//                        HStack {
+//                            Text(formatDate(date, format: "yyyy.MM.dd"))
+//                                .font(.system(size: 25))
+//
+//                            Text(formatWeekday(date))
+//                                .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
+//                                .font(.system(size: 25))
+//                        }
+                        
+                        DatePicker("", selection: $date, in: ...currentDate, displayedComponents: .date)
+                            .labelsHidden()
+                    }
                     .frame(maxWidth: .infinity)
-                
-                Text("제목")
-                    .frame(maxWidth: .infinity)
-                
-                Text("시작")
-                    .frame(maxWidth: .infinity)
-                
-                Text("종료")
-                    .frame(maxWidth: .infinity)
-                
-                Text("경과")
-                    .frame(maxWidth: .infinity)
-            }
-            .frame(maxWidth: .infinity)
-            .background(Color("light_gray"))
-            .cornerRadius(5)
-            
-            HStack {
-                Rectangle()
-//                    .fill(Color("light_gray"))
-                    .fill(.red)
-                    .frame(width: 10, height: 60)
-                
-                VStack {
-                    HStack(spacing: 0) {
-                        Text("1")
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 4)
+
+                HStack {
+                    Image(systemName: "text.book.closed")
+                        .imageScale(.large)
+                        .frame(width: 25)
+                    
+                    Text("제목")
+                        .font(.system(size: 25))
+                    
+                    ZStack {
+//                        Text(titleDictionary[title.rawValue]!)
+//                            .font(.system(size: 25))
+//                            .frame(maxWidth: .infinity)
                         
                         Picker("", selection: $title) {
                             ForEach(Array(Title.allCases), id: \.self) { title in
                                 Text(titleDictionary[title.rawValue]!)
                             }
                         }
-                        .border(.black)
+//                        .accentColor(Color("light_gray"))
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 4)
+
+                HStack {
+                    Image(systemName: "clock")
+                        .imageScale(.large)
+                        .frame(width: 25)
+                    
+                    Text("시작")
+                        .font(.system(size: 25))
+                    
+                    ZStack {
+//                        Text(formatTime(start, format: "a HH:mm:ss"))
+//                            .font(.system(size: 25))
                         
-                        DatePicker("", selection: $start, in: ...currentDate, displayedComponents: .hourAndMinute)
+                        DatePicker("", selection: $start, in: ...finish, displayedComponents: .hourAndMinute)
                             .labelsHidden()
-                            .border(.black)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 4)
+
+                HStack {
+                    Image(systemName: "stopwatch")
+                        .imageScale(.large)
+                        .frame(width: 25)
+                    
+                    Text("종료")
+                        .font(.system(size: 25))
+                    
+                    ZStack {
+//                        Text(formatTime(finish, format: "a HH:mm:ss"))
+//                            .font(.system(size: 25))
                         
                         DatePicker("", selection: $finish, in: ...currentDate, displayedComponents: .hourAndMinute)
                             .labelsHidden()
-                            .border(.black)
-                        
-                        Text(formatDuration(duration, mode: 2))
-                            .frame(maxWidth: .infinity)
-                            .border(.black)
                     }
+                    .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 4)
+
+                HStack {
+                    Image(systemName: "hourglass")
+                        .imageScale(.large)
+                        .frame(width: 25)
                     
-                    HStack {
-                        Text("설명")
+                    Text("소요")
+                        .font(.system(size: 25))
+
+                    Text(formatDuration(duration, mode: 3))
+                        .font(.system(size: 25))
+                        .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 4)
+                
+                VStack {
+                    HStack(alignment: .center) {
+                        Image(systemName: "text.bubble")
+                            .imageScale(.large)
+                            .frame(width: 25)
                         
-                        Text("입력...")
+                        Text("설명")
+                            .font(.system(size: 25))
+                            .foregroundColor(.black)
                         
                         Spacer()
                     }
+                    
+                    TextEditor(text: $detail)
+                        .frame(maxWidth: .infinity, maxHeight: 150, alignment: .topLeading)
+                        .border(.gray)
                 }
+                .padding(.horizontal)
+                .padding(.bottom)
             }
             .background(Color("light_gray"))
             .cornerRadius(5)
-            
-            Button(action: {
-                
-            }) {
-                Text("등록")
+
+            HStack {
+                Button(action: {
+                    let wiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration, detail: detail)
+                    wiDService.insertWiD(wid: wiD)
+                }) {
+                    Text("등록")
+                }
+                .frame(maxWidth: .infinity)
+
+                Button(action: {
+
+                }) {
+                    Text("초기화")
+                }
+                .frame(maxWidth: .infinity)
             }
+            .padding()
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
         .onChange(of: [start, finish]) { values in
             let newStart = values[0]
             let newFinish = values[1]
             duration = newFinish.timeIntervalSince(newStart)
+        }
+        .onAppear() {
+            start = Calendar.current.date(bySetting: .second, value: 0, of: start) ?? start
+            finish = Calendar.current.date(bySetting: .second, value: 0, of: finish) ?? finish
         }
     }
 }

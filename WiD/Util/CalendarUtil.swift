@@ -48,6 +48,19 @@ func getFirstDayOfWeek(for date: Date) -> Date {
     return firstDayOfWeek
 }
 
+// 해당 날짜가 속한 주의 마지막 날짜 반환
+func getLastDayOfWeek(for date: Date) -> Date {
+    let calendar = Calendar.current
+    let firstDayOfWeek = getFirstDayOfWeek(for: date)
+    
+    guard let lastDayOfWeek = calendar.date(byAdding: .day, value: 6, to: firstDayOfWeek) else {
+        return date
+    }
+    
+    return lastDayOfWeek
+}
+
+
 // 해당 날짜가 속한 달의 첫 번째 날짜 반환
 func getFirstDayOfMonth(for date: Date) -> Date {
     let calendar = Calendar.current
