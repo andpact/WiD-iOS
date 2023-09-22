@@ -159,7 +159,6 @@ struct WiDView: View {
                                 Text(isEditing ? "완료" : "수정")
                                     .font(.system(size: 20))
                             }
-                            .disabled(isEditing)
                         }
                         
                         if !isEditing {
@@ -222,6 +221,7 @@ struct WiDView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal)
+            .accentColor(.black)
         }
         .navigationBarBackButtonHidden()
     }

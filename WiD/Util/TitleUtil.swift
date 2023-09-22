@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Title: String {
+enum Title: String, CaseIterable, Identifiable {
     case STUDY
     case WORK
     case READING
@@ -15,6 +15,8 @@ enum Title: String {
     case HOBBY
     case TRAVEL
     case SLEEP
+    
+    var id: Self { self }
     
     var koreanValue: String {
         switch self {

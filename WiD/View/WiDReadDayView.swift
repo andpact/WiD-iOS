@@ -11,11 +11,7 @@ struct WiDReadDayView: View {
     private let wiDService = WiDService()
     
     @State private var wiDs: [WiD] = []
-    @State private var currentDate: Date = Date() {
-        didSet {
-            wiDs = wiDService.selectWiDsByDate(date: currentDate)
-        }
-    }
+    @State private var currentDate: Date = Date()
     
 //    private var totalDurationDictionary: [String: TimeInterval] {
 //        var result: [String: TimeInterval] = [:]
@@ -221,6 +217,11 @@ struct WiDReadDayView: View {
             .onAppear() {
                 withAnimation {
                     wiDs = wiDService.selectWiDsByDate(date: currentDate)
+                }
+            }
+            .onChange(of: currentDate) { newValue in
+                withAnimation {
+                    wiDs = wiDService.selectWiDsByDate(date: newValue)
                 }
             }
         }

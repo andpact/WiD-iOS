@@ -9,24 +9,9 @@ import SwiftUI
 
 struct WiDReadMonthView: View {
     private let wiDService = WiDService()
-    
     @State private var wiDs: [WiD] = []
     
-    @State private var currentDate: Date = getFirstDayOfMonth(for: Date()) {
-        didSet {
-            let daysOfMonthArray = getDaysOfMonthArray(for: currentDate)
-
-            var allWiDs: [WiD] = []
-
-            // Loop through the dates for each day of the month
-            for date in daysOfMonthArray {
-                let wiDsForDate = wiDService.selectWiDsByDate(date: date)
-                allWiDs.append(contentsOf: wiDsForDate)
-            }
-
-            wiDs = allWiDs
-        }
-    }
+    @State private var currentDate: Date = getFirstDayOfMonth(for: Date())
     
     // 각 제목별 날짜별 종합 시간을 추적하기 위한 맵
     private var titleDateDurations: [String: [Date: TimeInterval]] {
@@ -248,6 +233,24 @@ struct WiDReadMonthView: View {
                     let wiDsForDate = wiDService.selectWiDsByDate(date: date)
                     allWiDs.append(contentsOf: wiDsForDate)
                 }
+                
+                withAnimation {
+                    wiDs = allWiDs
+                }
+                
+                updateSortedTitleStats()
+            }
+            .onChange(of: currentDate) { newDate in
+                let daysOfMonthArray = getDaysOfMonthArray(for: newDate)
+
+                var allWiDs: [WiD] = []
+
+                // Loop through the dates for each day of the month
+                for date in daysOfMonthArray {
+                    let wiDsForDate = wiDService.selectWiDsByDate(date: date)
+                    allWiDs.append(contentsOf: wiDsForDate)
+                }
+
                 withAnimation {
                     wiDs = allWiDs
                 }

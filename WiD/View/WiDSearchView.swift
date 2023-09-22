@@ -171,9 +171,10 @@ struct WiDSearchView: View {
                     wiDs = wiDService.selectWiDsByDetail(detail: searchText) // 삭제 후 돌아오면 삭제된 WiD가 표시되니까 다시 WiD 리스트를 가져옴.
                 }
             }
-            .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification)) { _ in
+//            .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification)) { _ in
+            .onChange(of: searchText) { newValue in
                 withAnimation {
-                    wiDs = wiDService.selectWiDsByDetail(detail: searchText)
+                    wiDs = wiDService.selectWiDsByDetail(detail: newValue)
                 }
             }
         }

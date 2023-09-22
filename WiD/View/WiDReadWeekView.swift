@@ -12,21 +12,7 @@ struct WiDReadWeekView: View {
     @State private var wiDs: [WiD] = []
     
     @State private var currentDate: Date = Date() // 현재 날짜가 몇 번째 주인지 표시하기 위한 용도.
-    @State private var firstDayOfWeek: Date = getFirstDayOfWeek(for: Date()) { // 파이 차트를 표시하기 위한 용도
-        didSet {
-            var allWiDs: [WiD] = []
-            
-            // Loop through the dates for each day of the week
-            for index in 0..<7 {
-                let date = Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek
-                let wiDsForDate = wiDService.selectWiDsByDate(date: date)
-                allWiDs.append(contentsOf: wiDsForDate)
-            }
-            
-            wiDs = allWiDs
-        }
-    }
-    
+    @State private var firstDayOfWeek: Date = getFirstDayOfWeek(for: Date()) // 파이 차트를 표시하기 위한 용도
     @State private var lastDayOfWeek: Date = getLastDayOfWeek(for: Date())
     
     // 각 제목별 날짜별 종합 시간을 추적하기 위한 맵
@@ -257,6 +243,23 @@ struct WiDReadWeekView: View {
                     let wiDsForDate = wiDService.selectWiDsByDate(date: date)
                     allWiDs.append(contentsOf: wiDsForDate)
                 }
+                
+                withAnimation {
+                    wiDs = allWiDs
+                }
+                
+                updateSortedTitleStats()
+            }
+            .onChange(of: firstDayOfWeek) { newFirstDay in
+                var allWiDs: [WiD] = []
+                
+                // Loop through the dates for each day of the week
+                for index in 0..<7 {
+                    let date = Calendar.current.date(byAdding: .day, value: index, to: newFirstDay) ?? newFirstDay
+                    let wiDsForDate = wiDService.selectWiDsByDate(date: date)
+                    allWiDs.append(contentsOf: wiDsForDate)
+                }
+                
                 withAnimation {
                     wiDs = allWiDs
                 }

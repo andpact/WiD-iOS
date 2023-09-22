@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WiDCreateManualView: View {
     private let wiDService = WiDService()
+    @State private var wiDs: [WiD] = []
     
     @State private var date = Date()
     @State private var title: Title = .STUDY
@@ -19,19 +20,10 @@ struct WiDCreateManualView: View {
     
     @State private var currentDate = Date()
     
-    @State private var isDone: Bool = false
+    @State private var isStartOverlap: Bool = false
+    @State private var isFinishOverlap: Bool = false
     
-    enum Title: String, CaseIterable, Identifiable {
-        case STUDY
-        case WORK
-        case READING
-        case EXERCISE
-        case HOBBY
-        case TRAVEL
-        case SLEEP
-        
-        var id: Self { self }
-    }
+    @State private var isOver12Hours: Bool = false
 
     var body: some View {
         VStack {
@@ -39,6 +31,12 @@ struct WiDCreateManualView: View {
                 HStack {
                     Text("WiD")
                         .font(.custom("Acme-Regular", size: 30))
+                    
+                    Spacer()
+                    
+                    Text(isStartOverlap || isFinishOverlap ? "겹침 /" : "안겹침 /")
+                    
+                    Text("\(wiDs.count)")
                     
                     Spacer()
 
@@ -58,17 +56,18 @@ struct WiDCreateManualView: View {
                         .font(.system(size: 25))
                     
                     ZStack {
-//                        HStack {
-//                            Text(formatDate(date, format: "yyyy.MM.dd"))
-//                                .font(.system(size: 25))
-//
-//                            Text(formatWeekday(date))
-//                                .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
-//                                .font(.system(size: 25))
-//                        }
+                        HStack {
+                            Text(formatDate(date, format: "yyyy.MM.dd"))
+                                .font(.system(size: 25))
+
+                            Text(formatWeekday(date))
+                                .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
+                                .font(.system(size: 25))
+                        }
                         
                         DatePicker("", selection: $date, in: ...currentDate, displayedComponents: .date)
                             .labelsHidden()
+                            .opacity(0.02)
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -84,16 +83,16 @@ struct WiDCreateManualView: View {
                         .font(.system(size: 25))
                     
                     ZStack {
-//                        Text(titleDictionary[title.rawValue]!)
-//                            .font(.system(size: 25))
-//                            .frame(maxWidth: .infinity)
+                        Text(titleDictionary[title.rawValue]!)
+                            .font(.system(size: 25))
+                            .frame(maxWidth: .infinity)
                         
                         Picker("", selection: $title) {
                             ForEach(Array(Title.allCases), id: \.self) { title in
                                 Text(titleDictionary[title.rawValue]!)
                             }
                         }
-//                        .accentColor(Color("light_gray"))
+                        .opacity(0.02)
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -109,11 +108,22 @@ struct WiDCreateManualView: View {
                         .font(.system(size: 25))
                     
                     ZStack {
-//                        Text(formatTime(start, format: "a HH:mm:ss"))
-//                            .font(.system(size: 25))
+                        Text(formatTime(start, format: "a h:mm"))
+                            .font(.system(size: 25))
                         
-                        DatePicker("", selection: $start, in: ...finish, displayedComponents: .hourAndMinute)
+                        DatePicker("", selection: $start, in: ...currentDate, displayedComponents: .hourAndMinute)
                             .labelsHidden()
+                            .opacity(0.02)
+                        
+                        if isStartOverlap {
+                            HStack {
+                                Spacer()
+                                
+                                Image(systemName: "exclamationmark.square")
+                                    .foregroundColor(.red)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -129,11 +139,22 @@ struct WiDCreateManualView: View {
                         .font(.system(size: 25))
                     
                     ZStack {
-//                        Text(formatTime(finish, format: "a HH:mm:ss"))
-//                            .font(.system(size: 25))
+                        Text(formatTime(finish, format: "a h:mm"))
+                            .font(.system(size: 25))
                         
                         DatePicker("", selection: $finish, in: ...currentDate, displayedComponents: .hourAndMinute)
                             .labelsHidden()
+                            .opacity(0.02)
+                        
+                        if isFinishOverlap {
+                            HStack {
+                                Spacer()
+                                
+                                Image(systemName: "exclamationmark.square")
+                                    .foregroundColor(.red)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -147,10 +168,22 @@ struct WiDCreateManualView: View {
                     
                     Text("소요")
                         .font(.system(size: 25))
-
-                    Text(formatDuration(duration, mode: 3))
-                        .font(.system(size: 25))
-                        .frame(maxWidth: .infinity)
+                    
+                    ZStack {
+                        Text(formatDuration(duration, mode: 3))
+                            .font(.system(size: 25))
+                            .frame(maxWidth: .infinity)
+                        
+                        if isOver12Hours {
+                            HStack {
+                                Spacer()
+                                
+                                Image(systemName: "exclamationmark.square")
+                                    .foregroundColor(.red)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 4)
@@ -180,15 +213,26 @@ struct WiDCreateManualView: View {
 
             HStack {
                 Button(action: {
+                    // start, finish 현재 날짜로 맞춰야 함.
+//                    let calendar = Calendar.current
+//                    let adjustedStart = calendar.date(bySettingHour: calendar.component(.hour, from: start), minute: calendar.component(.minute, from: start), second: calendar.component(.second, from: start), of: date)!
+//                    let adjustedFinish = calendar.date(bySettingHour: calendar.component(.hour, from: finish), minute: calendar.component(.minute, from: finish), second: calendar.component(.second, from: finish), of: date)!
+                    
                     let wiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration, detail: detail)
                     wiDService.insertWiD(wid: wiD)
                 }) {
                     Text("등록")
                 }
                 .frame(maxWidth: .infinity)
+                .disabled(isStartOverlap || isFinishOverlap || isOver12Hours)
 
                 Button(action: {
-
+                    date = Date()
+                    title = .STUDY
+                    start = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+                    finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+                    duration = 0.0
+                    detail = ""
                 }) {
                     Text("초기화")
                 }
@@ -196,16 +240,85 @@ struct WiDCreateManualView: View {
             }
             .padding()
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
-        .onChange(of: [start, finish]) { values in
-            let newStart = values[0]
-            let newFinish = values[1]
-            duration = newFinish.timeIntervalSince(newStart)
-        }
         .onAppear() {
+            wiDs = wiDService.selectWiDsByDate(date: date)
+
             start = Calendar.current.date(bySetting: .second, value: 0, of: start) ?? start
             finish = Calendar.current.date(bySetting: .second, value: 0, of: finish) ?? finish
+        }
+        .onChange(of: date) { newValue in
+            wiDs = wiDService.selectWiDsByDate(date: newValue)
+        }
+        .onChange(of: [date, start, finish]) { values in
+            let newDate = values[0]
+            let newStart = values[1]
+            print("newStart : \(formatTime(newStart, format: "yyyy-MM-dd HH:mm:ss"))")
+            let newFinish = values[2]
+            print("newFinish : \(formatTime(newFinish, format: "yyyy-MM-dd HH:mm:ss"))")
+            duration = newFinish.timeIntervalSince(newStart)
+            
+            if duration > 12 * 60 * 60 {
+                withAnimation {
+                    isOver12Hours = true
+                }
+            } else {
+                withAnimation {
+                    isOver12Hours = false
+                }
+            }
+            
+            let calendar = Calendar.current
+            
+            for existingWiD in wiDs {
+                let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: newDate)!
+                print("existingStart : \(formatTime(existingStart, format: "yyyy-MM-dd HH:mm:ss"))")
+                print("existingWiD.start : \(formatTime(existingWiD.start, format: "yyyy-MM-dd HH:mm:ss"))")
+                let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: newDate)!
+                print("existingFinish : \(formatTime(existingFinish, format: "yyyy-MM-dd HH:mm:ss"))")
+                print("existingWiD.finish : \(formatTime(existingWiD.finish, format: "yyyy-MM-dd HH:mm:ss"))")
+                
+                if (newStart >= existingStart && newStart <= existingFinish) {
+                    withAnimation {
+                        isStartOverlap = true
+                    }
+                    break
+                } else {
+                    withAnimation {
+                        isStartOverlap = false
+                    }
+                }
+            }
+            
+            for existingWiD in wiDs {
+                let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: newDate)!
+                let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: newDate)!
+
+                if (newFinish >= existingStart && newFinish <= existingFinish) {
+                    withAnimation {
+                        isFinishOverlap = true
+                    }
+                    break
+                } else {
+                    withAnimation {
+                        isFinishOverlap = false
+                    }
+                }
+            }
+        
+            for existingWiD in wiDs {
+                let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: newDate)!
+                let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: newDate)!
+
+                if (newStart <= existingStart && newFinish >= existingFinish) {
+                    withAnimation {
+                        isStartOverlap = true
+                        isFinishOverlap = true
+                    }
+                    break
+                }
+            }
         }
     }
 }
