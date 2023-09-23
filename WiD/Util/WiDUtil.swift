@@ -40,7 +40,7 @@ struct WiDView: View {
     var body: some View {
         NavigationView {
             VStack {
-                VStack {
+                VStack(spacing: 8) {
                     HStack {
                         Text("WiD")
                             .font(.custom("Acme-Regular", size: 30))
@@ -52,7 +52,7 @@ struct WiDView: View {
                             .frame(width: 20, height: 20)
                     }
                     .padding(.horizontal)
-                    .padding(.top, 4)
+                    .padding(.top, 8)
                     
                     HStack {
                         Image(systemName: "calendar")
@@ -61,6 +61,7 @@ struct WiDView: View {
                         
                         Text("날짜")
                             .font(.system(size: 25))
+                            .padding(.vertical, 4)
 
                         HStack {
                             Text(formatDate(clickedWiD?.date ?? Date(), format: "yyyy.MM.dd"))
@@ -73,7 +74,6 @@ struct WiDView: View {
                         .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 4)
 
                     HStack {
                         Image(systemName: "text.book.closed")
@@ -82,13 +82,13 @@ struct WiDView: View {
                         
                         Text("제목")
                             .font(.system(size: 25))
+                            .padding(.vertical, 4)
 
                         Text(titleDictionary[clickedWiD?.title ?? ""] ?? "STUDY")
                             .font(.system(size: 25))
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 4)
 
                     HStack {
                         Image(systemName: "clock")
@@ -97,13 +97,13 @@ struct WiDView: View {
                         
                         Text("시작")
                             .font(.system(size: 25))
+                            .padding(.vertical, 4)
 
                         Text(formatTime(clickedWiD?.start ?? Date(), format: "a HH:mm:ss"))
                             .font(.system(size: 25))
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 4)
 
                     HStack {
                         Image(systemName: "stopwatch")
@@ -112,13 +112,13 @@ struct WiDView: View {
                         
                         Text("종료")
                             .font(.system(size: 25))
+                            .padding(.vertical, 4)
 
                         Text(formatTime(clickedWiD?.finish ?? Date(), format: "a HH:mm:ss"))
                             .font(.system(size: 25))
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 4)
 
                     HStack {
                         Image(systemName: "hourglass")
@@ -127,57 +127,58 @@ struct WiDView: View {
                         
                         Text("소요")
                             .font(.system(size: 25))
+                            .padding(.vertical, 4)
 
                         Text(formatDuration(clickedWiD?.duration ?? 0, mode: 3))
                             .font(.system(size: 25))
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 4)
                     
-                    VStack {
-                        HStack(alignment: .center) {
-                            Image(systemName: "text.bubble")
-                                .imageScale(.large)
-                                .frame(width: 25)
-                            
-                            Text("설명")
-                                .font(.system(size: 25))
-                                .foregroundColor(.black)
-                            
-                            Spacer()
-                            
-                            Button(action: {
-                                if isEditing {
-                                    wiDService.updateWiD(withID: clickedWiDId, detail: inputText)
-                                }
-                                isEditing.toggle()
-                            }) {
-                                Image(systemName: isEditing ? "checkmark.square" : "square.and.pencil")
-                                    .padding(.trailing, -4)
-                                
-                                Text(isEditing ? "완료" : "수정")
-                                    .font(.system(size: 20))
-                            }
-                        }
+                    HStack(alignment: .center) {
+                        Image(systemName: "text.bubble")
+                            .imageScale(.large)
+                            .frame(width: 25)
                         
-                        if !isEditing {
-                            ScrollView {
-                                Text(inputText == "" ? "설명 추가.." : inputText)
-                                    .padding(5)
-                                    .padding(.top, 4)
-                                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                        Text("설명")
+                            .font(.system(size: 25))
+                            .padding(.vertical, 4)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            if isEditing {
+                                wiDService.updateWiD(withID: clickedWiDId, detail: inputText)
                             }
-                            .frame(maxHeight: 150)
-                            .border(.gray)
-                        } else {
-                            TextEditor(text: $inputText)
-                                .frame(maxWidth: .infinity, maxHeight: 150, alignment: .topLeading)
-                                .border(.gray)
+                            isEditing.toggle()
+                        }) {
+                            Image(systemName: isEditing ? "checkmark.square" : "square.and.pencil")
+                                .padding(.trailing, -4)
+                            
+                            Text(isEditing ? "완료" : "수정")
+                                .font(.system(size: 20))
                         }
                     }
                     .padding(.horizontal)
-                    .padding(.bottom)
+                    
+                    if !isEditing {
+                        ScrollView {
+                            Text(inputText == "" ? "설명 추가.." : inputText)
+                                .padding(5)
+                                .padding(.top, 4)
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                        }
+                        .frame(maxHeight: 150)
+                        .border(.gray)
+                        .padding(.horizontal)
+                        .padding(.bottom)
+                    } else {
+                        TextEditor(text: $inputText)
+                            .frame(maxWidth: .infinity, maxHeight: 150, alignment: .topLeading)
+                            .border(.gray)
+                            .padding(.horizontal)
+                            .padding(.bottom)
+                    }
                 }
                 .background(Color("light_gray"))
                 .cornerRadius(5)
