@@ -144,6 +144,8 @@ class WiDService {
             print("Success to select WiD.")
         }
         
+        wids.sort { $0.start < $1.start }
+        
         return wids
     }
     

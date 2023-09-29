@@ -14,13 +14,10 @@ struct WiDSearchView: View {
     
     private var sortedWiDs: [WiD] {
         return wiDs.sorted(by: {
-            if $0.date != $1.date {
-                return $0.date > $1.date
-            } else {
-                return $0.start < $1.start
-            }
+            return $0.date > $1.date
         })
     }
+
     
     var body: some View {
         GeometryReader { geo in

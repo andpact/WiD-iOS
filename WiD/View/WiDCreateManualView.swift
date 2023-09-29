@@ -18,9 +18,11 @@ struct WiDCreateManualView: View {
     @State private var duration: TimeInterval = 0.0
     @State private var detail: String = ""
     
+    @State private var today = Date()
+    @State private var currenTime = Calendar.current.date(bySetting: .second, value: 0, of: Date())
+    
     @State private var isStartOverlap: Bool = false
     @State private var isFinishOverlap: Bool = false
-    
     @State private var isDurationMinOrMax: Bool = false
 
     var body: some View {
@@ -58,7 +60,7 @@ struct WiDCreateManualView: View {
                                 .font(.system(size: 25))
                         }
                         
-                        DatePicker("", selection: $date, in: ...Date(), displayedComponents: .date)
+                        DatePicker("", selection: $date, in: ...today, displayedComponents: .date)
                             .labelsHidden()
                             .opacity(0.02)
                     }
@@ -101,7 +103,7 @@ struct WiDCreateManualView: View {
                         .padding(.vertical, 4)
                     
                     ZStack {
-                        Text(formatTime(start, format: "a h:mm"))
+                        Text(formatTime(start, format: "a h:mm:ss"))
                             .font(.system(size: 25))
                         
                         DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
@@ -132,10 +134,11 @@ struct WiDCreateManualView: View {
                         .padding(.vertical, 4)
                     
                     ZStack {
-                        Text(formatTime(finish, format: "a h:mm"))
+                        Text(formatTime(finish, format: "a h:mm:ss"))
                             .font(.system(size: 25))
                         
-                        DatePicker("", selection: $finish, in: ...Date(), displayedComponents: .hourAndMinute)
+//                        DatePicker("", selection: $finish, in: ...Date(), displayedComponents: .hourAndMinute)
+                        DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
                             .labelsHidden()
                             .opacity(0.02)
                         
@@ -158,7 +161,7 @@ struct WiDCreateManualView: View {
                         .imageScale(.large)
                         .frame(width: 25)
                     
-                    Text("소요")
+                    Text("경과")
                         .font(.system(size: 25))
                         .padding(.vertical, 4)
                     
@@ -211,16 +214,16 @@ struct WiDCreateManualView: View {
                     updateWiDsAndOverlapFlags(newDate: date, newStart: start, newFinish: finish)
                 }) {
                     Text("등록")
-                        .foregroundColor(.green)
+                        .foregroundColor(isStartOverlap || isFinishOverlap || isDurationMinOrMax ? nil : .green)
                 }
                 .frame(maxWidth: .infinity)
                 .disabled(isStartOverlap || isFinishOverlap || isDurationMinOrMax)
 
                 Button(action: {
-                    date = Date()
+                    date = today
                     title = .STUDY
-                    start = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
-                    finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+                    start = currenTime ?? Date()
+                    finish = currenTime ?? Date()
                     duration = 0.0
                     detail = ""
                     
@@ -236,23 +239,74 @@ struct WiDCreateManualView: View {
         .padding(.horizontal)
         .onAppear() {
             wiDs = wiDService.selectWiDsByDate(date: date)
-
-            start = Calendar.current.date(bySetting: .second, value: 0, of: start) ?? start
-            finish = Calendar.current.date(bySetting: .second, value: 0, of: finish) ?? finish
             
-            updateWiDsAndOverlapFlags(newDate: date, newStart: start, newFinish: finish) // 네비게이션으로 전환 시 실행 안되는 듯?
+            let calendar = Calendar.current
+
+            start = calendar.date(bySetting: .second, value: 0, of: start) ?? start
+            finish = calendar.date(bySetting: .second, value: 0, of: finish) ?? finish
+            
+            updateWiDsAndOverlapFlags(newDate: date, newStart: start, newFinish: finish)
+            print("manual view onAppear")
         }
-        .onChange(of: [date, start, finish]) { values in
-            if finish < start {
-                start = finish
+        .onChange(of: date) { newDate in
+            updateWiDsAndOverlapFlags(newDate: newDate, newStart: start, newFinish: finish)
+        }
+        .onChange(of: start) { newStart in
+            if finish < newStart {
+                finish = newStart
             }
             
-            let newDate = values[0]
-            let newStart = values[1]
-            let newFinish = values[2]
+            if Calendar.current.isDate(date, inSameDayAs: today) {
+                if newStart > currenTime! {
+                    start = currenTime!
+                }
+            }
             
-            updateWiDsAndOverlapFlags(newDate: newDate, newStart: newStart, newFinish: newFinish)
+            updateWiDsAndOverlapFlags(newDate: date, newStart: newStart, newFinish: finish)
         }
+        .onChange(of: finish) { newFinish in
+            if newFinish <  start {
+                start = newFinish
+            }
+            
+            if Calendar.current.isDate(date, inSameDayAs: today) {
+                if newFinish > currenTime! {
+                    finish = currenTime!
+                }
+            }
+            
+            updateWiDsAndOverlapFlags(newDate: date, newStart: start, newFinish: newFinish)
+        }
+//        .onChange(of: [date, start, finish]) { values in
+//            var newDate = values[0]
+//            var newStart = values[1]
+//            var newFinish = values[2]
+//
+//            // Start가 Finish보다 늦은 시간이면 Finish를 Start로 설정
+//            if newStart > newFinish {
+//                newFinish = newStart
+//            } else if newFinish < newStart { // Finish가 Start보다 이른 시간이면 Start를 Finish로 설정
+//                newStart = newFinish
+//            }
+//
+//            // Date가 오늘 날짜와 같다면 변경된 Start와 Finish가 현재 시간을 넘지 못하도록 설정
+//            if Calendar.current.isDate(newDate, inSameDayAs: today) {
+//                if newStart > currenTime! {
+//                    newStart = currenTime!
+//                }
+//
+//                if newFinish > currenTime! {
+//                    newFinish = currenTime!
+//                }
+//            }
+//
+//            date = newDate
+//            start = newStart
+//            finish = newFinish
+//
+//            updateWiDsAndOverlapFlags(newDate: newDate, newStart: newStart, newFinish: newFinish)
+//            print("manual view onChange")
+//        }
     }
     
     func updateWiDsAndOverlapFlags(newDate: Date, newStart: Date, newFinish: Date) {
