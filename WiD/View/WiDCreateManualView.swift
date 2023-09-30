@@ -137,7 +137,6 @@ struct WiDCreateManualView: View {
                         Text(formatTime(finish, format: "a h:mm:ss"))
                             .font(.system(size: 25))
                         
-//                        DatePicker("", selection: $finish, in: ...Date(), displayedComponents: .hourAndMinute)
                         DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
                             .labelsHidden()
                             .opacity(0.02)
@@ -277,36 +276,6 @@ struct WiDCreateManualView: View {
             
             updateWiDsAndOverlapFlags(newDate: date, newStart: start, newFinish: newFinish)
         }
-//        .onChange(of: [date, start, finish]) { values in
-//            var newDate = values[0]
-//            var newStart = values[1]
-//            var newFinish = values[2]
-//
-//            // Start가 Finish보다 늦은 시간이면 Finish를 Start로 설정
-//            if newStart > newFinish {
-//                newFinish = newStart
-//            } else if newFinish < newStart { // Finish가 Start보다 이른 시간이면 Start를 Finish로 설정
-//                newStart = newFinish
-//            }
-//
-//            // Date가 오늘 날짜와 같다면 변경된 Start와 Finish가 현재 시간을 넘지 못하도록 설정
-//            if Calendar.current.isDate(newDate, inSameDayAs: today) {
-//                if newStart > currenTime! {
-//                    newStart = currenTime!
-//                }
-//
-//                if newFinish > currenTime! {
-//                    newFinish = currenTime!
-//                }
-//            }
-//
-//            date = newDate
-//            start = newStart
-//            finish = newFinish
-//
-//            updateWiDsAndOverlapFlags(newDate: newDate, newStart: newStart, newFinish: newFinish)
-//            print("manual view onChange")
-//        }
     }
     
     func updateWiDsAndOverlapFlags(newDate: Date, newStart: Date, newFinish: Date) {

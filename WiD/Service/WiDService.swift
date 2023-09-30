@@ -194,23 +194,49 @@ class WiDService {
         return wids
     }
     
-    func updateWiD(withID id: Int, detail: String) {
-            let updateWiDQuery = "UPDATE WiD SET detail = ? WHERE id = ?"
+//    func updateWiD(withID id: Int, detail: String) {
+//        let updateWiDQuery = "UPDATE WiD SET detail = ? WHERE id = ?"
+//
+//        var statement: OpaquePointer?
+//        if sqlite3_prepare_v2(db, updateWiDQuery, -1, &statement, nil) == SQLITE_OK {
+//            sqlite3_bind_text(statement, 1, (detail as NSString).utf8String, -1, nil)
+//            sqlite3_bind_int(statement, 2, Int32(id))
+//
+//            if sqlite3_step(statement) != SQLITE_DONE {
+//                print("Failed to update WiD.")
+//            } else {
+//                print("Success to update WiD.")
+//            }
+//
+//            sqlite3_finalize(statement)
+//        }
+//    }
+    
+    func updateWiD(withID id: Int, newTitle: String, newStart: Date, newFinish: Date, newDuration: TimeInterval, newDetail: String) {
+        let updateWiDQuery = "UPDATE WiD SET title = ?, start = ?, finish = ?, duration = ?, detail = ? WHERE id = ?"
 
-            var statement: OpaquePointer?
-            if sqlite3_prepare_v2(db, updateWiDQuery, -1, &statement, nil) == SQLITE_OK {
-                sqlite3_bind_text(statement, 1, (detail as NSString).utf8String, -1, nil)
-                sqlite3_bind_int(statement, 2, Int32(id))
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, updateWiDQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_text(statement, 1, (newTitle as NSString).utf8String, -1, nil)
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm:ss"
+            let startString = timeFormatter.string(from: newStart)
+            sqlite3_bind_text(statement, 2, (startString as NSString).utf8String, -1, nil)
+            let finishString = timeFormatter.string(from: newFinish)
+            sqlite3_bind_text(statement, 3, (finishString as NSString).utf8String, -1, nil)
+            sqlite3_bind_double(statement, 4, newDuration)
+            sqlite3_bind_text(statement, 5, (newDetail as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(statement, 6, Int32(id))
 
-                if sqlite3_step(statement) != SQLITE_DONE {
-                    print("Failed to update WiD.")
-                } else {
-                    print("Success to update WiD.")
-                }
-
-                sqlite3_finalize(statement)
+            if sqlite3_step(statement) != SQLITE_DONE {
+                print("Failed to update WiD.")
+            } else {
+                print("Success to update WiD.")
             }
+
+            sqlite3_finalize(statement)
         }
+    }
     
     func deleteWiD(withID id: Int) {
         let deleteWiDQuery = "DELETE FROM WiD WHERE id = ?"
@@ -229,18 +255,18 @@ class WiDService {
         }
     }
     
-    func deleteAllWiDs() {
-        let deleteAllQuery = "DELETE FROM WiD"
-        
-        var statement: OpaquePointer?
-        if sqlite3_prepare_v2(db, deleteAllQuery, -1, &statement, nil) == SQLITE_OK {
-            if sqlite3_step(statement) != SQLITE_DONE {
-                print("Failed to delete all WiDs.")
-            } else {
-                print("Success to delete all WiDs.")
-            }
-            
-            sqlite3_finalize(statement)
-        }
-    }
+//    func deleteAllWiDs() {
+//        let deleteAllQuery = "DELETE FROM WiD"
+//
+//        var statement: OpaquePointer?
+//        if sqlite3_prepare_v2(db, deleteAllQuery, -1, &statement, nil) == SQLITE_OK {
+//            if sqlite3_step(statement) != SQLITE_DONE {
+//                print("Failed to delete all WiDs.")
+//            } else {
+//                print("Success to delete all WiDs.")
+//            }
+//
+//            sqlite3_finalize(statement)
+//        }
+//    }
 }

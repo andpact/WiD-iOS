@@ -20,10 +20,23 @@ struct WiD {
 struct WiDView: View {
     @Environment(\.presentationMode) var presentationMode
     private let wiDService = WiDService()
+    @State private var wiDs: [WiD] = []
     
-    @State private var inputText: String = ""
+    @State private var today = Date()
+    @State private var currenTime = Date()
     
-    @State private var beforeDelete: Bool = false
+    @State private var date = Date()
+    @State private var title: String = ""
+    @State private var start = Date()
+    @State private var finish = Date()
+    @State private var duration: TimeInterval = 0.0
+    @State private var detail: String = ""
+    
+    @State private var isStartOverlap: Bool = false
+    @State private var isFinishOverlap: Bool = false
+    @State private var isDurationMinOrMax: Bool = false
+    
+    @State private var isDeleteButtonPressed: Bool = false
     @State private var deleteTimer: Timer?
     
     @State private var isEditing: Bool = false
@@ -34,7 +47,6 @@ struct WiDView: View {
     init(clickedWiDId: Int) {
         self.clickedWiDId = clickedWiDId
         self.clickedWiD = wiDService.selectWiDByID(id: clickedWiDId)
-        self._inputText = State(initialValue: clickedWiD?.detail ?? "")
     }
 
     var body: some View {
@@ -48,7 +60,7 @@ struct WiDView: View {
                         Spacer()
 
                         Circle()
-                            .foregroundColor(Color(clickedWiD?.title ?? "STUDY"))
+                            .foregroundColor(Color(title))
                             .frame(width: 20, height: 20)
                     }
                     .padding(.horizontal)
@@ -64,11 +76,11 @@ struct WiDView: View {
                             .padding(.vertical, 4)
 
                         HStack {
-                            Text(formatDate(clickedWiD?.date ?? Date(), format: "yyyy.MM.dd"))
+                            Text(formatDate(date, format: "yyyy.MM.dd"))
                                 .font(.system(size: 25))
 
-                            Text(formatWeekday(clickedWiD?.date ?? Date()))
-                                .foregroundColor(Calendar.current.component(.weekday, from: clickedWiD?.date ?? Date()) == 1 ? .red : (Calendar.current.component(.weekday, from: clickedWiD?.date ?? Date()) == 7 ? .blue : .black))
+                            Text(formatWeekday(date))
+                                .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
                                 .font(.system(size: 25))
                         }
                         .frame(maxWidth: .infinity)
@@ -84,9 +96,20 @@ struct WiDView: View {
                             .font(.system(size: 25))
                             .padding(.vertical, 4)
 
-                        Text(titleDictionary[clickedWiD?.title ?? ""] ?? "STUDY")
-                            .font(.system(size: 25))
-                            .frame(maxWidth: .infinity)
+                        ZStack {
+                            Text(titleDictionary[title] ?? "공부")
+                                .font(.system(size: 25))
+                                .frame(maxWidth: .infinity)
+                            
+                            Picker("", selection: $title) {
+                                ForEach(titleArray, id: \.self) { title in
+                                    Text(titleDictionary[title]!)
+                                }
+                            }
+                            .opacity(0.02)
+                            .disabled(!isEditing)
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
 
@@ -99,9 +122,26 @@ struct WiDView: View {
                             .font(.system(size: 25))
                             .padding(.vertical, 4)
 
-                        Text(formatTime(clickedWiD?.start ?? Date(), format: "a HH:mm:ss"))
-                            .font(.system(size: 25))
-                            .frame(maxWidth: .infinity)
+                        ZStack {
+                            Text(formatTime(start, format: "a h:mm:ss"))
+                                .font(.system(size: 25))
+                            
+                            DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                                .opacity(0.02)
+                                .disabled(!isEditing)
+                            
+                            if isStartOverlap {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Image(systemName: "exclamationmark.square")
+                                        .foregroundColor(.red)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
 
@@ -114,9 +154,26 @@ struct WiDView: View {
                             .font(.system(size: 25))
                             .padding(.vertical, 4)
 
-                        Text(formatTime(clickedWiD?.finish ?? Date(), format: "a HH:mm:ss"))
-                            .font(.system(size: 25))
-                            .frame(maxWidth: .infinity)
+                        ZStack {
+                            Text(formatTime(finish, format: "a h:mm:ss"))
+                                .font(.system(size: 25))
+                            
+                            DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                                .opacity(0.02)
+                                .disabled(!isEditing)
+                            
+                            if isFinishOverlap {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Image(systemName: "exclamationmark.square")
+                                        .foregroundColor(.red)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
 
@@ -125,13 +182,25 @@ struct WiDView: View {
                             .imageScale(.large)
                             .frame(width: 25)
                         
-                        Text("소요")
+                        Text("경과")
                             .font(.system(size: 25))
                             .padding(.vertical, 4)
 
-                        Text(formatDuration(clickedWiD?.duration ?? 0, mode: 3))
-                            .font(.system(size: 25))
-                            .frame(maxWidth: .infinity)
+                        ZStack {
+                            Text(formatDuration(duration, mode: 3))
+                                .font(.system(size: 25))
+                                .frame(maxWidth: .infinity)
+                            
+                            if isDurationMinOrMax {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Image(systemName: "exclamationmark.square")
+                                        .foregroundColor(.red)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
                     }
                     .padding(.horizontal)
                     
@@ -145,25 +214,12 @@ struct WiDView: View {
                             .padding(.vertical, 4)
                         
                         Spacer()
-                        
-                        Button(action: {
-                            if isEditing {
-                                wiDService.updateWiD(withID: clickedWiDId, detail: inputText)
-                            }
-                            isEditing.toggle()
-                        }) {
-                            Image(systemName: isEditing ? "checkmark.square" : "square.and.pencil")
-                                .padding(.trailing, -4)
-                            
-                            Text(isEditing ? "완료" : "수정")
-                                .font(.system(size: 20))
-                        }
                     }
                     .padding(.horizontal)
                     
                     if !isEditing {
                         ScrollView {
-                            Text(inputText == "" ? "설명 추가.." : inputText)
+                            Text(detail == "" ? "설명 추가.." : detail)
                                 .padding(5)
                                 .padding(.top, 4)
                                 .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -173,7 +229,7 @@ struct WiDView: View {
                         .padding(.horizontal)
                         .padding(.bottom)
                     } else {
-                        TextEditor(text: $inputText)
+                        TextEditor(text: $detail)
                             .frame(maxWidth: .infinity, maxHeight: 150, alignment: .topLeading)
                             .border(.gray)
                             .padding(.horizontal)
@@ -185,15 +241,35 @@ struct WiDView: View {
 
                 HStack {
                     Button(action: {
-                        if beforeDelete {
+                        if isEditing {
+                            wiDService.updateWiD(withID: clickedWiDId, newTitle: title, newStart: start, newFinish: finish, newDuration: duration, newDetail: detail)
+                        }
+                        isEditing.toggle()
+                    }) {
+                        Text(isEditing ? "완료" : "수정")
+                            .foregroundColor({
+                                if !isEditing {
+                                    return Color.blue
+                                } else if isEditing && !(isStartOverlap || isFinishOverlap || isDurationMinOrMax) {
+                                    return Color.green
+                                } else {
+                                    return nil
+                                }
+                            }())
+                    }
+                    .frame(maxWidth: .infinity)
+                    .disabled(isStartOverlap || isFinishOverlap || isDurationMinOrMax)
+                    
+                    Button(action: {
+                        if isDeleteButtonPressed {
                             wiDService.deleteWiD(withID: clickedWiDId)
                             presentationMode.wrappedValue.dismiss() // 뒤로 가기
                         }
-                        beforeDelete.toggle()
+                        isDeleteButtonPressed.toggle()
                         
-                        if beforeDelete {
+                        if isDeleteButtonPressed {
                             deleteTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-                                beforeDelete = false
+                                isDeleteButtonPressed = false
                                 deleteTimer?.invalidate()
                                 deleteTimer = nil
                             }
@@ -202,7 +278,7 @@ struct WiDView: View {
                             deleteTimer = nil
                         }
                     }) {
-                        if beforeDelete {
+                        if isDeleteButtonPressed {
                             Text("한번 더 눌러 삭제")
                                 .foregroundColor(.red)
                         } else {
@@ -211,12 +287,12 @@ struct WiDView: View {
                     }
                     .frame(maxWidth: .infinity)
 
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss() // 뒤로 가기
-                    }) {
-                        Text("뒤로 가기")
-                    }
-                    .frame(maxWidth: .infinity)
+//                    Button(action: {
+//                        presentationMode.wrappedValue.dismiss() // 뒤로 가기
+//                    }) {
+//                        Text("뒤로 가기")
+//                    }
+//                    .frame(maxWidth: .infinity)
                 }
                 .padding()
             }
@@ -224,7 +300,59 @@ struct WiDView: View {
             .padding(.horizontal)
             .accentColor(.black)
         }
-        .navigationBarBackButtonHidden()
+//        .navigationBarBackButtonHidden()
+        .onAppear() {
+            date = clickedWiD!.date
+            title = clickedWiD!.title
+            start = clickedWiD!.start
+            finish = clickedWiD!.finish
+            duration = clickedWiD!.duration
+            detail = clickedWiD!.detail
+            
+            wiDs = wiDService.selectWiDsByDate(date: date)
+        }
+        .onChange(of: start) { newStart in
+            duration = finish.timeIntervalSince(newStart)
+            
+            withAnimation {
+                isDurationMinOrMax = 12 * 60 * 60 < duration || duration <= 0
+            }
+            
+            if Calendar.current.isDate(date, inSameDayAs: today), currenTime <= newStart {
+                isStartOverlap = true
+                return
+            }
+            
+            if let currentIndex = wiDs.firstIndex(where: { $0.id == clickedWiDId }), currentIndex > 0 {
+                let previousWiD = wiDs[currentIndex - 1]
+                if newStart <= previousWiD.finish {
+                    isStartOverlap = true
+                } else {
+                    isStartOverlap = false
+                }
+            }
+        }
+        .onChange(of: finish) { newFinish in
+            duration = newFinish.timeIntervalSince(start)
+            
+            withAnimation {
+                isDurationMinOrMax = 12 * 60 * 60 < duration || duration <= 0
+            }
+            
+            if Calendar.current.isDate(date, inSameDayAs: today), currenTime <= newFinish {
+                isFinishOverlap = true
+                return
+            }
+            
+            if let currentIndex = wiDs.firstIndex(where: { $0.id == clickedWiDId }), currentIndex < wiDs.count - 1 {
+                let nextWiD = wiDs[currentIndex + 1]
+                if nextWiD.start <= newFinish {
+                    isFinishOverlap = true
+                } else {
+                    isFinishOverlap = false
+                }
+            }
+        }
     }
 }
 
