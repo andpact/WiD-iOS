@@ -25,10 +25,8 @@ struct WiDReadHolderView: View {
                         withAnimation(.easeInOut) {
                             switch selectedPicker {
                             case .DAY:
-                                selectedPicker = .WEEK
-                            case .WEEK:
-                                selectedPicker = .MONTH
-                            case .MONTH:
+                                selectedPicker = .CALENDAR
+                            case .CALENDAR:
                                 selectedPicker = .DAY
                             }
                         }
@@ -37,11 +35,9 @@ struct WiDReadHolderView: View {
                         withAnimation(.easeInOut) {
                             switch selectedPicker {
                             case .DAY:
-                                selectedPicker = .MONTH
-                            case .WEEK:
+                                selectedPicker = .CALENDAR
+                            case .CALENDAR:
                                 selectedPicker = .DAY
-                            case .MONTH:
-                                selectedPicker = .WEEK
                             }
                         }
                     }
@@ -76,8 +72,9 @@ struct WiDReadHolderView: View {
 
 enum wiDReadHolderTapInfo: String, CaseIterable {
     case DAY = "DAY"
-    case WEEK = "WEEK"
-    case MONTH = "MONTH"
+    case CALENDAR = "CALENDAR"
+//    case WEEK = "WEEK"
+//    case MONTH = "MONTH"
 }
 
 struct WiDReadView: View {
@@ -87,10 +84,12 @@ struct WiDReadView: View {
         switch currentTab {
         case .DAY:
             WiDReadDayView()
-        case .WEEK:
-            WiDReadWeekView()
-        case .MONTH:
-            WiDReadMonthView()
+        case .CALENDAR:
+            WiDReadCalendarView()
+//        case .WEEK:
+//            WiDReadWeekView()
+//        case .MONTH:
+//            WiDReadMonthView()
         }
     }
 }

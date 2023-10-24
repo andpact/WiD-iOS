@@ -11,26 +11,39 @@ import Network
 @main
 struct WiDApp: App {
 //    @Environment(\.scenePhase) private var scenePhase
-    @State var isShowingSplashView = true
+//    @State var isShowingSplashView = true
     
-    @StateObject var appOpenAdUtil = AppOpenAdUtil()
+//    @StateObject var appOpenAdUtil = AppOpenAdUtil()
     
-    let monitor = NWPathMonitor()
+//    let monitor = NWPathMonitor()
     
-    @State var isInternetConnected = false
+//    @State var isInternetConnected = false
+    
+    @State private var isSplashScreenActive = true
     
     var body: some Scene {
         WindowGroup {
-            if appOpenAdUtil.isShowingSplashView {
-                SplashView(isInternetConnected: $isInternetConnected)
+//            if appOpenAdUtil.isShowingSplashView {
+//                SplashView(isInternetConnected: $isInternetConnected)
+//                    .onAppear {
+//                        let queue = DispatchQueue(label: "NetworkMonitor")
+//                        monitor.start(queue: queue)
+//                        monitor.pathUpdateHandler = { path in
+//                            isInternetConnected = (path.status == .satisfied)
+//                            if isInternetConnected {
+//                                appOpenAdUtil.loadAd()
+//                            }
+//                        }
+//                    }
+//            } else {
+//                ContentView()
+//            }
+            
+            if isSplashScreenActive {
+                SplashView()
                     .onAppear {
-                        let queue = DispatchQueue(label: "NetworkMonitor")
-                        monitor.start(queue: queue)
-                        monitor.pathUpdateHandler = { path in
-                            isInternetConnected = (path.status == .satisfied)
-                            if isInternetConnected {
-                                appOpenAdUtil.loadAd()
-                            }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            isSplashScreenActive = false
                         }
                     }
             } else {

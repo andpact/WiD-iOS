@@ -22,8 +22,8 @@ struct WiDView: View {
     private let wiDService = WiDService()
     @State private var wiDs: [WiD] = []
     
-    @State private var today = Date()
-    @State private var currenTime = Date()
+    private let today = Date()
+    private let currenTime = Date()
     
     @State private var date = Date()
     @State private var title: String = ""
@@ -303,6 +303,7 @@ struct WiDView: View {
 //        .navigationBarBackButtonHidden()
         .onAppear() {
             date = clickedWiD!.date
+            print("date onAppear : \(date)")
             title = clickedWiD!.title
             start = clickedWiD!.start
             finish = clickedWiD!.finish
@@ -313,6 +314,7 @@ struct WiDView: View {
         }
         .onChange(of: start) { newStart in
             duration = finish.timeIntervalSince(newStart)
+            print("start changed")
             
             withAnimation {
                 isDurationMinOrMax = 12 * 60 * 60 < duration || duration <= 0
@@ -320,36 +322,42 @@ struct WiDView: View {
             
             if Calendar.current.isDate(date, inSameDayAs: today), currenTime <= newStart {
                 isStartOverlap = true
-                return
-            }
-            
-            if let currentIndex = wiDs.firstIndex(where: { $0.id == clickedWiDId }), currentIndex > 0 {
+                print("today, start over currentTime")
+            } else if let currentIndex = wiDs.firstIndex(where: { $0.id == clickedWiDId }), 0 < currentIndex {
                 let previousWiD = wiDs[currentIndex - 1]
                 if newStart <= previousWiD.finish {
                     isStartOverlap = true
+                    print("start overlap")
                 } else {
                     isStartOverlap = false
+                    print("start not overlap")
                 }
             }
         }
         .onChange(of: finish) { newFinish in
             duration = newFinish.timeIntervalSince(start)
+            print("finish changed")
             
             withAnimation {
                 isDurationMinOrMax = 12 * 60 * 60 < duration || duration <= 0
             }
             
-            if Calendar.current.isDate(date, inSameDayAs: today), currenTime <= newFinish {
-                isFinishOverlap = true
-                return
-            }
+            print("date onChange finish : \(date)")
+            print("today : \(today)")
             
-            if let currentIndex = wiDs.firstIndex(where: { $0.id == clickedWiDId }), currentIndex < wiDs.count - 1 {
+            if Calendar.current.isDate(date, inSameDayAs: today) {
+                if currenTime <= newFinish {
+                    isFinishOverlap = true
+                    print("today, finish over currentTime")
+                }
+            } else if let currentIndex = wiDs.firstIndex(where: { $0.id == clickedWiDId }), currentIndex < wiDs.count - 1 {
                 let nextWiD = wiDs[currentIndex + 1]
                 if nextWiD.start <= newFinish {
                     isFinishOverlap = true
+                    print("finish overlap")
                 } else {
                     isFinishOverlap = false
+                    print("finish not overlap")
                 }
             }
         }

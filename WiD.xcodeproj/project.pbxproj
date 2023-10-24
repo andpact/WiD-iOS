@@ -19,6 +19,7 @@
 		EA215CE02A60FCAF005C5D30 /* WiDReadWeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */; };
 		EA215CE22A60FCBB005C5D30 /* WiDReadMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */; };
 		EA215CE42A60FCD6005C5D30 /* WiDReadHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */; };
+		EA3E63942AE7ED7F00294709 /* WiDReadCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3E63932AE7ED7F00294709 /* WiDReadCalendarView.swift */; };
 		EA469A7F2AB6A5170000E0CC /* Tektur-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA469A7E2AB6A5170000E0CC /* Tektur-Regular.ttf */; };
 		EA60B8062A56991700B49641 /* WiDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8052A56991700B49641 /* WiDApp.swift */; };
 		EA60B8082A56991700B49641 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8072A56991700B49641 /* ContentView.swift */; };
@@ -73,6 +74,7 @@
 		EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadWeekView.swift; sourceTree = "<group>"; };
 		EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadMonthView.swift; sourceTree = "<group>"; };
 		EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadHolderView.swift; sourceTree = "<group>"; };
+		EA3E63932AE7ED7F00294709 /* WiDReadCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadCalendarView.swift; sourceTree = "<group>"; };
 		EA469A7E2AB6A5170000E0CC /* Tektur-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tektur-Regular.ttf"; sourceTree = "<group>"; };
 		EA60B8022A56991700B49641 /* WiD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WiD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA60B8052A56991700B49641 /* WiDApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDApp.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 				EACB45142AB9CA8200DEF739 /* WiDCreateManualView.swift */,
 				EA215CE32A60FCD6005C5D30 /* WiDReadHolderView.swift */,
 				EA70DD732A59089D00B4B167 /* WiDReadDayView.swift */,
+				EA3E63932AE7ED7F00294709 /* WiDReadCalendarView.swift */,
 				EA215CDF2A60FCAF005C5D30 /* WiDReadWeekView.swift */,
 				EA215CE12A60FCBB005C5D30 /* WiDReadMonthView.swift */,
 				EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */,
@@ -506,6 +509,7 @@
 				EA181F372A624F1F006EAF72 /* CalendarUtil.swift in Sources */,
 				EA70DD742A59089D00B4B167 /* WiDReadDayView.swift in Sources */,
 				EA0458232A625C0C0065B98E /* WiDUtil.swift in Sources */,
+				EA3E63942AE7ED7F00294709 /* WiDReadCalendarView.swift in Sources */,
 				EA9D41762AB18B28008D6DE2 /* WiDCreateHolderView.swift in Sources */,
 				EAC5D7212A56A76E00FA2499 /* WiDCreateStopWatchView.swift in Sources */,
 				EA215CE42A60FCD6005C5D30 /* WiDReadHolderView.swift in Sources */,

@@ -45,17 +45,13 @@ struct ContentView: View {
                         Rectangle()
                             .fill(Color.white)
                             .frame(width: .infinity, height: geo.size.height / 15)
-//                            .offset(y: !buttonsVisible ? 0 : 100)
 
                         Spacer()
 
-                        ZStack {
-                            Text("WiD")
-                                .font(.custom("Acme-Regular", size: 50))
-                                .frame(maxWidth: .infinity)
-//                                .offset(y: !buttonsVisible ? 0 : -100)
-                        }
-                        .background(.white)
+                        Rectangle()
+                            .fill(Color.white)
+                            .frame(width: .infinity, height: geo.size.height / 15)
+                        
                     }
                 }
             }

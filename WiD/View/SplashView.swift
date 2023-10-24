@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SplashView: View {
-    @Binding var isInternetConnected: Bool
+//    @Binding var isInternetConnected: Bool
     
     var body: some View {
         ZStack {
@@ -18,13 +18,13 @@ struct SplashView: View {
                     .foregroundColor(.white)
             }
             
-            if !isInternetConnected {
-                VStack {
-                    Text("인터넷 연결을 확인하세요.")
-                        .padding(.top, 80)
-                        .foregroundColor(.white)
-                }
-            }
+//            if !isInternetConnected {
+//                VStack {
+//                    Text("인터넷 연결을 확인하세요.")
+//                        .padding(.top, 80)
+//                        .foregroundColor(.white)
+//                }
+//            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.black)
@@ -33,7 +33,8 @@ struct SplashView: View {
 
 struct SplashView_Previews: PreviewProvider {
     static var previews: some View {
-        let isInternetConnected = Binding.constant(true)
-        SplashView(isInternetConnected: isInternetConnected)
+//        let isInternetConnected = Binding.constant(true)
+//        SplashView(isInternetConnected: isInternetConnected)
+        SplashView()
     }
 }
