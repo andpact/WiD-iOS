@@ -97,7 +97,7 @@ struct WiDCreateView: View {
         case .TIMER:
             WiDCreateTimerView(buttonsVisible: $buttonsVisible)
         case .MANUAL:
-            WiDCreateManualView()
+            ManualViewTmp()
         }
     }
 }

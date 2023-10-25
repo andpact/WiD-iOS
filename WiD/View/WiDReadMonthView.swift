@@ -126,11 +126,11 @@ struct WiDReadMonthView: View {
                     let weekdayOffset = getWeekdayOffset(for: firstDayOfMonth)
 
                     ForEach(0..<weekdayOffset, id: \.self) { _ in
-                        PieChartView(data: [], date: firstDayOfMonth, isForOne: false, isEmpty: true)
+                        PieChartView(pieChartData: [], date: firstDayOfMonth, isForOne: false, isEmpty: true)
                     }
 
                     ForEach(getDaysOfMonthArray(for: currentDate), id: \.self) { day in
-                        PieChartView(data: fetchChartData(date: day), date: day, isForOne: false, isEmpty: false)
+                        PieChartView(pieChartData: fetchPieChartData(date: day), date: day, isForOne: false, isEmpty: false)
                     }
                 }
                 .padding(.bottom, 8)

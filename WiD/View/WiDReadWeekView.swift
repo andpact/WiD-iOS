@@ -141,7 +141,7 @@ struct WiDReadWeekView: View {
                 // 파이 차트 표시
                 HStack(spacing: 7) {
                     ForEach(0..<7) { index in
-                        PieChartView(data: fetchChartData(date: Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek), date: Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek, isForOne: false, isEmpty: false)
+                        PieChartView(pieChartData: fetchPieChartData(date: Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek), date: Calendar.current.date(byAdding: .day, value: index, to: firstDayOfWeek) ?? firstDayOfWeek, isForOne: false, isEmpty: false)
                     }
                 }
                 .padding(.bottom, 8)

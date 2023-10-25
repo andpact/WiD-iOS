@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PieChartView: View {
-    var data: [ChartData]
+    var pieChartData: [PieChartData]
     var date: Date
     var isForOne: Bool
     var isEmpty: Bool
@@ -16,9 +16,9 @@ struct PieChartView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                ForEach(0..<data.count, id: \.self) { index in
-                    PieSlice(startAngle: getStartAngle(for: index), endAngle: getEndAngle(for: index))
-                        .foregroundColor(data[index].color)
+                ForEach(0..<pieChartData.count, id: \.self) { index in
+                    PieSliceView(startAngle: getStartAngle(for: index), endAngle: getEndAngle(for: index))
+                        .foregroundColor(pieChartData[index].color)
                         
                 }
 
@@ -44,16 +44,16 @@ struct PieChartView: View {
                     
                     Text("오후 | 오전")
                         .position(x: geo.size.width / 2, y: geo.size.width / 2)
-                        .foregroundColor(data.count == 1 ? .gray : .black)
+                        .foregroundColor(pieChartData.count == 1 ? .gray : .black)
                     
                 } else {                    
                     if !isEmpty {
                         // 날짜 텍스트
                         Text(formatDate(date, format: "d"))
                             .font(.system(size: geo.size.width * 0.2))
-                            .fontWeight(data.count == 1 ? nil : .bold)
+                            .fontWeight(pieChartData.count == 1 ? nil : .bold)
                             .position(x: geo.size.width / 2, y: geo.size.width / 2)
-                            .foregroundColor(data.count == 1 ? .gray : .black)
+                            .foregroundColor(pieChartData.count == 1 ? .gray : .black)
 
                     }
                 }
@@ -65,7 +65,7 @@ struct PieChartView: View {
     func getStartAngle(for index: Int) -> Angle {
         var startAngle: Angle = .degrees(-90)
         for i in 0..<index {
-            startAngle += data[i].value
+            startAngle += pieChartData[i].value
         }
         return startAngle
     }
@@ -73,7 +73,7 @@ struct PieChartView: View {
     func getEndAngle(for index: Int) -> Angle {
         var endAngle: Angle = .degrees(-90)
         for i in 0...index {
-            endAngle += data[i].value
+            endAngle += pieChartData[i].value
         }
         return endAngle
     }
@@ -85,12 +85,12 @@ struct PieChartView: View {
     }
 }
 
-struct ChartData {
+struct PieChartData {
     var value: Angle
     var color: Color
 }
 
-struct PieSlice: Shape {
+struct PieSliceView: Shape {
     var startAngle: Angle
     var endAngle: Angle
 
@@ -107,7 +107,7 @@ struct PieSlice: Shape {
     }
 }
 
-func fetchChartData(date: Date) -> [ChartData] {
+func fetchPieChartData(date: Date) -> [PieChartData] {
     
     let wiDService = WiDService()
     let wiDs: [WiD] = wiDService.selectWiDsByDate(date: date)
@@ -115,12 +115,12 @@ func fetchChartData(date: Date) -> [ChartData] {
     let totalMinutes: TimeInterval = 60.0 * 24.0 // 24시간(1440분)으로 표현함. 원래 TimeInterval 단위는 초(second)
 
     var startMinutes: Int = 0
-    var chartDataArray: [ChartData] = []
+    var PieChartDataArray: [PieChartData] = []
 
-    // 비어 있는 시간대에 대한 ChartData 생성
+    // 비어 있는 시간대에 대한 PieChartData 생성
     if wiDs.isEmpty {
-        let noDataChartData = ChartData(value: .degrees(360.0), color: Color("light_gray"))
-        chartDataArray.append(noDataChartData)
+        let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("light_gray"))
+        PieChartDataArray.append(noPieChartData)
     } else {
         for wid in wiDs {
             let startMinutesComponents = Calendar.current.dateComponents([.hour, .minute], from: wid.start)
@@ -129,14 +129,14 @@ func fetchChartData(date: Date) -> [ChartData] {
             // 비어 있는 시간대의 엔트리 추가
             if startMinutesValue > startMinutes {
                 let emptyMinutes = startMinutesValue - startMinutes
-                let emptyChartData = ChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
-                chartDataArray.append(emptyChartData)
+                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
+                PieChartDataArray.append(emptyPieChartData)
             }
 
             // 엔트리 셋에 해당 WiD 객체의 시간대를 추가
             let durationMinutes = Int(wid.duration / 60)
-            let widChartData = ChartData(value: .degrees(Double(durationMinutes) / totalMinutes * 360.0), color: Color(wid.title))
-            chartDataArray.append(widChartData)
+            let widPieChartData = PieChartData(value: .degrees(Double(durationMinutes) / totalMinutes * 360.0), color: Color(wid.title))
+            PieChartDataArray.append(widPieChartData)
 
             // 시작 시간 업데이트
             startMinutes = startMinutesValue + durationMinutes
@@ -145,9 +145,9 @@ func fetchChartData(date: Date) -> [ChartData] {
         // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
         if startMinutes < 24 * 60 {
             let emptyMinutes = 24 * 60 - startMinutes
-            let emptyChartData = ChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
-            chartDataArray.append(emptyChartData)
+            let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
+            PieChartDataArray.append(emptyPieChartData)
         }
     }
-    return chartDataArray
+    return PieChartDataArray
 }

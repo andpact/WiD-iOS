@@ -89,7 +89,7 @@ struct WiDReadDayView: View {
                 }
                 .padding(.bottom, 8)
                 
-                PieChartView(data: fetchChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
+                PieChartView(pieChartData: fetchPieChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
                     .padding(.bottom, 8)
                 
                 // 각 WiD 표시

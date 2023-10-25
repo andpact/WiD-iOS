@@ -148,6 +148,7 @@ struct WiDCreateStopWatchView: View {
         timer = nil
         
         finish = Date()
+//        finish = Date().addingTimeInterval(60 * 60)
         duration = finish.timeIntervalSince(start)
 
         let calendar = Calendar.current
