@@ -55,14 +55,26 @@ struct BarChartView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ForEach(0..<barChartData.count, id: \.self) { index in
-                BarView(data: barChartData[index])
-                    .foregroundColor(barChartData[index].color)
-                    .frame(height: UIScreen.main.bounds.size.height * 0.6 * CGFloat(barChartData[index].value))
+        HStack {
+            VStack(spacing: 0) {
+                ForEach(0..<barChartData.count, id: \.self) { index in
+                    BarView(data: barChartData[index])
+                        .foregroundColor(barChartData[index].color)
+                        .frame(height: UIScreen.main.bounds.size.height * 0.6 * CGFloat(barChartData[index].value))
+                }
+            }
+            .border(.gray)
+            
+            VStack{
+                VStack(spacing: 0) {
+                    ForEach(0..<25, id: \.self) { hour in
+                        Text("\(hour)")
+                            .font(.system(size: 12))
+                            .frame(height: UIScreen.main.bounds.size.height * 0.6 / 24.2)
+                    }
+                }
             }
         }
-        .border(.black)
     }
 }
 
@@ -80,12 +92,12 @@ struct BarView: View {
 
     var body: some View {
         Rectangle()
-            .frame(width: 30)
+            .frame(width: 20)
     }
 }
 
-//struct BarChartView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        BarChartView()
-//    }
-//}
+struct BarChartView_Previews: PreviewProvider {
+    static var previews: some View {
+        BarChartView(wiDList: [])
+    }
+}

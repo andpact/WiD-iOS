@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WiDCreateManualView: View {
     private let wiDService = WiDService()
-    @State private var wiDs: [WiD] = []
+    @State private var wiDList: [WiD] = []
     
     @State private var date = Date()
     @State private var title: Title = .STUDY
@@ -161,7 +161,7 @@ struct WiDCreateManualView: View {
                         HStack {
                             Spacer()
                             
-                            DatePicker("dd", selection: $start, displayedComponents: .hourAndMinute)
+                            DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
                                 .labelsHidden()
                                 .opacity(0.02)
                         }
@@ -296,11 +296,11 @@ struct WiDCreateManualView: View {
                     let wiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration, detail: detail)
                     wiDService.insertWiD(wid: wiD)
                     
-                    wiDs = wiDService.selectWiDsByDate(date: date)
+                    wiDList = wiDService.selectWiDsByDate(date: date)
                     
                     let calendar = Calendar.current
                     
-                    for existingWiD in wiDs {
+                    for existingWiD in wiDList {
                         let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                         let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
                         
@@ -316,7 +316,7 @@ struct WiDCreateManualView: View {
                         }
                     }
                     
-                    for existingWiD in wiDs {
+                    for existingWiD in wiDList {
                         let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                         let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
                         
@@ -332,7 +332,7 @@ struct WiDCreateManualView: View {
                         }
                     }
                     
-                    for existingWiD in wiDs {
+                    for existingWiD in wiDList {
                         let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                         let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
                         
@@ -356,7 +356,7 @@ struct WiDCreateManualView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
         .onAppear() {
-            wiDs = wiDService.selectWiDsByDate(date: date)
+            wiDList = wiDService.selectWiDsByDate(date: date)
             print("manual view onAppear")
             print("최초 날짜 : \(date)")
             
@@ -372,7 +372,7 @@ struct WiDCreateManualView: View {
             print("manual view onChange")
             print("변경된 날짜 : \(newDate)")
             
-            wiDs = wiDService.selectWiDsByDate(date: newDate)
+            wiDList = wiDService.selectWiDsByDate(date: newDate)
             
             let calendar = Calendar.current
             
@@ -400,13 +400,13 @@ struct WiDCreateManualView: View {
                 }
             }
             
-            if wiDs.isEmpty {
+            if wiDList.isEmpty {
                 withAnimation {
                     isStartOverlap = false
                     isFinishOverlap = false
                 }
             } else {
-                for existingWiD in wiDs {
+                for existingWiD in wiDList {
                     let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: newDate)!
                     let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: newDate)!
                     
@@ -422,7 +422,7 @@ struct WiDCreateManualView: View {
                     }
                 }
                 
-                for existingWiD in wiDs {
+                for existingWiD in wiDList {
                     let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: newDate)!
                     let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: newDate)!
                     
@@ -438,7 +438,7 @@ struct WiDCreateManualView: View {
                     }
                 }
                 
-                for existingWiD in wiDs {
+                for existingWiD in wiDList {
                     let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: newDate)!
                     let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: newDate)!
                     
@@ -472,7 +472,7 @@ struct WiDCreateManualView: View {
                 }
             }
             
-            for existingWiD in wiDs {
+            for existingWiD in wiDList {
                 let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                 let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
                 
@@ -488,7 +488,7 @@ struct WiDCreateManualView: View {
                 }
             }
             
-            for existingWiD in wiDs {
+            for existingWiD in wiDList {
                 let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                 let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
     
@@ -504,7 +504,7 @@ struct WiDCreateManualView: View {
                 }
             }
             
-            for existingWiD in wiDs {
+            for existingWiD in wiDList {
                 let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                 let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
                 
@@ -537,7 +537,7 @@ struct WiDCreateManualView: View {
                 }
             }
             
-            for existingWiD in wiDs {
+            for existingWiD in wiDList {
                 let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                 let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
     
@@ -553,7 +553,7 @@ struct WiDCreateManualView: View {
                 }
             }
             
-            for existingWiD in wiDs {
+            for existingWiD in wiDList {
                 let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                 let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
                 
@@ -569,7 +569,7 @@ struct WiDCreateManualView: View {
                 }
             }
             
-            for existingWiD in wiDs {
+            for existingWiD in wiDList {
                 let existingStart = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.start), minute: calendar.component(.minute, from: existingWiD.start), second: calendar.component(.second, from: existingWiD.start), of: date)!
                 let existingFinish = calendar.date(bySettingHour: calendar.component(.hour, from: existingWiD.finish), minute: calendar.component(.minute, from: existingWiD.finish), second: calendar.component(.second, from: existingWiD.finish), of: date)!
                 
