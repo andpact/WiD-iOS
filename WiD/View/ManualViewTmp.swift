@@ -21,7 +21,7 @@ struct ManualViewTmp: View {
     private var startMinutes: Int { return Calendar.current.component(.hour, from: start) * 60 + Calendar.current.component(.minute, from: start) }
     @State private var finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
     private var finishMinutes: Int { return Calendar.current.component(.hour, from: finish) * 60 + Calendar.current.component(.minute, from: finish) }
-    @State private var duration: TimeInterval = 0.0
+    @State private var duration: TimeInterval = 0
     private let detail: String = ""
     
     @State private var isStartOverlap: Bool = false
@@ -31,7 +31,7 @@ struct ManualViewTmp: View {
     @State private var isFinishOverCurrentTime: Bool = false
 
     @State private var isDurationUnderMin: Bool = false
-    @State private var isDurationOverMax: Bool = false
+//    @State private var isDurationOverMax: Bool = false
 
     init() {
         self._wiDList = State(initialValue: wiDService.selectWiDsByDate(date: date))
@@ -40,17 +40,20 @@ struct ManualViewTmp: View {
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
             VStack(spacing: 8) {
-                Text(formatDate(date, format: "yyyy년 M월 d일"))
-                    .bold()
+                HStack {
+                    Text(formatDate(date, format: "yyyy년 M월 d일"))
+                        .bold()
+                }
+
                 
                 HStack {
                     ZStack {
-                        Image(systemName: isStartOverlap || isStartOverCurrentTime ? "play.slash" : "play")
-                            .foregroundColor(isStartOverlap || isStartOverCurrentTime ? .red : .none)
+                        Image(systemName: isStartOverlap || isStartOverCurrentTime || isDurationUnderMin ? "play.slash" : "play")
+                            .foregroundColor(isStartOverlap || isStartOverCurrentTime || isDurationUnderMin ? .red : .none)
                             .offset(y: CGFloat(startMinutes) / (24 * 60) * UIScreen.main.bounds.size.height * 0.6 - UIScreen.main.bounds.size.height * 0.6 / 2)
                         
-                        Image(systemName: isFinishOverlap || isFinishOverCurrentTime ? "play.slash.fill" : "play.fill")
-                            .foregroundColor(isFinishOverlap || isFinishOverCurrentTime ? .red : .none)
+                        Image(systemName: isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin ? "play.slash.fill" : "play.fill")
+                            .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin ? .red : .none)
                             .offset(y: CGFloat(finishMinutes) / (24 * 60) * UIScreen.main.bounds.size.height * 0.6 - UIScreen.main.bounds.size.height * 0.6 / 2)
                     }
 
@@ -67,8 +70,6 @@ struct ManualViewTmp: View {
                 HStack {
                     Text("New WiD")
                         .bold()
-                    
-//                    Spacer()
                 }
 //                .padding(.trailing)
                 
@@ -83,7 +84,7 @@ struct ManualViewTmp: View {
                             
                             Spacer()
                             
-                            DatePicker("날짜", selection: $date, in: ...Date(), displayedComponents: .date)
+                            DatePicker("", selection: $date, in: ...Date(), displayedComponents: .date)
                                 .labelsHidden()
                                 .padding(.trailing)
                         }
@@ -130,7 +131,7 @@ struct ManualViewTmp: View {
                             
                             Spacer()
                             
-                            DatePicker("시작", selection: $start, displayedComponents: .hourAndMinute)
+                            DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
                                 .labelsHidden()
                                 .padding(.trailing)
                         }
@@ -150,7 +151,7 @@ struct ManualViewTmp: View {
                             
                             Spacer()
                             
-                            DatePicker("종료", selection: $finish, displayedComponents: .hourAndMinute)
+                            DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
                                 .labelsHidden()
                                 .padding(.trailing)
                         }
@@ -186,8 +187,9 @@ struct ManualViewTmp: View {
                 )
 //                .padding(.trailing)
                 
-                HStack {
+                HStack(spacing: 8) {
                     Spacer()
+                        .frame(maxWidth: .infinity)
                     
                     Button(action: {
                         let wiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration, detail: detail)
@@ -197,14 +199,16 @@ struct ManualViewTmp: View {
                         
                         checkWiDOverlap()
                     }) {
+                        Image(systemName: "plus.square")
+                        
                         Text("등록")
                     }
-                    .padding(12)
-                    .padding(.horizontal)
+                    .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin || duration == 0)
+                    .padding(.vertical)
+                    .frame(maxWidth: .infinity)
                     .background(RoundedRectangle(cornerRadius: 5)
-                        .fill(.blue).opacity(0.8)
+                        .fill(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin || duration == 0 ? .gray : .blue).opacity(0.8)
                     )
-//                    .padding(.horizontal)
                 }
             }
 //            .frame(maxWidth: UIScreen.main.bounds.size.width * 0.6, maxHeight: .infinity)
@@ -215,6 +219,7 @@ struct ManualViewTmp: View {
         .padding()
         .onChange(of: date) { newDate in
             wiDList = wiDService.selectWiDsByDate(date: newDate)
+            print("new Date : \(formatTime(newDate, format: "yyyy-MM-dd a h:mm:ss"))")
             
             // date를 수정해도 start의 날짜는 그대로이므로 start의 날짜를 date에서 가져옴.
             let newStartHour = calendar.component(.hour, from: start)
@@ -231,24 +236,26 @@ struct ManualViewTmp: View {
             checkWiDOverlap()
         }
         .onChange(of: start) { newStart in
-            duration = finish.timeIntervalSince(newStart)
-            
-            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
-            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")
+//            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
+//            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")
             
             checkWiDOverlap()
         }
         .onChange(of: finish) { newFinish in
-            duration = newFinish.timeIntervalSince(start)
-
-            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
-            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")
+//            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
+//            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")
 
             checkWiDOverlap()
         }
     }
     
     func checkWiDOverlap() {
+        duration = finish.timeIntervalSince(start)
+        
+        withAnimation {
+            isDurationUnderMin = duration <= 0
+        }
+        
         if calendar.isDate(date, inSameDayAs: today) {
             withAnimation {
                 isStartOverCurrentTime = currenTime! < start
@@ -273,13 +280,13 @@ struct ManualViewTmp: View {
                 let existingStartMinute = calendar.component(.minute, from: existingWiD.start)
                 let existingStartSecond = calendar.component(.second, from: existingWiD.start)
                 let existingStart = calendar.date(bySettingHour: existingStartHour, minute: existingStartMinute, second: existingStartSecond, of: date)!
-                print("existingStart : \(formatTime(existingStart, format: "yyyy-MM-dd a h:mm:ss"))")
+//                print("existingStart : \(formatTime(existingStart, format: "yyyy-MM-dd a h:mm:ss"))")
                 
                 let existingFinishHour = calendar.component(.hour, from: existingWiD.finish)
                 let existingFinishMinute = calendar.component(.minute, from: existingWiD.finish)
                 let existingFinishSecond = calendar.component(.second, from: existingWiD.finish)
                 let existingFinish = calendar.date(bySettingHour: existingFinishHour, minute: existingFinishMinute, second: existingFinishSecond, of: date)!
-                print("existingFinish : \(formatTime(existingFinish, format: "yyyy-MM-dd a h:mm:ss"))")
+//                print("existingFinish : \(formatTime(existingFinish, format: "yyyy-MM-dd a h:mm:ss"))")
 
                 if existingStart <= start && start <= existingFinish {
                     withAnimation {

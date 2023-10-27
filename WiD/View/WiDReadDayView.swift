@@ -13,22 +13,9 @@ struct WiDReadDayView: View {
     @State private var wiDs: [WiD] = []
     @State private var currentDate: Date = Date()
     
-//    private var totalDurationDictionary: [String: TimeInterval] {
-//        var result: [String: TimeInterval] = [:]
-//
-//        for wiD in wiDs {
-//            if let currentDuration = result[wiD.title] {
-//                result[wiD.title] = currentDuration + wiD.duration
-//            } else {
-//                result[wiD.title] = wiD.duration
-//            }
-//        }
-//        return result
-//    }
-    
-//    private var sortedTotalDurationDictionary: [(key: String, value: TimeInterval)] {
-//        totalDurationDictionary.sorted { $0.value > $1.value }
-//    }
+    init() {
+        self._wiDs = State(initialValue: wiDService.selectWiDsByDate(date: currentDate))
+    }
     
     var body: some View {
         GeometryReader { geo in
@@ -214,11 +201,6 @@ struct WiDReadDayView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .onAppear() {
-                withAnimation {
-                    wiDs = wiDService.selectWiDsByDate(date: currentDate)
-                }
-            }
             .onChange(of: currentDate) { newValue in
                 withAnimation {
                     wiDs = wiDService.selectWiDsByDate(date: newValue)
