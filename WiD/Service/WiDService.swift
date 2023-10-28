@@ -64,6 +64,45 @@ class WiDService {
         }
     }
     
+//    func getUniqueYears() -> [String] {
+//        let selectYearsQuery = "SELECT DISTINCT strftime('%Y', date) FROM WiD"
+//
+//        var statement: OpaquePointer?
+//        var years: [String] = []
+//
+//        if sqlite3_prepare_v2(db, selectYearsQuery, -1, &statement, nil) == SQLITE_OK {
+//            while sqlite3_step(statement) == SQLITE_ROW {
+//                let year = String(cString: sqlite3_column_text(statement, 0))
+//                years.append(year)
+//            }
+//
+//            sqlite3_finalize(statement)
+//        }
+//
+//        return years
+//    }
+    
+    func getUniqueYears() -> [Year] {
+        let selectYearsQuery = "SELECT DISTINCT strftime('%Y', date) FROM WiD"
+        
+        var statement: OpaquePointer?
+        var years: [Year] = []
+
+        years.append(Year(id: "지난 1년"))
+        
+        if sqlite3_prepare_v2(db, selectYearsQuery, -1, &statement, nil) == SQLITE_OK {
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let yearString = String(cString: sqlite3_column_text(statement, 0))
+                let year = Year(id: yearString)
+                years.append(year)
+            }
+            
+            sqlite3_finalize(statement)
+        }
+
+        return years
+    }
+
     func selectWiDByID(id: Int) -> WiD? {
         let selectWiDByIDQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE id = ?"
         
@@ -195,6 +234,117 @@ class WiDService {
         
         return wiDList
     }
+    
+    func getDailyTitleDurationDictionary(forDate date: Date) -> [String: TimeInterval] {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateString = dateFormatter.string(from: date)
+
+        let selectWiDsQuery = "SELECT title, duration FROM WiD WHERE date = ?"
+        var statement: OpaquePointer?
+
+        var titleDurations: [String: TimeInterval] = [:]
+
+        if sqlite3_prepare_v2(db, selectWiDsQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_text(statement, 1, (dateString as NSString).utf8String, -1, nil)
+
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let title = String(cString: sqlite3_column_text(statement, 0))
+                let duration = sqlite3_column_double(statement, 1)
+
+                if let existingDuration = titleDurations[title] {
+                    titleDurations[title] = existingDuration + duration
+                } else {
+                    titleDurations[title] = duration
+                }
+            }
+
+            sqlite3_finalize(statement)
+        }
+
+        // Dictionary를 총 소요 시간이 높은 순으로 정렬
+        let sortedTitleDurations = titleDurations.sorted { $0.value > $1.value }
+        
+        return Dictionary(uniqueKeysWithValues: sortedTitleDurations)
+    }
+    
+    func getWeeklyTitleDurationDictionary(forDate date: Date) -> [String: TimeInterval] {
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+//        let dateString = dateFormatter.string(from: date)
+        
+        let weekday = calendar.component(.weekday, from: date)
+        let startOfWeek = calendar.date(byAdding: .day, value: 2 - weekday, to: date)!
+        let endOfWeek = calendar.date(byAdding: .day, value: 8 - weekday, to: date)!
+
+        let selectWiDsQuery = "SELECT title, duration FROM WiD WHERE date >= ? AND date <= ?"
+        
+        var statement: OpaquePointer?
+        var titleDurations: [String: TimeInterval] = [:]
+        
+        if sqlite3_prepare_v2(db, selectWiDsQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_text(statement, 1, (dateFormatter.string(from: startOfWeek) as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 2, (dateFormatter.string(from: endOfWeek) as NSString).utf8String, -1, nil)
+
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let title = String(cString: sqlite3_column_text(statement, 0))
+                let duration = sqlite3_column_double(statement, 1)
+
+                if let existingDuration = titleDurations[title] {
+                    titleDurations[title] = existingDuration + duration
+                } else {
+                    titleDurations[title] = duration
+                }
+            }
+
+            sqlite3_finalize(statement)
+        }
+
+        // Dictionary를 총 소요 시간이 높은 순으로 정렬
+        let sortedTitleDurations = titleDurations.sorted { $0.value > $1.value }
+
+        return Dictionary(uniqueKeysWithValues: sortedTitleDurations)
+    }
+    
+    func getMonthlyTitleDurationDictionary(forDate date: Date) -> [String: TimeInterval] {
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+//        let dateString = dateFormatter.string(from: date)
+        
+        let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: date))!
+        let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
+        
+        let selectWiDsQuery = "SELECT title, duration FROM WiD WHERE date >= ? AND date <= ?"
+        
+        var statement: OpaquePointer?
+        var titleDurations: [String: TimeInterval] = [:]
+        
+        if sqlite3_prepare_v2(db, selectWiDsQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_text(statement, 1, (dateFormatter.string(from: startOfMonth) as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 2, (dateFormatter.string(from: endOfMonth) as NSString).utf8String, -1, nil)
+
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let title = String(cString: sqlite3_column_text(statement, 0))
+                let duration = sqlite3_column_double(statement, 1)
+
+                if let existingDuration = titleDurations[title] {
+                    titleDurations[title] = existingDuration + duration
+                } else {
+                    titleDurations[title] = duration
+                }
+            }
+
+            sqlite3_finalize(statement)
+        }
+
+        // Dictionary를 총 소요 시간이 높은 순으로 정렬
+        let sortedTitleDurations = titleDurations.sorted { $0.value > $1.value }
+
+        return Dictionary(uniqueKeysWithValues: sortedTitleDurations)
+    }
+
     
     func selectWiDsByDetail(detail: String) -> [WiD] {
         // If the search detail is empty, return an empty array

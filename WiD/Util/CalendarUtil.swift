@@ -182,3 +182,7 @@ func formatDuration(_ interval: TimeInterval, mode: Int) -> String {
         fatalError("Invalid mode value")
     }
 }
+
+struct Year: Identifiable {
+    var id: String
+}
