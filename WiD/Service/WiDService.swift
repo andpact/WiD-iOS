@@ -274,9 +274,17 @@ class WiDService {
         dateFormatter.dateFormat = "yyyy-MM-dd"
 //        let dateString = dateFormatter.string(from: date)
         
+        let startOfWeek: Date
+        let endOfWeek: Date
+        
         let weekday = calendar.component(.weekday, from: date)
-        let startOfWeek = calendar.date(byAdding: .day, value: 2 - weekday, to: date)!
-        let endOfWeek = calendar.date(byAdding: .day, value: 8 - weekday, to: date)!
+        if weekday == 1 {
+            startOfWeek = calendar.date(byAdding: .day, value: -6, to: date)!
+            endOfWeek = date
+        } else {
+            startOfWeek = calendar.date(byAdding: .day, value: 2 - weekday, to: date)!
+            endOfWeek = calendar.date(byAdding: .day, value: 8 - weekday, to: date)!
+        }
 
         let selectWiDsQuery = "SELECT title, duration FROM WiD WHERE date >= ? AND date <= ?"
         

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TmpPieChartView: View {
-    var date: Date
+    let date: Date
     let wiDList: [WiD]
     
     var pieChartDataArray: [PieChartData] {
@@ -74,8 +74,6 @@ struct TmpPieChartView: View {
                     .fontWeight(pieChartDataArray.count == 1 ? nil : .bold)
                     .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
             }
-//            .frame(maxWidth: .infinity)
-//            .aspectRatio(contentMode: .fit)
         }
         .aspectRatio(contentMode: .fit)
     }
