@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct ManualViewTmp: View {
+struct ManualViewWithHorizontalBarView: View {
+    private let screen = UIScreen.main.bounds.size
     private let wiDService = WiDService()
     @State private var wiDList: [WiD] = []
     
@@ -45,33 +46,33 @@ struct ManualViewTmp: View {
                         .bold()
                 }
 
-                
                 HStack {
                     ZStack {
                         Image(systemName: isStartOverlap || isStartOverCurrentTime || isDurationUnderMin ? "play.slash" : "play")
                             .foregroundColor(isStartOverlap || isStartOverCurrentTime || isDurationUnderMin ? .red : .none)
-                            .offset(y: CGFloat(startMinutes) / (24 * 60) * UIScreen.main.bounds.size.height * 0.6 - UIScreen.main.bounds.size.height * 0.6 / 2)
+                            .offset(y: CGFloat(startMinutes) / (24 * 60) * screen.height * 0.6 - screen.height * 0.6 / 2)
                         
                         Image(systemName: isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin ? "play.slash.fill" : "play.fill")
                             .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin ? .red : .none)
-                            .offset(y: CGFloat(finishMinutes) / (24 * 60) * UIScreen.main.bounds.size.height * 0.6 - UIScreen.main.bounds.size.height * 0.6 / 2)
+                            .offset(y: CGFloat(finishMinutes) / (24 * 60) * screen.height * 0.6 - screen.height * 0.6 / 2)
                     }
 
-                    BarChartView(wiDList: wiDList)
+                    VerticalBarChartView(wiDList: wiDList)
                 }
-                .frame(maxWidth: UIScreen.main.bounds.size.width * 0.4)
+                .frame(maxWidth: .infinity)
                 .background(RoundedRectangle(cornerRadius: 5)
-                    .stroke(Color.gray, lineWidth: 1)
-                    .background(.white)
+                    .stroke(.black, lineWidth: 1)
                 )
+                .background(Color("light_gray"))
+                .cornerRadius(5)
             }
+            
             
             VStack(spacing: 8) {
                 HStack {
                     Text("New WiD")
                         .bold()
                 }
-//                .padding(.trailing)
                 
                 VStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 0) {
@@ -89,9 +90,10 @@ struct ManualViewTmp: View {
                                 .padding(.trailing)
                         }
                         .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.gray, lineWidth: 1)
-                            .background(.white)
+                            .stroke(.black, lineWidth: 1)
                         )
+                        .background(.white)
+                        .cornerRadius(5)
                     }
 
                     VStack(alignment: .leading, spacing: 0) {
@@ -111,15 +113,18 @@ struct ManualViewTmp: View {
                             }
                             
                             RoundedRectangle(cornerRadius: 5)
-                                .stroke(Color.gray, lineWidth: 1)
-                                .background(Color(title.rawValue))
-                                .frame(maxWidth: 5, maxHeight: 25)
+                                .fill(Color(title.rawValue))
+                                .background(RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.black, lineWidth: 1)
+                                )
+                                .frame(width: 5, height: 25)
                                 .padding(.trailing)
                         }
                         .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.gray, lineWidth: 1)
-                            .background(.white)
+                            .stroke(.black, lineWidth: 1)
                         )
+                        .background(.white)
+                        .cornerRadius(5)
                     }
                     VStack(alignment: .leading, spacing: 0) {
                         Text("시작")
@@ -136,9 +141,10 @@ struct ManualViewTmp: View {
                                 .padding(.trailing)
                         }
                         .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.gray, lineWidth: 1)
-                            .background(.white)
+                            .stroke(.black, lineWidth: 1)
                         )
+                        .background(.white)
+                        .cornerRadius(5)
                     }
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -156,9 +162,10 @@ struct ManualViewTmp: View {
                                 .padding(.trailing)
                         }
                         .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.gray, lineWidth: 1)
-                            .background(.white)
+                            .stroke(.black, lineWidth: 1)
                         )
+                        .background(.white)
+                        .cornerRadius(5)
                     }
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -175,17 +182,18 @@ struct ManualViewTmp: View {
                                 .padding(.trailing)
                         }
                         .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.gray, lineWidth: 1)
-                            .background(.white)
+                            .stroke(.black, lineWidth: 1)
                         )
+                        .background(.white)
+                        .cornerRadius(5)
                     }
                 }
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 5)
-                    .stroke(Color.gray, lineWidth: 1)
-                    .background(Color("light_gray"))
+                    .stroke(.black, lineWidth: 1)
                 )
-//                .padding(.trailing)
+                .background(Color("light_gray"))
+                .cornerRadius(5)
                 
                 HStack(spacing: 8) {
                     Spacer()
@@ -203,17 +211,18 @@ struct ManualViewTmp: View {
                         
                         Text("등록")
                     }
-                    .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin || duration == 0)
                     .padding(.vertical)
                     .frame(maxWidth: .infinity)
-                    .background(RoundedRectangle(cornerRadius: 5)
-                        .fill(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin || duration == 0 ? .gray : .blue).opacity(0.8)
-                    )
+                    .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin || duration == 0)
+
+                    .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin || duration == 0 ? Color("light_gray") : .blue)
+                    .cornerRadius(5)
+//                    .background(RoundedRectangle(cornerRadius: 5)
+//                        .stroke(.black, lineWidth: 1)
+//                    )
                 }
             }
-//            .frame(maxWidth: UIScreen.main.bounds.size.width * 0.6, maxHeight: .infinity)
-//            .frame(maxHeight: .infinity)
-//            .border(.blue)
+            .frame(maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
@@ -348,6 +357,6 @@ struct ManualViewTmp: View {
 
 struct ManualViewTmp_Previews: PreviewProvider {
     static var previews: some View {
-        ManualViewTmp()
+        ManualViewWithHorizontalBarView()
     }
 }

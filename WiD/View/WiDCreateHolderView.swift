@@ -81,9 +81,9 @@ struct WiDCreateHolderView: View {
 }
 
 enum wiDCreateHolderTapInfo: String, CaseIterable {
-    case STOPWATCH = "STOPWATCH"
-    case TIMER = "TIMER"
-    case MANUAL = "MANUAL"
+    case STOPWATCH = "스톱워치"
+    case TIMER = "타이머"
+    case MANUAL = "직접 입력"
 }
 
 struct WiDCreateView: View {
@@ -97,7 +97,7 @@ struct WiDCreateView: View {
         case .TIMER:
             WiDCreateTimerView(buttonsVisible: $buttonsVisible)
         case .MANUAL:
-            ManualViewTmp()
+            WiDCreateManualView()
         }
     }
 }

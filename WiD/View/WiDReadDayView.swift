@@ -13,10 +13,6 @@ struct WiDReadDayView: View {
     @State private var wiDs: [WiD] = []
     @State private var currentDate: Date = Date()
     
-    init() {
-        self._wiDs = State(initialValue: wiDService.selectWiDsByDate(date: currentDate))
-    }
-    
     var body: some View {
         GeometryReader { geo in
             VStack {
@@ -201,6 +197,9 @@ struct WiDReadDayView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .onAppear {
+                wiDs = wiDService.selectWiDsByDate(date: currentDate)
+            }
             .onChange(of: currentDate) { newValue in
                 withAnimation {
                     wiDs = wiDService.selectWiDsByDate(date: newValue)

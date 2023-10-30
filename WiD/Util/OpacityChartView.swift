@@ -12,19 +12,21 @@ struct OpacityChartView: View {
     let wiDList: [WiD]
     let totalDuration: TimeInterval
     let opacity: Double
-
+    
     init(date: Date, wiDList: [WiD]) {
         self.date = date
         self.wiDList = wiDList
         self.totalDuration = wiDList.map { $0.duration }.reduce(0, +)
-
-        if totalDuration <= 2 * 60 * 60 {
+        
+        let maxDuration: Double = 60 * 60 * 10
+        
+        if totalDuration <= maxDuration / 5 {
             self.opacity = 0.2
-        } else if totalDuration <= 4 * 60 * 60 {
+        } else if totalDuration <= maxDuration * 2 / 5 {
             self.opacity = 0.4
-        } else if totalDuration <= 6 * 60 * 60 {
+        } else if totalDuration <= maxDuration * 3 / 5 {
             self.opacity = 0.6
-        } else if totalDuration <= 8 * 60 * 60 {
+        } else if totalDuration <= maxDuration * 4 / 5 {
             self.opacity = 0.8
         } else {
             self.opacity = 1.0
@@ -34,21 +36,40 @@ struct OpacityChartView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                Rectangle()
-                    .opacity(opacity)
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(wiDList.isEmpty ? Color("light_gray") : Color(wiDList[0].title).opacity(opacity))
                     .background(RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.gray, lineWidth: 1)
-                        .background(wiDList.isEmpty ? Color("light_gray").opacity(0.5) : Color(wiDList[0].title))
+                        .stroke(.black, lineWidth: 1)
                     )
-                    .padding(4)
-                
+                    .frame(width: geo.size.width * 0.9, height: geo.size.width * 0.9)
+                    
                 Text(formatDate(date, format: "d"))
                     .font(.system(size: 14))
                     .fontWeight(wiDList.isEmpty ? nil : .bold)
                     .foregroundColor(wiDList.isEmpty ? .gray : .black)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .aspectRatio(contentMode: .fit)
+    }
+}
+
+struct ExampleOpacityChartView: View {
+    let title: String
+    let opacity: Double
+    
+    init(title: String, opacity: Double) {
+        self.title = title
+        self.opacity = opacity
+    }
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 5)
+            .fill(Color(title).opacity(opacity))
+            .background(RoundedRectangle(cornerRadius: 1)
+                .stroke(.black, lineWidth: 1)
+            )
+            .frame(width: 10, height: 10)
     }
 }
 

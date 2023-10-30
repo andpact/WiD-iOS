@@ -29,22 +29,30 @@ struct WiD {
 
 struct WiDView: View {
     @Environment(\.presentationMode) var presentationMode
+    private let screen = UIScreen.main.bounds.size
     private let wiDService = WiDService()
-    @State private var wiDs: [WiD] = []
+    @State private var wiDList: [WiD] = []
     
+    private let calendar = Calendar.current
     private let today = Date()
     private let currenTime = Date()
     
     @State private var date = Date()
     @State private var title: String = ""
     @State private var start = Date()
+    private var startMinutes: Int { return calendar.component(.hour, from: start) * 60 + calendar.component(.minute, from: start) }
     @State private var finish = Date()
+    private var finishMinutes: Int { return calendar.component(.hour, from: finish) * 60 + calendar.component(.minute, from: finish) }
     @State private var duration: TimeInterval = 0.0
     @State private var detail: String = ""
     
     @State private var isStartOverlap: Bool = false
+    @State private var isStartOverCurrentTime: Bool = false
+
     @State private var isFinishOverlap: Bool = false
-    @State private var isDurationMinOrMax: Bool = false
+    @State private var isFinishOverCurrentTime: Bool = false
+    
+    @State private var isDurationUnderMin: Bool = false
     
     @State private var isDeleteButtonPressed: Bool = false
     @State private var deleteTimer: Timer?
@@ -58,316 +66,328 @@ struct WiDView: View {
         self.clickedWiDId = clickedWiDId
         self.clickedWiD = wiDService.selectWiDByID(id: clickedWiDId)
     }
-
+    
     var body: some View {
         NavigationView {
-            VStack {
-                VStack(spacing: 8) {
-                    HStack {
-                        Text("WiD")
-                            .font(.custom("Acme-Regular", size: 30))
-                        
-                        Spacer()
-
-                        Circle()
-                            .foregroundColor(Color(title))
-                            .frame(width: 20, height: 20)
-                    }
-                    .padding(.horizontal)
-                    .padding(.top, 8)
+            ScrollView {
+                VStack(spacing: 4) {
+                    Text("\(formatDate(date, format: "yyyy년 M월 d일")) WiD 리스트")
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    HStack {
-                        Image(systemName: "calendar")
-                            .imageScale(.large)
-                            .frame(width: 25)
-                        
-                        Text("날짜")
-                            .font(.system(size: 25))
-                            .padding(.vertical, 4)
-
-                        HStack {
-                            Text(formatDate(date, format: "yyyy.MM.dd"))
-                                .font(.system(size: 25))
-
-                            Text(formatWeekday(date))
-                                .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
-                                .font(.system(size: 25))
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .padding(.horizontal)
-
-                    HStack {
-                        Image(systemName: "text.book.closed")
-                            .imageScale(.large)
-                            .frame(width: 25)
-                        
-                        Text("제목")
-                            .font(.system(size: 25))
-                            .padding(.vertical, 4)
-
+                    VStack {
                         ZStack {
-                            Text(titleDictionary[title] ?? "공부")
-                                .font(.system(size: 25))
-                                .frame(maxWidth: .infinity)
+                            Image(systemName: "arrowtriangle.down")
+                                .foregroundColor(isStartOverlap || isStartOverCurrentTime || isDurationUnderMin ? .red : .none)
+                                .offset(x: CGFloat(startMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
                             
-                            Picker("", selection: $title) {
-                                ForEach(titleArray, id: \.self) { title in
-                                    Text(titleDictionary[title]!)
-                                }
-                            }
-                            .opacity(0.02)
-                            .disabled(!isEditing)
+                            Image(systemName: "arrowtriangle.down.fill")
+                                .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin ? .red : .none)
+                                .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
                         }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .padding(.horizontal)
-
-                    HStack {
-                        Image(systemName: "clock")
-                            .imageScale(.large)
-                            .frame(width: 25)
                         
-                        Text("시작")
-                            .font(.system(size: 25))
-                            .padding(.vertical, 4)
-
-                        ZStack {
-                            Text(formatTime(start, format: "a h:mm:ss"))
-                                .font(.system(size: 25))
-                            
-                            DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
-                                .labelsHidden()
-                                .opacity(0.02)
-                                .disabled(!isEditing)
-                            
-                            if isStartOverlap {
-                                HStack {
-                                    Spacer()
-                                    
-                                    Image(systemName: "exclamationmark.square")
-                                        .foregroundColor(.red)
-                                }
-                                .frame(maxWidth: .infinity)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
+                        HorizontalBarChartView(wiDList: wiDList)
                     }
-                    .padding(.horizontal)
-
-                    HStack {
-                        Image(systemName: "stopwatch")
-                            .imageScale(.large)
-                            .frame(width: 25)
-                        
-                        Text("종료")
-                            .font(.system(size: 25))
-                            .padding(.vertical, 4)
-
-                        ZStack {
-                            Text(formatTime(finish, format: "a h:mm:ss"))
-                                .font(.system(size: 25))
-                            
-                            DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
-                                .labelsHidden()
-                                .opacity(0.02)
-                                .disabled(!isEditing)
-                            
-                            if isFinishOverlap {
-                                HStack {
-                                    Spacer()
-                                    
-                                    Image(systemName: "exclamationmark.square")
-                                        .foregroundColor(.red)
-                                }
-                                .frame(maxWidth: .infinity)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .padding(.horizontal)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .imageScale(.large)
-                            .frame(width: 25)
-                        
-                        Text("경과")
-                            .font(.system(size: 25))
-                            .padding(.vertical, 4)
-
-                        ZStack {
-                            Text(formatDuration(duration, mode: 3))
-                                .font(.system(size: 25))
-                                .frame(maxWidth: .infinity)
-                            
-                            if isDurationMinOrMax {
-                                HStack {
-                                    Spacer()
-                                    
-                                    Image(systemName: "exclamationmark.square")
-                                        .foregroundColor(.red)
-                                }
-                                .frame(maxWidth: .infinity)
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    HStack(alignment: .center) {
-                        Image(systemName: "text.bubble")
-                            .imageScale(.large)
-                            .frame(width: 25)
-                        
-                        Text("설명")
-                            .font(.system(size: 25))
-                            .padding(.vertical, 4)
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    
-                    if !isEditing {
-                        ScrollView {
-                            Text(detail == "" ? "설명 추가.." : detail)
-                                .padding(5)
-                                .padding(.top, 4)
-                                .frame(maxWidth: .infinity, alignment: .topLeading)
-                        }
-                        .frame(maxHeight: 150)
-                        .border(.gray)
-                        .padding(.horizontal)
-                        .padding(.bottom)
-                    } else {
-                        TextEditor(text: $detail)
-                            .frame(maxWidth: .infinity, maxHeight: 150, alignment: .topLeading)
-                            .border(.gray)
-                            .padding(.horizontal)
-                            .padding(.bottom)
-                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 5)
+                        .stroke(.black, lineWidth: 1)
+                    )
+                    .background(.white)
+                    .cornerRadius(5)
                 }
-                .background(Color("light_gray"))
-                .cornerRadius(5)
+                
+                VStack {
+                    VStack(spacing: 4) {
+                        Text("WiD No.\(clickedWiDId)")
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        VStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("날짜")
+                                
+                                HStack {
+                                    Image(systemName: "calendar")
+                                        .frame(width: 20)
+                                        .padding()
+                                    
+                                    HStack {
+                                        Text(formatDate(date, format: "yyyy년 M월 d일"))
 
-                HStack {
-                    Button(action: {
-                        if isEditing {
-                            wiDService.updateWiD(withID: clickedWiDId, newTitle: title, newStart: start, newFinish: finish, newDuration: duration, newDetail: detail)
+                                        Text(formatWeekday(date))
+                                            .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
+                                    }
+                                    
+                                    Spacer()
+                                }
+                                .background(RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.black, lineWidth: 1)
+                                )
+                                .background(.white)
+                                .cornerRadius(5)
+                            }
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("제목")
+                                
+                                HStack {
+                                    Image(systemName: "character.textbox.ko")
+                                        .frame(width: 20)
+                                        .padding()
+                                    
+                                    if isEditing {
+                                        Picker("", selection: $title) {
+                                            ForEach(titleArray, id: \.self) { title in
+                                                Text(titleDictionary[title]!)
+                                            }
+                                        }
+                                    } else {
+                                        Text(titleDictionary[title] ?? "tmp")
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .fill(Color(title))
+                                        .background(RoundedRectangle(cornerRadius: 5)
+                                            .stroke(.black, lineWidth: 1)
+                                        )
+                                        .frame(width: 5, height: 25)
+                                        .padding(.trailing)
+                                }
+                                .background(RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.black, lineWidth: 1)
+                                )
+                                .background(.white)
+                                .cornerRadius(5)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("시작")
+                                
+                                HStack {
+                                    Image(systemName: "play")
+                                        .frame(width: 20)
+                                        .padding()
+                                    
+                                    if isEditing {
+                                        DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
+                                            .labelsHidden()
+                                    } else {
+                                        Text(formatTime(start, format: "a h:mm:ss"))
+                                    }
+
+                                    
+                                    Spacer()
+                                }
+                                .background(RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.black, lineWidth: 1)
+                                )
+                                .background(.white)
+                                .cornerRadius(5)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("종료")
+                                
+                                HStack {
+                                    Image(systemName: "play.fill")
+                                        .frame(width: 20)
+                                        .padding()
+                                    if isEditing {
+                                        DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
+                                            .labelsHidden()
+                                    } else {
+                                        Text(formatTime(finish, format: "a h:mm:ss"))
+                                    }
+
+                                    
+                                    Spacer()
+                                }
+                                .background(RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.black, lineWidth: 1)
+                                )
+                                .background(.white)
+                                .cornerRadius(5)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("경과")
+                                
+                                HStack {
+                                    Image(systemName: "hourglass")
+                                        .frame(width: 20)
+                                        .padding()
+
+                                    Text(formatDuration(duration, mode: 3))
+                                    
+                                    Spacer()
+                                }
+                                .background(RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.black, lineWidth: 1)
+                                )
+                                .background(.white)
+                                .cornerRadius(5)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("설명")
+                                
+                                HStack {
+                                    Image(systemName: "text.bubble")
+                                        .frame(width: 20)
+                                        .padding()
+                                    
+                                    TextEditor(text: $detail)
+                                        .padding(1)
+                                    
+                                    Spacer()
+                                }
+                                .background(RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.black, lineWidth: 1)
+                                )
+                                .background(.white)
+                                .cornerRadius(5)
+                            }
                         }
-                        isEditing.toggle()
-                    }) {
-                        Text(isEditing ? "완료" : "수정")
-                            .foregroundColor({
-                                if !isEditing {
-                                    return Color.blue
-                                } else if isEditing && !(isStartOverlap || isFinishOverlap || isDurationMinOrMax) {
-                                    return Color.green
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 5)
+                            .stroke(.black, lineWidth: 1)
+                        )
+                        .background(Color("light_gray"))
+                        .cornerRadius(5)
+                    }
+                    
+                    HStack {
+                        Button(action: {
+                            if isEditing {
+                                title = clickedWiD?.title ?? "STUDY"
+                                start = clickedWiD?.start ?? Date()
+                                finish = clickedWiD?.finish ?? Date()
+                                
+                                isEditing.toggle()
+                            } else {
+                                if isDeleteButtonPressed {
+                                    wiDService.deleteWiD(withID: clickedWiDId)
+                                    // 삭제 후 뒤로가기
+                                    presentationMode.wrappedValue.dismiss()
+                                }
+                                isDeleteButtonPressed.toggle()
+                                
+                                if isDeleteButtonPressed {
+                                    deleteTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+                                        isDeleteButtonPressed = false
+                                        deleteTimer?.invalidate()
+                                        deleteTimer = nil
+                                    }
                                 } else {
-                                    return nil
+                                    deleteTimer?.invalidate()
+                                    deleteTimer = nil
                                 }
-                            }())
-                    }
-                    .frame(maxWidth: .infinity)
-                    .disabled(isStartOverlap || isFinishOverlap || isDurationMinOrMax)
-                    
-                    Button(action: {
-                        if isDeleteButtonPressed {
-                            wiDService.deleteWiD(withID: clickedWiDId)
-                            presentationMode.wrappedValue.dismiss() // 뒤로 가기
-                        }
-                        isDeleteButtonPressed.toggle()
-                        
-                        if isDeleteButtonPressed {
-                            deleteTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-                                isDeleteButtonPressed = false
-                                deleteTimer?.invalidate()
-                                deleteTimer = nil
                             }
-                        } else {
-                            deleteTimer?.invalidate()
-                            deleteTimer = nil
+                        }) {
+                            if isEditing {
+                                Text("취소")
+                            } else {
+                                if isDeleteButtonPressed {
+                                    Text("한번 더 눌러 삭제")
+                                        .foregroundColor(.white)
+                                        
+                                } else {
+                                    Text("삭제")
+                                        .foregroundColor(.red)
+                                }
+                            }
                         }
-                    }) {
-                        if isDeleteButtonPressed {
-                            Text("한번 더 눌러 삭제")
-                                .foregroundColor(.red)
-                        } else {
-                            Text("삭제")
+                        .padding(.vertical)
+                        .frame(maxWidth: .infinity)
+                        .background(isDeleteButtonPressed ? .red : .clear)
+                        .cornerRadius(isDeleteButtonPressed ? 5 : 0)
+                        .background(RoundedRectangle(cornerRadius: 5)
+                            .stroke(isEditing ? .blue : .red, lineWidth: 1)
+                        )
+                        
+                        Button(action: {
+                            if isEditing {
+                                wiDService.updateWiD(withID: clickedWiDId, newTitle: title, newStart: start, newFinish: finish, newDuration: duration, newDetail: detail)
+                                
+                                // wiDList를 갱신하여 수평 막대 차트를 갱신함.
+                                wiDList = wiDService.selectWiDsByDate(date: date)
+                            }
+                            isEditing.toggle()
+                        }) {
+                            Image(systemName: isEditing ? "checkmark.square" : "square.and.pencil")
+                                .foregroundColor(.white)
+                            
+                            Text(isEditing ? "완료" : "수정")
+                                .foregroundColor(.white)
                         }
+                        .padding(.vertical)
+                        .frame(maxWidth: .infinity)
+                        .background(isEditing ?
+                            (isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin || duration == 0 ? Color("light_gray") : .green) :
+                            .blue)
+                        .cornerRadius(5)
+                        .disabled(isStartOverlap || isFinishOverlap || isDurationUnderMin)
                     }
-                    .frame(maxWidth: .infinity)
+                }
+            }
+            .padding()
+            .onAppear() {
+                date = clickedWiD!.date
 
-//                    Button(action: {
-//                        presentationMode.wrappedValue.dismiss() // 뒤로 가기
-//                    }) {
-//                        Text("뒤로 가기")
-//                    }
-//                    .frame(maxWidth: .infinity)
+                title = clickedWiD!.title
+                start = clickedWiD!.start
+                finish = clickedWiD!.finish
+                duration = clickedWiD!.duration
+                detail = clickedWiD!.detail
+                
+                wiDList = wiDService.selectWiDsByDate(date: date)
+            }
+            .onChange(of: start) { newStart in
+                duration = finish.timeIntervalSince(newStart)
+                // DB의 newStart는 date가 아니라 2000-01-01 날짜를 가진다.
+                print("new Start : \(formatTime(newStart, format: "yyyy-MM-dd a h:mm:ss"))")
+                
+                withAnimation {
+                    isDurationUnderMin = duration <= 0
                 }
-                .padding()
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal)
-            .accentColor(.black)
-        }
-//        .navigationBarBackButtonHidden()
-        .onAppear() {
-            date = clickedWiD!.date
-            print("date onAppear : \(date)")
-            title = clickedWiD!.title
-            start = clickedWiD!.start
-            finish = clickedWiD!.finish
-            duration = clickedWiD!.duration
-            detail = clickedWiD!.detail
-            
-            wiDs = wiDService.selectWiDsByDate(date: date)
-        }
-        .onChange(of: start) { newStart in
-            duration = finish.timeIntervalSince(newStart)
-            print("start changed")
-            
-            withAnimation {
-                isDurationMinOrMax = 12 * 60 * 60 < duration || duration <= 0
-            }
-            
-            if Calendar.current.isDate(date, inSameDayAs: today), currenTime <= newStart {
-                isStartOverlap = true
-                print("today, start over currentTime")
-            } else if let currentIndex = wiDs.firstIndex(where: { $0.id == clickedWiDId }), 0 < currentIndex {
-                let previousWiD = wiDs[currentIndex - 1]
-                if newStart <= previousWiD.finish {
+                
+                if calendar.isDate(date, inSameDayAs: today), currenTime <= newStart {
                     isStartOverlap = true
-                    print("start overlap")
-                } else {
-                    isStartOverlap = false
-                    print("start not overlap")
+                    print("today, start over currentTime")
+                } else if let currentIndex = wiDList.firstIndex(where: { $0.id == clickedWiDId }), 0 < currentIndex {
+                    let previousWiD = wiDList[currentIndex - 1]
+                    // clickedWiD와 wiDList 모두 DB에서 가져온 것이기 때문에, newStart와 previousWiD.finish 모두 2000-01-01 날짜를 가진다.
+                    if newStart <= previousWiD.finish {
+                        isStartOverlap = true
+                        print("start overlap")
+                    } else {
+                        isStartOverlap = false
+                        print("start not overlap")
+                    }
                 }
             }
-        }
-        .onChange(of: finish) { newFinish in
-            duration = newFinish.timeIntervalSince(start)
-            print("finish changed")
-            
-            withAnimation {
-                isDurationMinOrMax = 12 * 60 * 60 < duration || duration <= 0
-            }
-            
-            print("date onChange finish : \(date)")
-            print("today : \(today)")
-            
-            if Calendar.current.isDate(date, inSameDayAs: today) {
-                if currenTime <= newFinish {
+            .onChange(of: finish) { newFinish in
+                duration = newFinish.timeIntervalSince(start)
+                print("new Finish : \(formatTime(newFinish, format: "yyyy-MM-dd a h:mm:ss"))")
+                
+                withAnimation {
+                    isDurationUnderMin = duration <= 0
+                }
+                
+                if calendar.isDate(date, inSameDayAs: today), currenTime <= newFinish {
                     isFinishOverlap = true
                     print("today, finish over currentTime")
-                }
-            } else if let currentIndex = wiDs.firstIndex(where: { $0.id == clickedWiDId }), currentIndex < wiDs.count - 1 {
-                let nextWiD = wiDs[currentIndex + 1]
-                if nextWiD.start <= newFinish {
-                    isFinishOverlap = true
-                    print("finish overlap")
-                } else {
-                    isFinishOverlap = false
-                    print("finish not overlap")
+                } else if let currentIndex = wiDList.firstIndex(where: { $0.id == clickedWiDId }), currentIndex < wiDList.count - 1 {
+                    let nextWiD = wiDList[currentIndex + 1]
+                    if nextWiD.start <= newFinish {
+                        isFinishOverlap = true
+                        print("finish overlap")
+                    } else {
+                        isFinishOverlap = false
+                        print("finish not overlap")
+                    }
                 }
             }
         }
