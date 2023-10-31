@@ -70,32 +70,34 @@ struct WiDView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 4) {
-                    Text("\(formatDate(date, format: "yyyy년 M월 d일")) WiD 리스트")
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    VStack {
-                        ZStack {
-                            Image(systemName: "arrowtriangle.down")
-                                .foregroundColor(isStartOverlap || isStartOverCurrentTime || isDurationUnderMin ? .red : .none)
-                                .offset(x: CGFloat(startMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
-                            
-                            Image(systemName: "arrowtriangle.down.fill")
-                                .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin ? .red : .none)
-                                .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
-                        }
+                if isEditing {
+                    VStack(spacing: 4) {
+                        Text("\(formatDate(date, format: "yyyy년 M월 d일")) WiD 리스트")
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        HorizontalBarChartView(wiDList: wiDList)
+                        VStack {
+                            ZStack {
+                                Image(systemName: "arrowtriangle.down")
+                                    .foregroundColor(isStartOverlap || isStartOverCurrentTime || isDurationUnderMin ? .red : .none)
+                                    .offset(x: CGFloat(startMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
+                                
+                                Image(systemName: "arrowtriangle.down.fill")
+                                    .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || isDurationUnderMin ? .red : .none)
+                                    .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
+                            }
+                            
+                            HorizontalBarChartView(wiDList: wiDList)
+                        }
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 5)
+                            .stroke(.black, lineWidth: 1)
+                        )
+                        .background(.white)
+                        .cornerRadius(5)
                     }
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 5)
-                        .stroke(.black, lineWidth: 1)
-                    )
-                    .background(.white)
-                    .cornerRadius(5)
                 }
-                
+
                 VStack {
                     VStack(spacing: 4) {
                         Text("WiD No.\(clickedWiDId)")
@@ -113,9 +115,16 @@ struct WiDView: View {
                                     
                                     HStack {
                                         Text(formatDate(date, format: "yyyy년 M월 d일"))
+                                        
+                                        HStack(spacing: 0) {
+                                            Text("(")
 
-                                        Text(formatWeekday(date))
-                                            .foregroundColor(Calendar.current.component(.weekday, from: date) == 1 ? .red : (Calendar.current.component(.weekday, from: date) == 7 ? .blue : .black))
+                                            Text(formatWeekday(date))
+                                                .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
+
+                                            Text(")")
+                                        }
+                                        
                                     }
                                     
                                     Spacer()
@@ -142,7 +151,7 @@ struct WiDView: View {
                                             }
                                         }
                                     } else {
-                                        Text(titleDictionary[title] ?? "tmp")
+                                        Text(titleDictionary[title] ?? "공부")
                                     }
                                     
                                     Spacer()
@@ -194,6 +203,7 @@ struct WiDView: View {
                                     Image(systemName: "play.fill")
                                         .frame(width: 20)
                                         .padding()
+                                    
                                     if isEditing {
                                         DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
                                             .labelsHidden()
@@ -265,15 +275,19 @@ struct WiDView: View {
                                 start = clickedWiD?.start ?? Date()
                                 finish = clickedWiD?.finish ?? Date()
                                 
-                                isEditing.toggle()
+                                withAnimation {
+                                    isEditing.toggle()
+                                }
                             } else {
                                 if isDeleteButtonPressed {
                                     wiDService.deleteWiD(withID: clickedWiDId)
                                     // 삭제 후 뒤로가기
                                     presentationMode.wrappedValue.dismiss()
                                 }
-                                isDeleteButtonPressed.toggle()
                                 
+                                withAnimation {
+                                    isDeleteButtonPressed.toggle()
+                                }
                                 if isDeleteButtonPressed {
                                     deleteTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
                                         isDeleteButtonPressed = false
@@ -287,13 +301,22 @@ struct WiDView: View {
                             }
                         }) {
                             if isEditing {
+                                Image(systemName: "clear")
+                                    .foregroundColor(.blue)
+                                
                                 Text("취소")
                             } else {
                                 if isDeleteButtonPressed {
+                                    Image(systemName: "trash.fill")
+                                        .foregroundColor(.white)
+                                    
                                     Text("한번 더 눌러 삭제")
                                         .foregroundColor(.white)
                                         
                                 } else {
+                                    Image(systemName: "trash")
+                                        .foregroundColor(.red)
+                                    
                                     Text("삭제")
                                         .foregroundColor(.red)
                                 }
@@ -314,7 +337,9 @@ struct WiDView: View {
                                 // wiDList를 갱신하여 수평 막대 차트를 갱신함.
                                 wiDList = wiDService.selectWiDsByDate(date: date)
                             }
-                            isEditing.toggle()
+                            withAnimation {
+                                isEditing.toggle()
+                            }
                         }) {
                             Image(systemName: isEditing ? "checkmark.square" : "square.and.pencil")
                                 .foregroundColor(.white)
@@ -350,7 +375,7 @@ struct WiDView: View {
                 print("new Start : \(formatTime(newStart, format: "yyyy-MM-dd a h:mm:ss"))")
                 
                 withAnimation {
-                    isDurationUnderMin = duration <= 0
+                    isDurationUnderMin = duration < 0
                 }
                 
                 if calendar.isDate(date, inSameDayAs: today), currenTime <= newStart {
@@ -373,7 +398,7 @@ struct WiDView: View {
                 print("new Finish : \(formatTime(newFinish, format: "yyyy-MM-dd a h:mm:ss"))")
                 
                 withAnimation {
-                    isDurationUnderMin = duration <= 0
+                    isDurationUnderMin = duration < 0
                 }
                 
                 if calendar.isDate(date, inSameDayAs: today), currenTime <= newFinish {

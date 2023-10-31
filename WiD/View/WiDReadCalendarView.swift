@@ -90,10 +90,7 @@ struct WiDReadCalendarView: View {
                             
                             // startDate가 일요일이 아니면 빈 아이템을 넣음.
                             if weekday != 1 {
-                                Text(formatDate(startDate, format: "M월"))
-                                    .font(.system(size: 14))
-                                
-                                ForEach(0..<weekday - 1, id: \.self) { gridIndex in
+                                ForEach(0..<weekday, id: \.self) { gridIndex in
                                     Text("")
                                 }
                                 
@@ -105,7 +102,7 @@ struct WiDReadCalendarView: View {
                                             return calendar.isDate(wiD.date, inSameDayAs: currentDate)
                                         }
                                         
-                                        TmpPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                        CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
                                         .onTapGesture {
                                             selectedDate = currentDate
                                         }
@@ -136,11 +133,8 @@ struct WiDReadCalendarView: View {
                                     let previousMonth = calendar.component(.month, from: dateWeekAgo)
                                     let currentMonth = calendar.component(.month, from: currentDate)
                                     
-                                    // 첫 날짜와 첫 날짜의 일주일전 날짜를 비교하면 첫 줄에 월 표시가 안나올 수 있으니, 첫째 줄은 무조건 달을 표시하도록 함.
-                                    if gridIndex < 7 {
-                                        Text(formatDate(currentDate, format: "M월"))
-                                            .font(.system(size: 14))
-                                    } else if previousMonth != currentMonth {
+                                    // 매달 첫 일요일에 해당하는 날짜 앞에 월 표시를 함.
+                                    if previousMonth != currentMonth {
                                         Text(formatDate(currentDate, format: "M월"))
                                             .font(.system(size: 14))
                                     } else {
@@ -153,7 +147,7 @@ struct WiDReadCalendarView: View {
                                             return calendar.isDate(wiD.date, inSameDayAs: currentDate)
                                         }
                                         
-                                        TmpPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                        CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
                                         .onTapGesture {
                                             selectedDate = currentDate
                                         }
@@ -176,11 +170,11 @@ struct WiDReadCalendarView: View {
                                             return calendar.isDate(wiD.date, inSameDayAs: currentDate)
                                         }
                                         
-                                        TmpPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                        CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
                                         .onTapGesture {
                                             selectedDate = currentDate
                                         }
-                                        .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
+                                        .border(calendar.isDate(selectedDate, inSameDayAs: currentDate) ? Color.blue : Color.clear, width: 1)
                                     } else {
                                         let filteredWiDList = wiDList.filter { wiD in
                                             return calendar.isDate(wiD.date, inSameDayAs: currentDate) && wiD.title == selectedTitle.rawValue
@@ -190,7 +184,7 @@ struct WiDReadCalendarView: View {
                                         .onTapGesture {
                                             selectedDate = currentDate
                                         }
-                                        .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
+                                        .border(calendar.isDate(selectedDate, inSameDayAs: currentDate) ? Color.blue : Color.clear, width: 1)
                                     }
                                 }
                             }
@@ -220,7 +214,6 @@ struct WiDReadCalendarView: View {
                             
                             ForEach([0.2, 0.4, 0.6, 0.8, 1.0], id: \.self) { opacity in
                                 ExampleOpacityChartView(title: selectedTitle.rawValue, opacity: opacity)
-                                    
                                     
                             }
                             .padding(.horizontal, -2)

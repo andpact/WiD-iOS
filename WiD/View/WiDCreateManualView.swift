@@ -278,7 +278,7 @@ struct WiDCreateManualView: View {
         duration = finish.timeIntervalSince(start)
         
         withAnimation {
-            isDurationUnderMin = duration <= 0
+            isDurationUnderMin = duration < 0
         }
         
         if calendar.isDate(date, inSameDayAs: today) {

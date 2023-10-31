@@ -9,204 +9,190 @@ import SwiftUI
 
 struct WiDReadDayView: View {
     private let wiDService = WiDService()
+    private let calendar = Calendar.current
     
-    @State private var wiDs: [WiD] = []
+    @State private var wiDList: [WiD] = []
     @State private var currentDate: Date = Date()
     
     var body: some View {
-        GeometryReader { geo in
-            VStack {
-                // 날짜 표시
+        VStack {
+            HStack {
                 HStack {
-                    Text("WiD")
-                        .font(.custom("Acme-Regular", size: 20))
-                        .padding(.horizontal, 8)
-                        .foregroundColor(.white)
-                        .background(.black)
-                        .cornerRadius(5)
-                        .padding(.horizontal, 8)
-
-                    HStack {
-                        Text(formatDate(currentDate, format: "M월 d일"))
-                        
-                        HStack(spacing: 0) {
-                            Text("(")
-
-                            Text(formatWeekday(currentDate))
-                                .foregroundColor(Calendar.current.component(.weekday, from: currentDate) == 1 ? .red : (Calendar.current.component(.weekday, from: currentDate) == 7 ? .blue : .black))
-
-                            Text(")")
-                        }
-                    }
-                    .padding(.horizontal, -16)
-                    .frame(maxWidth: .infinity)
+                    Text(formatDate(currentDate, format: "yyyy년 M월 d일"))
                     
-                    Button(action: {
-                        withAnimation {
-                            currentDate = Date()
-                        }
-                    }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .padding(.horizontal, 8)
-                    .disabled(Calendar.current.isDateInToday(currentDate))
-                    
-                    Button(action: {
-                        withAnimation {
-                            currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
-                        }
-                    }) {
-                        Image(systemName: "chevron.left")
-                    }
-                    .padding(.horizontal, 8)
-                    
-                    Button(action: {
-                        withAnimation {
-                            currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-                        }
-                    }) {
-                        Image(systemName: "chevron.right")
-                    }
-                    .disabled(Calendar.current.isDateInToday(currentDate))
-                    .padding(.horizontal, 8)
-                }
-                .padding(.bottom, 8)
-                
-                PieChartView(pieChartData: fetchPieChartData(date: currentDate), date: currentDate, isForOne: true, isEmpty: false)
-                    .padding(.bottom, 8)
-                
-                // 각 WiD 표시
-                VStack {
                     HStack(spacing: 0) {
-                        Rectangle()
-                            .fill(Color("light_gray"))
-                            .frame(width: geo.size.width * 0.02, height: 25)
+                        Text("(")
 
-                        Text("순서")
-                            .frame(width: geo.size.width * 0.11)
+                        Text(formatWeekday(currentDate))
+                            .foregroundColor(calendar.component(.weekday, from: currentDate) == 1 ? .red : (calendar.component(.weekday, from: currentDate) == 7 ? .blue : .black))
 
-                        Text("제목")
-                            .frame(width: geo.size.width * 0.11)
-
-                        Text("시작")
-                            .frame(width: geo.size.width * 0.26)
-
-                        Text("종료")
-                            .frame(width: geo.size.width * 0.26)
-
-                        Text("경과")
-                            .frame(width: geo.size.width * 0.24)
+                        Text(")")
                     }
-                    .frame(maxWidth: .infinity)
-                    .background(Color("light_gray"))
-                    .cornerRadius(5)
-                    
-//                    HStack(spacing: 0) {
-//                        Rectangle()
-//                            .fill(Color.red)
-//                            .frame(width: geo.size.width * 0.02, height: 60)
-//                        VStack(spacing: 5) {
-//                            HStack(spacing: 0) {
-//                                Text("99")
-//                                    .frame(width: geo.size.width * 0.11)
-//
-//                                Text("공부")
-//                                    .frame(width: geo.size.width * 0.11)
-//
-//                                Text("오전 99:99")
-//                                    .frame(width: geo.size.width * 0.26)
-//
-//                                Text("오후 99:99")
-//                                    .frame(width: geo.size.width * 0.26)
-//
-//                                Text("99.9시간")
-//                                    .frame(width: geo.size.width * 0.24)
-//                            }
-//
-//                            Divider()
-//                                .padding(.horizontal, 8)
-//
-//                            HStack(spacing: 0) {
-//                                Text("설명")
-//                                    .frame(width: geo.size.width * 0.11)
-//
-//                                Text("detailddddd")
-//                                    .frame(width: geo.size.width * 0.87, alignment: .leading)
-//                                    .lineLimit(1)
-//                                    .truncationMode(.tail)
-//                            }
-//                        }
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    .background(Color("light_gray"))
-//                    .cornerRadius(5)
-
-                    if wiDs.isEmpty {
-                        Spacer()
-                        Text("표시할 WiD가 없습니다.")
-                            .foregroundColor(.gray)
+                }
+                .frame(maxWidth: .infinity)
+                
+                Button(action: {
+                    withAnimation {
+                        currentDate = Date()
+                    }
+                }) {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .padding(.horizontal, 8)
+                .disabled(calendar.isDateInToday(currentDate))
+                
+                Button(action: {
+                    withAnimation {
+                        currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+                    }
+                }) {
+                    Image(systemName: "chevron.left")
+                }
+                .padding(.horizontal, 8)
+                
+                Button(action: {
+                    withAnimation {
+                        currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                    }
+                }) {
+                    Image(systemName: "chevron.right")
+                }
+                .padding(.horizontal)
+                .disabled(calendar.isDateInToday(currentDate))
+            }
+            .padding(.horizontal, 8)
+            
+            Divider()
+                .background(.black)
+            
+            VStack(spacing: 0) {
+                Text("파이차트")
+                    .bold()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                DayPieChartView(wiDList: wiDList)
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 5)
+                        .stroke(.black, lineWidth: 1)
+                    )
+                
+                Text("WiD 리스트")
+                    .bold()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                ScrollView {
+                    if wiDList.isEmpty {
+                        HStack {
+                            Image(systemName: "ellipsis.bubble")
+                                .foregroundColor(.gray)
+                            
+                            Text("표시할 WiD가 없습니다.")
+                                .foregroundColor(.gray)
+                        }
+                        .padding()
+                        .padding(.vertical)
+                        .frame(maxWidth: .infinity)
+                        .background(RoundedRectangle(cornerRadius: 5)
+                            .stroke(.black, lineWidth: 1)
+                        )
                     } else {
-                        ScrollView {
-                            ForEach(Array(wiDs.enumerated()), id: \.element.id) { (index, wiD) in
-                                NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                                    HStack(spacing: 0) {
-                                        Rectangle()
-                                            .fill(Color(wiD.title))
-                                            .frame(width: geo.size.width * 0.02, height: 60)
-                                        VStack(spacing: 5) {
-                                            HStack(spacing: 0) {
-                                                Text("\(index + 1)")
-                                                    .frame(width: geo.size.width * 0.11)
-
-                                                Text(titleDictionary[wiD.title] ?? "")
-                                                    .frame(width: geo.size.width * 0.11)
-
-                                                Text(formatTime(wiD.start, format: "a h:mm"))
-                                                    .frame(width: geo.size.width * 0.26)
-
-                                                Text(formatTime(wiD.finish, format: "a h:mm"))
-                                                    .frame(width: geo.size.width * 0.26)
-
-                                                Text(formatDuration(wiD.duration, mode: 1))
-                                                    .frame(width: geo.size.width * 0.24)
-                                            }
+                        ForEach(Array(wiDList.enumerated()), id: \.element.id) { (index, wiD) in
+                            NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
+                                VStack(spacing: 8) {
+                                    HStack {
+                                        HStack {
+                                            Image(systemName: "character.textbox.ko")
+                                                .frame(width: 20)
                                             
-                                            Divider()
-                                                .padding(.horizontal, 8)
+                                            Text("제목")
+                                                .bold()
                                             
-                                            HStack(spacing: 0) {
-                                                Text("설명")
-                                                    .frame(width: geo.size.width * 0.11)
-                                                
-                                                Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
-                                                    .frame(width: geo.size.width * 0.87, alignment: .leading)
-                                                    .lineLimit(1)
-                                                    .truncationMode(.tail)
-                                                    .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
-                                            }
+                                            Text(titleDictionary[wiD.title] ?? "")
+                                            
+                                            RoundedRectangle(cornerRadius: 5)
+                                                .fill(Color(wiD.title))
+                                                .background(RoundedRectangle(cornerRadius: 5)
+                                                    .stroke(.black, lineWidth: 1)
+                                                )
+                                                .frame(width: 5, height: 20)
                                         }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        
+                                        HStack {
+                                            Image(systemName: "hourglass")
+                                                .frame(width: 20)
+                                            
+                                            Text("소요")
+                                                .bold()
+                                            
+                                            Text(formatDuration(wiD.duration, mode: 1))
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color("light_gray"))
-                                    .cornerRadius(5)
+                                    
+                                    HStack {
+                                        HStack {
+                                            Image(systemName: "play")
+                                                .frame(width: 20)
+                                            
+                                            Text("시작")
+                                                .bold()
+                                            
+                                            Text(formatTime(wiD.start, format: "a h:mm"))
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        
+                                        HStack {
+                                            Image(systemName: "play.fill")
+                                                .frame(width: 20)
+                                            
+                                            Text("종료")
+                                                .bold()
+                                            
+                                            Text(formatTime(wiD.finish, format: "a h:mm"))
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    
+                                    HStack {
+                                        Image(systemName: "text.bubble")
+                                            .frame(width: 20)
+                                        
+                                        Text("설명")
+                                            .bold()
+                                        
+                                        Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                            .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
+                                    }
                                 }
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.black, lineWidth: 1)
+                                )
+                                .background(Color("light_gray"))
+                                .cornerRadius(5)
                             }
                         }
                     }
-                    Spacer()
                 }
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .onAppear {
-                wiDs = wiDService.selectWiDsByDate(date: currentDate)
-            }
-            .onChange(of: currentDate) { newValue in
-                withAnimation {
-                    wiDs = wiDService.selectWiDsByDate(date: newValue)
-                }
+            .padding(.horizontal)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .onAppear {
+            wiDList = wiDService.selectWiDsByDate(date: currentDate)
+        }
+        .onChange(of: currentDate) { newValue in
+            withAnimation {
+                wiDList = wiDService.selectWiDsByDate(date: newValue)
             }
         }
-        .padding(.horizontal)
     }
 }
 
