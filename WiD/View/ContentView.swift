@@ -12,6 +12,10 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State var buttonsVisible = true
     
+    init() {
+        UITabBar.appearance().backgroundColor = UIColor.white
+    }
+    
     var body: some View {
         GeometryReader { geo in
             ZStack {

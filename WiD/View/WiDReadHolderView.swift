@@ -13,9 +13,11 @@ struct WiDReadHolderView: View {
     
     var body: some View {
         VStack {
-            animate()
+            topTabBar()
+            
             WiDReadView(currentTab: selectedPicker)
-                .background(.white) // 스와이프 용 배경
+            //배경이 없으면 스와이프할 수 없기 때문에 배경색을 추가함.
+                .background(.white)
         }
         .gesture(
             DragGesture()
@@ -46,7 +48,7 @@ struct WiDReadHolderView: View {
     }
     
     @ViewBuilder
-    private func animate() -> some View {
+    private func topTabBar() -> some View {
         HStack {
             ForEach(wiDReadHolderTapInfo.allCases, id: \.self) { item in
                 VStack {
@@ -73,8 +75,6 @@ struct WiDReadHolderView: View {
 enum wiDReadHolderTapInfo: String, CaseIterable {
     case DAY = "DAY"
     case CALENDAR = "CALENDAR"
-//    case WEEK = "WEEK"
-//    case MONTH = "MONTH"
 }
 
 struct WiDReadView: View {
@@ -86,10 +86,6 @@ struct WiDReadView: View {
             WiDReadDayView()
         case .CALENDAR:
             WiDReadCalendarView()
-//        case .WEEK:
-//            WiDReadWeekView()
-//        case .MONTH:
-//            WiDReadMonthView()
         }
     }
 }

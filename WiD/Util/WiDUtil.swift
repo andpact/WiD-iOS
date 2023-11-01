@@ -71,10 +71,29 @@ struct WiDView: View {
         NavigationView {
             ScrollView {
                 if isEditing {
-                    VStack(spacing: 4) {
-                        Text("\(formatDate(date, format: "yyyy년 M월 d일")) WiD 리스트")
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                    VStack(spacing: 8) {
+                        HStack {
+                            Text(formatDate(date, format: "yyyy년 M월 d일"))
+                                .bold()
+                                .padding(.leading, 8)
+                            
+                            HStack(spacing: 0) {
+                                Text("(")
+                                    .bold()
+
+                                Text(formatWeekday(date))
+                                    .bold()
+                                    .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
+
+                                Text(")")
+                                    .bold()
+                            }
+                            
+                            Text("WiD 리스트")
+                                .bold()
+                            
+                            Spacer()
+                        }
                         
                         VStack {
                             ZStack {
@@ -98,15 +117,18 @@ struct WiDView: View {
                     }
                 }
 
-                VStack {
-                    VStack(spacing: 4) {
+                VStack(spacing: 8) {
+                    VStack(spacing: 8) {
                         Text("WiD No.\(clickedWiDId)")
                             .bold()
+                            .padding(.leading, 8)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         VStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("날짜")
+                                    .bold()
+                                    .padding(.leading, 8)
                                 
                                 HStack {
                                     Image(systemName: "calendar")
@@ -124,7 +146,6 @@ struct WiDView: View {
 
                                             Text(")")
                                         }
-                                        
                                     }
                                     
                                     Spacer()
@@ -138,6 +159,8 @@ struct WiDView: View {
 
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("제목")
+                                    .bold()
+                                    .padding(.leading, 8)
                                 
                                 HStack {
                                     Image(systemName: "character.textbox.ko")
@@ -173,6 +196,8 @@ struct WiDView: View {
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("시작")
+                                    .bold()
+                                    .padding(.leading, 8)
                                 
                                 HStack {
                                     Image(systemName: "play")
@@ -185,7 +210,6 @@ struct WiDView: View {
                                     } else {
                                         Text(formatTime(start, format: "a h:mm:ss"))
                                     }
-
                                     
                                     Spacer()
                                 }
@@ -198,6 +222,8 @@ struct WiDView: View {
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("종료")
+                                    .bold()
+                                    .padding(.leading, 8)
                                 
                                 HStack {
                                     Image(systemName: "play.fill")
@@ -210,7 +236,6 @@ struct WiDView: View {
                                     } else {
                                         Text(formatTime(finish, format: "a h:mm:ss"))
                                     }
-
                                     
                                     Spacer()
                                 }
@@ -223,6 +248,8 @@ struct WiDView: View {
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("경과")
+                                    .bold()
+                                    .padding(.leading, 8)
                                 
                                 HStack {
                                     Image(systemName: "hourglass")
@@ -242,14 +269,21 @@ struct WiDView: View {
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("설명")
+                                    .bold()
+                                    .padding(.leading, 8)
                                 
                                 HStack {
                                     Image(systemName: "text.bubble")
                                         .frame(width: 20)
                                         .padding()
                                     
-                                    TextEditor(text: $detail)
-                                        .padding(1)
+                                    if isEditing {
+                                        TextEditor(text: $detail)
+                                            .padding(1)
+                                    } else {
+                                        Text(detail)
+                                            .padding(.vertical, 8)
+                                    }
                                     
                                     Spacer()
                                 }
@@ -310,7 +344,7 @@ struct WiDView: View {
                                     Image(systemName: "trash.fill")
                                         .foregroundColor(.white)
                                     
-                                    Text("한번 더 눌러 삭제")
+                                    Text("삭제 확인")
                                         .foregroundColor(.white)
                                         
                                 } else {
@@ -334,7 +368,7 @@ struct WiDView: View {
                             if isEditing {
                                 wiDService.updateWiD(withID: clickedWiDId, newTitle: title, newStart: start, newFinish: finish, newDuration: duration, newDetail: detail)
                                 
-                                // wiDList를 갱신하여 수평 막대 차트를 갱신함.
+                                // wiDList를 갱신하여 수평 막대 차트 또한 갱신함.
                                 wiDList = wiDService.selectWiDsByDate(date: date)
                             }
                             withAnimation {

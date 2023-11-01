@@ -15,11 +15,11 @@ struct WiDCreateHolderView: View {
     
     var body: some View {
         VStack {
-            animate()
+            topTabBar()
                 .disabled(!buttonsVisible)
 
             WiDCreateView(currentTab: selectedPicker, buttonsVisible: $buttonsVisible)
-                .background(.white) // 스와이프 용 배경
+                .background(.white) //배경이 없으면 스와이프할 수 없기 때문에 배경색을 추가함.
         }
         .gesture(
             DragGesture()
@@ -56,7 +56,7 @@ struct WiDCreateHolderView: View {
     }
     
     @ViewBuilder
-    private func animate() -> some View {
+    private func topTabBar() -> some View {
         HStack {
             ForEach(wiDCreateHolderTapInfo.allCases, id: \.self) { item in
                 VStack {

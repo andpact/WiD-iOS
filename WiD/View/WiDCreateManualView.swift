@@ -39,10 +39,29 @@ struct WiDCreateManualView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 4) {
-                Text("\(formatDate(date, format: "yyyy년 M월 d일")) WiD 리스트")
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            VStack(spacing: 8) {
+                HStack {
+                    Text(formatDate(date, format: "yyyy년 M월 d일"))
+                        .bold()
+                        .padding(.leading, 8)
+                    
+                    HStack(spacing: 0) {
+                        Text("(")
+                            .bold()
+
+                        Text(formatWeekday(date))
+                            .bold()
+                            .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
+
+                        Text(")")
+                            .bold()
+                    }
+                    
+                    Text("WiD 리스트")
+                        .bold()
+                    
+                    Spacer()
+                }
                 
                 VStack {
                     ZStack {
@@ -65,14 +84,17 @@ struct WiDCreateManualView: View {
                 .cornerRadius(5)
             }
             
-            VStack(spacing: 4) {
+            VStack(spacing: 8) {
                 Text("New WiD")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 8)
                 
                 VStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("날짜")
+                            .bold()
+                            .padding(.leading, 8)
                         
                         HStack {
                             Image(systemName: "calendar")
@@ -94,6 +116,8 @@ struct WiDCreateManualView: View {
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text("제목")
+                            .bold()
+                            .padding(.leading, 8)
                         
                         HStack {
                             Image(systemName: "character.textbox.ko")
@@ -125,6 +149,8 @@ struct WiDCreateManualView: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text("시작")
+                            .bold()
+                            .padding(.leading, 8)
                         
                         HStack {
                             Image(systemName: "play")
@@ -145,6 +171,8 @@ struct WiDCreateManualView: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text("종료")
+                            .bold()
+                            .padding(.leading, 8)
                         
                         HStack {
                             Image(systemName: "play.fill")
@@ -165,6 +193,8 @@ struct WiDCreateManualView: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text("경과")
+                            .bold()
+                            .padding(.leading, 8)
                         
                         HStack {
                             Image(systemName: "hourglass")
@@ -185,6 +215,8 @@ struct WiDCreateManualView: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text("설명")
+                            .bold()
+                            .padding(.leading, 8)
                         
                         HStack {
                             Image(systemName: "text.bubble")

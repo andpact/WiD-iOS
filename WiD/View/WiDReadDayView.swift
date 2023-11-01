@@ -65,9 +65,10 @@ struct WiDReadDayView: View {
             Divider()
                 .background(.black)
             
-            VStack(spacing: 0) {
+            VStack(spacing: 8) {
                 Text("파이차트")
                     .bold()
+                    .padding(.leading, 8)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 DayPieChartView(wiDList: wiDList)
@@ -79,6 +80,7 @@ struct WiDReadDayView: View {
                 
                 Text("WiD 리스트")
                     .bold()
+                    .padding(.leading, 8)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 ScrollView {

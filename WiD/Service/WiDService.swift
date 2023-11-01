@@ -353,7 +353,6 @@ class WiDService {
         return Dictionary(uniqueKeysWithValues: sortedTitleDurations)
     }
 
-    
     func selectWiDsByDetail(detail: String) -> [WiD] {
         // If the search detail is empty, return an empty array
         guard !detail.isEmpty else {
@@ -395,6 +394,8 @@ class WiDService {
             sqlite3_finalize(statement)
             print("Success to select wiDList by detail.")
         }
+        
+        wiDList.sort { $0.date < $1.date || ($0.date == $1.date && $0.start < $1.start) }
 
         return wiDList
     }

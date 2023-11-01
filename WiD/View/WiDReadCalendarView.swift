@@ -22,23 +22,14 @@ struct WiDReadCalendarView: View {
     
     @State private var startDate: Date = Calendar.current.date(byAdding: .day, value: -364, to: Date()) ?? Date()
     @State private var finishDate: Date = Date()
+    private let toatalDays = 365
         
     @State private var dailyTitleDurationDictionary: [String: TimeInterval] = [:]
     @State private var weeklyTitleDurationDictionary: [String: TimeInterval] = [:]
     @State private var monthlyTitleDurationDictionary: [String: TimeInterval] = [:]
     
     var body: some View {
-        VStack(spacing: 0) {
-//            HStack {
-//                Text(formatDate(startDate, format: "yyyy년 M월 d일 E"))
-//
-//                Text("~")
-//
-//                Text(formatDate(finishDate, format: "yyyy년 M월 d일 E"))
-//
-//                Text(titleDictionary[selectedTitle.rawValue]!)
-//            }
-            
+        VStack(spacing: 8) {
             HStack {
                 if 1 < uniqueYears.count {
                     Picker("", selection: $selectedYear.id) {
@@ -62,9 +53,10 @@ struct WiDReadCalendarView: View {
             Divider()
                 .background(Color.black)
             
-            VStack(spacing: 0) {
+            VStack(spacing: 8) {
                 Text("달력")
                     .bold()
+                    .padding(.leading, 8)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 VStack(spacing: 0) {
@@ -80,119 +72,126 @@ struct WiDReadCalendarView: View {
                                 .foregroundColor(textColor)
                         }
                     }
+                    .padding(.vertical, 8)
                     
                     Divider()
                         .background(Color.black)
                     
-                    ScrollView {
-                        LazyVGrid(columns: Array(repeating: GridItem(), count: 8)) {
-                            let weekday = calendar.component(.weekday, from: startDate)
-                            
-                            // startDate가 일요일이 아니면 빈 아이템을 넣음.
-                            if weekday != 1 {
-                                ForEach(0..<weekday, id: \.self) { gridIndex in
-                                    Text("")
-                                }
+                    ScrollViewReader { sp in
+                        ScrollView {
+                            LazyVGrid(columns: Array(repeating: GridItem(), count: 8)) {
+                                let weekday = calendar.component(.weekday, from: startDate)
                                 
-                                ForEach(0..<8 - weekday, id: \.self) { gridIndex in
-                                    let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
-                                    
-                                    if selectedTitle.rawValue == "ALL" {
-                                        let filteredWiDList = wiDList.filter { wiD in
-                                            return calendar.isDate(wiD.date, inSameDayAs: currentDate)
-                                        }
-                                        
-                                        CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
-                                        .onTapGesture {
-                                            selectedDate = currentDate
-                                        }
-                                        .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
-                                    } else {
-                                        let filteredWiDList = wiDList.filter { wiD in
-                                            return calendar.isDate(wiD.date, inSameDayAs: currentDate) && wiD.title == selectedTitle.rawValue
-                                        }
-                                        
-                                        OpacityChartView(date: currentDate, wiDList: filteredWiDList)
-                                        .onTapGesture {
-                                            selectedDate = currentDate
-                                        }
-                                        .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
-                                    }
-                                }
-                            }
-                            
-                            var startIndex: Int { if weekday != 1 { return 8 - weekday } else { return 0 }}
-                            let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day! + 1
-                            
-                            ForEach(startIndex..<daysDifference, id: \.self) { gridIndex in
-                                let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
-                                let dateWeekAgo = calendar.date(byAdding: .day, value: -7, to: currentDate) ?? Date()
-                                
-                                // 각 View가 Column 하나씩을 차지하므로, gridIndex % 7 == 0 일 때, Column 두 개를 차지하지만, gridIndex는 1 증가
-                                if gridIndex % 7 == startIndex {
-                                    let previousMonth = calendar.component(.month, from: dateWeekAgo)
-                                    let currentMonth = calendar.component(.month, from: currentDate)
-                                    
-                                    // 매달 첫 일요일에 해당하는 날짜 앞에 월 표시를 함.
-                                    if previousMonth != currentMonth {
-                                        Text(formatDate(currentDate, format: "M월"))
-                                            .font(.system(size: 14))
-                                    } else {
+                                // startDate가 일요일이 아니면 빈 아이템을 넣음.
+                                if weekday != 1 {
+                                    ForEach(0..<weekday, id: \.self) { gridIndex in
                                         Text("")
                                     }
                                     
-                                    if selectedTitle.rawValue == "ALL" {
-                                        // 제목 상관없이 currentDate와 동일한 날짜의 WiD를 다 가져옴.
-                                        let filteredWiDList = wiDList.filter { wiD in
-                                            return calendar.isDate(wiD.date, inSameDayAs: currentDate)
-                                        }
+                                    ForEach(0..<8 - weekday, id: \.self) { gridIndex in
+                                        let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
                                         
-                                        CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
-                                        .onTapGesture {
-                                            selectedDate = currentDate
+                                        if selectedTitle.rawValue == "ALL" {
+                                            let filteredWiDList = wiDList.filter { wiD in
+                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                            }
+                                            
+                                            CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                            .onTapGesture {
+                                                selectedDate = currentDate
+                                            }
+                                            .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
+                                        } else {
+                                            let filteredWiDList = wiDList.filter { wiD in
+                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate) && wiD.title == selectedTitle.rawValue
+                                            }
+                                            
+                                            OpacityChartView(date: currentDate, wiDList: filteredWiDList)
+                                            .onTapGesture {
+                                                selectedDate = currentDate
+                                            }
+                                            .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
                                         }
-                                        .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
-                                    } else {
-                                        // currentDate와 동일한 날짜뿐만 아니라 제목도 selectTitle와 같은 WiD를 가져옴.
-                                        let filteredWiDList = wiDList.filter { wiD in
-                                            return calendar.isDate(wiD.date, inSameDayAs: currentDate) && wiD.title == selectedTitle.rawValue
-                                        }
-                                        
-                                        OpacityChartView(date: currentDate, wiDList: filteredWiDList)
-                                        .onTapGesture {
-                                            selectedDate = currentDate
-                                        }
-                                        .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
                                     }
-                                } else {
-                                    if selectedTitle.rawValue == "ALL" {
-                                        let filteredWiDList = wiDList.filter { wiD in
-                                            return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                }
+                                
+                                var startIndex: Int { if weekday != 1 { return 8 - weekday } else { return 0 }}
+                                
+                                ForEach(startIndex..<toatalDays, id: \.self) { gridIndex in
+                                    let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
+                                    let dateWeekAgo = calendar.date(byAdding: .day, value: -7, to: currentDate) ?? Date()
+                                    
+                                    // 각 View가 Column 하나씩을 차지하므로, gridIndex % 7 == 0 일 때, Column 두 개를 차지하지만, gridIndex는 1 증가
+                                    if gridIndex % 7 == startIndex {
+                                        let previousMonth = calendar.component(.month, from: dateWeekAgo)
+                                        let currentMonth = calendar.component(.month, from: currentDate)
+                                        
+                                        // 매달 첫 일요일에 해당하는 날짜 앞에 월 표시를 함.
+                                        if previousMonth != currentMonth {
+                                            Text(formatDate(currentDate, format: "M월"))
+                                                .font(.system(size: 14))
+                                        } else {
+                                            Text("")
                                         }
                                         
-                                        CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
-                                        .onTapGesture {
-                                            selectedDate = currentDate
+                                        if selectedTitle.rawValue == "ALL" {
+                                            // 제목 상관없이 currentDate와 동일한 날짜의 WiD를 다 가져옴.
+                                            let filteredWiDList = wiDList.filter { wiD in
+                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                            }
+                                            
+                                            CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                            .onTapGesture {
+                                                selectedDate = currentDate
+                                            }
+                                            .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
+                                        } else {
+                                            // currentDate와 동일한 날짜뿐만 아니라 제목도 selectTitle와 같은 WiD를 가져옴.
+                                            let filteredWiDList = wiDList.filter { wiD in
+                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate) && wiD.title == selectedTitle.rawValue
+                                            }
+                                            
+                                            OpacityChartView(date: currentDate, wiDList: filteredWiDList)
+                                            .onTapGesture {
+                                                selectedDate = currentDate
+                                            }
+                                            .border(selectedDate == currentDate ? Color.blue : Color.clear, width: 1)
                                         }
-                                        .border(calendar.isDate(selectedDate, inSameDayAs: currentDate) ? Color.blue : Color.clear, width: 1)
                                     } else {
-                                        let filteredWiDList = wiDList.filter { wiD in
-                                            return calendar.isDate(wiD.date, inSameDayAs: currentDate) && wiD.title == selectedTitle.rawValue
+                                        if selectedTitle.rawValue == "ALL" {
+                                            let filteredWiDList = wiDList.filter { wiD in
+                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                            }
+                                            
+                                            CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                            .onTapGesture {
+                                                selectedDate = currentDate
+                                            }
+                                            .border(calendar.isDate(selectedDate, inSameDayAs: currentDate) ? Color.blue : Color.clear, width: 1)
+                                        } else {
+                                            let filteredWiDList = wiDList.filter { wiD in
+                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate) && wiD.title == selectedTitle.rawValue
+                                            }
+                                            
+                                            OpacityChartView(date: currentDate, wiDList: filteredWiDList)
+                                            .onTapGesture {
+                                                selectedDate = currentDate
+                                            }
+                                            .border(calendar.isDate(selectedDate, inSameDayAs: currentDate) ? Color.blue : Color.clear, width: 1)
                                         }
-                                        
-                                        OpacityChartView(date: currentDate, wiDList: filteredWiDList)
-                                        .onTapGesture {
-                                            selectedDate = currentDate
-                                        }
-                                        .border(calendar.isDate(selectedDate, inSameDayAs: currentDate) ? Color.blue : Color.clear, width: 1)
                                     }
                                 }
                             }
                         }
+                        .onAppear {
+                            // 최초 스크롤을 가장 아래로 이동
+                            sp.scrollTo(toatalDays - 1, anchor: .bottom)
+                        }
                     }
                 }
                 .padding(1)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity)
                 .background(RoundedRectangle(cornerRadius: 5)
                     .stroke(.black, lineWidth: 1)
                 )
@@ -228,237 +227,422 @@ struct WiDReadCalendarView: View {
                 }
                 
                 ScrollView {
-//                    HStack {
-//                        Text("DAY")
-//                            .bold()
-//
-//                        Text(calendar.isDate(selectedDate, inSameDayAs: today) ? "오늘" : formatDate(selectedDate, format: "yyyy년 M월 d일"))
-//                            .font(.system(size: 14))
-//                            .foregroundColor(.gray)
-//                    }
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                    VStack(spacing: 0) {
-//                        if dailyTitleDurationDictionary.isEmpty {
-//                            Text("표시할 데이터가 없습니다.")
-//                                .foregroundColor(.gray)
-//                        } else {
-//                            ForEach(Array(dailyTitleDurationDictionary), id: \.key) { title, duration in
-//                                HStack {
-////                                    Rectangle()
-////                                        .fill(Color(title))
-////                                        .frame(width: 5, height: 10)
-//
-//                                    Text(titleDictionary[title] ?? "")
-//
-//                                    Spacer()
-//
-//                                    Text((formatDuration(duration, mode: 2)))
-//                                }
-//                            }
-//                        }
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    .background(RoundedRectangle(cornerRadius: 5)
-//                        .stroke(.black, lineWidth: 1)
-//                    )
-//                    .background(.white)
-//                    .cornerRadius(5)
-//
-//                    HStack {
-//                        Text("WEEK")
-//                            .bold()
-//
-//                        Text(calendar.isDate(firstDayOfWeek, inSameDayAs: today) ? "오늘" : formatDate(firstDayOfWeek, format: "yyyy년 M월 d일"))
-//                            .font(.system(size: 14))
-//                            .foregroundColor(.gray)
-//
-//                        Text("~")
-//                            .foregroundColor(.gray)
-//
-//                        if calendar.isDate(lastDayOfWeek, inSameDayAs: today) {
-//                            Text("오늘")
-//                                .font(.system(size: 14))
-//                                .foregroundColor(.gray)
-//                        } else {
-//                            if calendar.isDate(firstDayOfWeek, equalTo: lastDayOfWeek, toGranularity: .month) {
-//                                Text(formatDate(lastDayOfWeek, format: "d일"))
-//                                    .font(.system(size: 14))
-//                                    .foregroundColor(.gray)
-//                            } else {
-//                                Text(formatDate(lastDayOfWeek, format: "M월 d일"))
-//                                    .font(.system(size: 14))
-//                                    .foregroundColor(.gray)
-//                            }
-//                        }
-//                    }
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                    VStack(spacing: 0) {
-//                        if weeklyTitleDurationDictionary.isEmpty {
-//                            Text("표시할 데이터가 없습니다.")
-//                                .foregroundColor(.gray)
-//                        } else {
-//                            ForEach(Array(weeklyTitleDurationDictionary), id: \.key) { title, duration in
-//                                HStack {
-////                                    Rectangle()
-////                                        .fill(Color(title))
-////                                        .frame(width: 5, height: 10)
-//
-//                                    Text(titleDictionary[title] ?? "")
-//
-//                                    Spacer()
-//
-//                                    Text((formatDuration(duration, mode: 2)))
-//                                }
-//                            }
-//                        }
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    .background(RoundedRectangle(cornerRadius: 5)
-//                        .stroke(.black, lineWidth: 1)
-//                    )
-//                    .background(.white)
-//                    .cornerRadius(5)
-//
-//                    HStack {
-//                        Text("MONTH")
-//                            .bold()
-//
-//                        Text(formatDate(selectedDate, format: "yyyy년 M월"))
-//                            .font(.system(size: 14))
-//                            .foregroundColor(.gray)
-//                    }
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                    VStack(spacing: 0) {
-//                        if monthlyTitleDurationDictionary.isEmpty {
-//                            Text("표시할 데이터가 없습니다.")
-//                                .foregroundColor(.gray)
-//                        } else {
-//                            ForEach(Array(monthlyTitleDurationDictionary), id: \.key) { title, duration in
-//                                HStack {
-////                                    Rectangle()
-////                                        .fill(Color(title))
-////                                        .frame(width: 5, height: 10)
-//
-//                                    Text(titleDictionary[title] ?? "")
-//
-//                                    Spacer()
-//
-//                                    Text((formatDuration(duration, mode: 2)))
-//                                }
-//                            }
-//                        }
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    .background(RoundedRectangle(cornerRadius: 5)
-//                        .stroke(.black, lineWidth: 1)
-//                    )
-//                    .background(.white)
-//                    .cornerRadius(5)
-                    
-                    Text("날짜 및 기간별 기록")
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    HStack {
-                        VStack {
-                            Text("Day")
-                            
-                            Text("10시간")
-                            
-                            Text("10일")
-                        }
-                        .frame(maxWidth: .infinity)
-                        
-                        VStack {
-                            Text("Week")
-                            
-                            Text("10시간")
-                            
-                            Text("10일 ~ 16일")
-                        }
-                        .frame(maxWidth: .infinity)
-                        
-                        VStack {
-                            Text("Month")
-                            
-                            Text("10시간")
-                            
-                            Text("10월")
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .background(RoundedRectangle(cornerRadius: 5)
-                        .stroke(.black, lineWidth: 1)
-                    )
-                    .background(.white)
-                    .cornerRadius(5)
-                    
-                    Text("연속 기록")
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    HStack {
-                        VStack {
-                            Text("최장 기간")
-                            
-                            Text("10일")
-                            
-                            Text("10월 10일 ~ 16일")
-                        }
-                        .frame(maxWidth: .infinity)
-                        
-                        VStack {
-                            Text("현재 진행 중")
-                            
-                            Text("10일")
-                            
-                            Text("10월 10일 ~ 16일")
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .background(RoundedRectangle(cornerRadius: 5)
-                        .stroke(.black, lineWidth: 1)
-                    )
-                    .background(.white)
-                    .cornerRadius(5)
-                    
-                    Text("종합 기록")
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    HStack {
-                        VStack {
-                            Text("총")
-                            
-                            Text("10일")
-                            
-                            Text("10월 10일 ~ 16일")
-                        }
-                        .frame(maxWidth: .infinity)
-                        
-                        VStack {
-                            Text("최고")
-                            
-                            Text("10일")
-                            
-                            Text("10월 10일 ~ 16일")
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .background(RoundedRectangle(cornerRadius: 5)
-                        .stroke(.black, lineWidth: 1)
-                    )
-                    .background(.white)
-                    .cornerRadius(5)
+                    // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
+                    VStack(spacing: 8) {
+                        if selectedTitle.rawValue == "ALL" {
+                            HStack(spacing: 4) {
+                                Text("DAY 종합")
+                                    .bold()
 
+                                if calendar.isDate(selectedDate, inSameDayAs: today) {
+                                    Text("오늘")
+                                        .font(.system(size: 14))
+                                } else {
+                                    Text(formatDate(selectedDate, format: "yyyy년 M월 d일"))
+                                        .font(.system(size: 14))
+
+                                    HStack(spacing: 0) {
+                                        Text("(")
+                                            .font(.system(size: 14))
+
+                                        Text(formatWeekday(selectedDate))
+                                            .font(.system(size: 14))
+                                            .foregroundColor(calendar.component(.weekday, from: selectedDate) == 1 ? .red : (calendar.component(.weekday, from: selectedDate) == 7 ? .blue : .black))
+
+                                        Text(")")
+                                            .font(.system(size: 14))
+                                    }
+                                }
+                            }
+                            .padding(.leading, 8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                            VStack {
+                                if dailyTitleDurationDictionary.isEmpty {
+                                    HStack {
+                                        Image(systemName: "ellipsis.bubble")
+                                            .foregroundColor(.gray)
+
+                                        Text("표시할 데이터가 없습니다.")
+                                            .foregroundColor(.gray)
+                                    }
+                                } else {
+                                    ForEach(Array(dailyTitleDurationDictionary), id: \.key) { title, duration in
+                                        HStack {
+                                            HStack {
+                                                Image(systemName: "character.textbox.ko")
+                                                    .frame(width: 20)
+                                                
+                                                Text("제목")
+                                                    .bold()
+                                                
+                                                Text(titleDictionary[title] ?? "")
+                                                
+                                                RoundedRectangle(cornerRadius: 5)
+                                                    .fill(Color(title))
+                                                    .background(RoundedRectangle(cornerRadius: 5)
+                                                        .stroke(.black, lineWidth: 1)
+                                                    )
+                                                    .frame(width: 5, height: 20)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            HStack {
+                                                Image(systemName: "hourglass")
+                                                    .frame(width: 20)
+                                                
+                                                Text("소요")
+                                                    .bold()
+                                                
+                                                Text((formatDuration(duration, mode: 2)))
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(RoundedRectangle(cornerRadius: 5)
+                                .stroke(.black, lineWidth: 1)
+                            )
+                            .background(Color("light_gray"))
+                            .cornerRadius(5)
+
+                            HStack(spacing: 4) {
+                                let currentWeekday = calendar.component(.weekday, from: selectedDate)
+                                
+                                Text("WEEK 종합")
+                                    .bold()
+                                
+                                // selectedDate가 firstDayOfWeek와 lastDayOfWeek 사이에 있는지 확인.
+                                if firstDayOfWeek.compare(selectedDate) == .orderedAscending &&
+                                   lastDayOfWeek.compare(selectedDate) == .orderedDescending {
+                                    Text("이번 주")
+                                        .font(.system(size: 14))
+                                } else {
+                                    if calendar.isDate(firstDayOfWeek, inSameDayAs: today) {
+                                        Text("오늘")
+                                            .font(.system(size: 14))
+                                    } else {
+                                        Text(formatDate(firstDayOfWeek, format: "yyyy년 M월 d일"))
+                                            .font(.system(size: 14))
+                                        
+                                        HStack(spacing: 0) {
+                                            Text("(")
+                                                .font(.system(size: 14))
+
+                                            Text(formatWeekday(firstDayOfWeek))
+                                                .font(.system(size: 14))
+                                                .foregroundColor(calendar.component(.weekday, from: firstDayOfWeek) == 1 ? .red : (calendar.component(.weekday, from: firstDayOfWeek) == 7 ? .blue : .black))
+
+                                            Text(")")
+                                                .font(.system(size: 14))
+                                        }
+                                    }
+
+                                    Text("~")
+                                        .foregroundColor(.gray)
+
+                                    if calendar.isDate(lastDayOfWeek, inSameDayAs: today) {
+                                        Text("오늘")
+                                            .font(.system(size: 14))
+                                    } else if !calendar.isDate(lastDayOfWeek, equalTo: firstDayOfWeek, toGranularity: .year) {
+                                        Text(formatDate(lastDayOfWeek, format: "yyyy년 M월 d일"))
+                                            .font(.system(size: 14))
+                                        
+                                        HStack(spacing: 0) {
+                                            Text("(")
+                                                .font(.system(size: 14))
+
+                                            Text(formatWeekday(lastDayOfWeek))
+                                                .font(.system(size: 14))
+                                                .foregroundColor(calendar.component(.weekday, from: lastDayOfWeek) == 1 ? .red : (calendar.component(.weekday, from: lastDayOfWeek) == 7 ? .blue : .black))
+
+                                            Text(")")
+                                                .font(.system(size: 14))
+                                        }
+                                    } else {
+                                        if calendar.isDate(firstDayOfWeek, equalTo: lastDayOfWeek, toGranularity: .month) {
+                                            Text(formatDate(lastDayOfWeek, format: "d일"))
+                                                .font(.system(size: 14))
+                                        } else {
+                                            Text(formatDate(lastDayOfWeek, format: "M월 d일"))
+                                                .font(.system(size: 14))
+                                        }
+                                        
+                                        HStack(spacing: 0) {
+                                            Text("(")
+                                                .font(.system(size: 14))
+
+                                            Text(formatWeekday(lastDayOfWeek))
+                                                .font(.system(size: 14))
+                                                .foregroundColor(calendar.component(.weekday, from: lastDayOfWeek) == 1 ? .red : (calendar.component(.weekday, from: lastDayOfWeek) == 7 ? .blue : .black))
+
+                                            Text(")")
+                                                .font(.system(size: 14))
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.leading, 8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                            VStack {
+                                if weeklyTitleDurationDictionary.isEmpty {
+                                    HStack {
+                                        Image(systemName: "ellipsis.bubble")
+                                            .foregroundColor(.gray)
+                                        
+                                        Text("표시할 데이터가 없습니다.")
+                                            .foregroundColor(.gray)
+                                    }
+                                } else {
+                                    ForEach(Array(weeklyTitleDurationDictionary), id: \.key) { title, duration in
+                                        HStack {
+                                            HStack {
+                                                Image(systemName: "character.textbox.ko")
+                                                    .frame(width: 20)
+                                                
+                                                Text("제목")
+                                                    .bold()
+                                                
+                                                Text(titleDictionary[title] ?? "")
+                                                
+                                                RoundedRectangle(cornerRadius: 5)
+                                                    .fill(Color(title))
+                                                    .background(RoundedRectangle(cornerRadius: 5)
+                                                        .stroke(.black, lineWidth: 1)
+                                                    )
+                                                    .frame(width: 5, height: 20)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            HStack {
+                                                Image(systemName: "hourglass")
+                                                    .frame(width: 20)
+                                                
+                                                Text("소요")
+                                                    .bold()
+                                                
+                                                Text((formatDuration(duration, mode: 2)))
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(RoundedRectangle(cornerRadius: 5)
+                                .stroke(.black, lineWidth: 1)
+                            )
+                            .background(Color("light_gray"))
+                            .cornerRadius(5)
+
+                            HStack(spacing: 4) {
+                                Text("MONTH 종합")
+                                    .bold()
+
+                                if calendar.isDate(selectedDate, equalTo: today, toGranularity: .month) {
+                                    Text("이번 달")
+                                } else {
+                                    Text(formatDate(selectedDate, format: "yyyy년 M월"))
+                                        .font(.system(size: 14))
+                                }
+                            }
+                            .padding(.leading, 8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                            VStack {
+                                if monthlyTitleDurationDictionary.isEmpty {
+                                    HStack {
+                                        Image(systemName: "ellipsis.bubble")
+                                            .foregroundColor(.gray)
+                                        
+                                        Text("표시할 데이터가 없습니다.")
+                                            .foregroundColor(.gray)
+                                    }
+                                } else {
+                                    ForEach(Array(monthlyTitleDurationDictionary), id: \.key) { title, duration in
+                                        HStack {
+                                            HStack {
+                                                Image(systemName: "character.textbox.ko")
+                                                    .frame(width: 20)
+                                                
+                                                Text("제목")
+                                                    .bold()
+                                                
+                                                Text(titleDictionary[title] ?? "")
+                                                
+                                                RoundedRectangle(cornerRadius: 5)
+                                                    .fill(Color(title))
+                                                    .background(RoundedRectangle(cornerRadius: 5)
+                                                        .stroke(.black, lineWidth: 1)
+                                                    )
+                                                    .frame(width: 5, height: 20)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            HStack {
+                                                Image(systemName: "hourglass")
+                                                    .frame(width: 20)
+                                                
+                                                Text("소요")
+                                                    .bold()
+                                                
+                                                Text((formatDuration(duration, mode: 2)))
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(RoundedRectangle(cornerRadius: 5)
+                                .stroke(.black, lineWidth: 1)
+                            )
+                            .background(Color("light_gray"))
+                            .cornerRadius(5)
+                        } else {
+                            Text("종합 기록")
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 8)
+        
+                            HStack {
+                                VStack {
+                                    Text("Day")
+        
+                                    Text("10시간")
+        
+                                    Text("10일")
+                                }
+                                .frame(maxWidth: .infinity)
+        
+                                VStack {
+                                    Text("Week")
+        
+                                    Text("10시간")
+        
+                                    Text("10일 ~ 16일")
+                                }
+                                .frame(maxWidth: .infinity)
+        
+                                VStack {
+                                    Text("Month")
+        
+                                    Text("10시간")
+        
+                                    Text("10월")
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .background(RoundedRectangle(cornerRadius: 5)
+                                .stroke(.black, lineWidth: 1)
+                            )
+                            .background(.white)
+                            .cornerRadius(5)
+        
+                            Text("평균 기록")
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 8)
+        
+                            HStack {
+                                VStack {
+                                    Text("Week")
+        
+                                    Text("10시간")
+        
+                                    Text("10월 10일 ~ 16일")
+                                }
+                                .frame(maxWidth: .infinity)
+        
+                                VStack {
+                                    Text("Month")
+        
+                                    Text("10시간")
+        
+                                    Text("10월 10일 ~ 16일")
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .background(RoundedRectangle(cornerRadius: 5)
+                                .stroke(.black, lineWidth: 1)
+                            )
+                            .background(.white)
+                            .cornerRadius(5)
+        
+                            Text("최고 기록")
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 8)
+        
+                            HStack {
+                                VStack {
+                                    Text("Week")
+        
+                                    Text("10시간")
+        
+                                    Text("10월 10일 ~ 16일")
+                                }
+                                .frame(maxWidth: .infinity)
+        
+                                VStack {
+                                    Text("Month")
+        
+                                    Text("10시간")
+        
+                                    Text("10월 10일 ~ 16일")
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .background(RoundedRectangle(cornerRadius: 5)
+                                .stroke(.black, lineWidth: 1)
+                            )
+                            .background(.white)
+                            .cornerRadius(5)
+                            
+                            Text("연속 기록")
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 8)
+        
+                            HStack {
+                                VStack {
+                                    Text("최장 기간")
+        
+                                    Text("10일")
+        
+                                    Text("10월 10일 ~ 16일")
+                                }
+                                .frame(maxWidth: .infinity)
+        
+                                VStack {
+                                    Text("현재 진행")
+        
+                                    Text("10일")
+        
+                                    Text("10월 10일 ~ 16일")
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .background(RoundedRectangle(cornerRadius: 5)
+                                .stroke(.black, lineWidth: 1)
+                            )
+                            .background(.white)
+                            .cornerRadius(5)
+                        }
+                    }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal)
