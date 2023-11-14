@@ -25,19 +25,22 @@ struct ContentView: View {
                     TabView(selection: $selectedTab) {
                         WiDCreateHolderView(buttonsVisible: $buttonsVisible)
                             .tabItem {
-                                Label("Add", systemImage: "square.and.pencil")
+                                Image(systemName: "square.and.pencil")
+//                                Label("Add", systemImage: "square.and.pencil")
                             }
                             .tag(0)
                         
                         WiDReadHolderView()
                             .tabItem {
-                                Label("List", systemImage: "list.dash")
+                                Image(systemName: "list.dash")
+//                                Label("", systemImage: "list.dash")
                             }
                             .tag(1)
                         
                         WiDSearchView()
                             .tabItem {
-                                Label("Search", systemImage: "magnifyingglass")
+                                Image(systemName: "magnifyingglass")
+//                                Label("Search", systemImage: "magnifyingglass")
                             }
                             .tag(2)
                     }
@@ -48,13 +51,13 @@ struct ContentView: View {
                     VStack {
                         Rectangle()
                             .fill(Color.white)
-                            .frame(width: .infinity, height: geo.size.height / 15)
+                            .frame(width: geo.size.width, height: geo.size.height / 15)
 
                         Spacer()
 
                         Rectangle()
                             .fill(Color.white)
-                            .frame(width: .infinity, height: geo.size.height / 15)
+                            .frame(width: geo.size.width, height: geo.size.height / 15)
                         
                     }
                 }

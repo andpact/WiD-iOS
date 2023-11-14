@@ -210,6 +210,9 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Agbalumo-Regular.ttf</string>
+		<string>UbuntuMono-Regular.ttf</string>
+		<string>Wellfleet-Regular.ttf</string>
 		<string>Acme-Regular.ttf</string>
 		<string>Tektur-Regular.ttf</string>
 	</array>

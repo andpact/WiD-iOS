@@ -40,7 +40,7 @@ enum Title: String, CaseIterable, Identifiable {
         case .TRAVEL:
             return "이동"
         case .SLEEP:
-            return "취침"
+            return "수면"
         case .ETC:
             return "기타"
         }
@@ -110,7 +110,7 @@ enum Title2: String, CaseIterable, Identifiable {
         case .TRAVEL:
             return "이동"
         case .SLEEP:
-            return "취침"
+            return "수면"
         case .ETC:
             return "기타"
         }

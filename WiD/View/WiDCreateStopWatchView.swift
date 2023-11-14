@@ -8,115 +8,82 @@
 import SwiftUI
 
 struct WiDCreateStopWatchView: View {
+    // 데이터베이스
     private let wiDService = WiDService()
     
+    // 날짜
     @State private var date: Date = Date()
     
-    @State private var title: String = titleArray[0]
-    @State private var titleIndex: Int = 0
+    // 제목
+    @State private var title: Title = .STUDY
     
+    // 시작 시간
     @State private var start: Date = Date()
+    
+    // 종료 시간
     @State private var finish: Date = Date()
+    
+    // 소요 시간
     @State private var duration: TimeInterval = 0
     
+    // 설명
     private let detail: String = ""
     
+    // 버튼
     @State private var buttonText: String = "시작"
     
+    // 스톱 워치
     @State private var isRunning: Bool = false
     @State private var timer: Timer?
-    
     @State private var elapsedTime = 0
     private let timerInterval = 1
     
+    // 상단, 하단 탭 가시성
     @Binding var buttonsVisible: Bool
     
     var body: some View {
-        GeometryReader { geo in
-            VStack {
-                VStack(spacing: 40) {
-                    HStack {
-                        Button(action: {
-                            prevTitle()
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .imageScale(.large)
-                        }
-                        .disabled(!buttonsVisible)
-                        .opacity(buttonsVisible ? 1.0 : 0.0)
-                        .padding(.horizontal)
+        ZStack {
+            formatStopWatchTime(elapsedTime)
+                .padding(.bottom, 180)
 
-                        Text(titleDictionary[title] ?? "")
-    //                        .font(.system(size: 40))
-                            .font(.system(size: geo.size.width * 0.1))
-                            .frame(maxWidth: .infinity)
-
-                        Button(action: {
-                            nextTitle()
-                        }) {
-                            Image(systemName: "chevron.right")
-                                .imageScale(.large)
-                        }
-                        .disabled(!buttonsVisible)
-                        .opacity(buttonsVisible ? 1.0 : 0.0)
-                        .padding(.horizontal)
-                    }
+            HStack {
+                HStack {
+                    Circle()
+                        .fill(Color(title.rawValue))
+                        .frame(width: 10)
                     
-                    Text(formatElapsedTime(elapsedTime))
-    //                    .font(.custom("Tektur-Regular", size: 50))
-                        .font(.custom("Tektur-Regular", size: geo.size.width * 0.12))
-                    
-                    HStack {
-                        Button(action: {
-                            if !isRunning {
-                                startWiD()
-                            } else {
-                                finishWiD()
-                            }
-                        }) {
-                            Text(buttonText)
-    //                            .font(.system(size: 25))
-                                .font(.system(size: geo.size.width * 0.06))
-                                .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .black))
+                    Picker("", selection: $title) {
+                        ForEach(Array(Title.allCases), id: \.self) { title in
+                            Text(titleDictionary[title.rawValue]!)
                         }
-                        .frame(maxWidth: .infinity)
-
-                        Button(action: {
-                            resetWiD()
-                        }) {
-                            Text("초기화")
-    //                            .font(.system(size: 25))
-                                .font(.system(size: geo.size.width * 0.06))
-                        }
-                        .frame(maxWidth: .infinity)
-                        .disabled(isRunning || buttonsVisible)
                     }
                 }
-                .padding(.horizontal)
+                .frame(maxWidth: .infinity)
+                
+                Button(action: {
+                    resetWiD()
+                }) {
+                    Text("초기화")
+                }
+                .frame(maxWidth: .infinity)
+                .disabled(isRunning || buttonsVisible)
+                
+                Button(action: {
+                    if !isRunning {
+                        startWiD()
+                    } else {
+                        finishWiD()
+                    }
+                }) {
+                    Text(buttonText)
+                        .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .black))
+                }
+                .frame(maxWidth: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
-        .padding(.horizontal)
-    }
-    
-    private func prevTitle() {
-        titleIndex -= 1
-        if titleIndex < 0 {
-            titleIndex = titleArray.count - 1
-        }
-        withAnimation {
-            title = titleArray[titleIndex]
-        }
-    }
-
-    private func nextTitle() {
-        titleIndex += 1
-        if titleIndex >= titleArray.count {
-            titleIndex = 0
-        }
-        withAnimation {
-            title = titleArray[titleIndex]
-        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private func startWiD() {
@@ -161,17 +128,17 @@ struct WiDCreateStopWatchView: View {
             // Check if the duration spans across multiple days
             if calendar.isDate(startDate, inSameDayAs: finishDate) {
                 // WiD duration is within the same day
-                let wiD = WiD(id: 0, date: startDate, title: title, start: start, finish: finish, duration: duration, detail: detail)
+                let wiD = WiD(id: 0, date: startDate, title: title.rawValue, start: start, finish: finish, duration: duration, detail: detail)
                 wiDService.insertWiD(wid: wiD)
             } else {
                 // WiD duration spans across multiple days
                 let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
-                let firstDayWiD = WiD(id: 0, date: startDate, title: title, start: start, finish: midnightEndDate, duration: midnightEndDate.timeIntervalSince(start), detail: detail)
+                let firstDayWiD = WiD(id: 0, date: startDate, title: title.rawValue, start: start, finish: midnightEndDate, duration: midnightEndDate.timeIntervalSince(start), detail: detail)
                 wiDService.insertWiD(wid: firstDayWiD)
 
                 let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
                 let midnightEndDateNextDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nextDayStartDate)!
-                let secondDayWiD = WiD(id: 0, date: nextDayStartDate, title: title, start: midnightEndDateNextDay, finish: finish, duration: finish.timeIntervalSince(midnightEndDateNextDay), detail: detail)
+                let secondDayWiD = WiD(id: 0, date: nextDayStartDate, title: title.rawValue, start: midnightEndDateNextDay, finish: finish, duration: finish.timeIntervalSince(midnightEndDateNextDay), detail: detail)
                 wiDService.insertWiD(wid: secondDayWiD)
             }
         }

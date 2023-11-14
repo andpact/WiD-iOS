@@ -5,6 +5,7 @@
 //  Created by jjkim on 2023/07/15.
 //
 
+import SwiftUI
 import Foundation
 
 func formatDate(_ date: Date, format: String) -> String {
@@ -100,12 +101,182 @@ func formatTime(_ date: Date, format: String) -> String {
     return dateFormatter.string(from: date)
 }
 
-func formatElapsedTime(_ time: Int) -> String {
+func formatTimerTime(_ time: Int) -> some View {
     let hours = time / 3600
     let minutes = (time % 3600) / 60
     let seconds = time % 60
 
-    return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    var timeViews: [Text] = []
+
+    if 0 < hours {
+        timeViews.append(
+            Text("\(hours)")
+                .font(.custom("Wellfleet-Regular", size: 60))
+        )
+        timeViews.append(
+            Text("h")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+        
+        timeViews.append(
+            Text(String(format: "%02d", minutes))
+                .font(.custom("Wellfleet-Regular", size: 60))
+        )
+
+        timeViews.append(
+            Text("m")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+        
+        timeViews.append(
+            Text(String(format: "%02d", seconds))
+                .font(.custom("Wellfleet-Regular", size: 60))
+        )
+        
+        timeViews.append(
+            Text("s")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+    } else if 0 < minutes {
+        timeViews.append(
+            Text("\(minutes)")
+                .font(.custom("Wellfleet-Regular", size: 60))
+        )
+
+        timeViews.append(
+            Text("m")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+        
+        timeViews.append(
+            Text(String(format: "%02d", seconds))
+                .font(.custom("Wellfleet-Regular", size: 60))
+        )
+        
+        timeViews.append(
+            Text("s")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+    } else {
+        timeViews.append(
+            Text("\(seconds)")
+                .font(.custom("Wellfleet-Regular", size: 60))
+        )
+        
+        timeViews.append(
+            Text("s")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+    }
+
+    return HStack(alignment: .bottom, spacing: 0) {
+        ForEach(timeViews.indices, id: \.self) { index in
+            timeViews[index]
+        }
+    }
+}
+
+func formatStopWatchTime(_ time: Int) -> some View {
+    let hours = time / 3600
+    let minutes = (time % 3600) / 60
+    let seconds = time % 60
+
+    var hourViews: [Text] = []
+    var minuteViews: [Text] = []
+    var secondViews: [Text] = []
+
+    if 0 < hours {
+        hourViews.append(
+            Text("\(hours)")
+                .font(.custom("Wellfleet-Regular", size: 80))
+        )
+        hourViews.append(
+            Text("h")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+        
+        minuteViews.append(
+            Text(String(format: "%02d", minutes))
+                .font(.custom("Wellfleet-Regular", size: 80))
+        )
+
+        minuteViews.append(
+            Text("m")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+        
+        secondViews.append(
+            Text(String(format: "%02d", seconds))
+                .font(.custom("Wellfleet-Regular", size: 80))
+        )
+        
+        secondViews.append(
+            Text("s")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+    } else if 0 < minutes {
+        minuteViews.append(
+            Text("\(minutes)")
+                .font(.custom("Wellfleet-Regular", size: 80))
+        )
+
+        minuteViews.append(
+            Text("m")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+        
+        secondViews.append(
+            Text(String(format: "%02d", seconds))
+                .font(.custom("Wellfleet-Regular", size: 80))
+        )
+        
+        secondViews.append(
+            Text("s")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+    } else {
+        secondViews.append(
+            Text("\(seconds)")
+                .font(.custom("Wellfleet-Regular", size: 80))
+        )
+        
+        secondViews.append(
+            Text("s")
+                .font(.custom("UbuntuMono-Regular", size: 20))
+                .foregroundColor(.gray)
+        )
+    }
+
+    return VStack(alignment: .trailing, spacing: 0) {
+        HStack(alignment: .bottom) {
+            ForEach(hourViews.indices, id: \.self) { index in
+                hourViews[index]
+            }
+        }
+
+        HStack(alignment: .bottom) {
+            ForEach(minuteViews.indices, id: \.self) { index in
+                minuteViews[index]
+            }
+        }
+
+        HStack(alignment: .bottom) {
+            ForEach(secondViews.indices, id: \.self) { index in
+                secondViews[index]
+            }
+        }
+    }
 }
 
 func formatDuration(_ interval: TimeInterval, mode: Int) -> String {
@@ -122,6 +293,12 @@ func formatDuration(_ interval: TimeInterval, mode: Int) -> String {
     case 0:
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
 
+        
+    /*
+     모드 1 수정해야 한다!!!!!!!!!!!!!
+     모드 1 수정해야 한다!!!!!!!!!!!!!
+     모드 1 수정해야 한다!!!!!!!!!!!!!
+     */
     case 1:
         let totalHours = Double(hours) + (Double(minutes) / 60.0)
         let totalMinutes = Double(minutes) + (Double(seconds) / 60.0)

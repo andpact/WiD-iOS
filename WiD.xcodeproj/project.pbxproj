@@ -30,6 +30,9 @@
 		EA60B8172A56991800B49641 /* WiDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8162A56991800B49641 /* WiDTests.swift */; };
 		EA60B8212A56991800B49641 /* WiDUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8202A56991800B49641 /* WiDUITests.swift */; };
 		EA60B8232A56991800B49641 /* WiDUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */; };
+		EA63021F2B0335760031BAE2 /* Wellfleet-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA63021D2B0335760031BAE2 /* Wellfleet-Regular.ttf */; };
+		EA6302202B0335760031BAE2 /* UbuntuMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA63021E2B0335760031BAE2 /* UbuntuMono-Regular.ttf */; };
+		EA6302222B0360530031BAE2 /* Agbalumo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA6302212B0360530031BAE2 /* Agbalumo-Regular.ttf */; };
 		EA663F0C2A5E74E200B51844 /* TitleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA663F0B2A5E74E200B51844 /* TitleUtil.swift */; };
 		EA70DD742A59089D00B4B167 /* WiDReadDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA70DD732A59089D00B4B167 /* WiDReadDayView.swift */; };
 		EA9D41742AB18B0D008D6DE2 /* WiDCreateTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D41732AB18B0D008D6DE2 /* WiDCreateTimerView.swift */; };
@@ -91,6 +94,9 @@
 		EA60B81C2A56991800B49641 /* WiDUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WiDUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA60B8202A56991800B49641 /* WiDUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDUITests.swift; sourceTree = "<group>"; };
 		EA60B8222A56991800B49641 /* WiDUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EA63021D2B0335760031BAE2 /* Wellfleet-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Wellfleet-Regular.ttf"; sourceTree = "<group>"; };
+		EA63021E2B0335760031BAE2 /* UbuntuMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "UbuntuMono-Regular.ttf"; sourceTree = "<group>"; };
+		EA6302212B0360530031BAE2 /* Agbalumo-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Agbalumo-Regular.ttf"; sourceTree = "<group>"; };
 		EA663F0B2A5E74E200B51844 /* TitleUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleUtil.swift; sourceTree = "<group>"; };
 		EA70DD732A59089D00B4B167 /* WiDReadDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadDayView.swift; sourceTree = "<group>"; };
 		EA9D41732AB18B0D008D6DE2 /* WiDCreateTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDCreateTimerView.swift; sourceTree = "<group>"; };
@@ -254,7 +260,10 @@
 			isa = PBXGroup;
 			children = (
 				EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */,
+				EA6302212B0360530031BAE2 /* Agbalumo-Regular.ttf */,
 				EA469A7E2AB6A5170000E0CC /* Tektur-Regular.ttf */,
+				EA63021E2B0335760031BAE2 /* UbuntuMono-Regular.ttf */,
+				EA63021D2B0335760031BAE2 /* Wellfleet-Regular.ttf */,
 			);
 			path = Font;
 			sourceTree = "<group>";
@@ -377,9 +386,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA469A7F2AB6A5170000E0CC /* Tektur-Regular.ttf in Resources */,
+				EA6302202B0335760031BAE2 /* UbuntuMono-Regular.ttf in Resources */,
+				EA6302222B0360530031BAE2 /* Agbalumo-Regular.ttf in Resources */,
 				EA60B80D2A56991800B49641 /* Preview Assets.xcassets in Resources */,
 				EADCDC472A6DF98100D8AED2 /* Acme-Regular.ttf in Resources */,
 				EA60B80A2A56991800B49641 /* Assets.xcassets in Resources */,
+				EA63021F2B0335760031BAE2 /* Wellfleet-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

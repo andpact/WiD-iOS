@@ -16,9 +16,13 @@ struct WiDReadDayView: View {
     
     var body: some View {
         VStack {
+            // 날짜 표시
             HStack {
+                Text("WiD")
+                    .font(.custom("Acme-Regular", size: 20))
+                
                 HStack {
-                    Text(formatDate(currentDate, format: "yyyy년 M월 d일"))
+                    Text(formatDate(currentDate, format: "M월 d일"))
                     
                     HStack(spacing: 0) {
                         Text("(")
@@ -60,27 +64,35 @@ struct WiDReadDayView: View {
                 .padding(.horizontal)
                 .disabled(calendar.isDateInToday(currentDate))
             }
-            .padding(.horizontal, 8)
             
-            Divider()
-                .background(.black)
-            
-            VStack(spacing: 8) {
+            // 파이 차트
+            VStack(spacing: 0) {
                 Text("파이차트")
                     .bold()
-                    .padding(.leading, 8)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                DayPieChartView(wiDList: wiDList)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 5)
-                        .stroke(.black, lineWidth: 1)
-                    )
-                
+                HStack {
+                    DayPieChartView(wiDList: wiDList)
+                    
+                    VStack {
+                        Text("기록된 시간")
+                            .bold()
+                        
+                        Text("0%")
+                        
+                        Text("0초 / 24시간")
+                    }
+                }
+                .padding()
+                .background(RoundedRectangle(cornerRadius: 5)
+                    .stroke(.black, lineWidth: 1)
+                )
+            }
+
+            // WiD 리스트
+            VStack(spacing: 0) {
                 Text("WiD 리스트")
                     .bold()
-                    .padding(.leading, 8)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 ScrollView {
@@ -182,10 +194,9 @@ struct WiDReadDayView: View {
                         }
                     }
                 }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .padding(.horizontal)
         }
+        .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
             wiDList = wiDService.selectWiDsByDate(date: currentDate)

@@ -176,29 +176,29 @@ struct DayPieChartView: View {
                     let y = sin(numberTextangle.radians) * numberTextRadius
 
                     Text("\(adjustedNumber)")
-                        .font(.system(size: 10))
+                        .font(.custom("Agbalumo-Regular", size: 10))
                         .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 + y)
                     
-                    let tickAngle = getAngle(for: number)
-                    let tickRadius = geo.size.width * 0.474 // 눈금의 길이
-
-                    let startX = cos(tickAngle.radians) * tickRadius
-                    let startY = sin(tickAngle.radians) * tickRadius
-                    let endX = cos(tickAngle.radians) * (tickRadius - 8) // 눈금의 길이
-                    let endY = sin(tickAngle.radians) * (tickRadius - 8)
-
-                    Line(start: CGPoint(x: geo.size.width / 2 + startX, y: geo.size.width / 2 + startY),
-                         end: CGPoint(x: geo.size.width / 2 + endX, y: geo.size.width / 2 + endY))
-                        .stroke(Color.black, lineWidth: 1)
+//                    let tickAngle = getAngle(for: number)
+//                    let tickRadius = geo.size.width * 0.474 // 눈금의 길이
+//
+//                    let startX = cos(tickAngle.radians) * tickRadius
+//                    let startY = sin(tickAngle.radians) * tickRadius
+//                    let endX = cos(tickAngle.radians) * (tickRadius - 8) // 눈금의 길이
+//                    let endY = sin(tickAngle.radians) * (tickRadius - 8)
+//
+//                    Line(start: CGPoint(x: geo.size.width / 2 + startX, y: geo.size.width / 2 + startY),
+//                         end: CGPoint(x: geo.size.width / 2 + endX, y: geo.size.width / 2 + endY))
+//                        .stroke(Color.black, lineWidth: 1)
                 }
                 
                 Text("오후 | 오전")
-                    .position(x: geo.size.width / 2, y: geo.size.width / 3)
+                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
 //                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
                 
-                Text("WiD")
-                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
-                    .font(.custom("Acme-Regular", size: 20))
+//                Text("WiD")
+//                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
+//                    .font(.custom("Acme-Regular", size: 20))
 //                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
                 
                 // 총 소요 시간이 하루(24시간) 중 몇 퍼센트인지 표시
@@ -206,12 +206,12 @@ struct DayPieChartView: View {
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
 //                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
                 
-                BatteryView(battery: totalDurationPercentage)
-                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
+//                BatteryView(battery: totalDurationPercentage)
+//                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
             }
         }
-        .aspectRatio(contentMode: .fill)
-//        .aspectRatio(contentMode: .fit)
+//        .aspectRatio(contentMode: .fill)
+        .aspectRatio(contentMode: .fit)
     }
     
     func getStartAngle(for index: Int) -> Angle {

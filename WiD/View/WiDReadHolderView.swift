@@ -73,8 +73,8 @@ struct WiDReadHolderView: View {
 }
 
 enum wiDReadHolderTapInfo: String, CaseIterable {
-    case DAY = "DAY"
-    case CALENDAR = "CALENDAR"
+    case DAY = "날짜 별 기록"
+    case CALENDAR = "기간 별 기록"
 }
 
 struct WiDReadView: View {
