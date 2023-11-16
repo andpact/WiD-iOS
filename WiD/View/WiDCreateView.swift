@@ -7,24 +7,26 @@
 
 import SwiftUI
 
-struct WiDCreateHolderView: View {
+struct WiDCreateView: View {
     @State private var selectedPicker: wiDCreateHolderTapInfo = .STOPWATCH
     @Namespace private var animation
     
-    @Binding var buttonsVisible: Bool
+    // 상단, 하단 Bar 가시성
+    @Binding var topBottomBarVisible: Bool
     
     var body: some View {
         VStack {
-            topTabBar()
-                .disabled(!buttonsVisible)
+            if topBottomBarVisible {
+                topTabBar()
+            }
 
-            WiDCreateView(currentTab: selectedPicker, buttonsVisible: $buttonsVisible)
-                .background(.white) //배경이 없으면 스와이프할 수 없기 때문에 배경색을 추가함.
+            WiDCreateHolderView(currentTab: selectedPicker, topBottomBarVisible: $topBottomBarVisible)
         }
+        .background(Color("ghost_white")) // 배경이 없으면 스와이프할 수 없기 때문에 배경색을 추가함.
         .gesture(
             DragGesture()
                 .onEnded { value in
-                    if buttonsVisible {
+                    if topBottomBarVisible { // 상단, 하단 탭이 보일 때만 좌우 스와이프 가능함.
                         if value.translation.width < 0 {
                             // 왼쪽 스와이프: 다음 탭으로 이동
                             withAnimation(.easeInOut) {
@@ -86,16 +88,16 @@ enum wiDCreateHolderTapInfo: String, CaseIterable {
     case MANUAL = "직접 입력"
 }
 
-struct WiDCreateView: View {
+struct WiDCreateHolderView: View {
     var currentTab: wiDCreateHolderTapInfo
-    @Binding var buttonsVisible: Bool
+    @Binding var topBottomBarVisible: Bool
     
     var body: some View {
         switch currentTab {
         case .STOPWATCH:
-            WiDCreateStopWatchView(buttonsVisible: $buttonsVisible)
+            WiDCreateStopWatchView(topBottomBarVisible: $topBottomBarVisible)
         case .TIMER:
-            WiDCreateTimerView(buttonsVisible: $buttonsVisible)
+            WiDCreateTimerView(topBottomBarVisible: $topBottomBarVisible)
         case .MANUAL:
             WiDCreateManualView()
         }
@@ -104,7 +106,7 @@ struct WiDCreateView: View {
 
 struct WiDCreateHolderView_Previews: PreviewProvider {
     static var previews: some View {
-        let buttonsVisible = Binding.constant(true)
-        return WiDCreateHolderView(buttonsVisible: buttonsVisible)
+        let topBottomBarVisible = Binding.constant(true)
+        return WiDCreateView(topBottomBarVisible: topBottomBarVisible)
     }
 }

@@ -33,19 +33,21 @@ struct WiDCreateStopWatchView: View {
     @State private var buttonText: String = "시작"
     
     // 스톱 워치
-    @State private var isRunning: Bool = false
     @State private var timer: Timer?
+    @State private var isRunning: Bool = false
     @State private var elapsedTime = 0
     private let timerInterval = 1
     
-    // 상단, 하단 탭 가시성
-    @Binding var buttonsVisible: Bool
+    // 상단, 하단 Bar 가시성
+    @Binding var topBottomBarVisible: Bool
     
     var body: some View {
+        // 전체 화면
         ZStack {
             formatStopWatchTime(elapsedTime)
                 .padding(.bottom, 180)
-
+            
+            // 제목 표시 및 버튼
             HStack {
                 HStack {
                     Circle()
@@ -54,7 +56,7 @@ struct WiDCreateStopWatchView: View {
                     
                     Picker("", selection: $title) {
                         ForEach(Array(Title.allCases), id: \.self) { title in
-                            Text(titleDictionary[title.rawValue]!)
+                            Text(title.koreanValue)
                         }
                     }
                 }
@@ -66,7 +68,7 @@ struct WiDCreateStopWatchView: View {
                     Text("초기화")
                 }
                 .frame(maxWidth: .infinity)
-                .disabled(isRunning || buttonsVisible)
+                .disabled(isRunning || topBottomBarVisible)
                 
                 Button(action: {
                     if !isRunning {
@@ -88,7 +90,7 @@ struct WiDCreateStopWatchView: View {
     
     private func startWiD() {
         withAnimation() {
-            buttonsVisible = false
+            topBottomBarVisible = false
         }
         isRunning = true
         buttonText = "중지"
@@ -146,7 +148,7 @@ struct WiDCreateStopWatchView: View {
 
     private func resetWiD() {
         withAnimation {
-            buttonsVisible = true
+            topBottomBarVisible = true
         }
         elapsedTime = 0
         buttonText = "시작"
@@ -155,7 +157,7 @@ struct WiDCreateStopWatchView: View {
 
 struct WiDCreateView_Previews: PreviewProvider {
     static var previews: some View {
-        let buttonsVisible = Binding.constant(true)
-        return WiDCreateStopWatchView(buttonsVisible: buttonsVisible)
+        let topBottomBarVisible = Binding.constant(true)
+        return WiDCreateStopWatchView(topBottomBarVisible: topBottomBarVisible)
     }
 }

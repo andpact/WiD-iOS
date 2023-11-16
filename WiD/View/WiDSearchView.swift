@@ -17,11 +17,12 @@ struct WiDSearchView: View {
     var body: some View {
         VStack {
             SearchBar(text: $searchText, onEditingChanged: searchTextDidChange)
+                .padding(.horizontal)
             
             ScrollViewReader { sp in
                 ScrollView {
                     // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
-                    VStack(spacing: 8) {
+                    VStack(alignment: .leading, spacing: 8) {
                         if wiDList.isEmpty {
                             HStack {
                                 Image(systemName: "text.bubble")
@@ -40,30 +41,26 @@ struct WiDSearchView: View {
                                         if calendar.isDateInToday(wiD.date) {
                                             Text("오늘")
                                                 .bold()
-                                                .padding(.leading, 8)
                                         } else if calendar.isDateInYesterday(wiD.date) {
                                             Text("어제")
                                                 .bold()
-                                                .padding(.leading, 8)
                                         } else {
                                             Text(formatDate(wiD.date, format: "yyyy년 M월 d일"))
                                                 .bold()
-                                                .padding(.leading, 8)
                                           
                                             HStack(spacing: 0) {
                                                 Text("(")
                                                     .bold()
                                                 
                                                 Text(formatWeekday(wiD.date))
-                                                    .foregroundColor(calendar.component(.weekday, from: wiD.date) == 1 ? .red : (calendar.component(.weekday, from: wiD.date) == 7 ? .blue : .black))
                                                     .bold()
+                                                    .foregroundColor(calendar.component(.weekday, from: wiD.date) == 1 ? .red : (calendar.component(.weekday, from: wiD.date) == 7 ? .blue : .black))
                                                 
                                                 Text(")")
                                                     .bold()
                                             }
                                         }
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                                 
                                 NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
@@ -78,12 +75,9 @@ struct WiDSearchView: View {
                                                 
                                                 Text(titleDictionary[wiD.title] ?? "")
                                                 
-                                                RoundedRectangle(cornerRadius: 5)
+                                                Circle()
                                                     .fill(Color(wiD.title))
-                                                    .background(RoundedRectangle(cornerRadius: 5)
-                                                        .stroke(.black, lineWidth: 1)
-                                                    )
-                                                    .frame(width: 5, height: 20)
+                                                    .frame(width: 10)
                                             }
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             
@@ -137,16 +131,14 @@ struct WiDSearchView: View {
                                         }
                                     }
                                     .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(RoundedRectangle(cornerRadius: 5)
-                                        .stroke(.black, lineWidth: 1)
-                                    )
-                                    .background(Color("light_gray"))
+                                    .background(.white)
                                     .cornerRadius(5)
+                                    .shadow(radius: 5)
                                 }
                             }
                         }
                     }
+                    .padding(.horizontal)
                 }
                 .onAppear {
                     // 삭제 후 돌아오면 삭제된 WiD가 남아서 표시되니까 다시 WiD 리스트를 가져옴.
@@ -159,7 +151,7 @@ struct WiDSearchView: View {
                 }
             }
         }
-        .padding(.horizontal)
+        .background(Color("ghost_white"))
     }
     
     private func searchTextDidChange(isEditing: Bool) {

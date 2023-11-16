@@ -11,13 +11,13 @@ struct TitleDictionaryView: View {
     private let wiDService = WiDService()
     
     private let selectedDate: Date
-    private let selectedTitle: Title2
+    private let selectedTitle: TitleWithALl
     
     private let dailyTotalDictionary: [String: TimeInterval]
     private let weeklyTotalDictionary: [String: TimeInterval]
     private let monthlyTotalDictionary: [String: TimeInterval]
     
-    init(selectedDate: Date, selectedTitle: Title2) {
+    init(selectedDate: Date, selectedTitle: TitleWithALl) {
         self.selectedDate = selectedDate
         self.selectedTitle = selectedTitle
         
@@ -27,232 +27,230 @@ struct TitleDictionaryView: View {
     }
     
     var body: some View {
-        VStack(spacing: 8) {
-            Text("합계")
-                .bold()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 8)
+        // 전체 화면
+        VStack(spacing: 32) {
+            // 합계 기록
+            VStack(alignment: .leading, spacing: 8) {
+                Text("1️⃣ 합계 기록")
+                    .font(.custom("BlackHanSans-Regular", size: 20))
 
-            VStack(spacing: 8) {
-                HStack {
+                VStack(spacing: 8) {
                     HStack {
-                        Image(systemName: "1.square")
-                            .frame(width: 20)
-                        
-                        Text("일(Day)")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("\(formatDuration(dailyTotalDictionary[selectedTitle.rawValue] ?? 0, mode: 2))")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                HStack {
-                    HStack {
-                        Image(systemName: "7.square")
-                            .frame(width: 20)
-                        
-                        Text("주(Week)")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("\(formatDuration(weeklyTotalDictionary[selectedTitle.rawValue] ?? 0, mode: 2))")
+                        HStack {
+                            Image(systemName: "1.square")
+                                .frame(width: 20)
                             
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                            Text("일(Day)")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                HStack {
-                    HStack {
-                        Image(systemName: "30.square")
-                            .frame(width: 20)
-                        
-                        Text("월(Month)")
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                            
+                            Text("\(formatDuration(dailyTotalDictionary[selectedTitle.rawValue] ?? 0, mode: 2))")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
 
                     HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("\(formatDuration(monthlyTotalDictionary[selectedTitle.rawValue] ?? 0, mode: 2))")
+                        HStack {
+                            Image(systemName: "7.square")
+                                .frame(width: 20)
+                            
+                            Text("주(Week)")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                            
+                            Text("\(formatDuration(weeklyTotalDictionary[selectedTitle.rawValue] ?? 0, mode: 2))")
+                                
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    HStack {
+                        HStack {
+                            Image(systemName: "30.square")
+                                .frame(width: 20)
+                            
+                            Text("월(Month)")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                            
+                            Text("\(formatDuration(monthlyTotalDictionary[selectedTitle.rawValue] ?? 0, mode: 2))")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.white)
+                .cornerRadius(5)
+                .shadow(radius: 5)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(RoundedRectangle(cornerRadius: 5)
-                .stroke(.black, lineWidth: 1)
-            )
-            .background(.white)
-            .cornerRadius(5)
-
-            Text("평균")
-                .bold()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 8)
-
-            VStack(spacing: 8) {
-                HStack {
-                    HStack {
-                        Image(systemName: "7.square")
-                            .frame(width: 20)
-                        
-                        Text("주(Week)")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("10시간")
-                            
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                HStack {
-                    HStack {
-                        Image(systemName: "30.square")
-                            .frame(width: 20)
-                        
-                        Text("월(Month)")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("10시간")
-                            
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(RoundedRectangle(cornerRadius: 5)
-                .stroke(.black, lineWidth: 1)
-            )
-            .background(.white)
-            .cornerRadius(5)
-
-            Text("최고")
-                .bold()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 8)
-
-            VStack(spacing: 8) {
-                HStack {
-                    HStack {
-                        Image(systemName: "7.square")
-                            .frame(width: 20)
-                        
-                        Text("주(Week)")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("10시간")
-                            
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                HStack {
-                    HStack {
-                        Image(systemName: "30.square")
-                            .frame(width: 20)
-                        
-                        Text("월(Month)")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("10시간")
-                            
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(RoundedRectangle(cornerRadius: 5)
-                .stroke(.black, lineWidth: 1)
-            )
-            .background(.white)
-            .cornerRadius(5)
             
-            Text("연속")
-                .bold()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 8)
+            // 평균 기록
+            VStack(alignment: .leading, spacing: 8) {
+                Text("2️⃣ 평균 기록")
+                    .font(.custom("BlackHanSans-Regular", size: 20))
 
-            VStack(spacing: 8) {
-                HStack {
+                VStack(spacing: 8) {
                     HStack {
-                        Image(systemName: "arrow.left.and.right")
-                            .frame(width: 20)
-                        
-                        Text("최장 기간")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("10일")
+                        HStack {
+                            Image(systemName: "7.square")
+                                .frame(width: 20)
                             
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                            Text("주(Week)")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                HStack {
-                    HStack {
-                        Image(systemName: "arrow.right.to.line")
-                            .frame(width: 20)
-                        
-                        Text("현재 진행")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        Image(systemName: "hourglass")
-                            .frame(width: 20)
-                        
-                        Text("10일")
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
                             
+                            Text("10시간")
+                                
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    HStack {
+                        HStack {
+                            Image(systemName: "30.square")
+                                .frame(width: 20)
+                            
+                            Text("월(Month)")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                            
+                            Text("10시간")
+                                
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.white)
+                .cornerRadius(5)
+                .shadow(radius: 5)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(RoundedRectangle(cornerRadius: 5)
-                .stroke(.black, lineWidth: 1)
-            )
-            .background(.white)
-            .cornerRadius(5)
+            
+            // 최고 기록
+            VStack(alignment: .leading, spacing: 8) {
+                Text("3️⃣ 최고 기록")
+                    .font(.custom("BlackHanSans-Regular", size: 20))
+
+                VStack(spacing: 8) {
+                    HStack {
+                        HStack {
+                            Image(systemName: "7.square")
+                                .frame(width: 20)
+                            
+                            Text("주(Week)")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                            
+                            Text("10시간")
+                                
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+
+                    HStack {
+                        HStack {
+                            Image(systemName: "30.square")
+                                .frame(width: 20)
+                            
+                            Text("월(Month)")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                            
+                            Text("10시간")
+                                
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.white)
+                .cornerRadius(5)
+                .shadow(radius: 5)
+            }
+            
+            // 연속 기록
+            VStack(alignment: .leading, spacing: 8) {
+                Text("4️⃣ 연속 기록")
+                    .font(.custom("BlackHanSans-Regular", size: 20))
+
+                VStack(spacing: 8) {
+                    HStack {
+                        HStack {
+                            Image(systemName: "arrow.left.and.right")
+                                .frame(width: 20)
+                            
+                            Text("최장 기간")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                            
+                            Text("10일")
+                                
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+
+                    HStack {
+                        HStack {
+                            Image(systemName: "arrow.right.to.line")
+                                .frame(width: 20)
+                            
+                            Text("현재 진행")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                            
+                            Text("10일")
+                                
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.white)
+                .cornerRadius(5)
+                .shadow(radius: 5)
+            }
         }
+        .padding(.horizontal)
     }
 }
 

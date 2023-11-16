@@ -7,6 +7,7 @@
 
 import Foundation
 
+// WiD 생성시 필요한 enum
 enum Title: String, CaseIterable, Identifiable {
     case STUDY
     case WORK
@@ -47,34 +48,8 @@ enum Title: String, CaseIterable, Identifiable {
     }
 }
 
-let titleArray: [String] = [
-    Title.STUDY.rawValue,
-    Title.WORK.rawValue,
-    Title.EXERCISE.rawValue,
-    Title.HOBBY.rawValue,
-    Title.PLAY.rawValue,
-    Title.MEAL.rawValue,
-    Title.SHOWER.rawValue,
-    Title.TRAVEL.rawValue,
-    Title.SLEEP.rawValue,
-    Title.ETC.rawValue
-]
-
-let titleDictionary: [String: String] = [
-    "ALL": "전부",
-    Title.STUDY.rawValue: Title.STUDY.koreanValue,
-    Title.WORK.rawValue: Title.WORK.koreanValue,
-    Title.EXERCISE.rawValue: Title.EXERCISE.koreanValue,
-    Title.HOBBY.rawValue: Title.HOBBY.koreanValue,
-    Title.PLAY.rawValue: Title.PLAY.koreanValue,
-    Title.MEAL.rawValue: Title.MEAL.koreanValue,
-    Title.SHOWER.rawValue: Title.SHOWER.koreanValue,
-    Title.TRAVEL.rawValue: Title.TRAVEL.koreanValue,
-    Title.SLEEP.rawValue: Title.SLEEP.koreanValue,
-    Title.ETC.rawValue: Title.ETC.koreanValue
-]
-
-enum Title2: String, CaseIterable, Identifiable {
+// WiD 조회시 필요한 enum
+enum TitleWithALl: String, CaseIterable, Identifiable {
     case ALL
     case STUDY
     case WORK
@@ -116,3 +91,17 @@ enum Title2: String, CaseIterable, Identifiable {
         }
     }
 }
+
+// 데이터베이스에서 제목을 불러왔을 때 필요한 딕셔너리
+let titleDictionary: [String: String] = [
+    Title.STUDY.rawValue: Title.STUDY.koreanValue,
+    Title.WORK.rawValue: Title.WORK.koreanValue,
+    Title.EXERCISE.rawValue: Title.EXERCISE.koreanValue,
+    Title.HOBBY.rawValue: Title.HOBBY.koreanValue,
+    Title.PLAY.rawValue: Title.PLAY.koreanValue,
+    Title.MEAL.rawValue: Title.MEAL.koreanValue,
+    Title.SHOWER.rawValue: Title.SHOWER.koreanValue,
+    Title.TRAVEL.rawValue: Title.TRAVEL.koreanValue,
+    Title.SLEEP.rawValue: Title.SLEEP.koreanValue,
+    Title.ETC.rawValue: Title.ETC.koreanValue
+]

@@ -71,11 +71,11 @@ struct WiDView: View {
         NavigationView {
             ScrollView {
                 if isEditing {
+                    // 막대 차트
                     VStack(spacing: 8) {
                         HStack {
                             Text(formatDate(date, format: "yyyy년 M월 d일"))
                                 .bold()
-                                .padding(.leading, 8)
                             
                             HStack(spacing: 0) {
                                 Text("(")
@@ -109,199 +109,130 @@ struct WiDView: View {
                             HorizontalBarChartView(wiDList: wiDList)
                         }
                         .padding()
-                        .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(.black, lineWidth: 1)
-                        )
                         .background(.white)
                         .cornerRadius(5)
+                        .shadow(radius: 3)
                     }
+                    .padding(.horizontal)
                 }
 
-                VStack(spacing: 8) {
-                    VStack(spacing: 8) {
-                        Text("WiD No.\(clickedWiDId)")
-                            .bold()
-                            .padding(.leading, 8)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        VStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("날짜")
-                                    .bold()
-                                    .padding(.leading, 8)
-                                
-                                HStack {
-                                    Image(systemName: "calendar")
-                                        .frame(width: 20)
-                                        .padding()
-                                    
-                                    HStack {
-                                        Text(formatDate(date, format: "yyyy년 M월 d일"))
-                                        
-                                        HStack(spacing: 0) {
-                                            Text("(")
-
-                                            Text(formatWeekday(date))
-                                                .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
-
-                                            Text(")")
-                                        }
-                                    }
-                                    
-                                    Spacer()
-                                }
-                                .background(RoundedRectangle(cornerRadius: 5)
-                                    .stroke(.black, lineWidth: 1)
-                                )
-                                .background(.white)
-                                .cornerRadius(5)
-                            }
-
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("제목")
-                                    .bold()
-                                    .padding(.leading, 8)
-                                
-                                HStack {
-                                    Image(systemName: "character.textbox.ko")
-                                        .frame(width: 20)
-                                        .padding()
-                                    
-                                    if isEditing {
-                                        Picker("", selection: $title) {
-                                            ForEach(titleArray, id: \.self) { title in
-                                                Text(titleDictionary[title]!)
-                                            }
-                                        }
-                                    } else {
-                                        Text(titleDictionary[title] ?? "공부")
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    RoundedRectangle(cornerRadius: 5)
-                                        .fill(Color(title))
-                                        .background(RoundedRectangle(cornerRadius: 5)
-                                            .stroke(.black, lineWidth: 1)
-                                        )
-                                        .frame(width: 5, height: 25)
-                                        .padding(.trailing)
-                                }
-                                .background(RoundedRectangle(cornerRadius: 5)
-                                    .stroke(.black, lineWidth: 1)
-                                )
-                                .background(.white)
-                                .cornerRadius(5)
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("시작")
-                                    .bold()
-                                    .padding(.leading, 8)
-                                
-                                HStack {
-                                    Image(systemName: "play")
-                                        .frame(width: 20)
-                                        .padding()
-                                    
-                                    if isEditing {
-                                        DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
-                                            .labelsHidden()
-                                    } else {
-                                        Text(formatTime(start, format: "a h:mm:ss"))
-                                    }
-                                    
-                                    Spacer()
-                                }
-                                .background(RoundedRectangle(cornerRadius: 5)
-                                    .stroke(.black, lineWidth: 1)
-                                )
-                                .background(.white)
-                                .cornerRadius(5)
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("종료")
-                                    .bold()
-                                    .padding(.leading, 8)
-                                
-                                HStack {
-                                    Image(systemName: "play.fill")
-                                        .frame(width: 20)
-                                        .padding()
-                                    
-                                    if isEditing {
-                                        DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
-                                            .labelsHidden()
-                                    } else {
-                                        Text(formatTime(finish, format: "a h:mm:ss"))
-                                    }
-                                    
-                                    Spacer()
-                                }
-                                .background(RoundedRectangle(cornerRadius: 5)
-                                    .stroke(.black, lineWidth: 1)
-                                )
-                                .background(.white)
-                                .cornerRadius(5)
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("경과")
-                                    .bold()
-                                    .padding(.leading, 8)
-                                
-                                HStack {
-                                    Image(systemName: "hourglass")
-                                        .frame(width: 20)
-                                        .padding()
-
-                                    Text(formatDuration(duration, mode: 3))
-                                    
-                                    Spacer()
-                                }
-                                .background(RoundedRectangle(cornerRadius: 5)
-                                    .stroke(.black, lineWidth: 1)
-                                )
-                                .background(.white)
-                                .cornerRadius(5)
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("설명")
-                                    .bold()
-                                    .padding(.leading, 8)
-                                
-                                HStack {
-                                    Image(systemName: "text.bubble")
-                                        .frame(width: 20)
-                                        .padding()
-                                    
-                                    if isEditing {
-                                        TextEditor(text: $detail)
-                                            .padding(1)
-                                    } else {
-                                        Text(detail)
-                                            .padding(.vertical, 8)
-                                    }
-                                    
-                                    Spacer()
-                                }
-                                .background(RoundedRectangle(cornerRadius: 5)
-                                    .stroke(.black, lineWidth: 1)
-                                )
-                                .background(.white)
-                                .cornerRadius(5)
-                            }
-                        }
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(.black, lineWidth: 1)
-                        )
-                        .background(Color("light_gray"))
-                        .cornerRadius(5)
-                    }
+                // 클릭된 WiD 및 버튼
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("클릭된 WiD")
+                        .bold()
                     
+                    // 클릭된 WiD
+                    VStack(spacing: 0) {
+                        // 날짜
+                        HStack {
+                            Image(systemName: "calendar")
+                                .frame(width: 20)
+                                .padding()
+                            
+                            HStack {
+                                Text(formatDate(date, format: "yyyy년 M월 d일"))
+                                
+                                HStack(spacing: 0) {
+                                    Text("(")
+
+                                    Text(formatWeekday(date))
+                                        .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
+
+                                    Text(")")
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        // 제목
+                        HStack {
+                            Image(systemName: "character.textbox.ko")
+                                .frame(width: 20)
+                                .padding()
+                            
+                            if isEditing {
+                                Picker("", selection: $title) {
+                                    ForEach(Array(Title.allCases), id: \.self) { title in
+                                        Text(title.koreanValue)
+                                    }
+                                }
+                            } else {
+                                Text(titleDictionary[title] ?? "공부")
+                            }
+                            
+                            Circle()
+                                .fill(Color(title))
+                                .frame(width: 10)
+                            
+                            Spacer()
+                        }
+                        
+                        // 시작 시간
+                        HStack {
+                            Image(systemName: "play")
+                                .frame(width: 20)
+                                .padding()
+                            
+                            if isEditing {
+                                DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
+                                    .labelsHidden()
+                            } else {
+                                Text(formatTime(start, format: "a h:mm:ss"))
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        // 종료 시간
+                        HStack {
+                            Image(systemName: "play.fill")
+                                .frame(width: 20)
+                                .padding()
+                            
+                            if isEditing {
+                                DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
+                                    .labelsHidden()
+                            } else {
+                                Text(formatTime(finish, format: "a h:mm:ss"))
+                            }
+                            
+                            Spacer()
+                        }
+
+                        // 소요 시간
+                        HStack {
+                            Image(systemName: "hourglass")
+                                .frame(width: 20)
+                                .padding()
+
+                            Text(formatDuration(duration, mode: 3))
+                            
+                            Spacer()
+                        }
+                        
+                        // 설명
+                        HStack {
+                            Image(systemName: "text.bubble")
+                                .frame(width: 20)
+                                .padding()
+                            
+                            if isEditing {
+                                TextEditor(text: $detail)
+                                    .padding(1)
+                            } else {
+                                Text(detail)
+                                    .padding(.vertical, 8)
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                    .background(.white)
+                    .cornerRadius(5)
+                    .shadow(radius: 3)
+                    
+                    // 버튼
                     HStack {
                         Button(action: {
                             if isEditing {
@@ -390,8 +321,9 @@ struct WiDView: View {
                         .disabled(isStartOverlap || isFinishOverlap || isDurationUnderMin)
                     }
                 }
+                .padding(.horizontal)
             }
-            .padding()
+            .background(Color("ghost_white"))
             .onAppear() {
                 date = clickedWiD!.date
 

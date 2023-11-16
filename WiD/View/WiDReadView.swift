@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WiDReadHolderView: View {
+struct WiDReadView: View {
     @State private var selectedPicker: wiDReadHolderTapInfo = .DAY
     @Namespace private var animation
     
@@ -15,10 +15,9 @@ struct WiDReadHolderView: View {
         VStack {
             topTabBar()
             
-            WiDReadView(currentTab: selectedPicker)
-            //배경이 없으면 스와이프할 수 없기 때문에 배경색을 추가함.
-                .background(.white)
+            WiDReadHolderView(currentTab: selectedPicker)
         }
+        .background(Color("ghost_white")) // 배경이 없으면 스와이프할 수 없기 때문에 배경색을 추가함.
         .gesture(
             DragGesture()
                 .onEnded { value in
@@ -77,7 +76,7 @@ enum wiDReadHolderTapInfo: String, CaseIterable {
     case CALENDAR = "기간 별 기록"
 }
 
-struct WiDReadView: View {
+struct WiDReadHolderView: View {
     var currentTab: wiDReadHolderTapInfo
     
     var body: some View {
@@ -92,6 +91,6 @@ struct WiDReadView: View {
 
 struct WiDReadHolderView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDReadHolderView()
+        WiDReadView()
     }
 }

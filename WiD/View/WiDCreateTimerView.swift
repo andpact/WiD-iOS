@@ -34,43 +34,58 @@ struct WiDCreateTimerView: View {
     @State private var buttonText: String = "시작"
     
     // 타이머
-    @State private var isRunning: Bool = false
     @State private var timer: Timer?
+    @State private var isRunning: Bool = false
     @State private var remainingTime: Int = 0 // 초 단위
-    @State private var finishTime: Date = Date()
     private let timerInterval = 1
+    @State private var finishTime: Date = Date()
     @State private var selectedHour: Int = 0
     @State private var selectedMinute: Int = 0
     @State private var selectedSecond: Int = 0
     
     // 상단, 하단 탭 가시성
-    @Binding var buttonsVisible: Bool
+    @Binding var topBottomBarVisible: Bool
     
     var body: some View {
         ZStack {
-            // 최초 화면
-            if !isRunning && buttonsVisible {
+            // 최초 화면(타이머 시간 선택)
+            if !isRunning && topBottomBarVisible {
                 HStack(spacing: 0) {
-                    // 시간 선택
+                    // 시간(Hour) 선택
                     Picker("", selection: $selectedHour) {
                         ForEach(0..<24, id: \.self) { hour in
-                            Text("\(hour)h")
+                            if selectedHour == hour {
+                                Text("\(hour)h")
+                                    .bold()
+                            } else {
+                                Text("\(hour)h")
+                            }
                         }
                     }
                     .pickerStyle(.inline)
 
-                    // 분 선택
+                    // 분(Minute) 선택
                     Picker("", selection: $selectedMinute) {
                         ForEach(0..<60, id: \.self) { minute in
-                            Text("\(minute)m")
+                            if selectedMinute == minute {
+                                Text("\(minute)m")
+                                    .bold()
+                            } else {
+                                Text("\(minute)m")
+                            }
                         }
                     }
                     .pickerStyle(.inline)
 
-                    // 초 선택
+                    // 초(Second) 선택
                     Picker("", selection: $selectedSecond) {
                         ForEach(0..<60, id: \.self) { second in
-                            Text("\(second)s")
+                            if selectedSecond == second {
+                                Text("\(second)s")
+                                    .bold()
+                            } else {
+                                Text("\(second)s")
+                            }
                         }
                     }
                     .pickerStyle(.inline)
@@ -80,12 +95,14 @@ struct WiDCreateTimerView: View {
                 VStack(spacing: 10) {
                     formatTimerTime(remainingTime)
                     
+                    // 타이머 종료 시간
                     HStack {
                         Image(systemName: "timer")
                         
                         Text(formatTime(finishTime, format: "a H:mm:ss"))
                     }
                     
+                    // 타이머 시간 추가
                     HStack(spacing: 20) {
                         Button(action: {
                             remainingTime += 5 * 60
@@ -123,6 +140,7 @@ struct WiDCreateTimerView: View {
                 .padding(.bottom, 180)
             }
             
+            // 제목 표시 및 버튼
             HStack {
                 HStack {
                     Circle()
@@ -131,7 +149,7 @@ struct WiDCreateTimerView: View {
                     
                     Picker("", selection: $title) {
                         ForEach(Array(Title.allCases), id: \.self) { title in
-                            Text(titleDictionary[title.rawValue]!)
+                            Text(title.koreanValue)
                         }
                     }
                 }
@@ -143,7 +161,7 @@ struct WiDCreateTimerView: View {
                     Text("초기화")
                 }
                 .frame(maxWidth: .infinity)
-                .disabled(isRunning || buttonsVisible)
+                .disabled(isRunning || topBottomBarVisible)
                 
                 Button(action: {
                     if !isRunning {
@@ -170,7 +188,7 @@ struct WiDCreateTimerView: View {
     
     private func startWiD() {
         withAnimation {
-            buttonsVisible = false
+            topBottomBarVisible = false
         }
         
         isRunning = true
@@ -227,7 +245,7 @@ struct WiDCreateTimerView: View {
 
     private func resetWiD() {
         withAnimation {
-            buttonsVisible = true
+            topBottomBarVisible = true
         }
         
         buttonText = "시작"
@@ -237,7 +255,7 @@ struct WiDCreateTimerView: View {
 
 struct WiDCreateTimerView_Previews: PreviewProvider {
     static var previews: some View {
-        let buttonsVisible = Binding.constant(true)
-        WiDCreateTimerView(buttonsVisible: buttonsVisible)
+        let topBottomBarVisible = Binding.constant(true)
+        WiDCreateTimerView(topBottomBarVisible: topBottomBarVisible)
     }
 }

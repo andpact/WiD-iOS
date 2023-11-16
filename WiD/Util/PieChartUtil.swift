@@ -71,7 +71,7 @@ struct CalendarPieChartView: View {
                 
                 Text(formatDate(date, format: "d"))
                     .font(.system(size: 14))
-                    .fontWeight(pieChartDataArray.count == 1 ? nil : .bold)
+//                    .fontWeight(pieChartDataArray.count == 1 ? nil : .bold)
                     .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
             }
         }
@@ -176,8 +176,8 @@ struct DayPieChartView: View {
                     let y = sin(numberTextangle.radians) * numberTextRadius
 
                     Text("\(adjustedNumber)")
-                        .font(.custom("Agbalumo-Regular", size: 10))
-                        .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 + y)
+                        .font(.custom("Agbalumo-Regular", size: geo.size.width / 15))
+                        .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 - 5 + y) // y를 5만큼 올려줌.
                     
 //                    let tickAngle = getAngle(for: number)
 //                    let tickRadius = geo.size.width * 0.474 // 눈금의 길이
@@ -193,8 +193,9 @@ struct DayPieChartView: View {
                 }
                 
                 Text("오후 | 오전")
-                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
-//                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
+                    .font(.custom("BlackHanSans-Regular", size: geo.size.width / 15))
+                    .position(x: geo.size.width / 2, y: geo.size.width / 1.3)
+                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
                 
 //                Text("WiD")
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
@@ -209,9 +210,10 @@ struct DayPieChartView: View {
 //                BatteryView(battery: totalDurationPercentage)
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
             }
+            
         }
-//        .aspectRatio(contentMode: .fill)
         .aspectRatio(contentMode: .fit)
+        .padding()
     }
     
     func getStartAngle(for index: Int) -> Angle {
@@ -337,7 +339,8 @@ struct BatteryView: View {
 
 struct PieChartView_Previews: PreviewProvider {
     static var previews: some View {
-        DayPieChartView(wiDList: [])
+//        DayPieChartView(wiDList: [])
+        CalendarPieChartView(date: Date(), wiDList: [])
 //        BatteryView(battery: 40)
     }
 }

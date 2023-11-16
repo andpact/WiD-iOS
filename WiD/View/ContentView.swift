@@ -6,63 +6,74 @@
 //
 
 import SwiftUI
-import GoogleMobileAds
+//import GoogleMobileAds
 
 struct ContentView: View {
-    @State private var selectedTab = 0
-    @State var buttonsVisible = true
+    // 선택된 화면
+    @State private var selectedPicker: ContentViewTapInfo = .CREATE
     
-    init() {
-        UITabBar.appearance().backgroundColor = UIColor.white
-    }
+    // 상단, 하단 Bar 가시성
+    @State var topBottomBarVisible = true
     
     var body: some View {
-        GeometryReader { geo in
-            ZStack {
-    //            admob()
+        // 전체 화면
+        NavigationView {
+            VStack(spacing: 0) {
+                ContentHolderView(currentTab: selectedPicker, topBottomBarVisible: $topBottomBarVisible)
                 
-                NavigationView {
-                    TabView(selection: $selectedTab) {
-                        WiDCreateHolderView(buttonsVisible: $buttonsVisible)
-                            .tabItem {
-                                Image(systemName: "square.and.pencil")
-//                                Label("Add", systemImage: "square.and.pencil")
-                            }
-                            .tag(0)
-                        
-                        WiDReadHolderView()
-                            .tabItem {
-                                Image(systemName: "list.dash")
-//                                Label("", systemImage: "list.dash")
-                            }
-                            .tag(1)
-                        
-                        WiDSearchView()
-                            .tabItem {
-                                Image(systemName: "magnifyingglass")
-//                                Label("Search", systemImage: "magnifyingglass")
-                            }
-                            .tag(2)
-                    }
-                    .accentColor(.black)
-                }
-                
-                if !buttonsVisible {
-                    VStack {
-                        Rectangle()
-                            .fill(Color.white)
-                            .frame(width: geo.size.width, height: geo.size.height / 15)
-
-                        Spacer()
-
-                        Rectangle()
-                            .fill(Color.white)
-                            .frame(width: geo.size.width, height: geo.size.height / 15)
-                        
-                    }
+                if topBottomBarVisible {
+                    bottomNavigationBar()
                 }
             }
+            .accentColor(.black)
         }
+    }
+    
+    @ViewBuilder
+    private func bottomNavigationBar() -> some View {
+        HStack {
+            ForEach(ContentViewTapInfo.allCases, id: \.self) { item in
+                Image(systemName: item.rawValue)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top)
+                    .imageScale(.large)
+                    .foregroundColor(selectedPicker == item ? .black : .gray)
+                    .onTapGesture {
+//                        withAnimation(.easeInOut) {
+                            self.selectedPicker = item
+//                        }
+                    }
+            }
+        }
+        .background(Color("ghost_white"))
+    }
+}
+
+enum ContentViewTapInfo: String, CaseIterable {
+    case CREATE = "square.and.pencil" // 등록 이미지
+    case READ = "list.bullet" // 조회 이미지
+    case SEARCH = "magnifyingglass" // 검색 이미지
+}
+
+struct ContentHolderView: View {
+    var currentTab: ContentViewTapInfo
+    @Binding var topBottomBarVisible: Bool
+    
+    var body: some View {
+        switch currentTab {
+        case .CREATE:
+            WiDCreateView(topBottomBarVisible: $topBottomBarVisible)
+        case .READ:
+            WiDReadView()
+        case .SEARCH:
+            WiDSearchView()
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
 
@@ -88,9 +99,3 @@ struct ContentView: View {
 //
 //    }
 //}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}

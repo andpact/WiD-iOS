@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct WiDReadDayView: View {
+    // 데이터베이스
     private let wiDService = WiDService()
-    private let calendar = Calendar.current
-    
     @State private var wiDList: [WiD] = []
+    
+    // 날짜
+    private let calendar = Calendar.current
     @State private var currentDate: Date = Date()
     
     var body: some View {
+        // 전체 화면
         VStack {
             // 날짜 표시
             HStack {
@@ -23,14 +26,18 @@ struct WiDReadDayView: View {
                 
                 HStack {
                     Text(formatDate(currentDate, format: "M월 d일"))
+                        .bold()
                     
                     HStack(spacing: 0) {
                         Text("(")
+                            .bold()
 
                         Text(formatWeekday(currentDate))
+                            .bold()
                             .foregroundColor(calendar.component(.weekday, from: currentDate) == 1 ? .red : (calendar.component(.weekday, from: currentDate) == 7 ? .blue : .black))
 
                         Text(")")
+                            .bold()
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -65,138 +72,144 @@ struct WiDReadDayView: View {
                 .disabled(calendar.isDateInToday(currentDate))
             }
             
-            // 파이 차트
-            VStack(spacing: 0) {
-                Text("파이차트")
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                HStack {
-                    DayPieChartView(wiDList: wiDList)
+            // 파이 차트 및 WiD 리스트
+            VStack(spacing: 32) {
+                // 파이 차트
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("⭕️ 파이차트")
+                        .font(.custom("BlackHanSans-Regular", size: 20))
                     
-                    VStack {
-                        Text("기록된 시간")
-                            .bold()
-                        
-                        Text("0%")
-                        
-                        Text("0초 / 24시간")
-                    }
-                }
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 5)
-                    .stroke(.black, lineWidth: 1)
-                )
-            }
-
-            // WiD 리스트
-            VStack(spacing: 0) {
-                Text("WiD 리스트")
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                ScrollView {
-                    if wiDList.isEmpty {
-                        HStack {
-                            Image(systemName: "ellipsis.bubble")
-                                .foregroundColor(.gray)
+                    GeometryReader { geo in
+                        HStack(spacing: 0) {
+                            DayPieChartView(wiDList: wiDList)
+                                .frame(width: geo.size.width * 2 / 3)
                             
-                            Text("표시할 WiD가 없습니다.")
-                                .foregroundColor(.gray)
+                            VStack(spacing: 10) {
+                                Text("기록된 시간")
+                                    .bold()
+                                
+                                Text("\(getDailyTotalDurationPercentage(wiDList: wiDList))%")
+                                    .font(.custom("BlackHanSans-Regular", size: 40))
+                                    .foregroundColor(wiDList.isEmpty ? .gray : .black)
+                                
+                                Text("\(formatDuration(getDailyTotalDuration(wiDList: wiDList), mode: 2)) / 24시간")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.trailing)
+                            .frame(width: geo.size.width * 1 / 3)
                         }
-                        .padding()
-                        .padding(.vertical)
-                        .frame(maxWidth: .infinity)
-                        .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(.black, lineWidth: 1)
-                        )
-                    } else {
-                        ForEach(Array(wiDList.enumerated()), id: \.element.id) { (index, wiD) in
-                            NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                                VStack(spacing: 8) {
-                                    HStack {
+                        .background(.white)
+                        .cornerRadius(5)
+                        .shadow(radius: 3)
+                    }
+                    .aspectRatio(1.5, contentMode: .fit) // 파이 차트의 폭만큼 높이를 차지해야해서 1.5를 적용함.
+                }
+
+                // WiD 리스트
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("📜 WiD 리스트")
+                        .font(.custom("BlackHanSans-Regular", size: 20))
+                    
+                    ScrollView {
+                        if wiDList.isEmpty {
+                            HStack {
+                                Image(systemName: "ellipsis.bubble")
+                                    .foregroundColor(.gray)
+                                
+                                Text("표시할 WiD가 없습니다.")
+                                    .foregroundColor(.gray)
+
+                            }
+                            .padding()
+                            .padding(.vertical)
+                            .frame(maxWidth: .infinity)
+                            .background(.white)
+                            .cornerRadius(5)
+                        } else {
+                            ForEach(Array(wiDList.enumerated()), id: \.element.id) { (index, wiD) in
+                                NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
+                                    VStack(spacing: 8) {
                                         HStack {
-                                            Image(systemName: "character.textbox.ko")
-                                                .frame(width: 20)
-                                            
-                                            Text("제목")
-                                                .bold()
-                                            
-                                            Text(titleDictionary[wiD.title] ?? "")
-                                            
-                                            RoundedRectangle(cornerRadius: 5)
-                                                .fill(Color(wiD.title))
-                                                .background(RoundedRectangle(cornerRadius: 5)
-                                                    .stroke(.black, lineWidth: 1)
-                                                )
-                                                .frame(width: 5, height: 20)
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        HStack {
-                                            Image(systemName: "hourglass")
-                                                .frame(width: 20)
-                                            
-                                            Text("소요")
-                                                .bold()
-                                            
-                                            Text(formatDuration(wiD.duration, mode: 1))
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                    
-                                    HStack {
-                                        HStack {
-                                            Image(systemName: "play")
-                                                .frame(width: 20)
-                                            
-                                            Text("시작")
-                                                .bold()
-                                            
-                                            Text(formatTime(wiD.start, format: "a h:mm"))
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        HStack {
-                                            Image(systemName: "play.fill")
-                                                .frame(width: 20)
-                                            
-                                            Text("종료")
-                                                .bold()
-                                            
-                                            Text(formatTime(wiD.finish, format: "a h:mm"))
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                    
-                                    HStack {
-                                        Image(systemName: "text.bubble")
-                                            .frame(width: 20)
-                                        
-                                        Text("설명")
-                                            .bold()
-                                        
-                                        Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
+                                            HStack {
+                                                Image(systemName: "character.textbox.ko")
+                                                    .frame(width: 20)
+                                                
+                                                Text("제목")
+                                                    .bold()
+                                                
+                                                Text(titleDictionary[wiD.title] ?? "")
+                                                
+                                                Circle()
+                                                    .fill(Color(wiD.title))
+                                                    .frame(width: 10)
+                                            }
                                             .frame(maxWidth: .infinity, alignment: .leading)
-                                            .lineLimit(1)
-                                            .truncationMode(.tail)
-                                            .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
+                                            
+                                            HStack {
+                                                Image(systemName: "hourglass")
+                                                    .frame(width: 20)
+                                                
+                                                Text("소요")
+                                                    .bold()
+                                                
+                                                Text(formatDuration(wiD.duration, mode: 2))
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                        
+                                        HStack {
+                                            HStack {
+                                                Image(systemName: "play")
+                                                    .frame(width: 20)
+                                                
+                                                Text("시작")
+                                                    .bold()
+                                                
+                                                Text(formatTime(wiD.start, format: "a h:mm"))
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            HStack {
+                                                Image(systemName: "play.fill")
+                                                    .frame(width: 20)
+                                                
+                                                Text("종료")
+                                                    .bold()
+                                                
+                                                Text(formatTime(wiD.finish, format: "a h:mm"))
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                        
+                                        HStack {
+                                            Image(systemName: "text.bubble")
+                                                .frame(width: 20)
+                                            
+                                            Text("설명")
+                                                .bold()
+                                            
+                                            Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .lineLimit(1)
+                                                .truncationMode(.tail)
+                                                .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
+                                        }
                                     }
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(.white)
+                                    .cornerRadius(5)
                                 }
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(RoundedRectangle(cornerRadius: 5)
-                                    .stroke(.black, lineWidth: 1)
-                                )
-                                .background(Color("light_gray"))
-                                .cornerRadius(5)
                             }
                         }
                     }
+                    .shadow(radius: 3) // shadow는 가장 바깥 뷰에 적용해야 테두리에 제대로 표시됨.
                 }
             }
         }
-        .padding()
+        .padding(.horizontal)
+//        .background(Color("ghost_white"))
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
             wiDList = wiDService.selectWiDsByDate(date: currentDate)

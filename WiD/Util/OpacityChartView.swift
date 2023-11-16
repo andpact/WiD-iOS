@@ -36,16 +36,13 @@ struct OpacityChartView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                RoundedRectangle(cornerRadius: 5)
-                    .fill(wiDList.isEmpty ? Color("light_gray") : Color(wiDList[0].title).opacity(opacity))
-                    .background(RoundedRectangle(cornerRadius: 5)
-                        .stroke(.black, lineWidth: 1)
-                    )
+                Rectangle()
+                    .fill(wiDList.isEmpty ? .white : Color(wiDList[0].title).opacity(opacity))
                     .frame(width: geo.size.width * 0.9, height: geo.size.width * 0.9)
                     
                 Text(formatDate(date, format: "d"))
                     .font(.system(size: 14))
-                    .fontWeight(wiDList.isEmpty ? nil : .bold)
+//                    .fontWeight(wiDList.isEmpty ? nil : .bold)
                     .foregroundColor(wiDList.isEmpty ? .gray : .black)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -64,11 +61,8 @@ struct ExampleOpacityChartView: View {
     }
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 5)
+        Rectangle()
             .fill(Color(title).opacity(opacity))
-            .background(RoundedRectangle(cornerRadius: 1)
-                .stroke(.black, lineWidth: 1)
-            )
             .frame(width: 10, height: 10)
     }
 }
