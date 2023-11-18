@@ -15,14 +15,15 @@ struct WiDReadCalendarView: View {
     // 날짜
     private let calendar = Calendar.current
     private let today: Date = Date()
-    @State private var startDate: Date = Calendar.current.date(byAdding: .day, value: -364, to: Date()) ?? Date()
-    @State private var finishDate: Date = Date()
-    private let toatalDays = 365
-    
+    private let totalDays = 365
     @State private var uniqueYears: [Year] = []
     @State private var selectedYear: Year = Year(id: "지난 1년")
+    @State private var startDate: Date = Calendar.current.date(byAdding: .day, value: -364, to: Date()) ?? Date() // selectedYear의 시작 날짜
+    @State private var finishDate: Date = Date() // selectedYear의 종료 날짜
     @State private var selectedDate: Date = Date()
-    @State private var selectedTitle: TitleWithALl = .ALL
+    
+    // 제목
+    @State private var selectedTitle: TitleWithALL = .ALL
     
     var body: some View {
         // 전체 화면
@@ -45,7 +46,7 @@ struct WiDReadCalendarView: View {
                     .frame(width: 10)
                 
                 Picker("", selection: $selectedTitle) {
-                    ForEach(Array(TitleWithALl.allCases), id: \.self) { title in
+                    ForEach(Array(TitleWithALL.allCases), id: \.self) { title in
                         Text(title.koreanValue)
                     }
                 }
@@ -137,7 +138,7 @@ struct WiDReadCalendarView: View {
                                     
                                     var startIndex: Int { if weekday != 1 { return 8 - weekday } else { return 0 }}
                                     
-                                    ForEach(startIndex..<toatalDays, id: \.self) { gridIndex in
+                                    ForEach(startIndex..<totalDays, id: \.self) { gridIndex in
                                         let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
                                         let dateWeekAgo = calendar.date(byAdding: .day, value: -7, to: currentDate) ?? Date()
                                         
@@ -205,7 +206,7 @@ struct WiDReadCalendarView: View {
                             }
                             .onAppear {
                                 // 최초 스크롤을 가장 아래로 이동
-                                sp.scrollTo(toatalDays - 1, anchor: .bottom)
+                                sp.scrollTo(totalDays - 1, anchor: .bottom)
                             }
                         }
                     }
@@ -220,9 +221,9 @@ struct WiDReadCalendarView: View {
                 ScrollView {
                     // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯하고, 수직 스택을 명시적으로 생성하면 자동 생성된 수직 스택이 사라지는 듯.
                     if selectedTitle.rawValue == "ALL" {
-                        TotalDictionaryView(selectedDate: selectedDate)
+                        TotalDictionaryView(selectedDate: selectedDate, wiDList: wiDList)
                     } else {
-                        TitleDictionaryView(selectedDate: selectedDate, selectedTitle: selectedTitle)
+                        TitleDictionaryView(selectedDate: selectedDate, startDate: startDate, finishDate: finishDate, selectedTitle: selectedTitle, wiDList: wiDList)
                     }
                 }
                 .frame(maxWidth: .infinity)

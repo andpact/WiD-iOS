@@ -8,28 +8,29 @@
 import SwiftUI
 
 struct TotalDictionaryView: View {
+    // 날짜
     private let calendar = Calendar.current
     private let today: Date = Date()
-    private let wiDService = WiDService()
-    
     private let selectedDate: Date
     private let firstDayOfWeek: Date
     private let lastDayOfWeek: Date
     
-    private let dailyTotalDictionary: [String: TimeInterval]
-    private let weeklyTotalDictionary: [String: TimeInterval]
-    private let monthlyTotalDictionary: [String: TimeInterval]
+    // 데이터베이스
+    private let wiDList: [WiD]
+    private let dailyAllTitleDurationDictionary: [String: TimeInterval]
+    private let weeklyAllTitleDurationDictionary: [String: TimeInterval]
+    private let monthlyAllTitleDurationDictionary: [String: TimeInterval]
     
-    init(selectedDate: Date) {
+    init(selectedDate: Date, wiDList: [WiD]) {
         self.selectedDate = selectedDate
-        
         let weekday = calendar.component(.weekday, from: selectedDate)
         self.firstDayOfWeek = (weekday == 1) ? calendar.date(byAdding: .day, value: -6, to: selectedDate)! : calendar.date(byAdding: .day, value: 2 - weekday, to: selectedDate)!
         self.lastDayOfWeek = (weekday == 1) ? selectedDate : calendar.date(byAdding: .day, value: 8 - weekday, to: selectedDate)!
         
-        self.dailyTotalDictionary = wiDService.getDailyTotalDictionary(forDate: selectedDate)
-        self.weeklyTotalDictionary = wiDService.getWeeklyTotalDictionary(forDate: selectedDate)
-        self.monthlyTotalDictionary = wiDService.getMonthlyTotalDictionary(forDate: selectedDate)
+        self.wiDList = wiDList
+        self.dailyAllTitleDurationDictionary = getDailyAllTitleDurationDictionary(wiDList: wiDList, forDate: selectedDate)
+        self.weeklyAllTitleDurationDictionary = getWeeklyAllTitleDurationDictionary(wiDList: wiDList, forDate: selectedDate)
+        self.monthlyAllTitleDurationDictionary = getMonthlyAllTitleDurationDictionary(wiDList: wiDList, forDate: selectedDate)
     }
     
     var body: some View {
@@ -68,7 +69,7 @@ struct TotalDictionaryView: View {
                 }
 
                 VStack {
-                    if dailyTotalDictionary.isEmpty {
+                    if dailyAllTitleDurationDictionary.isEmpty {
                         HStack {
                             Image(systemName: "ellipsis.bubble")
                                 .foregroundColor(.gray)
@@ -78,7 +79,7 @@ struct TotalDictionaryView: View {
                         }
                         .frame(maxWidth: .infinity)
                     } else {
-                        ForEach(Array(dailyTotalDictionary), id: \.key) { title, duration in
+                        ForEach(Array(dailyAllTitleDurationDictionary), id: \.key) { title, duration in
                             HStack {
                                 HStack {
                                     Image(systemName: "character.textbox.ko")
@@ -191,7 +192,7 @@ struct TotalDictionaryView: View {
                 }
 
                 VStack {
-                    if weeklyTotalDictionary.isEmpty {
+                    if weeklyAllTitleDurationDictionary.isEmpty {
                         HStack {
                             Image(systemName: "ellipsis.bubble")
                                 .foregroundColor(.gray)
@@ -201,7 +202,7 @@ struct TotalDictionaryView: View {
                         }
                         .frame(maxWidth: .infinity)
                     } else {
-                        ForEach(Array(weeklyTotalDictionary), id: \.key) { title, duration in
+                        ForEach(Array(weeklyAllTitleDurationDictionary), id: \.key) { title, duration in
                             HStack {
                                 HStack {
                                     Image(systemName: "character.textbox.ko")
@@ -238,7 +239,6 @@ struct TotalDictionaryView: View {
                 .shadow(radius: 5)
             }
             
-
             // 월 합계
             VStack(spacing: 8) {
                 HStack(alignment: .bottom) {
@@ -260,7 +260,7 @@ struct TotalDictionaryView: View {
                 }
 
                 VStack {
-                    if monthlyTotalDictionary.isEmpty {
+                    if monthlyAllTitleDurationDictionary.isEmpty {
                         HStack {
                             Image(systemName: "ellipsis.bubble")
                                 .foregroundColor(.gray)
@@ -270,7 +270,7 @@ struct TotalDictionaryView: View {
                         }
                         .frame(maxWidth: .infinity)
                     } else {
-                        ForEach(Array(monthlyTotalDictionary), id: \.key) { title, duration in
+                        ForEach(Array(monthlyAllTitleDurationDictionary), id: \.key) { title, duration in
                             HStack {
                                 HStack {
                                     Image(systemName: "character.textbox.ko")
@@ -313,6 +313,6 @@ struct TotalDictionaryView: View {
 
 struct TotalDictionaryView_Previews: PreviewProvider {
     static var previews: some View {
-        TotalDictionaryView(selectedDate: Date())
+        TotalDictionaryView(selectedDate: Date(), wiDList: [])
     }
 }

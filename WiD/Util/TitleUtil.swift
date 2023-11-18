@@ -49,7 +49,7 @@ enum Title: String, CaseIterable, Identifiable {
 }
 
 // WiD 조회시 필요한 enum
-enum TitleWithALl: String, CaseIterable, Identifiable {
+enum TitleWithALL: String, CaseIterable, Identifiable {
     case ALL
     case STUDY
     case WORK
