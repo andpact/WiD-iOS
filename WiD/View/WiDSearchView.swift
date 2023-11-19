@@ -133,7 +133,7 @@ struct WiDSearchView: View {
                                     .padding()
                                     .background(.white)
                                     .cornerRadius(5)
-                                    .shadow(radius: 5)
+                                    .shadow(radius: 1)
                                 }
                             }
                         }

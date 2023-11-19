@@ -213,7 +213,7 @@ struct WiDReadCalendarView: View {
                     .padding(1)
                     .background(.white)
                     .cornerRadius(5)
-                    .shadow(radius: 5)
+                    .shadow(radius: 1)
                 }
                 .padding(.horizontal)
                 

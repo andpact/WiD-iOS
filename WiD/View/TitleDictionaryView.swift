@@ -118,7 +118,7 @@ struct TitleDictionaryView: View {
                 .frame(maxWidth: .infinity)
                 .background(.white)
                 .cornerRadius(5)
-                .shadow(radius: 5)
+                .shadow(radius: 1)
             }
             
             // 평균 기록
@@ -169,7 +169,7 @@ struct TitleDictionaryView: View {
                 .frame(maxWidth: .infinity)
                 .background(.white)
                 .cornerRadius(5)
-                .shadow(radius: 5)
+                .shadow(radius: 1)
             }
             
             // 최고 기록
@@ -220,7 +220,7 @@ struct TitleDictionaryView: View {
                 .frame(maxWidth: .infinity)
                 .background(.white)
                 .cornerRadius(5)
-                .shadow(radius: 5)
+                .shadow(radius: 1)
             }
             
             // 연속 기록
@@ -229,6 +229,7 @@ struct TitleDictionaryView: View {
                     .font(.custom("BlackHanSans-Regular", size: 20))
 
                 VStack(spacing: 8) {
+                    // 현재 진행
                     VStack(spacing: 0) {
                         HStack {
                             HStack {
@@ -253,11 +254,13 @@ struct TitleDictionaryView: View {
                         }
                         
                         if currentStreak != nil {
-                            HStack {
-                                if calendar.isDate(currentStreak ?? Date(), inSameDayAs: today) {
+                            HStack(spacing: 0) {
+                                if calendar.isDateInToday(currentStreak ?? Date()) {
                                     Text("오늘")
+                                        .font(.system(size: 14))
                                 } else {
                                     Text(formatDate(currentStreak ?? Date(), format: "yyyy년 M월 d일"))
+                                        .font(.system(size: 14))
                                     
                                     HStack(spacing: 0) {
                                         Text("(")
@@ -271,13 +274,15 @@ struct TitleDictionaryView: View {
                                             .font(.system(size: 14))
                                     }
                                     
-                                    Text("~ 오늘")
+                                    Text(" ~ 오늘")
+                                        .font(.system(size: 14))
                                 }
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
 
+                    // 최장 기간
                     VStack(spacing: 0) {
                         HStack {
                             HStack {
@@ -302,12 +307,14 @@ struct TitleDictionaryView: View {
                         }
                         
                         if longestStreak != nil {
-                            HStack {
+                            HStack(spacing: 0) {
                                 if calendar.isDate(longestStreak?.0 ?? Date(), inSameDayAs: longestStreak?.1 ?? Date()) {
-                                    if calendar.isDate(longestStreak?.0 ?? Date(), inSameDayAs: today) {
+                                    if calendar.isDateInToday(longestStreak?.0 ?? Date()) {
                                         Text("오늘")
+                                            .font(.system(size: 14))
                                     } else {
                                         Text(formatDate(longestStreak?.0 ?? Date(), format: "yyyy년 M월 d일"))
+                                            .font(.system(size: 14))
                                         
                                         HStack(spacing: 0) {
                                             Text("(")
@@ -323,6 +330,7 @@ struct TitleDictionaryView: View {
                                     }
                                 } else {
                                     Text(formatDate(longestStreak?.0 ?? Date(), format: "yyyy년 M월 d일"))
+                                        .font(.system(size: 14))
                                     
                                     HStack(spacing: 0) {
                                         Text("(")
@@ -336,14 +344,17 @@ struct TitleDictionaryView: View {
                                             .font(.system(size: 14))
                                     }
                                     
-                                    Text("~")
+                                    Text(" ~ ")
                                     
                                     if !calendar.isDate(longestStreak?.0 ?? Date(), equalTo: longestStreak?.1 ?? Date(), toGranularity: .year) {
                                         Text(formatDate(longestStreak?.1 ?? Date(), format: "yyyy년 M월 d일"))
+                                            .font(.system(size: 14))
                                     } else if !calendar.isDate(longestStreak?.0 ?? Date(), equalTo: longestStreak?.1 ?? Date(), toGranularity: .month) {
                                         Text(formatDate(longestStreak?.1 ?? Date(), format: "M월 d일"))
+                                            .font(.system(size: 14))
                                     } else {
                                         Text(formatDate(longestStreak?.1 ?? Date(), format: "d일"))
+                                            .font(.system(size: 14))
                                     }
                                     
                                     HStack(spacing: 0) {
@@ -367,7 +378,7 @@ struct TitleDictionaryView: View {
                 .frame(maxWidth: .infinity)
                 .background(.white)
                 .cornerRadius(5)
-                .shadow(radius: 5)
+                .shadow(radius: 1)
             }
         }
         .padding(.horizontal)

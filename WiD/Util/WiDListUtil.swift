@@ -94,7 +94,13 @@ func getMonthlyAllTitleDurationDictionary(wiDList: [WiD], forDate date: Date) ->
         }
     }
 
-    return titleTotalDuration
+    // Dictionary를 소요시간에 따라 내림차순 정렬
+    let sortedTitleTotalDuration = titleTotalDuration.sorted { $0.value > $1.value }
+
+    // 정렬된 Dictionary를 새로운 Dictionary로 변환
+    let sortedDictionary = Dictionary(uniqueKeysWithValues: sortedTitleTotalDuration)
+
+    return sortedDictionary
 }
 
 func getWeeklyAverageTitleDuration(wiDList: [WiD], title: String, forDate date: Date) -> TimeInterval {

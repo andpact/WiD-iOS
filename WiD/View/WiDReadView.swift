@@ -68,6 +68,9 @@ struct WiDReadView: View {
                 }
             }
         }
+        .background(Color("ghost_white"))
+        .compositingGroup()
+        .shadow(radius: 1)
     }
 }
 

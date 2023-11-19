@@ -44,7 +44,7 @@ struct TotalDictionaryView: View {
                     
                     Spacer()
 
-                    if calendar.isDate(selectedDate, inSameDayAs: today) {
+                    if calendar.isDateInToday(selectedDate) {
                         Text("오늘")
                             .font(.system(size: 14))
                     } else {
@@ -113,7 +113,7 @@ struct TotalDictionaryView: View {
                 .padding()
                 .background(.white)
                 .cornerRadius(5)
-                .shadow(radius: 5)
+                .shadow(radius: 1)
             }
             
             // 주 합계
@@ -133,7 +133,7 @@ struct TotalDictionaryView: View {
                         Text("이번 주")
                             .font(.system(size: 14))
                     } else {
-                        if calendar.isDate(firstDayOfWeek, inSameDayAs: today) {
+                        if calendar.isDateInToday(firstDayOfWeek) {
                             Text("오늘")
                                 .font(.system(size: 14))
                         } else {
@@ -156,7 +156,7 @@ struct TotalDictionaryView: View {
                         Text("~")
                             .foregroundColor(.gray)
 
-                        if calendar.isDate(lastDayOfWeek, inSameDayAs: today) {
+                        if calendar.isDateInToday(lastDayOfWeek) {
                             Text("오늘")
                                 .font(.system(size: 14))
                         } else {
@@ -236,7 +236,7 @@ struct TotalDictionaryView: View {
                 .padding()
                 .background(.white)
                 .cornerRadius(5)
-                .shadow(radius: 5)
+                .shadow(radius: 1)
             }
             
             // 월 합계
@@ -304,7 +304,7 @@ struct TotalDictionaryView: View {
                 .padding()
                 .background(.white)
                 .cornerRadius(5)
-                .shadow(radius: 5)
+                .shadow(radius: 1)
             }
         }
         .padding(.horizontal)

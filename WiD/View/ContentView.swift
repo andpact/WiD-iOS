@@ -35,17 +35,18 @@ struct ContentView: View {
             ForEach(ContentViewTapInfo.allCases, id: \.self) { item in
                 Image(systemName: item.rawValue)
                     .frame(maxWidth: .infinity)
-                    .padding(.top)
                     .imageScale(.large)
+                    .background(.clear)
                     .foregroundColor(selectedPicker == item ? .black : .gray)
                     .onTapGesture {
-//                        withAnimation(.easeInOut) {
-                            self.selectedPicker = item
-//                        }
+                        self.selectedPicker = item
                     }
             }
         }
+        .padding(.top)
         .background(Color("ghost_white"))
+        .compositingGroup() // 자식 뷰에 그림자 적용 안시킴
+        .shadow(radius: 1)
     }
 }
 
@@ -77,7 +78,8 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-//@ViewBuilder func admob() -> some View {
+//@ViewBuilder
+//func admob() -> some View {
 //    // admob
 //    GADBanner().frame(width: GADAdSizeBanner.size.width, height: GADAdSizeBanner.size.height)
 //}

@@ -111,7 +111,7 @@ struct WiDView: View {
                         .padding()
                         .background(.white)
                         .cornerRadius(5)
-                        .shadow(radius: 3)
+                        .shadow(radius: 1)
                     }
                     .padding(.horizontal)
                 }
@@ -230,7 +230,7 @@ struct WiDView: View {
                     }
                     .background(.white)
                     .cornerRadius(5)
-                    .shadow(radius: 3)
+                    .shadow(radius: 1)
                     
                     // 버튼
                     HStack {

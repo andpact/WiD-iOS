@@ -26,18 +26,14 @@ struct WiDReadDayView: View {
                 
                 HStack {
                     Text(formatDate(currentDate, format: "M월 d일"))
-                        .bold()
                     
                     HStack(spacing: 0) {
                         Text("(")
-                            .bold()
 
                         Text(formatWeekday(currentDate))
-                            .bold()
                             .foregroundColor(calendar.component(.weekday, from: currentDate) == 1 ? .red : (calendar.component(.weekday, from: currentDate) == 7 ? .blue : .black))
 
                         Text(")")
-                            .bold()
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -101,7 +97,7 @@ struct WiDReadDayView: View {
                         }
                         .background(.white)
                         .cornerRadius(5)
-                        .shadow(radius: 3)
+                        .shadow(radius: 1)
                     }
                     .aspectRatio(1.5, contentMode: .fit) // 파이 차트의 폭만큼 높이를 차지해야해서 1.5를 적용함.
                 }
@@ -204,7 +200,7 @@ struct WiDReadDayView: View {
                             }
                         }
                     }
-                    .shadow(radius: 3) // shadow는 가장 바깥 뷰에 적용해야 테두리에 제대로 표시됨.
+                    .shadow(radius: 1) // shadow는 가장 바깥 뷰에 적용해야 테두리에 제대로 표시됨.
                 }
             }
         }
