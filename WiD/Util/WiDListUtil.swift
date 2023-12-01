@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-func getDailyTotalDuration(wiDList: [WiD]) -> TimeInterval {
+func getTotalDurationFromWiDList(wiDList: [WiD]) -> TimeInterval {
     let totalDuration = wiDList.reduce(0) { $0 + $1.duration }
     return totalDuration
 }
 
-func getDailyTotalDurationPercentage(wiDList: [WiD]) -> Int {
-    let totalDuration = getDailyTotalDuration(wiDList: wiDList)
+func getTotalDurationPercentageFromWiDList(wiDList: [WiD]) -> Int {
+    let totalDuration = getTotalDurationFromWiDList(wiDList: wiDList)
     let totalSecondsIn24Hours: TimeInterval = 24 * 60 * 60
     
     if totalSecondsIn24Hours > 0 {
@@ -22,6 +22,26 @@ func getDailyTotalDurationPercentage(wiDList: [WiD]) -> Int {
     } else {
         return 0
     }
+}
+
+func getTotalDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
+    var titleTotalDuration: [String: TimeInterval] = [:]
+
+    for wiD in wiDList {
+        if let existingDuration = titleTotalDuration[wiD.title] {
+            titleTotalDuration[wiD.title] = existingDuration + wiD.duration
+        } else {
+            titleTotalDuration[wiD.title] = wiD.duration
+        }
+    }
+
+    // Dictionary를 소요시간에 따라 내림차순 정렬
+    let sortedTitleTotalDuration = titleTotalDuration.sorted { $0.value > $1.value }
+
+    // 정렬된 Dictionary를 새로운 Dictionary로 변환
+    let sortedDictionary = Dictionary(uniqueKeysWithValues: sortedTitleTotalDuration)
+
+    return sortedDictionary
 }
 
 func getDailyAllTitleDurationDictionary(wiDList: [WiD], forDate date: Date) -> [String: TimeInterval] {
@@ -103,6 +123,38 @@ func getMonthlyAllTitleDurationDictionary(wiDList: [WiD], forDate date: Date) ->
     return sortedDictionary
 }
 
+func getAverageDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
+    var titleTotalDuration: [String: [Date: TimeInterval]] = [:]
+
+    for wiD in wiDList {
+        if var existingDurations = titleTotalDuration[wiD.title] {
+            existingDurations[wiD.date, default: 0] += wiD.duration
+            titleTotalDuration[wiD.title] = existingDurations
+        } else {
+            titleTotalDuration[wiD.title] = [wiD.date: wiD.duration]
+        }
+    }
+
+    // Calculate average duration for each title
+    var averageDurationByTitle: [String: TimeInterval] = [:]
+
+    for (title, durations) in titleTotalDuration {
+        let count = durations.count
+
+        if count > 0 {
+            var totalDuration: TimeInterval = 0
+
+            for (_, duration) in durations {
+                totalDuration += duration
+            }
+
+            averageDurationByTitle[title] = totalDuration / TimeInterval(count)
+        }
+    }
+
+    return averageDurationByTitle
+}
+
 func getWeeklyAverageTitleDuration(wiDList: [WiD], title: String, forDate date: Date) -> TimeInterval {
     var durationsByDate: [Date: TimeInterval] = [:]
     
@@ -141,33 +193,28 @@ func getWeeklyAverageTitleDuration(wiDList: [WiD], title: String, forDate date: 
     return numberOfDays > 0 ? totalDuration / numberOfDays : 0
 }
 
-func getMonthlyAverageTitleDuration(wiDList: [WiD], title: String, forDate date: Date) -> TimeInterval {
-    var durationsByDate: [Date: TimeInterval] = [:]
-    
-    let calendar = Calendar.current
-    let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: date))!
-    let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
+func getMaxDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
+    var titleTotalDuration: [String: [Date: TimeInterval]] = [:]
 
-    var currentDate = startOfMonth
-    while currentDate <= endOfMonth {
-        let filteredWiDList = wiDList.filter { wiD in
-            return calendar.isDate(wiD.date, equalTo: currentDate, toGranularity: .day) && wiD.title == title
+    for wiD in wiDList {
+        if var existingDurations = titleTotalDuration[wiD.title] {
+            existingDurations[wiD.date, default: 0] += wiD.duration
+            titleTotalDuration[wiD.title] = existingDurations
+        } else {
+            titleTotalDuration[wiD.title] = [wiD.date: wiD.duration]
         }
-
-        let totalDuration = filteredWiDList.reduce(0) { $0 + $1.duration }
-        durationsByDate[currentDate] = totalDuration
-
-        guard let nextDate = calendar.date(byAdding: .day, value: 1, to: currentDate) else {
-            break
-        }
-        currentDate = nextDate
     }
 
-    let averageDurations = durationsByDate.values
-    let totalDuration = averageDurations.reduce(0, +)
-    let numberOfDays = Double(durationsByDate.count)
-    
-    return numberOfDays > 0 ? totalDuration / numberOfDays : 0
+    // Calculate max duration for each title
+    var maxDurationByTitle: [String: TimeInterval] = [:]
+
+    for (title, durations) in titleTotalDuration {
+        if let maxDuration = durations.values.max() {
+            maxDurationByTitle[title] = maxDuration
+        }
+    }
+
+    return maxDurationByTitle
 }
 
 func getWeeklyMaxTitleDuration(wiDList: [WiD], title: String, forDate date: Date) -> TimeInterval {

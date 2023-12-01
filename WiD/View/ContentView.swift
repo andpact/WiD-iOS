@@ -43,9 +43,9 @@ struct ContentView: View {
                     }
             }
         }
-        .padding(.top)
+        .padding(.vertical)
         .background(Color("ghost_white"))
-        .compositingGroup() // 자식 뷰에 그림자 적용 안시킴
+        .compositingGroup() // 자식 뷰에 그림자 적용 방지
         .shadow(radius: 1)
     }
 }

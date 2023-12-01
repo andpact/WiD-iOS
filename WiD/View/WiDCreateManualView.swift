@@ -192,7 +192,7 @@ struct WiDCreateManualView: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("경과")
+                        Text("소요")
                             .bold()
                             .padding(.leading, 8)
                         

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WiDReadView: View {
-    @State private var selectedPicker: wiDReadHolderTapInfo = .DAY
+    @State private var selectedPicker: wiDReadHolderTapInfo = .DATEBASED
     @Namespace private var animation
     
     var body: some View {
@@ -25,20 +25,20 @@ struct WiDReadView: View {
                         // 왼쪽 스와이프: 다음 탭으로 이동
                         withAnimation(.easeInOut) {
                             switch selectedPicker {
-                            case .DAY:
-                                selectedPicker = .CALENDAR
-                            case .CALENDAR:
-                                selectedPicker = .DAY
+                            case .DATEBASED:
+                                selectedPicker = .PERIODBASED
+                            case .PERIODBASED:
+                                selectedPicker = .DATEBASED
                             }
                         }
                     } else if value.translation.width > 0 {
                         // 오른쪽 스와이프: 이전 탭으로 이동
                         withAnimation(.easeInOut) {
                             switch selectedPicker {
-                            case .DAY:
-                                selectedPicker = .CALENDAR
-                            case .CALENDAR:
-                                selectedPicker = .DAY
+                            case .DATEBASED:
+                                selectedPicker = .PERIODBASED
+                            case .PERIODBASED:
+                                selectedPicker = .DATEBASED
                             }
                         }
                     }
@@ -58,7 +58,9 @@ struct WiDReadView: View {
                         Capsule()
                             .foregroundColor(.black)
                             .frame(height: 3)
-                            .matchedGeometryEffect(id: "DAY", in: animation)
+                            .matchedGeometryEffect(id: "DATEBASED", in: animation)
+//                            .matchedGeometryEffect(id: "PERIODBASED", in: animation)
+//                            .matchedGeometryEffect(id: "\(item)", in: animation)
                     }
                 }
                 .onTapGesture {
@@ -75,8 +77,8 @@ struct WiDReadView: View {
 }
 
 enum wiDReadHolderTapInfo: String, CaseIterable {
-    case DAY = "날짜 별 기록"
-    case CALENDAR = "기간 별 기록"
+    case DATEBASED = "날짜 별 기록"
+    case PERIODBASED = "기간 별 기록"
 }
 
 struct WiDReadHolderView: View {
@@ -84,10 +86,11 @@ struct WiDReadHolderView: View {
     
     var body: some View {
         switch currentTab {
-        case .DAY:
+        case .DATEBASED:
             WiDReadDayView()
-        case .CALENDAR:
-            WiDReadCalendarView()
+        case .PERIODBASED:
+//            WiDReadCalendarView()
+            PeriodBasedView()
         }
     }
 }

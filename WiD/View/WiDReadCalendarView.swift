@@ -91,7 +91,7 @@ struct WiDReadCalendarView: View {
                             ForEach(0...6, id: \.self) { index in
                                 let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
                                 
-                                Text(formatWeekdayLetter(index))
+                                Text(formatWeekdayLetterFromSunday(index))
                                     .frame(maxWidth: .infinity)
                                     .foregroundColor(textColor)
                             }

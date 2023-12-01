@@ -105,3 +105,23 @@ let titleDictionary: [String: String] = [
     Title.SLEEP.rawValue: Title.SLEEP.koreanValue,
     Title.ETC.rawValue: Title.ETC.koreanValue
 ]
+
+struct Year: Identifiable {
+    var id: String
+}
+
+enum Period: String, CaseIterable, Identifiable {
+    case WEEK
+    case MONTH
+    
+    var id: Self { self }
+    
+    var koreanValue: String {
+        switch self {
+        case .WEEK:
+            return "일주일"
+        case .MONTH:
+            return "한 달"
+        }
+    }
+}
