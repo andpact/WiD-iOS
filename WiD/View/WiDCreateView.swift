@@ -98,9 +98,9 @@ struct WiDCreateHolderView: View {
     var body: some View {
         switch currentTab {
         case .STOPWATCH:
-            WiDCreateStopWatchView(topBottomBarVisible: $topBottomBarVisible)
+            WiDCreateStopWatchView()
         case .TIMER:
-            WiDCreateTimerView(topBottomBarVisible: $topBottomBarVisible)
+            WiDCreateTimerView()
         case .MANUAL:
             WiDCreateManualView()
         }

@@ -43,13 +43,10 @@ struct WiDCreateTimerView: View {
     @State private var selectedMinute: Int = 0
     @State private var selectedSecond: Int = 0
     
-    // 상단, 하단 탭 가시성
-    @Binding var topBottomBarVisible: Bool
-    
     var body: some View {
         ZStack {
             // 최초 화면(타이머 시간 선택)
-            if !isRunning && topBottomBarVisible {
+            if !isRunning {
                 HStack(spacing: 0) {
                     // 시간(Hour) 선택
                     Picker("", selection: $selectedHour) {
@@ -161,7 +158,7 @@ struct WiDCreateTimerView: View {
                     Text("초기화")
                 }
                 .frame(maxWidth: .infinity)
-                .disabled(isRunning || topBottomBarVisible)
+                .disabled(isRunning)
                 
                 Button(action: {
                     if !isRunning {
@@ -187,10 +184,6 @@ struct WiDCreateTimerView: View {
     }
     
     private func startWiD() {
-        withAnimation {
-            topBottomBarVisible = false
-        }
-        
         isRunning = true
         buttonText = "중지"
         
@@ -244,10 +237,6 @@ struct WiDCreateTimerView: View {
     }
 
     private func resetWiD() {
-        withAnimation {
-            topBottomBarVisible = true
-        }
-        
         buttonText = "시작"
         remainingTime = 0
     }
@@ -255,7 +244,6 @@ struct WiDCreateTimerView: View {
 
 struct WiDCreateTimerView_Previews: PreviewProvider {
     static var previews: some View {
-        let topBottomBarVisible = Binding.constant(true)
-        WiDCreateTimerView(topBottomBarVisible: topBottomBarVisible)
+        WiDCreateTimerView()
     }
 }

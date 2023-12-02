@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct WiDCreateStopWatchView: View {
-    // 데이터베이스
+    // 화면
+    @Environment(\.presentationMode) var presentationMode
+    
+    // WiD
     private let wiDService = WiDService()
     
     // 날짜
@@ -34,65 +37,88 @@ struct WiDCreateStopWatchView: View {
     
     // 스톱 워치
     @State private var timer: Timer?
-    @State private var isRunning: Bool = false
+    @State private var isRecording: Bool = false
+    @State private var isRecordingStop: Bool = false
+    @State private var isStopWatchReset: Bool = true
     @State private var elapsedTime = 0
     private let timerInterval = 1
     
-    // 상단, 하단 Bar 가시성
-    @Binding var topBottomBarVisible: Bool
-    
     var body: some View {
-        // 전체 화면
-        ZStack {
-            formatStopWatchTime(elapsedTime)
-                .padding(.bottom, 180)
-            
-            // 제목 표시 및 버튼
-            HStack {
+        NavigationView {
+            // 전체 화면
+            ZStack {
+                // 상단 바
                 HStack {
-                    Circle()
-                        .fill(Color(title.rawValue))
-                        .frame(width: 10)
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                        
+                        if isRecording {
+                            finishStopWatch()
+                        }
+                    }) {
+                        Image(systemName: "arrow.backward")
+                            .imageScale(.large)
+                    }
+
+                    Text("스톱워치")
+                        .bold()
                     
-                    Picker("", selection: $title) {
-                        ForEach(Array(Title.allCases), id: \.self) { title in
-                            Text(title.koreanValue)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                
+                // 컨텐츠
+                formatStopWatchTime(elapsedTime)
+                
+                // 하단 바
+                HStack {
+                    HStack {
+                        Circle()
+                            .fill(Color(title.rawValue))
+                            .frame(width: 10)
+                        
+                        Picker("", selection: $title) {
+                            ForEach(Array(Title.allCases), id: \.self) { title in
+                                Text(title.koreanValue)
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 16) {
+                        if isRecordingStop {
+                            Button(action: {
+                                resetStopWatch()
+                            }) {
+                                Text("초기화")
+                            }
+                        }
+                        
+                        Button(action: {
+                            if isRecording {
+                                finishStopWatch()
+                            } else {
+                                startStopWatch()
+                            }
+                        }) {
+                            Text(buttonText)
+                                .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .black))
                         }
                     }
                 }
-                .frame(maxWidth: .infinity)
-                
-                Button(action: {
-                    resetWiD()
-                }) {
-                    Text("초기화")
-                }
-                .frame(maxWidth: .infinity)
-                .disabled(isRunning || topBottomBarVisible)
-                
-                Button(action: {
-                    if !isRunning {
-                        startWiD()
-                    } else {
-                        finishWiD()
-                    }
-                }) {
-                    Text(buttonText)
-                        .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .black))
-                }
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationBarBackButtonHidden()
     }
     
-    private func startWiD() {
-        withAnimation() {
-            topBottomBarVisible = false
-        }
-        isRunning = true
+    private func startStopWatch() {
+        isRecording = true
+        isRecordingStop = false
+        isStopWatchReset = false
         buttonText = "중지"
         
         timer?.invalidate()
@@ -100,8 +126,8 @@ struct WiDCreateStopWatchView: View {
             if elapsedTime < 12 * 60 * 60 {
                 elapsedTime += timerInterval
             } else {
-                finishWiD()
-                resetWiD()
+                finishStopWatch()
+                resetStopWatch()
             }
         }
         
@@ -109,8 +135,9 @@ struct WiDCreateStopWatchView: View {
         start = Date()
     }
 
-    private func finishWiD() {
-        isRunning = false
+    private func finishStopWatch() {
+        isRecording = false
+        isRecordingStop = true
         buttonText = "계속"
         
         timer?.invalidate()
@@ -146,10 +173,9 @@ struct WiDCreateStopWatchView: View {
         }
     }
 
-    private func resetWiD() {
-        withAnimation {
-            topBottomBarVisible = true
-        }
+    private func resetStopWatch() {
+        isRecordingStop = false
+        isStopWatchReset = true
         elapsedTime = 0
         buttonText = "시작"
     }
@@ -157,7 +183,6 @@ struct WiDCreateStopWatchView: View {
 
 struct WiDCreateView_Previews: PreviewProvider {
     static var previews: some View {
-        let topBottomBarVisible = Binding.constant(true)
-        return WiDCreateStopWatchView(topBottomBarVisible: topBottomBarVisible)
+        return WiDCreateStopWatchView()
     }
 }

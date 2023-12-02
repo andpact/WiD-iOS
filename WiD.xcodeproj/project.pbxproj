@@ -25,8 +25,10 @@
 		EA1BF4E02B04703D004DEBC4 /* WiDListUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1BF4DF2B04703D004DEBC4 /* WiDListUtil.swift */; };
 		EA215CDE2A60F9AF005C5D30 /* WiDSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */; };
 		EA215CE42A60FCD6005C5D30 /* WiDReadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CE32A60FCD6005C5D30 /* WiDReadView.swift */; };
+		EA3BC0642B1AB9F1009467CA /* DiaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3BC0632B1AB9F1009467CA /* DiaryService.swift */; };
 		EA3E63942AE7ED7F00294709 /* WiDReadCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3E63932AE7ED7F00294709 /* WiDReadCalendarView.swift */; };
 		EA469A7F2AB6A5170000E0CC /* Tektur-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA469A7E2AB6A5170000E0CC /* Tektur-Regular.ttf */; };
+		EA4774F82B1AF357009A59B0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4774F72B1AF357009A59B0 /* HomeView.swift */; };
 		EA60B8062A56991700B49641 /* WiDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8052A56991700B49641 /* WiDApp.swift */; };
 		EA60B8082A56991700B49641 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8072A56991700B49641 /* ContentView.swift */; };
 		EA60B80A2A56991800B49641 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA60B8092A56991800B49641 /* Assets.xcassets */; };
@@ -47,6 +49,7 @@
 		EACB45152AB9CA8200DEF739 /* WiDCreateManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACB45142AB9CA8200DEF739 /* WiDCreateManualView.swift */; };
 		EADCDC472A6DF98100D8AED2 /* Acme-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */; };
 		EADF79162A583C8E000753B2 /* WiDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADF79152A583C8E000753B2 /* WiDService.swift */; };
+		EAF1D54C2B1AAAB000E26B2A /* DiaryUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF1D54B2B1AAAB000E26B2A /* DiaryUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,8 +94,10 @@
 		EA1BF4DF2B04703D004DEBC4 /* WiDListUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDListUtil.swift; sourceTree = "<group>"; };
 		EA215CDD2A60F9AF005C5D30 /* WiDSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDSearchView.swift; sourceTree = "<group>"; };
 		EA215CE32A60FCD6005C5D30 /* WiDReadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadView.swift; sourceTree = "<group>"; };
+		EA3BC0632B1AB9F1009467CA /* DiaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryService.swift; sourceTree = "<group>"; };
 		EA3E63932AE7ED7F00294709 /* WiDReadCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDReadCalendarView.swift; sourceTree = "<group>"; };
 		EA469A7E2AB6A5170000E0CC /* Tektur-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tektur-Regular.ttf"; sourceTree = "<group>"; };
+		EA4774F72B1AF357009A59B0 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		EA60B8022A56991700B49641 /* WiD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WiD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA60B8052A56991700B49641 /* WiDApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDApp.swift; sourceTree = "<group>"; };
 		EA60B8072A56991700B49641 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -117,6 +122,7 @@
 		EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Acme-Regular.ttf"; sourceTree = "<group>"; };
 		EADCDC482A6DF9C100D8AED2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EADF79152A583C8E000753B2 /* WiDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDService.swift; sourceTree = "<group>"; };
+		EAF1D54B2B1AAAB000E26B2A /* DiaryUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +189,7 @@
 				EA0C27092B19AA7D00AB2FBD /* DateUtil.swift */,
 				EA181F362A624F1F006EAF72 /* TimeUtil.swift */,
 				EA0C270B2B19AAB200AB2FBD /* DurationUtil.swift */,
+				EAF1D54B2B1AAAB000E26B2A /* DiaryUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -254,6 +261,7 @@
 			children = (
 				EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */,
 				EA60B8072A56991700B49641 /* ContentView.swift */,
+				EA4774F72B1AF357009A59B0 /* HomeView.swift */,
 				EA9D41752AB18B28008D6DE2 /* WiDCreateView.swift */,
 				EAC5D7202A56A76E00FA2499 /* WiDCreateStopWatchView.swift */,
 				EA9D41732AB18B0D008D6DE2 /* WiDCreateTimerView.swift */,
@@ -287,6 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				EADF79152A583C8E000753B2 /* WiDService.swift */,
+				EA3BC0632B1AB9F1009467CA /* DiaryService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -536,6 +545,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA18DCB82AE8D9EC00B88F30 /* ManualViewWithHorizontalBarView.swift in Sources */,
+				EAF1D54C2B1AAAB000E26B2A /* DiaryUtil.swift in Sources */,
 				EADF79162A583C8E000753B2 /* WiDService.swift in Sources */,
 				EA0B3A9C2AF31BA700822302 /* TotalDictionaryView.swift in Sources */,
 				EA18DCB62AE8CC5B00B88F30 /* BarChartUtil.swift in Sources */,
@@ -546,9 +556,11 @@
 				EA215CDE2A60F9AF005C5D30 /* WiDSearchView.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
 				EA181F372A624F1F006EAF72 /* TimeUtil.swift in Sources */,
+				EA4774F82B1AF357009A59B0 /* HomeView.swift in Sources */,
 				EA70DD742A59089D00B4B167 /* WiDReadDayView.swift in Sources */,
 				EA0458232A625C0C0065B98E /* WiDUtil.swift in Sources */,
 				EA3E63942AE7ED7F00294709 /* WiDReadCalendarView.swift in Sources */,
+				EA3BC0642B1AB9F1009467CA /* DiaryService.swift in Sources */,
 				EA9D41762AB18B28008D6DE2 /* WiDCreateView.swift in Sources */,
 				EA1BF4E02B04703D004DEBC4 /* WiDListUtil.swift in Sources */,
 				EAA2E1922AEE8AF900D6486B /* OpacityChartView.swift in Sources */,

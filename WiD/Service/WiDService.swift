@@ -15,6 +15,7 @@ class WiDService {
     init() {
         let fileURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(dbName)
         
+        // 데이터 베이스 열기
         if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
             print("Unable to open database.")
             return
@@ -30,7 +31,10 @@ class WiDService {
     }
     
     deinit {
-        sqlite3_close(db)
+        // 데이터 베이스 닫기
+        if sqlite3_close(db) != SQLITE_OK {
+            print("Error closing database")
+        }
     }
     
     func insertWiD(wid: WiD) {

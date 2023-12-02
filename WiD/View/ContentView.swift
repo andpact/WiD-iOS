@@ -51,7 +51,7 @@ struct ContentView: View {
 }
 
 enum ContentViewTapInfo: String, CaseIterable {
-    case CREATE = "square.and.pencil" // 등록 이미지
+    case CREATE = "house.fill" // 등록 이미지
     case READ = "list.bullet" // 조회 이미지
     case SEARCH = "magnifyingglass" // 검색 이미지
 }
@@ -63,7 +63,7 @@ struct ContentHolderView: View {
     var body: some View {
         switch currentTab {
         case .CREATE:
-            WiDCreateView(topBottomBarVisible: $topBottomBarVisible)
+            HomeView()
         case .READ:
             WiDReadView()
         case .SEARCH:

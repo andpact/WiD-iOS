@@ -12,6 +12,10 @@ struct WiDReadDayView: View {
     private let wiDService = WiDService()
     @State private var wiDList: [WiD] = []
     
+    // 다이어리
+    private let diaryService = DiaryService()
+    @State private var diary: Diary = Diary(id: -1, date: Date(), title: "", content: "")
+    
     // 합계
     @State private var totalDurationDictionary: [String: TimeInterval] = [:]
     
@@ -37,7 +41,6 @@ struct WiDReadDayView: View {
                                 
                                 Text("표시할 그래프가 없습니다.")
                                     .foregroundColor(.gray)
-
                             }
                             .padding()
                             .padding(.vertical, 32)
@@ -75,7 +78,51 @@ struct WiDReadDayView: View {
                     }
                     .padding(.horizontal)
                     
-                    // 파이 차트
+                    // 다이어리
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("다이어리")
+                            .font(.custom("BlackHanSans-Regular", size: 20))
+                        
+                        if diary.id < 0 {
+                            HStack {
+                                Image(systemName: "ellipsis.bubble")
+                                    .foregroundColor(.gray)
+                                
+                                Text("표시할 다이어리가 없습니다.")
+                                    .foregroundColor(.gray)
+                            }
+                            .padding()
+                            .padding(.vertical, 32)
+                            .frame(maxWidth: .infinity)
+                            .background(.white)
+                            .cornerRadius(8)
+                            .shadow(radius: 1)
+                        } else {
+                            VStack(alignment: .leading) {
+                                Text(diary.title)
+                                    .bold()
+                                    .lineLimit(1)
+                            
+                                Text(diary.content)
+                            }
+                        }
+                        
+                        Button(action: {
+                            withAnimation {
+                                
+                            }
+                        }) {
+                            Text("다이어리 수정")
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(.blue)
+                        .cornerRadius(8)
+                    }
+                    .padding(.horizontal)
+                    
+                    // 합계 기록
                     VStack(alignment: .leading, spacing: 8) {
                         Text("합계 기록")
                             .font(.custom("BlackHanSans-Regular", size: 20))
@@ -87,7 +134,6 @@ struct WiDReadDayView: View {
                                 
                                 Text("표시할 기록이 없습니다.")
                                     .foregroundColor(.gray)
-
                             }
                             .padding()
                             .padding(.vertical, 32)
@@ -147,7 +193,6 @@ struct WiDReadDayView: View {
                                 
                                 Text("표시할 WiD가 없습니다.")
                                     .foregroundColor(.gray)
-
                             }
                             .padding()
                             .padding(.vertical, 32)
@@ -279,13 +324,14 @@ struct WiDReadDayView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
             wiDList = wiDService.selectWiDsByDate(date: currentDate)
-            
             totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
+            diary = diaryService.selectDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
         }
         .onChange(of: currentDate) { newDate in
             withAnimation {
                 wiDList = wiDService.selectWiDsByDate(date: newDate)
                 totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
+                diary = diaryService.selectDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
             }
         }
     }
