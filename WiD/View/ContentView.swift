@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     // 선택된 화면
-    @State private var selectedPicker: ContentViewTapInfo = .CREATE
+    @State private var selectedPicker: ContentViewTapInfo = .HOME
     
     // 상단, 하단 Bar 가시성
     @State var topBottomBarVisible = true
@@ -25,7 +25,7 @@ struct ContentView: View {
                     bottomNavigationBar()
                 }
             }
-            .accentColor(.black)
+            .tint(.black)
         }
     }
     
@@ -51,8 +51,8 @@ struct ContentView: View {
 }
 
 enum ContentViewTapInfo: String, CaseIterable {
-    case CREATE = "house.fill" // 등록 이미지
-    case READ = "list.bullet" // 조회 이미지
+    case HOME = "house.fill" // 등록 이미지
+    case LIST = "list.bullet" // 조회 이미지
     case SEARCH = "magnifyingglass" // 검색 이미지
 }
 
@@ -62,12 +62,12 @@ struct ContentHolderView: View {
     
     var body: some View {
         switch currentTab {
-        case .CREATE:
+        case .HOME:
             HomeView()
-        case .READ:
-            WiDReadView()
+        case .LIST:
+            ListView()
         case .SEARCH:
-            WiDSearchView()
+            SearchView()
         }
     }
 }

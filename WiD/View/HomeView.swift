@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     var body: some View {
+        // 전체화면
         VStack {
             ZStack {
                 Text("WiD")
@@ -22,7 +23,7 @@ struct HomeView: View {
                     HStack {
                         Button(action: {
                         }) {
-                            NavigationLink(destination: WiDCreateStopWatchView()) { // 버튼을 링크로 감싸면 동작을 안함.
+                            NavigationLink(destination: StopWatchView()) { // 버튼을 링크로 감싸면 동작을 안함.
                                 ZStack {
                                     Text("스톱워치")
                                         .padding()
@@ -34,7 +35,7 @@ struct HomeView: View {
                                         .padding()
                                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                                 }
-                                .frame(width: .infinity, height: geometry.size.width / 2)
+                                .frame(maxWidth: .infinity, maxHeight: geometry.size.width / 2)
                             }
                         }
                         .background(Color.white)
@@ -43,7 +44,7 @@ struct HomeView: View {
 
                         Button(action: {
                         }) {
-                            NavigationLink(destination: WiDCreateStopWatchView()) {
+                            NavigationLink(destination: TimerView()) {
                                 ZStack {
                                     Text("타이머")
                                         .padding()
@@ -55,9 +56,8 @@ struct HomeView: View {
                                         .padding()
                                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                                 }
-                                .frame(width: .infinity, height: geometry.size.width / 2, alignment: .topLeading)
-                            }
-                                
+                                .frame(maxWidth: .infinity, maxHeight: geometry.size.width / 2)
+                            } 
                         }
                         .background(Color.white)
                         .cornerRadius(8)
@@ -69,7 +69,7 @@ struct HomeView: View {
                 Button(action: {
                     
                 }) {
-                    NavigationLink(destination: WiDCreateManualView()) {
+                    NavigationLink(destination: ManualView()) {
                         Text("직접 입력")
                             .font(.custom("BlackHanSans-Regular", size: 30))
                             .padding()
@@ -88,6 +88,7 @@ struct HomeView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .padding()
+        .background(Color("ghost_white"))
     }
 }
 

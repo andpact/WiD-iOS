@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WiDReadDayView: View {
+struct DateBasedView: View {
     // WiD
     private let wiDService = WiDService()
     @State private var wiDList: [WiD] = []
@@ -83,7 +83,7 @@ struct WiDReadDayView: View {
                         Text("다이어리")
                             .font(.custom("BlackHanSans-Regular", size: 20))
                         
-                        if diary.id < 0 {
+                        if diary.id < 0 { // 다이어리가 데이터베이스에 없을 때
                             HStack {
                                 Image(systemName: "ellipsis.bubble")
                                     .foregroundColor(.gray)
@@ -108,12 +108,12 @@ struct WiDReadDayView: View {
                         }
                         
                         Button(action: {
-                            withAnimation {
-                                
-                            }
+                            
                         }) {
-                            Text("다이어리 수정")
-                                .foregroundColor(.white)
+                            NavigationLink(destination: DiaryView(date: currentDate)) {
+                                Text("다이어리 수정")
+                                    .foregroundColor(.white)
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -323,9 +323,9 @@ struct WiDReadDayView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
-            wiDList = wiDService.selectWiDsByDate(date: currentDate)
-            totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-            diary = diaryService.selectDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
+            self.wiDList = wiDService.selectWiDsByDate(date: currentDate)
+            self.totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
+            self.diary = diaryService.selectDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
         }
         .onChange(of: currentDate) { newDate in
             withAnimation {
@@ -337,8 +337,8 @@ struct WiDReadDayView: View {
     }
 }
 
-struct WiDReadView_Previews: PreviewProvider {
+struct DateBasedView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDReadDayView()
+        DateBasedView()
     }
 }

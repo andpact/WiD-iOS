@@ -355,7 +355,7 @@ struct ManualViewWithHorizontalBarView: View {
     }
 }
 
-struct ManualViewTmp_Previews: PreviewProvider {
+struct ManualViewWithHorizontalBarView_Previews: PreviewProvider {
     static var previews: some View {
         ManualViewWithHorizontalBarView()
     }

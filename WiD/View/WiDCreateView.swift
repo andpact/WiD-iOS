@@ -98,11 +98,11 @@ struct WiDCreateHolderView: View {
     var body: some View {
         switch currentTab {
         case .STOPWATCH:
-            WiDCreateStopWatchView()
+            StopWatchView()
         case .TIMER:
-            WiDCreateTimerView()
+            TimerView()
         case .MANUAL:
-            WiDCreateManualView()
+            ManualView()
         }
     }
 }

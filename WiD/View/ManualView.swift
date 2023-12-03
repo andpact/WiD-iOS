@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WiDCreateManualView: View {
+struct ManualView: View {
     private let screen = UIScreen.main.bounds.size
     private let wiDService = WiDService()
     @State private var wiDList: [WiD] = []
@@ -403,8 +403,8 @@ struct WiDCreateManualView: View {
     }
 }
 
-struct WiDCreateManualView_Previews: PreviewProvider {
+struct ManualView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDCreateManualView()
+        ManualView()
     }
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WiDSearchView: View {
+struct SearchView: View {
     private let wiDService = WiDService()
     private let calendar = Calendar.current
     
@@ -142,7 +142,7 @@ struct WiDSearchView: View {
                 }
                 .onAppear {
                     // 삭제 후 돌아오면 삭제된 WiD가 남아서 표시되니까 다시 WiD 리스트를 가져옴.
-                    wiDList = wiDService.selectWiDsByDetail(detail: searchText)
+                    self.wiDList = wiDService.selectWiDsByDetail(detail: searchText)
                 }
                 .onChange(of: searchText) { newValue in
                     withAnimation {
@@ -173,8 +173,8 @@ struct SearchBar: View {
     }
 }
 
-struct WiDSearchView_Previews: PreviewProvider {
+struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDSearchView()
+        SearchView()
     }
 }

@@ -404,12 +404,12 @@ struct PeriodBasedView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            startDate = getFirstDayOfWeek(for: today)
-            finishDate = getLastDayOfWeek(for: today)
+            self.startDate = getFirstDayOfWeek(for: today)
+            self.finishDate = getLastDayOfWeek(for: today)
             
             updateWiDData()
             
-            filteredWiDListByTitle = wiDList.filter { wiD in
+            self.filteredWiDListByTitle = wiDList.filter { wiD in
                 return wiD.title == selectedTitle.rawValue
             }
         }

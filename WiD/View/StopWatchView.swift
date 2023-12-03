@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct WiDCreateStopWatchView: View {
+struct StopWatchView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
+    @State private var stopWatchTopBottomBarVisible: Bool = true
     
     // WiD
     private let wiDService = WiDService()
@@ -32,85 +33,102 @@ struct WiDCreateStopWatchView: View {
     // 설명
     private let detail: String = ""
     
-    // 버튼
-    @State private var buttonText: String = "시작"
-    
     // 스톱 워치
     @State private var timer: Timer?
     @State private var isRecording: Bool = false
     @State private var isRecordingStop: Bool = false
     @State private var isStopWatchReset: Bool = true
     @State private var elapsedTime = 0
+    @State private var buttonText: String = "시작"
     private let timerInterval = 1
     
     var body: some View {
         NavigationView {
             // 전체 화면
             ZStack {
-                // 상단 바
-                HStack {
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                        
-                        if isRecording {
-                            finishStopWatch()
+                if stopWatchTopBottomBarVisible {
+                    // 상단 바
+                    HStack {
+                        Button(action: {
+                            presentationMode.wrappedValue.dismiss()
+                            
+                            if isRecording {
+                                finishStopWatch()
+                            }
+                        }) {
+                            Image(systemName: "arrow.backward")
+                                .imageScale(.large)
                         }
-                    }) {
-                        Image(systemName: "arrow.backward")
-                            .imageScale(.large)
-                    }
 
-                    Text("스톱워치")
-                        .bold()
-                    
-                    Spacer()
+                        Text("스톱워치")
+                            .bold()
+                        
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 
                 // 컨텐츠
                 formatStopWatchTime(elapsedTime)
                 
-                // 하단 바
-                HStack {
+                if stopWatchTopBottomBarVisible {
+                    // 하단 바
                     HStack {
-                        Circle()
-                            .fill(Color(title.rawValue))
-                            .frame(width: 10)
+                        HStack {
+                            Circle()
+                                .fill(Color(title.rawValue))
+                                .frame(width: 10)
+                            
+                            Picker("", selection: $title) {
+                                ForEach(Array(Title.allCases), id: \.self) { title in
+                                    Text(title.koreanValue)
+                                }
+                            }
+                        }
                         
-                        Picker("", selection: $title) {
-                            ForEach(Array(Title.allCases), id: \.self) { title in
-                                Text(title.koreanValue)
+                        Spacer()
+                        
+                        HStack(spacing: 16) {
+                            if isRecordingStop {
+                                Button(action: {
+                                    resetStopWatch()
+                                }) {
+                                    Text("초기화")
+                                }
+                            }
+                            
+                            Button(action: {
+                                if isRecording {
+                                    finishStopWatch()
+                                } else {
+                                    startStopWatch()
+                                }
+                            }) {
+                                Text(buttonText)
+                                    .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : nil))
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                }
+            }
+            .tint(.black)
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color("ghost_white"))
+            .onTapGesture {
+                if isRecording {
+                    stopWatchTopBottomBarVisible = true
                     
-                    Spacer()
-                    
-                    HStack(spacing: 16) {
-                        if isRecordingStop {
-                            Button(action: {
-                                resetStopWatch()
-                            }) {
-                                Text("초기화")
-                            }
-                        }
-                        
-                        Button(action: {
+                    Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+                        withAnimation {
                             if isRecording {
-                                finishStopWatch()
-                            } else {
-                                startStopWatch()
+                                stopWatchTopBottomBarVisible = false
                             }
-                        }) {
-                            Text(buttonText)
-                                .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .black))
                         }
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
-            .padding(.horizontal)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .navigationBarBackButtonHidden()
     }
@@ -133,6 +151,14 @@ struct WiDCreateStopWatchView: View {
         
         date = Date()
         start = Date()
+        
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+            withAnimation {
+                if isRecording {
+                    stopWatchTopBottomBarVisible = false
+                }
+            }
+        }
     }
 
     private func finishStopWatch() {
@@ -171,6 +197,8 @@ struct WiDCreateStopWatchView: View {
                 wiDService.insertWiD(wid: secondDayWiD)
             }
         }
+        
+        stopWatchTopBottomBarVisible = true
     }
 
     private func resetStopWatch() {
@@ -181,8 +209,8 @@ struct WiDCreateStopWatchView: View {
     }
 }
 
-struct WiDCreateView_Previews: PreviewProvider {
+struct StopWatchView_Previews: PreviewProvider {
     static var previews: some View {
-        return WiDCreateStopWatchView()
+        return StopWatchView()
     }
 }

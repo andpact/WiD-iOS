@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct WiDReadView: View {
-    @State private var selectedPicker: wiDReadHolderTapInfo = .DATEBASED
+struct ListView: View {
+    @State private var selectedPicker: ListTapInfo = .DATEBASED
     @Namespace private var animation
     
     var body: some View {
         VStack {
             topTabBar()
             
-            WiDReadHolderView(currentTab: selectedPicker)
+            ListHolderView(currentTab: selectedPicker)
         }
         .background(Color("ghost_white")) // 배경이 없으면 스와이프할 수 없기 때문에 배경색을 추가함.
         .gesture(
@@ -49,13 +49,13 @@ struct WiDReadView: View {
     @ViewBuilder
     private func topTabBar() -> some View {
         HStack {
-            ForEach(wiDReadHolderTapInfo.allCases, id: \.self) { item in
+            ForEach(ListTapInfo.allCases, id: \.self) { item in
                 VStack {
                     Text(item.rawValue)
                         .frame(maxWidth: .infinity)
                         .foregroundColor(selectedPicker == item ? .black : .gray)
                     if selectedPicker == item {
-                        Capsule()
+                        Rectangle()
                             .foregroundColor(.black)
                             .frame(height: 3)
                             .matchedGeometryEffect(id: "DATEBASED", in: animation)
@@ -76,27 +76,26 @@ struct WiDReadView: View {
     }
 }
 
-enum wiDReadHolderTapInfo: String, CaseIterable {
+enum ListTapInfo: String, CaseIterable {
     case DATEBASED = "날짜 별 기록"
     case PERIODBASED = "기간 별 기록"
 }
 
-struct WiDReadHolderView: View {
-    var currentTab: wiDReadHolderTapInfo
+struct ListHolderView: View {
+    var currentTab: ListTapInfo
     
     var body: some View {
         switch currentTab {
         case .DATEBASED:
-            WiDReadDayView()
+            DateBasedView()
         case .PERIODBASED:
-//            WiDReadCalendarView()
             PeriodBasedView()
         }
     }
 }
 
-struct WiDReadHolderView_Previews: PreviewProvider {
+struct ListView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDReadView()
+        ListView()
     }
 }
