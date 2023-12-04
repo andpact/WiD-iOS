@@ -87,7 +87,7 @@ struct DateBasedView: View {
                             HStack {
                                 Image(systemName: "ellipsis.bubble")
                                     .foregroundColor(.gray)
-                                
+
                                 Text("표시할 다이어리가 없습니다.")
                                     .foregroundColor(.gray)
                             }
@@ -98,13 +98,19 @@ struct DateBasedView: View {
                             .cornerRadius(8)
                             .shadow(radius: 1)
                         } else {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 8) {
                                 Text(diary.title)
                                     .bold()
                                     .lineLimit(1)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             
                                 Text(diary.content)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
+                            .padding()
+                            .background(.white)
+                            .cornerRadius(8)
+                            .shadow(radius: 1)
                         }
                         
                         Button(action: {
@@ -113,10 +119,10 @@ struct DateBasedView: View {
                             NavigationLink(destination: DiaryView(date: currentDate)) {
                                 Text("다이어리 수정")
                                     .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
                             }
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
                         .background(.blue)
                         .cornerRadius(8)
                     }

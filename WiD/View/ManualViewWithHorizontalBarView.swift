@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ManualViewWithHorizontalBarView: View {
+struct ManualViewWithVerticalBarView: View {
     private let screen = UIScreen.main.bounds.size
     private let wiDService = WiDService()
     @State private var wiDList: [WiD] = []
@@ -357,6 +357,6 @@ struct ManualViewWithHorizontalBarView: View {
 
 struct ManualViewWithHorizontalBarView_Previews: PreviewProvider {
     static var previews: some View {
-        ManualViewWithHorizontalBarView()
+        ManualViewWithVerticalBarView()
     }
 }

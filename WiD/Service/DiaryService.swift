@@ -12,7 +12,12 @@ class DiaryService {
     private var db: OpaquePointer?
     private let dbName = "diaryDB.sqlite"
     
+    private let dateFormatter: DateFormatter
+    
     init() {
+        dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
         let fileURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(dbName)
         
         // 데이터 베이스 열기
@@ -40,15 +45,15 @@ class DiaryService {
     func insertDiary(diary: Diary) {
         let insertDiaryQuery = "INSERT INTO Diary (date, title, content) VALUES (?, ?, ?)"
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from: diary.date)
         
         var statement: OpaquePointer?
         if sqlite3_prepare_v2(db, insertDiaryQuery, -1, &statement, nil) == SQLITE_OK {
-            sqlite3_bind_text(statement, 1, dateString, -1, nil)
-            sqlite3_bind_text(statement, 2, diary.title, -1, nil)
-            sqlite3_bind_text(statement, 3, diary.content, -1, nil)
+            sqlite3_bind_text(statement, 1, (dateString as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 2, (diary.title as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 3, (diary.content as NSString).utf8String, -1, nil)
             
             if sqlite3_step(statement) != SQLITE_DONE {
                 print("Failed to insert Diary.")
@@ -61,22 +66,21 @@ class DiaryService {
     }
     
     func selectDiaryByDate(date: Date) -> Diary? {
-        let selectDiaryQuery = "SELECT * FROM Diary WHERE date = ?"
+        let selectDiaryQuery = "SELECT id, date, title, content FROM Diary WHERE date = ?"
+//        let selectDiaryQuery = "SELECT * FROM Diary WHERE date = ?"
 
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from: date)
 
         var statement: OpaquePointer?
         if sqlite3_prepare_v2(db, selectDiaryQuery, -1, &statement, nil) == SQLITE_OK {
-            sqlite3_bind_text(statement, 1, dateString, -1, nil)
+            sqlite3_bind_text(statement, 1, (dateString as NSString).utf8String, -1, nil)
 
             if sqlite3_step(statement) == SQLITE_ROW {
                 let id = Int(sqlite3_column_int(statement, 0))
                 
                 let dateString = String(cString: sqlite3_column_text(statement, 1))
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
                 let date = dateFormatter.date(from: dateString)!
                 
                 let title = String(cString: sqlite3_column_text(statement, 2))
@@ -85,12 +89,114 @@ class DiaryService {
                 let diary = Diary(id: id, date: date, title: title, content: content)
                 sqlite3_finalize(statement)
 
+                print("Success to select Diary by date.")
+                print("selectDiaryByDate - \(diary)")
+                
                 return diary
             }
         }
 
         return nil
     }
+    
+    func selectDiaryByTitle(title: String) -> [Diary] {
+        let selectDiaryByTitleQuery = "SELECT id, date, title, content FROM Diary WHERE title = ?"
+
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd"
+
+        var diaryList: [Diary] = []
+
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, selectDiaryByTitleQuery, -1, &statement, nil) == SQLITE_OK {
+            let titleCString = (title as NSString).utf8String
+            sqlite3_bind_text(statement, 1, titleCString, -1, nil)
+
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+
+                let dateString = String(cString: sqlite3_column_text(statement, 1))
+                let date = dateFormatter.date(from: dateString)!
+
+                let title = String(cString: sqlite3_column_text(statement, 2))
+                let content = String(cString: sqlite3_column_text(statement, 3))
+
+                let diary = Diary(id: id, date: date, title: title, content: content)
+                diaryList.append(diary)
+            }
+
+            sqlite3_finalize(statement)
+        }
+
+        return diaryList
+    }
+    
+    func selectDiaryByContent(content: String) -> [Diary] {
+        let selectDiaryByContentQuery = "SELECT id, date, title, content FROM Diary WHERE content LIKE ?"
+
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd"
+
+        var diaryList: [Diary] = []
+
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, selectDiaryByContentQuery, -1, &statement, nil) == SQLITE_OK {
+            let contentCString = ("%\(content)%" as NSString).utf8String
+            sqlite3_bind_text(statement, 1, contentCString, -1, nil)
+
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+
+                let dateString = String(cString: sqlite3_column_text(statement, 1))
+                let date = dateFormatter.date(from: dateString)!
+
+                let title = String(cString: sqlite3_column_text(statement, 2))
+                let content = String(cString: sqlite3_column_text(statement, 3))
+
+                let diary = Diary(id: id, date: date, title: title, content: content)
+                diaryList.append(diary)
+            }
+
+            sqlite3_finalize(statement)
+        }
+
+        return diaryList
+    }
+
+    
+    func selectDiaryByTitleOrContent(searchText: String) -> [Diary] {
+        let selectDiaryByTitleOrContentQuery = "SELECT id, date, title, content FROM Diary WHERE title LIKE ? OR content LIKE ?"
+        
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        var diaryList: [Diary] = []
+        
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, selectDiaryByTitleOrContentQuery, -1, &statement, nil) == SQLITE_OK {
+            let keywordCString = ("%\(searchText)%" as NSString).utf8String
+            sqlite3_bind_text(statement, 1, keywordCString, -1, nil)
+            sqlite3_bind_text(statement, 2, keywordCString, -1, nil)
+            
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+                
+                let dateString = String(cString: sqlite3_column_text(statement, 1))
+                let date = dateFormatter.date(from: dateString)!
+                
+                let title = String(cString: sqlite3_column_text(statement, 2))
+                let content = String(cString: sqlite3_column_text(statement, 3))
+                
+                let diary = Diary(id: id, date: date, title: title, content: content)
+                diaryList.append(diary)
+            }
+            
+            sqlite3_finalize(statement)
+        }
+        
+        return diaryList
+    }
+
     
     func updateDiary(withID id: Int, newTitle: String, newContent: String) {
         let updateDiaryQuery = "UPDATE Diary SET title = ?, content = ? WHERE id = ?"

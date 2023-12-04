@@ -49,16 +49,19 @@ struct DiaryView: View {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                         
+                        let newDiary = Diary(id: 0, date: date, title: diaryTitle, content: diaryContent)
+                        
                         if diary.id == -1 { // 다이어리가 데이터베이스에 없을 때
-                            let diary = Diary(id: 0, date: date, title: diaryTitle, content: diaryContent)
-                            diaryService.insertDiary(diary: diary)
+                            print("insertDiary - \(newDiary)")
+                            diaryService.insertDiary(diary: newDiary)
                         } else {
                             diaryService.updateDiary(withID: diary.id, newTitle: diaryTitle, newContent: diaryContent)
                         }
                     }) {
                         Text("완료")
-                            .foregroundColor(.blue)
+                            .foregroundColor(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
                     }
+                    .disabled(diaryTitle.isEmpty || diaryContent.isEmpty)
                 }
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity)
