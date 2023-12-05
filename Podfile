@@ -8,6 +8,7 @@ target 'WiD' do
   # Pods for WiD
 
   pod 'Google-Mobile-Ads-SDK'
+  pod 'DGCharts'
 
   target 'WiDTests' do
     inherit! :search_paths

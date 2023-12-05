@@ -289,8 +289,6 @@ struct DateBasedView: View {
                 }
             }
             
-            Divider()
-            
             // 하단 바
             HStack {
                 getDayString(date: currentDate)
@@ -325,7 +323,10 @@ struct DateBasedView: View {
                 .padding(.horizontal)
                 .disabled(calendar.isDateInToday(currentDate))
             }
-            .padding(.horizontal)
+            .padding()
+            .background(.white)
+            .compositingGroup()
+            .shadow(radius: 1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {

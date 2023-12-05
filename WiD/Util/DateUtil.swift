@@ -31,6 +31,27 @@ func getDayString(date: Date) -> some View {
     }
 }
 
+func getDayStringWith2Lines(date: Date) -> some View {
+    let calendar = Calendar.current
+    
+    return VStack(alignment: .leading) {
+        Text(formatDate(date, format: "yyyy년"))
+        
+        HStack {
+            Text(formatDate(date, format: "M월 d일"))
+            
+            HStack(spacing: 0) {
+                Text("(")
+
+                Text(formatWeekday(date))
+                    .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
+
+                Text(")")
+            }
+        }
+    }
+}
+
 func getWeekString(firstDayOfWeek: Date, lastDayOfWeek: Date) -> some View {
     let calendar = Calendar.current
     

@@ -44,6 +44,26 @@ func getTotalDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval]
     return sortedDictionary
 }
 
+func getTotalDurationDictionaryByDate(wiDList: [WiD]) -> [Date: TimeInterval] {
+    var dateTotalDuration: [Date: TimeInterval] = [:]
+
+    for wiD in wiDList {
+        if let existingDuration = dateTotalDuration[wiD.date] {
+            dateTotalDuration[wiD.date] = existingDuration + wiD.duration
+        } else {
+            dateTotalDuration[wiD.date] = wiD.duration
+        }
+    }
+
+    // Dictionary를 날짜에 따라 내림차순 정렬
+    let sortedDateTotalDuration = dateTotalDuration.sorted { $0.key > $1.key }
+
+    // 정렬된 Dictionary를 새로운 Dictionary로 변환
+    let sortedDictionary = Dictionary(uniqueKeysWithValues: sortedDateTotalDuration)
+
+    return sortedDictionary
+}
+
 func getDailyAllTitleDurationDictionary(wiDList: [WiD], forDate date: Date) -> [String: TimeInterval] {
     var titleTotalDuration: [String: TimeInterval] = [:]
 

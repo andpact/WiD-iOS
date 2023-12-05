@@ -69,6 +69,7 @@ struct DiaryView: View {
                 TextField("제목을 입력해 주세요.", text: $diaryTitle)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 8)
+                    .font(Font.body.bold())
                 
                 Divider()
                     .padding(.horizontal)

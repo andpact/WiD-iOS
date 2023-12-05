@@ -8,6 +8,13 @@
 import Foundation
 import SQLite3
 
+/*
+ 쿼리로 정렬해서 리스트 가져오기
+ 쿼리로 정렬해서 리스트 가져오기
+ 쿼리로 정렬해서 리스트 가져오기
+ 쿼리로 정렬해서 리스트 가져오기
+ 쿼리로 정렬해서 리스트 가져오기
+ */
 class WiDService {
     private var db: OpaquePointer?
     private let dbName = "widDB.sqlite"
@@ -49,22 +56,23 @@ class WiDService {
     func insertWiD(wid: WiD) {
         let insertWiDQuery = "INSERT INTO WiD (title, detail, date, start, finish, duration) VALUES (?, ?, ?, ?, ?, ?)"
         
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from: wid.date)
         
-//        let timeFormatter = DateFormatter()
-//        timeFormatter.dateFormat = "HH:mm:ss"
         let startTimeString = timeFormatter.string(from: wid.start)
         let finishTimeString = timeFormatter.string(from: wid.finish)
         
         var statement: OpaquePointer?
         if sqlite3_prepare_v2(db, insertWiDQuery, -1, &statement, nil) == SQLITE_OK {
             sqlite3_bind_text(statement, 1, (wid.title as NSString).utf8String, -1, nil)
+            
             sqlite3_bind_text(statement, 2, (wid.detail as NSString).utf8String, -1, nil)
+            
             sqlite3_bind_text(statement, 3, (dateString as NSString).utf8String, -1, nil)
+            
             sqlite3_bind_text(statement, 4, (startTimeString as NSString).utf8String, -1, nil)
+            
             sqlite3_bind_text(statement, 5, (finishTimeString as NSString).utf8String, -1, nil)
+            
             sqlite3_bind_double(statement, 6, wid.duration)
             
             if sqlite3_step(statement) != SQLITE_DONE {
@@ -128,18 +136,16 @@ class WiDService {
                 let id = Int(sqlite3_column_int(statement, 0))
                 
                 let title = String(cString: sqlite3_column_text(statement, 1))
+                
                 let detail = String(cString: sqlite3_column_text(statement, 2))
                 
                 let dateString = String(cString: sqlite3_column_text(statement, 3))
-//                let dateFormatter = DateFormatter()
-//                dateFormatter.dateFormat = "yyyy-MM-dd"
                 let date = dateFormatter.date(from: dateString)!
                 
                 let startTimeString = String(cString: sqlite3_column_text(statement, 4))
-                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
-//                let timeFormatter = DateFormatter()
-//                timeFormatter.dateFormat = "HH:mm:ss"
                 let start = timeFormatter.date(from: startTimeString)!
+                
+                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
                 let finish = timeFormatter.date(from: finishTimeString)!
                 
                 let duration = sqlite3_column_double(statement, 6)
@@ -161,7 +167,7 @@ class WiDService {
     }
     
     func selectWiDsByDate(date: Date) -> [WiD] {
-        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE date = ?"
+        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE date = ? ORDER BY start ASC"
         
 //        let dateFormatter = DateFormatter()
 //        dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -176,16 +182,16 @@ class WiDService {
                 let id = Int(sqlite3_column_int(statement, 0))
                 
                 let title = String(cString: sqlite3_column_text(statement, 1))
+                
                 let detail = String(cString: sqlite3_column_text(statement, 2))
                 
                 let dateString = String(cString: sqlite3_column_text(statement, 3))
                 let date = dateFormatter.date(from: dateString)!
                 
                 let startTimeString = String(cString: sqlite3_column_text(statement, 4))
-                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
-                let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm:ss"
                 let start = timeFormatter.date(from: startTimeString)!
+                
+                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
                 let finish = timeFormatter.date(from: finishTimeString)!
                 
                 let duration = sqlite3_column_double(statement, 6)
@@ -198,16 +204,14 @@ class WiDService {
             print("Success to select WiD list by ID.")
         }
         
-        wiDList.sort { $0.start < $1.start }
+//        wiDList.sort { $0.start < $1.start }
         
         return wiDList
     }
     
     func selectWiDsBetweenDates(startDate: Date, finishDate: Date) -> [WiD] {
-        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE date BETWEEN ? AND ?"
+        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE date BETWEEN ? AND ? ORDER BY date ASC, start ASC"
         
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd"
         let startDateString = dateFormatter.string(from: startDate)
         let finishDateString = dateFormatter.string(from: finishDate)
         
@@ -221,16 +225,18 @@ class WiDService {
                 let id = Int(sqlite3_column_int(statement, 0))
                 
                 let title = String(cString: sqlite3_column_text(statement, 1))
+                
                 let detail = String(cString: sqlite3_column_text(statement, 2))
                 
                 let dateString = String(cString: sqlite3_column_text(statement, 3))
                 let date = dateFormatter.date(from: dateString)!
+//                let date = Calendar.current.startOfDay(for: dateFormatter.date(from: dateString)!)
+//                print("selectWiDsBetweenDates - date : \(formatDate(date, format: "yyyy-MM-dd a HH:mm:ss"))")
                 
                 let startTimeString = String(cString: sqlite3_column_text(statement, 4))
-                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
-//                let timeFormatter = DateFormatter()
-//                timeFormatter.dateFormat = "HH:mm:ss"
                 let start = timeFormatter.date(from: startTimeString)!
+                
+                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
                 let finish = timeFormatter.date(from: finishTimeString)!
                 
                 let duration = sqlite3_column_double(statement, 6)
@@ -243,7 +249,7 @@ class WiDService {
             print("Success to select WiD list betwwen dates.")
         }
         
-        wiDList.sort { $0.date < $1.date || ($0.date == $1.date && $0.start < $1.start) }
+//        wiDList.sort { $0.date < $1.date || ($0.date == $1.date && $0.start < $1.start) }
         
         return wiDList
     }
@@ -425,7 +431,7 @@ class WiDService {
             return []
         }
 
-        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE detail LIKE ?"
+        let selectWiDsQuery = "SELECT id, title, detail, date, start, finish, duration FROM WiD WHERE detail LIKE ? ORDER BY date ASC, start ASC"
 
         var wiDList = [WiD]()
         var statement: OpaquePointer?
@@ -437,18 +443,16 @@ class WiDService {
                 let id = Int(sqlite3_column_int(statement, 0))
 
                 let title = String(cString: sqlite3_column_text(statement, 1))
+                
                 let detail = String(cString: sqlite3_column_text(statement, 2))
 
                 let dateString = String(cString: sqlite3_column_text(statement, 3))
-//                let dateFormatter = DateFormatter()
-//                dateFormatter.dateFormat = "yyyy-MM-dd"
                 let date = dateFormatter.date(from: dateString)!
 
                 let startTimeString = String(cString: sqlite3_column_text(statement, 4))
-                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
-//                let timeFormatter = DateFormatter()
-//                timeFormatter.dateFormat = "HH:mm:ss"
                 let start = timeFormatter.date(from: startTimeString)!
+                
+                let finishTimeString = String(cString: sqlite3_column_text(statement, 5))
                 let finish = timeFormatter.date(from: finishTimeString)!
 
                 let duration = sqlite3_column_double(statement, 6)
@@ -461,7 +465,7 @@ class WiDService {
             print("Success to select wiDList by detail.")
         }
         
-        wiDList.sort { $0.date < $1.date || ($0.date == $1.date && $0.start < $1.start) }
+//        wiDList.sort { $0.date < $1.date || ($0.date == $1.date && $0.start < $1.start) }
 
         return wiDList
     }
@@ -472,14 +476,17 @@ class WiDService {
         var statement: OpaquePointer?
         if sqlite3_prepare_v2(db, updateWiDQuery, -1, &statement, nil) == SQLITE_OK {
             sqlite3_bind_text(statement, 1, (newTitle as NSString).utf8String, -1, nil)
-//            let timeFormatter = DateFormatter()
-//            timeFormatter.dateFormat = "HH:mm:ss"
+            
             let startString = timeFormatter.string(from: newStart)
             sqlite3_bind_text(statement, 2, (startString as NSString).utf8String, -1, nil)
+            
             let finishString = timeFormatter.string(from: newFinish)
             sqlite3_bind_text(statement, 3, (finishString as NSString).utf8String, -1, nil)
+            
             sqlite3_bind_double(statement, 4, newDuration)
+            
             sqlite3_bind_text(statement, 5, (newDetail as NSString).utf8String, -1, nil)
+            
             sqlite3_bind_int(statement, 6, Int32(id))
 
             if sqlite3_step(statement) != SQLITE_DONE {

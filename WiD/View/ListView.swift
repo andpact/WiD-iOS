@@ -70,7 +70,7 @@ struct ListView: View {
                 }
             }
         }
-        .background(Color("ghost_white"))
+        .background(.white)
         .compositingGroup()
         .shadow(radius: 1)
     }

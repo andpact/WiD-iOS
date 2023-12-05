@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct CalendarPieChartView: View {
-    let date: Date
-    let wiDList: [WiD]
+    private let date: Date
+    private let wiDList: [WiD]
     
-    var pieChartDataArray: [PieChartData] {
+    private var pieChartDataArray: [PieChartData] {
         let totalMinutes: TimeInterval = 60.0 * 24.0 // 24시간(1440분)으로 표현함. 원래 TimeInterval 단위는 초(second)
         var startMinutes: Int = 0
         var array: [PieChartData] = [] // Create a mutable array to store data
@@ -96,9 +96,9 @@ struct CalendarPieChartView: View {
 }
 
 struct DayPieChartView: View {
-    let wiDList: [WiD]
+    private let wiDList: [WiD]
     
-    var pieChartDataArray: [PieChartData] {
+    private var pieChartDataArray: [PieChartData] {
         let totalMinutes: TimeInterval = 60.0 * 24.0 // 24시간(1440분)으로 표현함. 원래 TimeInterval 단위는 초(second)
         var startMinutes: Int = 0
         var array: [PieChartData] = []
@@ -138,16 +138,16 @@ struct DayPieChartView: View {
         return array
     }
     
-    var totalDurationPercentage: Int {
-        let totalMinutesInDay = 60 * 24
-        var totalDurationMinutes: Int = 0
-
-        for wid in wiDList {
-            totalDurationMinutes += Int(wid.duration / 60) // Convert duration to minutes
-        }
-
-        return Int(Double(totalDurationMinutes) / Double(totalMinutesInDay) * 100)
-    }
+//    var totalDurationPercentage: Int {
+//        let totalMinutesInDay = 60 * 24
+//        var totalDurationMinutes: Int = 0
+//
+//        for wid in wiDList {
+//            totalDurationMinutes += Int(wid.duration / 60) // Convert duration to minutes
+//        }
+//
+//        return Int(Double(totalDurationMinutes) / Double(totalMinutesInDay) * 100)
+//    }
 
     init(wiDList: [WiD]) {
         self.wiDList = wiDList
@@ -210,7 +210,6 @@ struct DayPieChartView: View {
 //                BatteryView(battery: totalDurationPercentage)
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
             }
-            
         }
         .aspectRatio(contentMode: .fit)
         .padding()
@@ -291,56 +290,55 @@ struct PieSliceView: Shape {
     }
 }
 
-struct BatteryView: View {
-    private let battery: Int
-    private let fillWidth: CGFloat
-    private let fillColor: Color
-    
-    init(battery: Int) {
-        self.battery = battery
-        self.fillWidth = (CGFloat(battery) / 100) * UIScreen.main.bounds.size.width / 10
-        
-        if battery <= 25 {
-            self.fillColor = .red
-        } else if battery <= 50 {
-            self.fillColor = .orange
-        } else {
-            self.fillColor = .green
-        }
-    }
-    
-    var body: some View {
-        HStack(spacing: 0) {
-            ZStack {
-                ZStack(alignment: .leading) {
-                    // 배터리 칸
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(.white)
-                        .background(RoundedRectangle(cornerRadius: 5)
-                            .stroke(.black, lineWidth: 1)
-                        )
-                        .frame(width: UIScreen.main.bounds.size.width / 10, height: UIScreen.main.bounds.size.width / 20)
-                    
-                    // 배터리 잔량 표시
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(fillColor)
-                        .padding(2)
-                        .frame(width: fillWidth, height: UIScreen.main.bounds.size.width / 20)
-                }
-                
-                Text("\(battery)%")
-            }
-            
-            Rectangle()
-                .frame(width: UIScreen.main.bounds.size.width / 150, height: UIScreen.main.bounds.size.width / 50)
-        }
-    }
-}
+//struct BatteryView: View {
+//    private let battery: Int
+//    private let fillWidth: CGFloat
+//    private let fillColor: Color
+//
+//    init(battery: Int) {
+//        self.battery = battery
+//        self.fillWidth = (CGFloat(battery) / 100) * UIScreen.main.bounds.size.width / 10
+//
+//        if battery <= 25 {
+//            self.fillColor = .red
+//        } else if battery <= 50 {
+//            self.fillColor = .orange
+//        } else {
+//            self.fillColor = .green
+//        }
+//    }
+//
+//    var body: some View {
+//        HStack(spacing: 0) {
+//            ZStack {
+//                ZStack(alignment: .leading) {
+//                    // 배터리 칸
+//                    RoundedRectangle(cornerRadius: 5)
+//                        .fill(.white)
+//                        .background(RoundedRectangle(cornerRadius: 5)
+//                            .stroke(.black, lineWidth: 1)
+//                        )
+//                        .frame(width: UIScreen.main.bounds.size.width / 10, height: UIScreen.main.bounds.size.width / 20)
+//
+//                    // 배터리 잔량 표시
+//                    RoundedRectangle(cornerRadius: 5)
+//                        .fill(fillColor)
+//                        .padding(2)
+//                        .frame(width: fillWidth, height: UIScreen.main.bounds.size.width / 20)
+//                }
+//
+//                Text("\(battery)%")
+//            }
+//
+//            Rectangle()
+//                .frame(width: UIScreen.main.bounds.size.width / 150, height: UIScreen.main.bounds.size.width / 50)
+//        }
+//    }
+//}
 
 struct PieChartView_Previews: PreviewProvider {
     static var previews: some View {
 //        DayPieChartView(wiDList: [])
         CalendarPieChartView(date: Date(), wiDList: [])
-//        BatteryView(battery: 40)
     }
 }

@@ -44,7 +44,7 @@ struct ContentView: View {
             }
         }
         .padding(.vertical)
-        .background(Color("ghost_white"))
+        .background(.white)
         .compositingGroup() // 자식 뷰에 그림자 적용 방지
         .shadow(radius: 1)
     }

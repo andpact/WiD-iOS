@@ -18,7 +18,7 @@ struct PeriodBasedView: View {
     
     // 날짜
     private let calendar = Calendar.current
-    private let today: Date = Date()
+    private let today: Date = Calendar.current.startOfDay(for: Date()) // 시간을 오전 12:00:00으로 설정함.
     @State private var startDate: Date = Date()
     @State private var finishDate: Date = Date()
     
@@ -44,7 +44,7 @@ struct PeriodBasedView: View {
             // 상단 바
             HStack {
                 Picker("", selection: $selectedPeriod) {
-                    ForEach(Array(Period.allCases)) { period in
+                    ForEach(Array(Period.allCases), id: \.self) { period in
                         Text(period.koreanValue)
                     }
                 }
@@ -60,10 +60,11 @@ struct PeriodBasedView: View {
                     }
                 }
             }
-            .padding(.horizontal)
+            .padding()
+            .background(.white)
             .frame(maxWidth: .infinity)
-            
-            Divider()
+            .compositingGroup()
+            .shadow(radius: 1)
             
             // 컨텐츠
             ScrollView {
@@ -80,7 +81,6 @@ struct PeriodBasedView: View {
 
                                     Text("표시할 그래프가 없습니다.")
                                         .foregroundColor(.gray)
-
                                 }
                                 .padding()
                                 .padding(.vertical, 32)
@@ -120,7 +120,7 @@ struct PeriodBasedView: View {
                                         if selectedPeriod == Period.MONTH && weekday != 1 {
                                             // "id: \.self" 넣어야 정상작동한다.
                                             ForEach(0..<weekday - 1, id: \.self) { index in
-                                                Text("\(index)")
+//                                                Text("")
                                             }
                                         }
                                         
@@ -230,14 +230,13 @@ struct PeriodBasedView: View {
                             Text("시간 그래프")
                                 .font(.custom("BlackHanSans-Regular", size: 20))
                             
-                            if wiDList.isEmpty {
+                            if filteredWiDListByTitle.isEmpty {
                                 HStack {
                                     Image(systemName: "ellipsis.bubble")
                                         .foregroundColor(.gray)
 
                                     Text("표시할 그래프가 없습니다.")
                                         .foregroundColor(.gray)
-
                                 }
                                 .padding()
                                 .padding(.vertical, 32)
@@ -246,7 +245,14 @@ struct PeriodBasedView: View {
                                 .cornerRadius(8)
                                 .shadow(radius: 1)
                             } else {
-                                Text("LineChart Here")
+                                ZStack {
+                                    LineGraphView(title: selectedTitle.rawValue, wiDList: filteredWiDListByTitle, startDate: startDate, finishDate: finishDate)
+                                }
+                                .padding()
+                                .background(.white)
+                                .cornerRadius(8)
+                                .shadow(radius: 1)
+                                .aspectRatio(2.0 / 1.0, contentMode: .fit) // 가로 2, 세로 1 비율
                             }
                         }
                         .padding(.horizontal)
@@ -255,7 +261,7 @@ struct PeriodBasedView: View {
                             Text("시간 기록")
                                 .font(.custom("BlackHanSans-Regular", size: 20))
                             
-                            if wiDList.isEmpty {
+                            if filteredWiDListByTitle.isEmpty {
                                 HStack {
                                     Image(systemName: "ellipsis.bubble")
                                         .foregroundColor(.gray)
@@ -343,8 +349,6 @@ struct PeriodBasedView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             
-            Divider()
-            
             // 하단 바
             HStack {
                 if selectedPeriod == Period.WEEK {
@@ -400,18 +404,19 @@ struct PeriodBasedView: View {
                 }
                 .padding(.horizontal, 8)
             }
-            .padding(.horizontal)
+            .padding()
+            .background(.white)
+            .shadow(radius: 1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             self.startDate = getFirstDayOfWeek(for: today)
             self.finishDate = getLastDayOfWeek(for: today)
             
-            updateWiDData()
+            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
             
-            self.filteredWiDListByTitle = wiDList.filter { wiD in
-                return wiD.title == selectedTitle.rawValue
-            }
+            updateWiDData()
         }
         .onChange(of: selectedTitle) { newTitle in
             filteredWiDListByTitle = wiDList.filter { wiD in
@@ -434,11 +439,16 @@ struct PeriodBasedView: View {
     // startDate, finishDate 변경될 때 실행됨.
     func updateWiDData() {
         wiDList = wiDService.selectWiDsBetweenDates(startDate: startDate, finishDate: finishDate)
+        
+        filteredWiDListByTitle = wiDList.filter { wiD in
+            return wiD.title == selectedTitle.rawValue
+        }
 
         totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
         averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
         maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
         
+        // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
         seletedDictionary = totalDurationDictionary
         seletedDictionaryText = "합계"
     }
