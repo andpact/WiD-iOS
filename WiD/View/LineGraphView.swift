@@ -57,7 +57,7 @@ struct LineGraphView: UIViewRepresentable {
             let entry = ChartDataEntry(x: xValue, y: yValue)
             entries.append(entry)
 
-            let dateString = String(calendar.component(.day, from: currentDate)) + "일"
+            let dateString = "\(calendar.component(.day, from: currentDate))일"
             dates.append(dateString)
         }
 
@@ -69,7 +69,7 @@ struct LineGraphView: UIViewRepresentable {
         return LineChartView()
     }
 
-    // updateUIView에 작성해야 선 그래프가 정상 동작한다.
+    // makeUIView가 아닌 updateUIView에 작성해야 선 그래프가 정상 동작, 갱신이 된다.
     func updateUIView(_ uiView: LineChartView, context: Context) {
         // 데이터
         let dataSet = LineChartDataSet(entries: entryList)
@@ -117,7 +117,7 @@ struct LineGraphView: UIViewRepresentable {
         // 차트 설정
         uiView.legend.enabled = false
         uiView.chartDescription.text = "단위 : 시간"
-        uiView.chartDescription.yOffset = 190.0
+//        uiView.chartDescription.yOffset = 190.0
         uiView.dragEnabled = false
         uiView.pinchZoomEnabled = false
         uiView.scaleXEnabled = false
@@ -159,7 +159,7 @@ struct LineGraphView_Previews: PreviewProvider {
         let finishDate = calendar.date(byAdding: .day, value: 6, to: startDate) ?? Date()
 
         LineGraphView(title: "STUDY", wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
-            .aspectRatio(2.0 / 1.0, contentMode: .fit)
+            .aspectRatio(1.5 / 1.0, contentMode: .fit)
     }
 }
 

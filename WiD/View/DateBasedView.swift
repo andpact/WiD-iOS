@@ -25,7 +25,7 @@ struct DateBasedView: View {
     
     var body: some View {
         // 전체 화면
-        VStack {
+        VStack(spacing: 0) {
             // 컨텐츠
             ScrollView {
                 VStack(spacing: 32) {
@@ -262,19 +262,19 @@ struct DateBasedView: View {
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                         }
                                         
-                                        HStack {
-                                            Image(systemName: "text.bubble")
-                                                .frame(width: 20)
-                                            
-                                            Text("설명")
-                                                .bold()
-                                            
-                                            Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                                .lineLimit(1)
-                                                .truncationMode(.tail)
-                                                .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
-                                        }
+//                                        HStack {
+//                                            Image(systemName: "text.bubble")
+//                                                .frame(width: 20)
+//
+//                                            Text("설명")
+//                                                .bold()
+//
+//                                            Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
+//                                                .frame(maxWidth: .infinity, alignment: .leading)
+//                                                .lineLimit(1)
+//                                                .truncationMode(.tail)
+//                                                .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
+//                                        }
                                     }
                                     .padding()
                                     .frame(maxWidth: .infinity)
@@ -287,6 +287,7 @@ struct DateBasedView: View {
                     }
                     .padding(.horizontal)
                 }
+                .padding(.vertical)
             }
             
             // 하단 바
@@ -320,7 +321,7 @@ struct DateBasedView: View {
                 }) {
                     Image(systemName: "chevron.right")
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 8)
                 .disabled(calendar.isDateInToday(currentDate))
             }
             .padding()

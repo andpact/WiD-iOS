@@ -18,7 +18,7 @@ struct CalendarPieChartView: View {
 
         // 비어 있는 시간대에 대한 PieChartData 생성
         if wiDList.isEmpty {
-            let noPieChartData = PieChartData(value: .degrees(360.0), color: .black)
+            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("light_gray"))
             array.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -28,7 +28,7 @@ struct CalendarPieChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: .black)
+                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
                     array.append(emptyPieChartData)
                 }
 
@@ -44,7 +44,7 @@ struct CalendarPieChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: .black)
+                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("light_gray"))
                 array.append(emptyPieChartData)
             }
         }

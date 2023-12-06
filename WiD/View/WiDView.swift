@@ -11,7 +11,6 @@ struct WiDView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
     @State private var isDeleteButtonPressed: Bool = false
-    @State private var deleteTimer: Timer?
     
     // WiD
     private let wiDService = WiDService()
@@ -87,7 +86,7 @@ struct WiDView: View {
                         Text(isEditing ? "완료" : "수정")
                             .foregroundColor(isEditing ? (isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? .gray : .green) : .blue)
                     }
-                    .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist)
+                    .disabled(isEditing && (isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist))
                 }
                 .padding(.horizontal)
                 
@@ -176,21 +175,21 @@ struct WiDView: View {
                         }
                         
                         // 설명
-                        HStack {
-                            Image(systemName: "text.bubble")
-                                .frame(width: 20)
-                                .padding()
-                            
-                            if isEditing {
-                                TextEditor(text: $detail)
-                                    .padding(1)
-                            } else {
-                                Text(detail)
-                                    .padding(.vertical, 8)
-                            }
-                            
-                            Spacer()
-                        }
+//                        HStack {
+//                            Image(systemName: "text.bubble")
+//                                .frame(width: 20)
+//                                .padding()
+//                            
+//                            if isEditing {
+//                                TextEditor(text: $detail)
+//                                    .padding(1)
+//                            } else {
+//                                Text(detail)
+//                                    .padding(.vertical, 8)
+//                            }
+//                            
+//                            Spacer()
+//                        }
                     }
                     .background(.white)
                     .cornerRadius(8)
@@ -201,35 +200,32 @@ struct WiDView: View {
                 
                 // 하단 바
                 HStack {
-                    Text("선택 가능한 시간")
-                        .bold()
-                    
-                    Text("\(formatTime(startLimit, format: "a hh:mm"))")
-                    
-                    Text("\(formatTime(finishLimit, format: "a hh:mm"))")
-                    
-                    Spacer()
-                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            Text("선택 가능한 시간")
+                                .bold()
+                            
+                            Text("\(formatTime(startLimit, format: "a hh:mm"))")
+                            
+                            Text("~")
+                            
+                            Text("\(formatTime(finishLimit, format: "a hh:mm"))")
+                        }
+                    }
+
                     Button(action: {
                         if isDeleteButtonPressed {
                             wiDService.deleteWiD(withID: clickedWiDId)
                             // 삭제 후 뒤로가기
                             presentationMode.wrappedValue.dismiss()
-                        }
-                        
-                        withAnimation {
-                            isDeleteButtonPressed.toggle()
-                        }
-                        
-                        if isDeleteButtonPressed {
-                            deleteTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-                                isDeleteButtonPressed = false
-                                deleteTimer?.invalidate()
-                                deleteTimer = nil
-                            }
                         } else {
-                            deleteTimer?.invalidate()
-                            deleteTimer = nil
+                            isDeleteButtonPressed = true
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                withAnimation {
+                                    isDeleteButtonPressed = false
+                                }
+                            }
                         }
                     }) {
                         if isDeleteButtonPressed {
@@ -289,31 +285,31 @@ struct WiDView: View {
             .onChange(of: start) { newStart in
                 duration = finish.timeIntervalSince(newStart)
                 // DB의 newStart는 date가 아니라 2000-01-01 날짜를 가진다.
-                print("new Start : \(formatTime(newStart, format: "yyyy-MM-dd a h:mm:ss"))")
+//                print("new Start : \(formatTime(newStart, format: "yyyy-MM-dd a h:mm:ss"))")
                 
                 withAnimation {
                     DurationExist = 0 < duration
                 }
                 
                 isStartOverlap = newStart < startLimit
-                print(isStartOverlap ? "start overlap" : "")
+//                print(isStartOverlap ? "start overlap" : "")
 
                 isStartOverCurrentTime = calendar.isDate(date, inSameDayAs: today) && currenTime < newStart
-                print(isStartOverCurrentTime ? "today, start over currentTime" : "")
+//                print(isStartOverCurrentTime ? "today, start over currentTime" : "")
             }
             .onChange(of: finish) { newFinish in
                 duration = newFinish.timeIntervalSince(start)
-                print("new Finish : \(formatTime(newFinish, format: "yyyy-MM-dd a h:mm:ss"))")
+//                print("new Finish : \(formatTime(newFinish, format: "yyyy-MM-dd a h:mm:ss"))")
                 
                 withAnimation {
                     DurationExist = 0 < duration
                 }
                 
                 isFinishOverlap = finishLimit < newFinish
-                print(isFinishOverlap ? "finish overlap" : "")
+//                print(isFinishOverlap ? "finish overlap" : "")
 
                 isFinishOverCurrentTime = calendar.isDate(date, inSameDayAs: today) && currenTime < newFinish
-                print(isFinishOverCurrentTime ? "today, finish over currentTime" : "")
+//                print(isFinishOverCurrentTime ? "today, finish over currentTime" : "")
             }
         }
         .navigationBarHidden(true)

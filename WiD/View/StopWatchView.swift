@@ -35,9 +35,9 @@ struct StopWatchView: View {
     
     // 스톱 워치
     @State private var timer: Timer?
-    @State private var isRecording: Bool = false
-    @State private var isRecordingStop: Bool = false
-    @State private var isStopWatchReset: Bool = true
+    @State private var stopWatchStarted: Bool = false
+    @State private var stopWatchPaused: Bool = false
+    @State private var stopWatchReset: Bool = true
     @State private var elapsedTime = 0
     @State private var buttonText: String = "시작"
     private let timerInterval = 1
@@ -52,8 +52,8 @@ struct StopWatchView: View {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
                             
-                            if isRecording {
-                                finishStopWatch()
+                            if stopWatchStarted {
+                                pauseStopWatch()
                             }
                         }) {
                             Image(systemName: "arrow.backward")
@@ -89,7 +89,7 @@ struct StopWatchView: View {
                         Spacer()
                         
                         HStack(spacing: 16) {
-                            if isRecordingStop {
+                            if stopWatchPaused {
                                 Button(action: {
                                     resetStopWatch()
                                 }) {
@@ -98,8 +98,8 @@ struct StopWatchView: View {
                             }
                             
                             Button(action: {
-                                if isRecording {
-                                    finishStopWatch()
+                                if stopWatchStarted {
+                                    pauseStopWatch()
                                 } else {
                                     startStopWatch()
                                 }
@@ -117,26 +117,20 @@ struct StopWatchView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("ghost_white"))
             .onTapGesture {
-                if isRecording {
+                if stopWatchStarted {
                     stopWatchTopBottomBarVisible = true
                     
-                    Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-                        withAnimation {
-                            if isRecording {
-                                stopWatchTopBottomBarVisible = false
-                            }
-                        }
-                    }
+                    hideStopWatchTopBottomBar()
                 }
             }
         }
-        .navigationBarBackButtonHidden()
+        .navigationBarHidden(true)
     }
     
     private func startStopWatch() {
-        isRecording = true
-        isRecordingStop = false
-        isStopWatchReset = false
+        stopWatchStarted = true
+        stopWatchPaused = false
+        stopWatchReset = false
         buttonText = "중지"
         
         timer?.invalidate()
@@ -144,7 +138,7 @@ struct StopWatchView: View {
             if elapsedTime < 12 * 60 * 60 {
                 elapsedTime += timerInterval
             } else {
-                finishStopWatch()
+                pauseStopWatch()
                 resetStopWatch()
             }
         }
@@ -152,18 +146,12 @@ struct StopWatchView: View {
         date = Date()
         start = Date()
         
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-            withAnimation {
-                if isRecording {
-                    stopWatchTopBottomBarVisible = false
-                }
-            }
-        }
+        hideStopWatchTopBottomBar()
     }
 
-    private func finishStopWatch() {
-        isRecording = false
-        isRecordingStop = true
+    private func pauseStopWatch() {
+        stopWatchStarted = false
+        stopWatchPaused = true
         buttonText = "계속"
         
         timer?.invalidate()
@@ -202,10 +190,20 @@ struct StopWatchView: View {
     }
 
     private func resetStopWatch() {
-        isRecordingStop = false
-        isStopWatchReset = true
+        stopWatchPaused = false
+        stopWatchReset = true
         elapsedTime = 0
         buttonText = "시작"
+    }
+    
+    private func hideStopWatchTopBottomBar() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            withAnimation {
+                if stopWatchStarted {
+                    stopWatchTopBottomBarVisible = false
+                }
+            }
+        }
     }
 }
 

@@ -256,7 +256,7 @@ struct ManualView: View {
                 checkWiDOverlap()
             }
         }
-        .navigationBarBackButtonHidden()
+        .navigationBarHidden(true)
     }
     
     func checkWiDOverlap() {

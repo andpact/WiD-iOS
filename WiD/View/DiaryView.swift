@@ -90,7 +90,7 @@ struct DiaryView: View {
                 self.diaryContent = diary.content
             }
         }
-        .navigationBarBackButtonHidden()
+        .navigationBarHidden(true)
     }
 }
 

@@ -15,15 +15,13 @@ struct SearchView: View {
     // 다이어리
     private let diaryService = DiaryService()
     @State private var diaryList: [Diary] = []
+    @State private var searchText: String = ""
     
     // 날짜
     private let calendar = Calendar.current
     
-    // 검색
-    @State private var searchText: String = ""
-    
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             // 검색 창
             HStack {
                 Image(systemName: "magnifyingglass")
@@ -203,7 +201,7 @@ struct SearchView: View {
 //                            }
 //                        }
                     }
-                    .padding(.horizontal)
+                    .padding()
                 }
                 .onAppear {
                     // 삭제 후 돌아오면 삭제된 WiD가 남아서 표시되니까 다시 WiD 리스트를 가져옴.

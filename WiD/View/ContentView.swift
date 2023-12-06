@@ -9,21 +9,16 @@ import SwiftUI
 //import GoogleMobileAds
 
 struct ContentView: View {
-    // 선택된 화면
+    // 화면
     @State private var selectedPicker: ContentViewTapInfo = .HOME
-    
-    // 상단, 하단 Bar 가시성
-    @State var topBottomBarVisible = true
     
     var body: some View {
         // 전체 화면
         NavigationView {
             VStack(spacing: 0) {
-                ContentHolderView(currentTab: selectedPicker, topBottomBarVisible: $topBottomBarVisible)
+                ContentHolderView(currentTab: selectedPicker)
                 
-                if topBottomBarVisible {
-                    bottomNavigationBar()
-                }
+                bottomNavigationBar()
             }
             .tint(.black)
         }
@@ -58,7 +53,6 @@ enum ContentViewTapInfo: String, CaseIterable {
 
 struct ContentHolderView: View {
     var currentTab: ContentViewTapInfo
-    @Binding var topBottomBarVisible: Bool
     
     var body: some View {
         switch currentTab {

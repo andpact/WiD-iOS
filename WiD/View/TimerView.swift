@@ -39,9 +39,9 @@ struct TimerView: View {
     
     // 타이머
     @State private var timer: Timer?
-    @State private var isRecording: Bool = false
-    @State private var isRecordingStop: Bool = false
-    @State private var isStopWatchReset: Bool = true
+    @State private var timerStarted: Bool = false
+    @State private var timerPaused: Bool = false
+    @State private var timerReset: Bool = true
     @State private var remainingTime: Int = 0 // 초 단위
     private let timerInterval = 1
     @State private var finishTime: Date = Date()
@@ -58,8 +58,8 @@ struct TimerView: View {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
                             
-                            if isRecording {
-                                finishTimer()
+                            if timerStarted {
+                                pauseTimer()
                             }
                         }) {
                             Image(systemName: "arrow.backward")
@@ -71,7 +71,7 @@ struct TimerView: View {
                         
                         Spacer()
                         
-                        if isRecording {
+                        if timerStarted {
                             Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
                         }
                     }
@@ -79,7 +79,7 @@ struct TimerView: View {
                 }
                 
                 // 컨텐츠
-                if isStopWatchReset {
+                if timerReset {
                     HStack(spacing: 0) {
                         // 시간(Hour) 선택
                         Picker("", selection: $selectedHour) {
@@ -177,7 +177,7 @@ struct TimerView: View {
                         Spacer()
                         
                         HStack(spacing: 16) {
-                            if isRecordingStop {
+                            if timerPaused {
                                 Button(action: {
                                     resetTimer()
                                 }) {
@@ -186,8 +186,8 @@ struct TimerView: View {
                             }
                             
                             Button(action: {
-                                if isRecording {
-                                    finishTimer()
+                                if timerStarted {
+                                    pauseTimer()
                                 } else {
                                     startTimer()
                                 }
@@ -211,26 +211,20 @@ struct TimerView: View {
                 finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
             }
             .onTapGesture {
-                if isRecording {
+                if timerStarted {
                     timerTopBottomBarVisible = true
                     
-                    Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-                        withAnimation {
-                            if isRecording {
-                                timerTopBottomBarVisible = false
-                            }
-                        }
-                    }
+                    hideTimerTopBottomBar()
                 }
             }
         }
-        .navigationBarBackButtonHidden()
+        .navigationBarHidden(true)
     }
     
     private func startTimer() {
-        isRecording = true
-        isRecordingStop = false
-        isStopWatchReset = false
+        timerStarted = true
+        timerPaused = false
+        timerReset = false
         buttonText = "중지"
         
         timer?.invalidate()
@@ -238,7 +232,7 @@ struct TimerView: View {
             if remainingTime > 0 {
                 remainingTime -= timerInterval
             } else {
-                finishTimer()
+                pauseTimer()
                 resetTimer()
             }
         }
@@ -246,18 +240,12 @@ struct TimerView: View {
         date = Date()
         start = Date()
         
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-            withAnimation {
-                if isRecording {
-                    timerTopBottomBarVisible = false
-                }
-            }
-        }
+        hideTimerTopBottomBar()
     }
 
-    private func finishTimer() {
-        isRecording = false
-        isRecordingStop = true
+    private func pauseTimer() {
+        timerStarted = false
+        timerPaused = true
         buttonText = "계속"
         
         timer?.invalidate()
@@ -296,10 +284,20 @@ struct TimerView: View {
     }
 
     private func resetTimer() {
-        isRecordingStop = false
-        isStopWatchReset = true
+        timerPaused = false
+        timerReset = true
         buttonText = "시작"
         remainingTime = 0
+    }
+    
+    private func hideTimerTopBottomBar() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            withAnimation {
+                if timerStarted {
+                    timerTopBottomBarVisible = false
+                }
+            }
+        }
     }
 }
 

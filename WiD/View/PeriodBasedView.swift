@@ -40,7 +40,7 @@ struct PeriodBasedView: View {
     
     var body: some View {
         // 전체 화면
-        VStack {
+        VStack(spacing: 0) {
             // 상단 바
             HStack {
                 Picker("", selection: $selectedPeriod) {
@@ -60,7 +60,8 @@ struct PeriodBasedView: View {
                     }
                 }
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 8)
             .background(.white)
             .frame(maxWidth: .infinity)
             .compositingGroup()
@@ -111,27 +112,53 @@ struct PeriodBasedView: View {
                                     }
                                     .padding(.vertical, 8)
                                     
+                                    // Weekday 1 - 일, 2 - 월...
                                     let weekday = calendar.component(.weekday, from: startDate)
+                                    let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
                                     
-                                    let timeInterval = finishDate.timeIntervalSince(startDate)
-                                    let daysDifference = Int(timeInterval / (24 * 60 * 60))
-                                    
-                                    LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
-                                        if selectedPeriod == Period.MONTH && weekday != 1 {
-                                            // "id: \.self" 넣어야 정상작동한다.
-                                            ForEach(0..<weekday - 1, id: \.self) { index in
-//                                                Text("")
+                                    if selectedPeriod == Period.WEEK {
+                                        LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+                                            ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
+                                                let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
+
+                                                let filteredWiDList = wiDList.filter { wiD in
+                                                    return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                                }
+
+                                                CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
                                             }
                                         }
-                                        
-                                        ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
-                                            let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
-                                            
-                                            let filteredWiDList = wiDList.filter { wiD in
-                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                    } else if selectedPeriod == Period.MONTH {
+                                        LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+                                            ForEach(0..<(daysDifference + 1) + (weekday - 1), id: \.self) { gridIndex in
+                                                if gridIndex < weekday - 1 {
+                                                    Text("")
+                                                } else {
+                                                    let currentDate = calendar.date(byAdding: .day, value: gridIndex - (weekday - 1), to: startDate) ?? Date()
+
+                                                    let filteredWiDList = wiDList.filter { wiD in
+                                                        return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                                    }
+
+                                                    CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                                }
                                             }
                                             
-                                            CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+//                                            if selectedPeriod == Period.MONTH {
+//                                                ForEach(0..<weekday - 1, id: \.self) { index in // "id: \.self" 넣어야 정상작동한다.
+//                                                    Text("\(index)")
+//                                                }
+//                                            }
+//
+//                                            ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
+//                                                let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
+//
+//                                                let filteredWiDList = wiDList.filter { wiD in
+//                                                    return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+//                                                }
+//
+//                                                CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+//                                            }
                                         }
                                     }
                                 }
@@ -252,7 +279,7 @@ struct PeriodBasedView: View {
                                 .background(.white)
                                 .cornerRadius(8)
                                 .shadow(radius: 1)
-                                .aspectRatio(2.0 / 1.0, contentMode: .fit) // 가로 2, 세로 1 비율
+                                .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
                             }
                         }
                         .padding(.horizontal)
@@ -346,24 +373,24 @@ struct PeriodBasedView: View {
                         .padding(.horizontal)
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding(.vertical)
             }
             
             // 하단 바
             HStack {
-                if selectedPeriod == Period.WEEK {
-                    getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                } else if selectedPeriod == Period.MONTH {
-                    getMonthString(date: startDate)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    if selectedPeriod == Period.WEEK {
+                        getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
+                    } else if selectedPeriod == Period.MONTH {
+                        getMonthString(date: startDate)
+                    }
                 }
                 
                 Button(action: {
-                    if (selectedPeriod == Period.WEEK) {
+                    if selectedPeriod == Period.WEEK {
                         startDate = getFirstDayOfWeek(for: today)
                         finishDate = getLastDayOfWeek(for: today)
-                    } else if (selectedPeriod == Period.MONTH) {
+                    } else if selectedPeriod == Period.MONTH {
                         startDate = getFirstDayOfMonth(for: today)
                         finishDate = getLastDayOfMonth(for: today)
                     }
@@ -373,12 +400,21 @@ struct PeriodBasedView: View {
                     Image(systemName: "arrow.clockwise")
                 }
                 .padding(.horizontal, 8)
+                .disabled(
+                    selectedPeriod == Period.WEEK &&
+                    calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
+                    calendar.isDate(finishDate, inSameDayAs: getLastDayOfWeek(for: today)) ||
+                    
+                    selectedPeriod == Period.MONTH &&
+                    calendar.isDate(startDate, inSameDayAs: getFirstDayOfMonth(for: today)) &&
+                    calendar.isDate(finishDate, inSameDayAs: getLastDayOfMonth(for: today))
+                )
                 
                 Button(action: {
-                    if (selectedPeriod == Period.WEEK) {
+                    if selectedPeriod == Period.WEEK {
                         startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
                         finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
-                    } else if (selectedPeriod == Period.MONTH) {
+                    } else if selectedPeriod == Period.MONTH {
                         startDate = getFirstDayOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
                         finishDate = getLastDayOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
                     }
@@ -390,10 +426,10 @@ struct PeriodBasedView: View {
                 .padding(.horizontal, 8)
                 
                 Button(action: {
-                    if (selectedPeriod == Period.WEEK) {
+                    if selectedPeriod == Period.WEEK {
                         startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
                         finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
-                    } else if (selectedPeriod == Period.MONTH) {
+                    } else if selectedPeriod == Period.MONTH {
                         startDate = getFirstDayOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
                         finishDate = getLastDayOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
                     }
@@ -403,9 +439,19 @@ struct PeriodBasedView: View {
                     Image(systemName: "chevron.right")
                 }
                 .padding(.horizontal, 8)
+                .disabled(
+                    selectedPeriod == Period.WEEK &&
+                    calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
+                    calendar.isDate(finishDate, inSameDayAs: getLastDayOfWeek(for: today)) ||
+                    
+                    selectedPeriod == Period.MONTH &&
+                    calendar.isDate(startDate, inSameDayAs: getFirstDayOfMonth(for: today)) &&
+                    calendar.isDate(finishDate, inSameDayAs: getLastDayOfMonth(for: today))
+                )
             }
             .padding()
             .background(.white)
+            .compositingGroup()
             .shadow(radius: 1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -12,7 +12,7 @@ struct ListView: View {
     @Namespace private var animation
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             topTabBar()
             
             ListHolderView(currentTab: selectedPicker)
@@ -31,7 +31,7 @@ struct ListView: View {
                                 selectedPicker = .DATEBASED
                             }
                         }
-                    } else if value.translation.width > 0 {
+                    } else if 0 < value.translation.width {
                         // 오른쪽 스와이프: 이전 탭으로 이동
                         withAnimation(.easeInOut) {
                             switch selectedPicker {
@@ -48,7 +48,7 @@ struct ListView: View {
     
     @ViewBuilder
     private func topTabBar() -> some View {
-        HStack {
+        HStack(spacing: 0) {
             ForEach(ListTapInfo.allCases, id: \.self) { item in
                 VStack {
                     Text(item.rawValue)
@@ -60,7 +60,7 @@ struct ListView: View {
                             .frame(height: 3)
                             .matchedGeometryEffect(id: "DATEBASED", in: animation)
 //                            .matchedGeometryEffect(id: "PERIODBASED", in: animation)
-//                            .matchedGeometryEffect(id: "\(item)", in: animation)
+//                            .matchedGeometryEffect(id: "\(item.rawValue)", in: animation)
                     }
                 }
                 .onTapGesture {
