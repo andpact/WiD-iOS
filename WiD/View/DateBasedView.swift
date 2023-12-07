@@ -135,6 +135,66 @@ struct DateBasedView: View {
                         
                         if wiDList.isEmpty {
                             HStack {
+                                Text("공부")
+                                    .font(.custom("BlackHanSans-Regular", size: 25))
+                                
+                                Spacer()
+                                
+                                Text("1시간 30분")
+                                    .font(.custom("BlackHanSans-Regular", size: 25))
+                            }
+                            .padding()
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color("STUDY"), Color.white]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .cornerRadius(8)
+                            .shadow(radius: 1)
+                            
+                            HStack {
+                                Text("노동")
+                                    .font(.custom("BlackHanSans-Regular", size: 25))
+                                
+                                Spacer()
+                                
+                                Text("1시간")
+                                    .font(.custom("BlackHanSans-Regular", size: 25))
+                            }
+                            .padding()
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color("WORK"), Color.white]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .cornerRadius(8)
+                            .shadow(radius: 1)
+                            
+                            HStack {
+                                Text("운동")
+                                    .font(.custom("BlackHanSans-Regular", size: 25))
+                                
+                                Spacer()
+                                
+                                Text("1시간 23분 32초")
+                                    .font(.custom("BlackHanSans-Regular", size: 25))
+                            }
+                            .padding()
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color("EXERCISE"), Color.white]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .cornerRadius(8)
+                            .shadow(radius: 1)
+                            
+                            HStack {
                                 Image(systemName: "ellipsis.bubble")
                                     .foregroundColor(.gray)
                                 

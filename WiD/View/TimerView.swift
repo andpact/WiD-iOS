@@ -64,6 +64,7 @@ struct TimerView: View {
                         }) {
                             Image(systemName: "arrow.backward")
                                 .imageScale(.large)
+                                .foregroundColor(.blue)
                         }
 
                         Text("타이머")
@@ -193,8 +194,9 @@ struct TimerView: View {
                                 }
                             }) {
                                 Text(buttonText)
-                                    .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : nil))
+                                    .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : (remainingTime == 0 ? .gray : .blue)))
                             }
+                            .disabled(remainingTime == 0)
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)

@@ -59,6 +59,7 @@ struct ManualView: View {
                     }) {
                         Image(systemName: "arrow.backward")
                             .imageScale(.large)
+                            .foregroundColor(.blue)
                     }
 
                     Text("직접 입력")

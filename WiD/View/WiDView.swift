@@ -62,6 +62,7 @@ struct WiDView: View {
                     }) {
                         Image(systemName: "arrow.backward")
                             .imageScale(.large)
+                            .foregroundColor(.blue)
                     }
 
                     Text("WiD")

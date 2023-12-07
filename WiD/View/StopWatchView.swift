@@ -58,6 +58,7 @@ struct StopWatchView: View {
                         }) {
                             Image(systemName: "arrow.backward")
                                 .imageScale(.large)
+                                .foregroundColor(.blue)
                         }
 
                         Text("스톱워치")
@@ -105,7 +106,7 @@ struct StopWatchView: View {
                                 }
                             }) {
                                 Text(buttonText)
-                                    .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : nil))
+                                    .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .blue))
                             }
                         }
                     }

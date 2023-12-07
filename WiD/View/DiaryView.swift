@@ -35,6 +35,7 @@ struct DiaryView: View {
                     }) {
                         Image(systemName: "arrow.backward")
                             .imageScale(.large)
+                            .foregroundColor(.blue)
                     }
                     
                     Text("다이어리")
