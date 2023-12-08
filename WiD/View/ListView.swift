@@ -77,8 +77,8 @@ struct ListView: View {
 }
 
 enum ListTapInfo: String, CaseIterable {
-    case DATEBASED = "날짜 별 기록"
-    case PERIODBASED = "기간 별 기록"
+    case DATEBASED = "날짜 별 조회"
+    case PERIODBASED = "기간 별 조회"
 }
 
 struct ListHolderView: View {

@@ -56,23 +56,20 @@ struct WiDView: View {
         NavigationView {
             VStack {
                 // 상단 바
-                HStack {
+                ZStack {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Image(systemName: "arrow.backward")
-                            .imageScale(.large)
-                            .foregroundColor(.blue)
+                        Image(systemName: "chevron.backward")
+                        
+                        Text("뒤로 가기")
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.blue)
 
                     Text("WiD")
                         .bold()
-                    
-                    Text("-")
-                    
-                    getDayString(date: date)
-                    
-                    Spacer()
+                        .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button(action: {
                         if isEditing {
@@ -84,9 +81,12 @@ struct WiDView: View {
                             isEditing.toggle()
                         }
                     }) {
+                        Image(systemName: isEditing ? "checkmark" : "pencil")
+                        
                         Text(isEditing ? "완료" : "수정")
-                            .foregroundColor(isEditing ? (isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? .gray : .green) : .blue)
                     }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .foregroundColor(isEditing ? (isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? .gray : .green) : .blue)
                     .disabled(isEditing && (isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist))
                 }
                 .padding(.horizontal)
@@ -231,14 +231,13 @@ struct WiDView: View {
                     }) {
                         if isDeleteButtonPressed {
                             Text("삭제 확인")
-                                .foregroundColor(.red)
                         } else {
-                            Text("WiD")
+                            Image(systemName: "trash.fill")
                             
                             Text("삭제")
-                                .foregroundColor(.red)
                         }
                     }
+                    .foregroundColor(.red)
                 }
                 .padding(.horizontal)
             }

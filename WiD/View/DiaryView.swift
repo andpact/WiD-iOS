@@ -29,23 +29,20 @@ struct DiaryView: View {
             // 전체 화면
             VStack {
                 // 상단 바
-                HStack {
+                ZStack {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Image(systemName: "arrow.backward")
-                            .imageScale(.large)
-                            .foregroundColor(.blue)
+                        Image(systemName: "chevron.backward")
+                        
+                        Text("뒤로 가기")
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.blue)
                     
                     Text("다이어리")
                         .bold()
-                    
-                    Text("-")
-                    
-                    getDayString(date: date)
-                    
-                    Spacer()
+                        .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
@@ -59,13 +56,21 @@ struct DiaryView: View {
                             diaryService.updateDiary(withID: diary.id, newTitle: diaryTitle, newContent: diaryContent)
                         }
                     }) {
+                        Image(systemName: "checkmark")
+                        
                         Text("완료")
-                            .foregroundColor(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
                     }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .foregroundColor(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
                     .disabled(diaryTitle.isEmpty || diaryContent.isEmpty)
                 }
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity)
+                
+                getDayString(date: date)
+                    .font(.custom("BlackHanSans-Regular", size: 25))
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 TextField("제목을 입력해 주세요.", text: $diaryTitle)
                     .padding(.horizontal, 20)
@@ -76,6 +81,7 @@ struct DiaryView: View {
                     .padding(.horizontal)
                 
                 ZStack {
+                    // Place holder
                     TextEditor(text: $contentPlaceHolder)
                         .padding(.horizontal)
                         .disabled(true)

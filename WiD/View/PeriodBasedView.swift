@@ -76,19 +76,7 @@ struct PeriodBasedView: View {
                                 .font(.custom("BlackHanSans-Regular", size: 20))
                             
                             if wiDList.isEmpty {
-                                HStack {
-                                    Image(systemName: "ellipsis.bubble")
-                                        .foregroundColor(.gray)
-
-                                    Text("표시할 그래프가 없습니다.")
-                                        .foregroundColor(.gray)
-                                }
-                                .padding()
-                                .padding(.vertical, 32)
-                                .frame(maxWidth: .infinity)
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
+                                getEmptyView(message: "표시할 그래프가 없습니다.")
                             } else {
                                 VStack(spacing: 0) {
                                     HStack {
@@ -204,51 +192,31 @@ struct PeriodBasedView: View {
                             }
                             
                             if wiDList.isEmpty {
-                                HStack {
-                                    Image(systemName: "ellipsis.bubble")
-                                        .foregroundColor(.gray)
-                                    
-                                    Text("표시할 \(seletedDictionaryText) 기록이 없습니다.")
-                                        .foregroundColor(.gray)
-                                }
-                                .padding()
-                                .padding(.vertical, 32)
-                                .frame(maxWidth: .infinity)
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
+                                getEmptyView(message: "표시할 \(seletedDictionaryText) 기록이 없습니다.")
                             } else {
                                 VStack(spacing: 8) {
                                     ForEach(Array(seletedDictionary), id: \.key) { title, duration in
                                         HStack {
-                                            HStack {
-                                                Image(systemName: "character.textbox.ko")
-                                                    .frame(width: 20)
-                                                
-                                                Text(titleDictionary[title] ?? "")
-                                                    .bold()
-                                                
-                                                Circle()
-                                                    .fill(Color(title))
-                                                    .frame(width: 10)
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            Text(titleDictionary[title] ?? "")
+                                                .font(.custom("BlackHanSans-Regular", size: 25))
                                             
-                                            HStack {
-                                                Image(systemName: "hourglass")
-                                                    .frame(width: 20)
-                                                
-                                                Text(formatDuration(duration, mode: 2))
-                                                    .bold()
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            Spacer()
+                                        
+                                            Text(formatDuration(duration, mode: 2))
+                                                .font(.custom("BlackHanSans-Regular", size: 25))
                                         }
+                                        .padding()
+                                        .background(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [Color(title), Color.white]),
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                        .cornerRadius(8)
+                                        .shadow(radius: 1)
                                     }
                                 }
-                                .padding()
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
                             }
                         }
                         .padding(.horizontal)
@@ -258,19 +226,7 @@ struct PeriodBasedView: View {
                                 .font(.custom("BlackHanSans-Regular", size: 20))
                             
                             if filteredWiDListByTitle.isEmpty {
-                                HStack {
-                                    Image(systemName: "ellipsis.bubble")
-                                        .foregroundColor(.gray)
-
-                                    Text("표시할 그래프가 없습니다.")
-                                        .foregroundColor(.gray)
-                                }
-                                .padding()
-                                .padding(.vertical, 32)
-                                .frame(maxWidth: .infinity)
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
+                                getEmptyView(message: "표시할 그래프가 없습니다.")
                             } else {
                                 ZStack {
                                     LineGraphView(title: selectedTitle.rawValue, wiDList: filteredWiDListByTitle, startDate: startDate, finishDate: finishDate)
@@ -289,85 +245,69 @@ struct PeriodBasedView: View {
                                 .font(.custom("BlackHanSans-Regular", size: 20))
                             
                             if filteredWiDListByTitle.isEmpty {
-                                HStack {
-                                    Image(systemName: "ellipsis.bubble")
-                                        .foregroundColor(.gray)
-                                    
-                                    Text("표시할 기록이 없습니다.")
-                                        .foregroundColor(.gray)
-                                }
-                                .padding()
-                                .padding(.vertical, 32)
-                                .frame(maxWidth: .infinity)
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
+                                getEmptyView(message: "표시할 기록이 없습니다.")
                             } else {
                                 VStack(spacing: 8) {
                                     HStack {
-                                        HStack {
-                                            Image(systemName: "character.textbox.ko")
-                                                .frame(width: 20)
-                                            
-                                            Text("합계")
-                                                .bold()
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        Text("합계")
+                                            .font(.custom("BlackHanSans-Regular", size: 25))
                                         
-                                        HStack {
-                                            Image(systemName: "hourglass")
-                                                .frame(width: 20)
-                                            
-                                            Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
-                                                .bold()
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        Spacer()
+                                    
+                                        Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
+                                            .font(.custom("BlackHanSans-Regular", size: 25))
                                     }
+                                    .padding()
+                                    .background(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color("light_gray"), Color.white]),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .cornerRadius(8)
+                                    .shadow(radius: 1)
                                     
                                     HStack {
-                                        HStack {
-                                            Image(systemName: "character.textbox.ko")
-                                                .frame(width: 20)
-                                            
-                                            Text("평균")
-                                                .bold()
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        Text("평균")
+                                            .font(.custom("BlackHanSans-Regular", size: 25))
                                         
-                                        HStack {
-                                            Image(systemName: "hourglass")
-                                                .frame(width: 20)
-                                            
-                                            Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
-                                                .bold()
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        Spacer()
+                                    
+                                        Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
+                                            .font(.custom("BlackHanSans-Regular", size: 25))
                                     }
+                                    .padding()
+                                    .background(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color("light_gray"), Color.white]),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .cornerRadius(8)
+                                    .shadow(radius: 1)
                                     
                                     HStack {
-                                        HStack {
-                                            Image(systemName: "character.textbox.ko")
-                                                .frame(width: 20)
-                                            
-                                            Text("최고")
-                                                .bold()
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        Text("최고")
+                                            .font(.custom("BlackHanSans-Regular", size: 25))
                                         
-                                        HStack {
-                                            Image(systemName: "hourglass")
-                                                .frame(width: 20)
-                                            
-                                            Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
-                                                .bold()
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        Spacer()
+                                    
+                                        Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
+                                            .font(.custom("BlackHanSans-Regular", size: 25))
                                     }
+                                    .padding()
+                                    .background(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color("light_gray"), Color.white]),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .cornerRadius(8)
+                                    .shadow(radius: 1)
                                 }
-                                .padding()
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
                             }
                         }
                         .padding(.horizontal)
@@ -395,7 +335,7 @@ struct PeriodBasedView: View {
                         finishDate = getLastDayOfMonth(for: today)
                     }
 
-                    updateWiDData()
+                    updateDataFromPeriod()
                 }) {
                     Image(systemName: "arrow.clockwise")
                 }
@@ -419,9 +359,9 @@ struct PeriodBasedView: View {
                         finishDate = getLastDayOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
                     }
                     
-                    updateWiDData()
+                    updateDataFromPeriod()
                 }) {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "arrowtriangle.backward.fill")
                 }
                 .padding(.horizontal, 8)
                 
@@ -434,9 +374,9 @@ struct PeriodBasedView: View {
                         finishDate = getLastDayOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
                     }
 
-                    updateWiDData()
+                    updateDataFromPeriod()
                 }) {
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "arrowtriangle.forward.fill")
                 }
                 .padding(.horizontal, 8)
                 .disabled(
@@ -462,7 +402,7 @@ struct PeriodBasedView: View {
             print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
             print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
             
-            updateWiDData()
+            updateDataFromPeriod()
         }
         .onChange(of: selectedTitle) { newTitle in
             filteredWiDListByTitle = wiDList.filter { wiD in
@@ -478,12 +418,12 @@ struct PeriodBasedView: View {
                 finishDate = getLastDayOfMonth(for: today)
             }
 
-            updateWiDData()
+            updateDataFromPeriod()
         }
     }
     
     // startDate, finishDate 변경될 때 실행됨.
-    func updateWiDData() {
+    func updateDataFromPeriod() {
         wiDList = wiDService.selectWiDsBetweenDates(startDate: startDate, finishDate: finishDate)
         
         filteredWiDListByTitle = wiDList.filter { wiD in

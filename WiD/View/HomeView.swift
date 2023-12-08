@@ -48,7 +48,7 @@ struct HomeView: View {
                  
                     Button(action: {
                     }) {
-                        NavigationLink(destination: ManualView()) {
+                        NavigationLink(destination: NewWiDView()) {
                             VStack(spacing: 8) {
                                 Image(systemName: "plus.square")
                                     .imageScale(.large)

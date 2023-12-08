@@ -35,19 +35,7 @@ struct DateBasedView: View {
                             .font(.custom("BlackHanSans-Regular", size: 20))
                         
                         if wiDList.isEmpty {
-                            HStack {
-                                Image(systemName: "ellipsis.bubble")
-                                    .foregroundColor(.gray)
-                                
-                                Text("표시할 그래프가 없습니다.")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding()
-                            .padding(.vertical, 32)
-                            .frame(maxWidth: .infinity)
-                            .background(.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
+                            getEmptyView(message: "표시할 그래프가 없습니다.")
                         } else {
                             GeometryReader { geo in
                                 HStack(spacing: 0) {
@@ -84,19 +72,7 @@ struct DateBasedView: View {
                             .font(.custom("BlackHanSans-Regular", size: 20))
                         
                         if diary.id < 0 { // 다이어리가 데이터베이스에 없을 때
-                            HStack {
-                                Image(systemName: "ellipsis.bubble")
-                                    .foregroundColor(.gray)
-
-                                Text("표시할 다이어리가 없습니다.")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding()
-                            .padding(.vertical, 32)
-                            .frame(maxWidth: .infinity)
-                            .background(.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
+                            getEmptyView(message: "표시할 다이어리가 없습니다.")
                         } else {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(diary.title)
@@ -134,115 +110,31 @@ struct DateBasedView: View {
                             .font(.custom("BlackHanSans-Regular", size: 20))
                         
                         if wiDList.isEmpty {
-                            HStack {
-                                Text("공부")
-                                    .font(.custom("BlackHanSans-Regular", size: 25))
-                                
-                                Spacer()
-                                
-                                Text("1시간 30분")
-                                    .font(.custom("BlackHanSans-Regular", size: 25))
-                            }
-                            .padding()
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [Color("STUDY"), Color.white]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
-                            
-                            HStack {
-                                Text("노동")
-                                    .font(.custom("BlackHanSans-Regular", size: 25))
-                                
-                                Spacer()
-                                
-                                Text("1시간")
-                                    .font(.custom("BlackHanSans-Regular", size: 25))
-                            }
-                            .padding()
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [Color("WORK"), Color.white]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
-                            
-                            HStack {
-                                Text("운동")
-                                    .font(.custom("BlackHanSans-Regular", size: 25))
-                                
-                                Spacer()
-                                
-                                Text("1시간 23분 32초")
-                                    .font(.custom("BlackHanSans-Regular", size: 25))
-                            }
-                            .padding()
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [Color("EXERCISE"), Color.white]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
-                            
-                            HStack {
-                                Image(systemName: "ellipsis.bubble")
-                                    .foregroundColor(.gray)
-                                
-                                Text("표시할 기록이 없습니다.")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding()
-                            .padding(.vertical, 32)
-                            .frame(maxWidth: .infinity)
-                            .background(.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
+                            getEmptyView(message: "표시할 기록이 없습니다.")
                         } else {
                             VStack(spacing: 8) {
                                 ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
                                     HStack {
-                                        HStack {
-                                            Image(systemName: "character.textbox.ko")
-                                                .frame(width: 20)
-                                            
-                                            Text("제목")
-                                                .bold()
-                                            
-                                            Text(titleDictionary[title] ?? "")
-                                            
-                                            Circle()
-                                                .fill(Color(title))
-                                                .frame(width: 10)
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        Text(titleDictionary[title] ?? "")
+                                            .font(.custom("BlackHanSans-Regular", size: 25))
                                         
-                                        HStack {
-                                            Image(systemName: "hourglass")
-                                                .frame(width: 20)
-                                            
-                                            Text("소요")
-                                                .bold()
-                                            
-                                            Text(formatDuration(duration, mode: 2))
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        Spacer()
+                                    
+                                        Text(formatDuration(duration, mode: 2))
+                                            .font(.custom("BlackHanSans-Regular", size: 25))
                                     }
+                                    .padding()
+                                    .background(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color(title), Color.white]),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .cornerRadius(8)
+                                    .shadow(radius: 1)
                                 }
                             }
-                            .padding()
-                            .background(.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
                         }
                     }
                     .padding(.horizontal)
@@ -253,90 +145,62 @@ struct DateBasedView: View {
                             .font(.custom("BlackHanSans-Regular", size: 20))
 
                         if wiDList.isEmpty {
-                            HStack {
-                                Image(systemName: "ellipsis.bubble")
-                                    .foregroundColor(.gray)
-                                
-                                Text("표시할 WiD가 없습니다.")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding()
-                            .padding(.vertical, 32)
-                            .frame(maxWidth: .infinity)
-                            .background(.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
+                            getEmptyView(message: "표시할 WiD가 없습니다.")
                         } else {
                             ForEach(Array(wiDList.enumerated()), id: \.element.id) { (index, wiD) in
                                 NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                                    VStack(spacing: 8) {
+                                    VStack(spacing: 0) {
                                         HStack {
-                                            HStack {
-                                                Image(systemName: "character.textbox.ko")
-                                                    .frame(width: 20)
-                                                
-                                                Text("제목")
-                                                    .bold()
-                                                
-                                                Text(titleDictionary[wiD.title] ?? "")
-                                                
-                                                Circle()
-                                                    .fill(Color(wiD.title))
-                                                    .frame(width: 10)
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            Circle()
+                                                .fill(Color(wiD.title))
+                                                .frame(width: 10)
                                             
-                                            HStack {
-                                                Image(systemName: "hourglass")
-                                                    .frame(width: 20)
-                                                
-                                                Text("소요")
-                                                    .bold()
-                                                
-                                                Text(formatDuration(wiD.duration, mode: 2))
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            Text(titleDictionary[wiD.title] ?? "")
+                                            
+                                            Spacer()
+                                            
+                                            Image(systemName: "arrow.forward")
+                                                .foregroundColor(.blue)
                                         }
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 8)
+                                        .background(Color("light_gray"))
+                                        
+                                        Divider()
                                         
                                         HStack {
-                                            HStack {
-                                                Image(systemName: "play")
-                                                    .frame(width: 20)
-                                                
-                                                Text("시작")
-                                                    .bold()
-                                                
-                                                Text(formatTime(wiD.start, format: "a h:mm"))
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                HStack(spacing: 0) {
+                                                    Text(formatTime(wiD.start, format: "a h:mm"))
+                                                        .bold()
+                                                    
+                                                    Text("부터")
+                                                }
+
+                                                HStack(spacing: 0) {
+                                                    Text(formatTime(wiD.finish, format: "a h:mm"))
+                                                        .bold()
+                                                    
+                                                    Text("까지")
+                                                }
                                             }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
                                             
-                                            HStack {
-                                                Image(systemName: "play.fill")
-                                                    .frame(width: 20)
-                                                
-                                                Text("종료")
-                                                    .bold()
-                                                
-                                                Text(formatTime(wiD.finish, format: "a h:mm"))
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            Spacer()
+                                            
+                                            Text(formatDuration(wiD.duration, mode: 2))
+                                                .font(.custom("BlackHanSans-Regular", size: 25))
                                         }
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 8)
                                         
-//                                        HStack {
-//                                            Image(systemName: "text.bubble")
-//                                                .frame(width: 20)
-//
-//                                            Text("설명")
-//                                                .bold()
-//
-//                                            Text(wiD.detail.isEmpty ? "입력.." : wiD.detail)
-//                                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                                .lineLimit(1)
-//                                                .truncationMode(.tail)
-//                                                .foregroundColor(wiD.detail.isEmpty ? Color.gray : Color.black)
-//                                        }
+                                        Divider()
+                                        
+                                        Text(wiD.detail.isEmpty ? "설명 입력.." : wiD.detail)
+                                            .padding(.horizontal)
+                                            .padding(.vertical, 8)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .foregroundColor(wiD.detail.isEmpty ? .gray : .black)
                                     }
-                                    .padding()
                                     .frame(maxWidth: .infinity)
                                     .background(.white)
                                     .cornerRadius(8)
@@ -370,7 +234,7 @@ struct DateBasedView: View {
                         currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
                     }
                 }) {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "arrowtriangle.backward.fill")
                 }
                 .padding(.horizontal, 8)
                 
@@ -379,7 +243,7 @@ struct DateBasedView: View {
                         currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
                     }
                 }) {
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "arrowtriangle.forward.fill")
                 }
                 .padding(.horizontal, 8)
                 .disabled(calendar.isDateInToday(currentDate))

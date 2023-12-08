@@ -48,7 +48,7 @@ struct StopWatchView: View {
             ZStack {
                 if stopWatchTopBottomBarVisible {
                     // 상단 바
-                    HStack {
+                    ZStack {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
                             
@@ -56,15 +56,16 @@ struct StopWatchView: View {
                                 pauseStopWatch()
                             }
                         }) {
-                            Image(systemName: "arrow.backward")
-                                .imageScale(.large)
-                                .foregroundColor(.blue)
+                            Image(systemName: "chevron.backward")
+                            
+                            Text("뒤로 가기")
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.blue)
 
                         Text("스톱워치")
                             .bold()
-                        
-                        Spacer()
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
@@ -85,6 +86,7 @@ struct StopWatchView: View {
                                     Text(title.koreanValue)
                                 }
                             }
+                            .disabled(!stopWatchReset)
                         }
                         
                         Spacer()
@@ -94,8 +96,11 @@ struct StopWatchView: View {
                                 Button(action: {
                                     resetStopWatch()
                                 }) {
+                                    Image(systemName: "arrow.clockwise")
+                                    
                                     Text("초기화")
                                 }
+                                .foregroundColor(.blue)
                             }
                             
                             Button(action: {
@@ -104,10 +109,12 @@ struct StopWatchView: View {
                                 } else {
                                     startStopWatch()
                                 }
-                            }) {
+                            }) { // 버튼 안에 기본적으로 수평 스택이 생성되는 듯.
+                                Image(systemName: buttonText == "중지" ? "pause.fill" : "play.fill")
+                                
                                 Text(buttonText)
-                                    .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .blue))
                             }
+                            .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .blue))
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
