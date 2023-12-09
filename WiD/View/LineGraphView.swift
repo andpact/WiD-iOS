@@ -25,7 +25,7 @@ struct LineGraphView: UIViewRepresentable {
     private let finishDate: Date
     
     // 데이터
-    private let dateList: [String] // startDate, finishDate가 갱신되어 넘어올 때, 포매터에 있는 dateList를 갱신해야 하니 @State로 선언함.
+    private let dateList: [String]
     private let entryList: [ChartDataEntry]
     
     // wiDList, startDate, finishDate 모두 오전 12:00:00으로 설정되서 넘어옴.
@@ -73,7 +73,7 @@ struct LineGraphView: UIViewRepresentable {
     func updateUIView(_ uiView: LineChartView, context: Context) {
         // 데이터
         let dataSet = LineChartDataSet(entries: entryList)
-        dataSet.valueFormatter = DataValueFormatter()
+        dataSet.valueFormatter = LineGraphDataValueFormatter()
         dataSet.setColor(.black) // 선 색상
         dataSet.lineWidth = 2 // 선 굵기
         dataSet.drawCirclesEnabled = false // 선 꼭지점 원 표시
@@ -132,6 +132,7 @@ struct LineGraphView: UIViewRepresentable {
         xAxis.granularity = 1 // 축 라벨 표시 간격
 //        xAxis.valueFormatter = XAxisValueFormatter(dateList: dateList)
         xAxis.valueFormatter = IndexAxisValueFormatter(values: dateList)
+//        xAxis.setLabelCount(dateList.count, force: false) // X축 레이블 갯수 최대로 설정
 
 
         // 왼쪽 축
@@ -218,7 +219,7 @@ func createTempWiDList() -> [WiD] {
 //    }
 //}
 
-class DataValueFormatter : NSObject, ValueFormatter {
+class LineGraphDataValueFormatter : NSObject, ValueFormatter {
     func stringForValue(_ value: Double,
                         entry: ChartDataEntry,
                         dataSetIndex: Int,

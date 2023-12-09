@@ -98,7 +98,7 @@ struct NewWiDView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Text("시간 그래프")
-                                    .font(.custom("BlackHanSans-Regular", size: 20))
+                                    .bold()
                                 
                                 Spacer()
                                 
@@ -119,7 +119,7 @@ struct NewWiDView: View {
                 //                            .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
                 //                    }
                                     
-                                    HorizontalBarChartView(wiDList: wiDList)
+                                    MyHorizontalBarChartView(wiDList: wiDList)
                                 }
                                 .padding(.vertical)
                                 .frame(maxWidth: .infinity)
@@ -132,7 +132,7 @@ struct NewWiDView: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text("새로운 WiD")
-                                .font(.custom("BlackHanSans-Regular", size: 20))
+                                .bold()
                             
                             VStack {
                                 HStack(spacing: 16) {
@@ -157,18 +157,15 @@ struct NewWiDView: View {
                                     
                                     Picker("", selection: $title) {
                                         ForEach(Array(Title.allCases), id: \.self) { title in
-                                            Text(titleDictionary[title.rawValue]!)
+                                            Text(title.koreanValue)
                                         }
                                     }
                                     
                                     Spacer()
                                     
-                                    RoundedRectangle(cornerRadius: 5)
+                                    Circle()
                                         .fill(Color(title.rawValue))
-                                        .background(RoundedRectangle(cornerRadius: 5)
-                                            .stroke(.black, lineWidth: 1)
-                                        )
-                                        .frame(width: 5, height: 25)
+                                        .frame(width: 10)
                                 }
                                 
                                 HStack(spacing: 16) {
@@ -234,10 +231,10 @@ struct NewWiDView: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text("선택 가능한 시간대")
-                                .font(.custom("BlackHanSans-Regular", size: 20))
+                                .bold()
                             
                             if wiDList.isEmpty {
-                                getEmptyView(message: "표시할 리스트가 없습니다.")
+                                getEmptyView(message: "표시할 시간대가 없습니다.")
                             } else {
                                 ForEach(Array(emptyWiDList.enumerated()), id: \.element.id) { (index, emptyWiD) in
                                     Button(action: {

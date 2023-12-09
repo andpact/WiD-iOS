@@ -32,7 +32,7 @@ struct DateBasedView: View {
                     // 파이 차트
                     VStack(alignment: .leading, spacing: 8) {
                         Text("시간 그래프")
-                            .font(.custom("BlackHanSans-Regular", size: 20))
+                                .bold()
                         
                         if wiDList.isEmpty {
                             getEmptyView(message: "표시할 그래프가 없습니다.")
@@ -47,10 +47,9 @@ struct DateBasedView: View {
                                             .bold()
                                         
                                         Text("\(getTotalDurationPercentageFromWiDList(wiDList: wiDList))%")
-                                            .font(.custom("BlackHanSans-Regular", size: 40))
-                                            .foregroundColor(wiDList.isEmpty ? .gray : .black)
+                                            .font(.custom("PyeongChangPeace-Bold", size: 30))
                                         
-                                        Text("\(formatDuration(getTotalDurationFromWiDList(wiDList: wiDList), mode: 2)) / 24시간")
+                                        Text("\(formatDuration(getTotalDurationFromWiDList(wiDList: wiDList), mode: 1)) / 24시간")
                                             .font(.system(size: 14))
                                             .foregroundColor(.gray)
                                     }
@@ -61,7 +60,7 @@ struct DateBasedView: View {
                                 .cornerRadius(8)
                                 .shadow(radius: 1)
                             }
-                            .aspectRatio(1.5, contentMode: .fit) // 파이 차트의 폭만큼 높이를 차지해야해서 1.5를 적용함.
+                            .aspectRatio(1.5 / 1.0, contentMode: .fit) // 파이 차트의 폭만큼 높이를 차지해야해서 1.5를 적용함.
                         }
                     }
                     .padding(.horizontal)
@@ -69,7 +68,7 @@ struct DateBasedView: View {
                     // 다이어리
                     VStack(alignment: .leading, spacing: 8) {
                         Text("다이어리")
-                            .font(.custom("BlackHanSans-Regular", size: 20))
+                            .bold()
                         
                         if diary.id < 0 { // 다이어리가 데이터베이스에 없을 때
                             getEmptyView(message: "표시할 다이어리가 없습니다.")
@@ -107,7 +106,7 @@ struct DateBasedView: View {
                     // 합계 기록
                     VStack(alignment: .leading, spacing: 8) {
                         Text("합계 기록")
-                            .font(.custom("BlackHanSans-Regular", size: 20))
+                            .bold()
                         
                         if wiDList.isEmpty {
                             getEmptyView(message: "표시할 기록이 없습니다.")
@@ -116,12 +115,12 @@ struct DateBasedView: View {
                                 ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
                                     HStack {
                                         Text(titleDictionary[title] ?? "")
-                                            .font(.custom("BlackHanSans-Regular", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
                                         
                                         Spacer()
                                     
-                                        Text(formatDuration(duration, mode: 2))
-                                            .font(.custom("BlackHanSans-Regular", size: 25))
+                                        Text(formatDuration(duration, mode: 3))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
                                     }
                                     .padding()
                                     .background(
@@ -142,7 +141,7 @@ struct DateBasedView: View {
                     // WiD 리스트
                     VStack(alignment: .leading, spacing: 8) {
                         Text("WiD 리스트")
-                            .font(.custom("BlackHanSans-Regular", size: 20))
+                            .bold()
 
                         if wiDList.isEmpty {
                             getEmptyView(message: "표시할 WiD가 없습니다.")
@@ -171,14 +170,14 @@ struct DateBasedView: View {
                                         HStack {
                                             VStack(alignment: .leading, spacing: 8) {
                                                 HStack(spacing: 0) {
-                                                    Text(formatTime(wiD.start, format: "a h:mm"))
+                                                    Text(formatTime(wiD.start, format: "a h:mm:ss"))
                                                         .bold()
                                                     
                                                     Text("부터")
                                                 }
 
                                                 HStack(spacing: 0) {
-                                                    Text(formatTime(wiD.finish, format: "a h:mm"))
+                                                    Text(formatTime(wiD.finish, format: "a h:mm:ss"))
                                                         .bold()
                                                     
                                                     Text("까지")
@@ -187,19 +186,19 @@ struct DateBasedView: View {
                                             
                                             Spacer()
                                             
-                                            Text(formatDuration(wiD.duration, mode: 2))
-                                                .font(.custom("BlackHanSans-Regular", size: 25))
+                                            Text(formatDuration(wiD.duration, mode: 3))
+                                                .font(.custom("PyeongChangPeace-Bold", size: 25))
                                         }
                                         .padding(.horizontal)
                                         .padding(.vertical, 8)
                                         
-                                        Divider()
-                                        
-                                        Text(wiD.detail.isEmpty ? "설명 입력.." : wiD.detail)
-                                            .padding(.horizontal)
-                                            .padding(.vertical, 8)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .foregroundColor(wiD.detail.isEmpty ? .gray : .black)
+//                                        Divider()
+//                                        
+//                                        Text(wiD.detail.isEmpty ? "설명 입력.." : wiD.detail)
+//                                            .padding(.horizontal)
+//                                            .padding(.vertical, 8)
+//                                            .frame(maxWidth: .infinity, alignment: .leading)
+//                                            .foregroundColor(wiD.detail.isEmpty ? .gray : .black)
                                     }
                                     .frame(maxWidth: .infinity)
                                     .background(.white)

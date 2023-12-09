@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct VerticalBarChartView: View {
+struct MyVerticalBarChartView: View {
     var wiDList: [WiD]
-    var barChartData: [BarChartData]
+    var barChartData: [MyBarChartData]
     
     init(wiDList: [WiD]) {
         self.wiDList = wiDList
@@ -17,10 +17,10 @@ struct VerticalBarChartView: View {
         var startMinutes: Int = 0
         let totalMinutes: Float = 24.0 * 60.0 // 24시간(1440분)으로 표현함. TimeInterval 단위는 초(second)를 사용함.
 
-        var data: [BarChartData] = []
+        var data: [MyBarChartData] = []
         
         if wiDList.isEmpty {
-            let noPieChartData = BarChartData(value: 1, color: Color("light_gray"))
+            let noPieChartData = MyBarChartData(value: 1, color: Color("light_gray"))
             data.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -30,13 +30,13 @@ struct VerticalBarChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = BarChartData(value: Float(emptyMinutes) / totalMinutes, color: Color("light_gray"))
+                    let emptyPieChartData = MyBarChartData(value: Float(emptyMinutes) / totalMinutes, color: Color("light_gray"))
                     data.append(emptyPieChartData)
                 }
 
                 // 엔트리 셋에 해당 WiD 객체의 시간대를 추가
                 let durationMinutes = Int(wid.duration / 60)
-                let widPieChartData = BarChartData(value: Float(durationMinutes) / totalMinutes, color: Color(wid.title))
+                let widPieChartData = MyBarChartData(value: Float(durationMinutes) / totalMinutes, color: Color(wid.title))
                 data.append(widPieChartData)
 
                 // 시작 시간 업데이트
@@ -46,7 +46,7 @@ struct VerticalBarChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = BarChartData(value: Float(emptyMinutes) / totalMinutes, color: Color("light_gray"))
+                let emptyPieChartData = MyBarChartData(value: Float(emptyMinutes) / totalMinutes, color: Color("light_gray"))
                 data.append(emptyPieChartData)
             }
         }
@@ -58,7 +58,7 @@ struct VerticalBarChartView: View {
         HStack {
             VStack(spacing: 0) {
                 ForEach(0..<barChartData.count, id: \.self) { index in
-                    VerticalBarView(data: barChartData[index])
+                    MyVerticalBarView(data: barChartData[index])
                         .foregroundColor(barChartData[index].color)
                         .frame(height: UIScreen.main.bounds.size.height * 0.6 * CGFloat(barChartData[index].value))
                 }
@@ -76,10 +76,10 @@ struct VerticalBarChartView: View {
     }
 }
 
-struct VerticalBarView: View {
-    let data: BarChartData
+struct MyVerticalBarView: View {
+    let data: MyBarChartData
     
-    init(data: BarChartData) {
+    init(data: MyBarChartData) {
         self.data = data
     }
 
@@ -89,9 +89,9 @@ struct VerticalBarView: View {
     }
 }
 
-struct HorizontalBarChartView: View {
+struct MyHorizontalBarChartView: View {
     var wiDList: [WiD]
-    var barChartData: [BarChartData]
+    var barChartData: [MyBarChartData]
     
     init(wiDList: [WiD]) {
         self.wiDList = wiDList
@@ -99,10 +99,10 @@ struct HorizontalBarChartView: View {
         var startMinutes: Int = 0
         let totalMinutes: Float = 24.0 * 60.0 // 24시간(1440분)으로 표현함. TimeInterval 단위는 초(second)를 사용함.
 
-        var data: [BarChartData] = []
+        var data: [MyBarChartData] = []
         
         if wiDList.isEmpty {
-            let noPieChartData = BarChartData(value: 1, color: Color("light_gray"))
+            let noPieChartData = MyBarChartData(value: 1, color: Color("light_gray"))
             data.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -112,13 +112,13 @@ struct HorizontalBarChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = BarChartData(value: Float(emptyMinutes) / totalMinutes, color: Color("light_gray"))
+                    let emptyPieChartData = MyBarChartData(value: Float(emptyMinutes) / totalMinutes, color: Color("light_gray"))
                     data.append(emptyPieChartData)
                 }
 
                 // 엔트리 셋에 해당 WiD 객체의 시간대를 추가
                 let durationMinutes = Int(wid.duration / 60)
-                let widPieChartData = BarChartData(value: Float(durationMinutes) / totalMinutes, color: Color(wid.title))
+                let widPieChartData = MyBarChartData(value: Float(durationMinutes) / totalMinutes, color: Color(wid.title))
                 data.append(widPieChartData)
 
                 // 시작 시간 업데이트
@@ -128,7 +128,7 @@ struct HorizontalBarChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = BarChartData(value: Float(emptyMinutes) / totalMinutes, color: Color("light_gray"))
+                let emptyPieChartData = MyBarChartData(value: Float(emptyMinutes) / totalMinutes, color: Color("light_gray"))
                 data.append(emptyPieChartData)
             }
         }
@@ -140,7 +140,7 @@ struct HorizontalBarChartView: View {
         VStack {
             HStack(spacing: 0) {
                 ForEach(0..<barChartData.count, id: \.self) { index in
-                    HorizontalBarView(data: barChartData[index])
+                    MyHorizontalBarView(data: barChartData[index])
                         .foregroundColor(barChartData[index].color)
                         .frame(width: UIScreen.main.bounds.size.width * 0.8 * CGFloat(barChartData[index].value))
                 }
@@ -158,10 +158,10 @@ struct HorizontalBarChartView: View {
     }
 }
 
-struct HorizontalBarView: View {
-    let data: BarChartData
+struct MyHorizontalBarView: View {
+    let data: MyBarChartData
     
-    init(data: BarChartData) {
+    init(data: MyBarChartData) {
         self.data = data
     }
 
@@ -171,7 +171,7 @@ struct HorizontalBarView: View {
     }
 }
 
-struct BarChartData {
+struct MyBarChartData {
     let value: Float
     let color: Color
     
@@ -183,7 +183,7 @@ struct BarChartData {
 
 struct BarChartView_Previews: PreviewProvider {
     static var previews: some View {
-//        VerticalBarChartView(wiDList: [])
-        HorizontalBarChartView(wiDList: [])
+//        MyVerticalBarChartView(wiDList: [])
+        MyHorizontalBarChartView(wiDList: [])
     }
 }

@@ -26,7 +26,7 @@ struct WiDView: View {
     @State private var date = Date()
     
     // 제목
-    @State private var title: String = ""
+    @State private var title: Title = .STUDY
     
     // 시작 시간
     @State private var start = Date()
@@ -73,7 +73,7 @@ struct WiDView: View {
                     
                     Button(action: {
                         if isEditing {
-                            wiDService.updateWiD(withID: clickedWiDId, newTitle: title, newStart: start, newFinish: finish, newDuration: duration, newDetail: detail)
+                            wiDService.updateWiD(withID: clickedWiDId, newTitle: title.rawValue, newStart: start, newFinish: finish, newDuration: duration, newDetail: detail)
                             
                             wiDList = wiDService.selectWiDsByDate(date: date)
                         }
@@ -94,7 +94,7 @@ struct WiDView: View {
                 // 컨텐츠
                 VStack(alignment: .leading, spacing: 8) {
                     Text("클릭된 WiD")
-                        .font(.custom("BlackHanSans-Regular", size: 20))
+                        .bold()
                     
                     // 클릭된 WiD
                     VStack(spacing: 0) {
@@ -122,11 +122,11 @@ struct WiDView: View {
                                     }
                                 }
                             } else {
-                                Text(titleDictionary[title] ?? "공부")
+                                Text(titleDictionary[title.rawValue] ?? "공부")
                             }
                             
                             Circle()
-                                .fill(Color(title))
+                                .fill(Color(title.rawValue))
                                 .frame(width: 10)
                             
                             Spacer()
@@ -203,14 +203,14 @@ struct WiDView: View {
                 HStack {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            Text("선택 가능한 시간")
+                            Text("선택 가능")
                                 .bold()
                             
-                            Text("\(formatTime(startLimit, format: "a hh:mm"))")
+                            Text("\(formatTime(startLimit, format: "a hh:mm:ss"))")
                             
                             Text("~")
                             
-                            Text("\(formatTime(finishLimit, format: "a hh:mm"))")
+                            Text("\(formatTime(finishLimit, format: "a hh:mm:ss"))")
                         }
                     }
 
@@ -232,7 +232,7 @@ struct WiDView: View {
                         if isDeleteButtonPressed {
                             Text("삭제 확인")
                         } else {
-                            Image(systemName: "trash.fill")
+                            Image(systemName: "trash")
                             
                             Text("삭제")
                         }
@@ -245,46 +245,44 @@ struct WiDView: View {
             .background(Color("ghost_white"))
             .onAppear {
                 self.date = clickedWiD!.date
-                self.title = clickedWiD!.title
+                self.title = Title(rawValue: clickedWiD!.title) ?? .STUDY
+                
                 // date 날짜를 clickedWiD!.start와 clickedWiD!.finish에 적용시킴.
-                self.start = calendar.date(bySettingHour: calendar.component(.hour, from: clickedWiD!.start),
-                                           minute: calendar.component(.minute, from: clickedWiD!.start),
-                                           second: calendar.component(.second, from: clickedWiD!.start), of: date)!
-                self.finish = calendar.date(bySettingHour: calendar.component(.hour, from: clickedWiD!.finish),
-                                            minute: calendar.component(.minute, from: clickedWiD!.finish),
-                                            second: calendar.component(.second, from: clickedWiD!.finish), of: date)!
+                let clickedWiDStartComponents = calendar.dateComponents([.hour, .minute, .second], from: clickedWiD!.start)
+                self.start = calendar.date(bySettingHour: clickedWiDStartComponents.hour!, minute: clickedWiDStartComponents.minute!, second: clickedWiDStartComponents.second!, of: date)!
+                
+                let clickedWiDFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: clickedWiD!.finish)
+                self.finish = calendar.date(bySettingHour: clickedWiDFinishComponents.hour!, minute: clickedWiDFinishComponents.minute!, second: clickedWiDFinishComponents.second!, of: date)!
+                
                 self.duration = clickedWiD!.duration
                 self.detail = clickedWiD!.detail
                 
                 self.wiDList = wiDService.selectWiDsByDate(date: date)
                 
                 if let index = wiDList.firstIndex(where: { $0.id == clickedWiDId }) {
-                    if index > 0 {
-                        let previouWiD = wiDList[index - 1]
-                        self.startLimit = calendar.date(byAdding: .minute, value: 1, to: calendar.date(bySettingHour: calendar.component(.hour, from: previouWiD.finish),
-                                                                                                        minute: calendar.component(.minute, from: previouWiD.finish),
-                                                                                                        second: calendar.component(.second, from: previouWiD.finish), of: date)!)!
-
+                    if 0 < index {
+                        let previousWiD = wiDList[index - 1]
+                        let previousWiDFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: previousWiD.finish)
+                        self.startLimit = calendar.date(bySettingHour: previousWiDFinishComponents.hour!, minute: previousWiDFinishComponents.minute!, second: previousWiDFinishComponents.second!, of: date)!
                     } else {
-                        self.startLimit = calendar.startOfDay(for: date)
+                        self.startLimit = calendar.startOfDay(for: date) // date 날짜의 오전 12:00:00
                     }
                     
                     if index < wiDList.count - 1 {
                         let nextWiD = wiDList[index + 1]
-                        self.finishLimit = calendar.date(byAdding: .minute, value: -1, to: calendar.date(bySettingHour: calendar.component(.hour, from: nextWiD.start),
-                                                                                                            minute: calendar.component(.minute, from: nextWiD.start),
-                                                                                                            second: calendar.component(.second, from: nextWiD.start), of: date)!)!
-
+                        let nextWiDStartComponents = calendar.dateComponents([.hour, .minute, .second], from: nextWiD.start)
+                        self.finishLimit = calendar.date(bySettingHour: nextWiDStartComponents.hour!, minute: nextWiDStartComponents.minute!, second: nextWiDStartComponents.second!, of: date)!
                     } else if calendar.isDate(date, inSameDayAs: today) {
                         self.finishLimit = currenTime
                     } else {
-                        self.finishLimit = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
+                        self.finishLimit = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)! // date 날짜의 오후 11:59:59
                     }
                 }
             }
             .onChange(of: start) { newStart in
                 duration = finish.timeIntervalSince(newStart)
                 // DB의 newStart는 date가 아니라 2000-01-01 날짜를 가진다.
+                // 데이터베이스에서 "HH:mm:ss" 형식의 데이터를 가져와서 Date타입으로 변경하면 "2000-01-01 HH:mm:ss" 형식이 된다.
 //                print("new Start : \(formatTime(newStart, format: "yyyy-MM-dd a h:mm:ss"))")
                 
                 withAnimation {

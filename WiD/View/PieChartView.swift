@@ -193,9 +193,10 @@ struct DayPieChartView: View {
                 }
                 
                 Text("오후 | 오전")
-                    .font(.custom("BlackHanSans-Regular", size: geo.size.width / 15))
+                    .bold()
+                    .font(.system(size: geo.size.width / 15))
                     .position(x: geo.size.width / 2, y: geo.size.width / 1.3)
-                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
+//                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
                 
 //                Text("WiD")
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
@@ -338,7 +339,7 @@ struct PieSliceView: Shape {
 
 struct PieChartView_Previews: PreviewProvider {
     static var previews: some View {
-//        DayPieChartView(wiDList: [])
-        CalendarPieChartView(date: Date(), wiDList: [])
+        DayPieChartView(wiDList: [])
+//        CalendarPieChartView(date: Date(), wiDList: [])
     }
 }

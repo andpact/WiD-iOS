@@ -28,6 +28,7 @@ struct HomeView: View {
                                     .imageScale(.large)
                                 
                                 Text("스톱워치")
+                                    .bold()
                             }
                         }
                     }
@@ -41,6 +42,7 @@ struct HomeView: View {
                                     .imageScale(.large)
                                 
                                 Text("타이머")
+                                    .bold()
                             }
                         }
                     }
@@ -54,6 +56,7 @@ struct HomeView: View {
                                     .imageScale(.large)
                                 
                                 Text("새로운 WiD")
+                                    .bold()
                             }
                         }
                     }

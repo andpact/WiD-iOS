@@ -73,7 +73,7 @@ struct PeriodBasedView: View {
                     if selectedTitle == TitleWithALL.ALL { // 제목이 "전체" 일 때
                         VStack(alignment: .leading, spacing: 8) {
                             Text("시간 그래프")
-                                .font(.custom("BlackHanSans-Regular", size: 20))
+                                .bold()
                             
                             if wiDList.isEmpty {
                                 getEmptyView(message: "표시할 그래프가 없습니다.")
@@ -131,22 +131,6 @@ struct PeriodBasedView: View {
                                                     CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
                                                 }
                                             }
-                                            
-//                                            if selectedPeriod == Period.MONTH {
-//                                                ForEach(0..<weekday - 1, id: \.self) { index in // "id: \.self" 넣어야 정상작동한다.
-//                                                    Text("\(index)")
-//                                                }
-//                                            }
-//
-//                                            ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
-//                                                let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
-//
-//                                                let filteredWiDList = wiDList.filter { wiD in
-//                                                    return calendar.isDate(wiD.date, inSameDayAs: currentDate)
-//                                                }
-//
-//                                                CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
-//                                            }
                                         }
                                     }
                                 }
@@ -160,7 +144,7 @@ struct PeriodBasedView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Text("\(seletedDictionaryText) 기록")
-                                    .font(.custom("BlackHanSans-Regular", size: 20))
+                                    .bold()
                                 
                                 Spacer()
                                 
@@ -198,12 +182,12 @@ struct PeriodBasedView: View {
                                     ForEach(Array(seletedDictionary), id: \.key) { title, duration in
                                         HStack {
                                             Text(titleDictionary[title] ?? "")
-                                                .font(.custom("BlackHanSans-Regular", size: 25))
+                                                .font(.custom("PyeongChangPeace-Bold", size: 25))
                                             
                                             Spacer()
                                         
-                                            Text(formatDuration(duration, mode: 2))
-                                                .font(.custom("BlackHanSans-Regular", size: 25))
+                                            Text(formatDuration(duration, mode: 3))
+                                                .font(.custom("PyeongChangPeace-Bold", size: 25))
                                         }
                                         .padding()
                                         .background(
@@ -220,10 +204,29 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.horizontal)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("기록률")
+                                .bold()
+                            
+                            if wiDList.isEmpty {
+                                getEmptyView(message: "표시할 기록률이 없습니다.")
+                            } else {
+                                ZStack {
+                                    VerticalBarChartView(wiDList: wiDList, startDate: startDate, finishDate: finishDate)
+                                }
+                                .padding()
+                                .background(.white)
+                                .cornerRadius(8)
+                                .shadow(radius: 1)
+                                .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
+                            }
+                        }
+                        .padding(.horizontal)
                     } else { // 제목이 "전체"가 아닐 떄
                         VStack(alignment: .leading, spacing: 8) {
                             Text("시간 그래프")
-                                .font(.custom("BlackHanSans-Regular", size: 20))
+                                .bold()
                             
                             if filteredWiDListByTitle.isEmpty {
                                 getEmptyView(message: "표시할 그래프가 없습니다.")
@@ -242,7 +245,7 @@ struct PeriodBasedView: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text("시간 기록")
-                                .font(.custom("BlackHanSans-Regular", size: 20))
+                                .bold()
                             
                             if filteredWiDListByTitle.isEmpty {
                                 getEmptyView(message: "표시할 기록이 없습니다.")
@@ -250,12 +253,12 @@ struct PeriodBasedView: View {
                                 VStack(spacing: 8) {
                                     HStack {
                                         Text("합계")
-                                            .font(.custom("BlackHanSans-Regular", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
                                         
                                         Spacer()
                                     
-                                        Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
-                                            .font(.custom("BlackHanSans-Regular", size: 25))
+                                        Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
                                     }
                                     .padding()
                                     .background(
@@ -270,12 +273,12 @@ struct PeriodBasedView: View {
                                     
                                     HStack {
                                         Text("평균")
-                                            .font(.custom("BlackHanSans-Regular", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
                                         
                                         Spacer()
                                     
-                                        Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
-                                            .font(.custom("BlackHanSans-Regular", size: 25))
+                                        Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
                                     }
                                     .padding()
                                     .background(
@@ -290,12 +293,12 @@ struct PeriodBasedView: View {
                                     
                                     HStack {
                                         Text("최고")
-                                            .font(.custom("BlackHanSans-Regular", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
                                         
                                         Spacer()
                                     
-                                        Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 2))
-                                            .font(.custom("BlackHanSans-Regular", size: 25))
+                                        Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
                                     }
                                     .padding()
                                     .background(
