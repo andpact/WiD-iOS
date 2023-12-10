@@ -222,9 +222,9 @@ struct TimerView: View {
             }
             .onTapGesture {
                 if timerStarted {
-                    timerTopBottomBarVisible = true
-                    
-                    hideTimerTopBottomBar()
+                    withAnimation {
+                        timerTopBottomBarVisible.toggle()
+                    }
                 }
             }
         }
@@ -249,8 +249,6 @@ struct TimerView: View {
         
         date = Date()
         start = Date()
-        
-        hideTimerTopBottomBar()
     }
 
     private func pauseTimer() {
@@ -284,13 +282,11 @@ struct TimerView: View {
                 wiDService.insertWiD(wid: firstDayWiD)
 
                 let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-                let midnightEndDateNextDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nextDayStartDate)!
+                let midnightEndDateNextDay = calendar.startOfDay(for: nextDayStartDate)
                 let secondDayWiD = WiD(id: 0, date: nextDayStartDate, title: title.rawValue, start: midnightEndDateNextDay, finish: finish, duration: finish.timeIntervalSince(midnightEndDateNextDay), detail: detail)
                 wiDService.insertWiD(wid: secondDayWiD)
             }
         }
-        
-        timerTopBottomBarVisible = true
     }
 
     private func resetTimer() {
@@ -298,16 +294,6 @@ struct TimerView: View {
         timerReset = true
         buttonText = "시작"
         remainingTime = 0
-    }
-    
-    private func hideTimerTopBottomBar() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            withAnimation {
-                if timerStarted {
-                    timerTopBottomBarVisible = false
-                }
-            }
-        }
     }
 }
 

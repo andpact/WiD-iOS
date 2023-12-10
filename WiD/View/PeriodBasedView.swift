@@ -182,12 +182,12 @@ struct PeriodBasedView: View {
                                     ForEach(Array(seletedDictionary), id: \.key) { title, duration in
                                         HStack {
                                             Text(titleDictionary[title] ?? "")
-                                                .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
                                             
                                             Spacer()
                                         
                                             Text(formatDuration(duration, mode: 3))
-                                                .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
                                         }
                                         .padding()
                                         .background(
@@ -253,12 +253,12 @@ struct PeriodBasedView: View {
                                 VStack(spacing: 8) {
                                     HStack {
                                         Text("합계")
-                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                         
                                         Spacer()
                                     
                                         Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                     }
                                     .padding()
                                     .background(
@@ -273,12 +273,12 @@ struct PeriodBasedView: View {
                                     
                                     HStack {
                                         Text("평균")
-                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                         
                                         Spacer()
                                     
                                         Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                     }
                                     .padding()
                                     .background(
@@ -293,12 +293,12 @@ struct PeriodBasedView: View {
                                     
                                     HStack {
                                         Text("최고")
-                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                         
                                         Spacer()
                                     
                                         Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                     }
                                     .padding()
                                     .background(

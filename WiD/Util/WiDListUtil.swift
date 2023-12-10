@@ -61,6 +61,49 @@ func getEmptyWiDListFromWiDList(date: Date, wiDList: [WiD]) -> [WiD] {
     return emptyWiDList
 }
 
+func getRandomWiDList(days: Int) -> [WiD] {
+    var randomWiDList: [WiD] = []
+
+    let calendar = Calendar.current
+    let startDate = Date()
+    let finishDate = calendar.date(byAdding: .day, value: days - 1, to: startDate) ?? Date()
+
+    // currentDate의 시간을 오전 12:00:00으로 설정.
+    var currentDate = calendar.startOfDay(for: startDate)
+
+    while currentDate <= finishDate {
+        let wiD = WiD(id: 0,
+                      date: currentDate,
+                      title: "STUDY",
+                      start: Date(),
+                      finish: Date(),
+                      duration: 3 * 60 * 60,
+                      detail: "Detail"
+        )
+
+        randomWiDList.append(wiD)
+
+        let randomMinutes = Int(arc4random_uniform(60))
+        let randomSeconds = Int(arc4random_uniform(60))
+
+        let randomDuration = TimeInterval((randomMinutes * 60) + randomSeconds)
+        let wiD2 = WiD(id: 0,
+                      date: currentDate,
+                      title: "STUDY",
+                      start: Date(),
+                      finish: Date(),
+                      duration: randomDuration,
+                      detail: "Detail"
+        )
+
+        randomWiDList.append(wiD2)
+
+        currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+    }
+
+    return randomWiDList
+}
+
 func getTotalDurationFromWiDList(wiDList: [WiD]) -> TimeInterval {
     let totalDuration = wiDList.reduce(0) { $0 + $1.duration }
     return totalDuration

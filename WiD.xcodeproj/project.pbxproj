@@ -38,7 +38,6 @@
 		EA6302222B0360530031BAE2 /* Agbalumo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA6302212B0360530031BAE2 /* Agbalumo-Regular.ttf */; };
 		EA663F0C2A5E74E200B51844 /* TitleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA663F0B2A5E74E200B51844 /* TitleUtil.swift */; };
 		EA70DD742A59089D00B4B167 /* DateBasedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA70DD732A59089D00B4B167 /* DateBasedView.swift */; };
-		EA7656E42B2462CA0025FAC1 /* VerticalBarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7656E32B2462CA0025FAC1 /* VerticalBarChartView.swift */; };
 		EA82C5032B240A2F00835DE4 /* PyeongChangPeace-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */; };
 		EA9D41742AB18B0D008D6DE2 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D41732AB18B0D008D6DE2 /* TimerView.swift */; };
 		EAA2E1922AEE8AF900D6486B /* OpacityChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA2E1912AEE8AF900D6486B /* OpacityChartView.swift */; };
@@ -109,7 +108,6 @@
 		EA6302212B0360530031BAE2 /* Agbalumo-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Agbalumo-Regular.ttf"; sourceTree = "<group>"; };
 		EA663F0B2A5E74E200B51844 /* TitleUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleUtil.swift; sourceTree = "<group>"; };
 		EA70DD732A59089D00B4B167 /* DateBasedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateBasedView.swift; sourceTree = "<group>"; };
-		EA7656E32B2462CA0025FAC1 /* VerticalBarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalBarChartView.swift; sourceTree = "<group>"; };
 		EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PyeongChangPeace-Bold.otf"; sourceTree = "<group>"; };
 		EA9D41732AB18B0D008D6DE2 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EAA2E1912AEE8AF900D6486B /* OpacityChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityChartView.swift; sourceTree = "<group>"; };
@@ -270,7 +268,6 @@
 				EA18DCB52AE8CC5B00B88F30 /* BarChartView.swift */,
 				EA0458202A625B840065B98E /* PieChartView.swift */,
 				EA4EACF32B1EAA2900BB4681 /* LineGraphView.swift */,
-				EA7656E32B2462CA0025FAC1 /* VerticalBarChartView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -558,7 +555,6 @@
 				EA1AF4AA2AB54EBD00BEBA93 /* AppOpenAdUtil.swift in Sources */,
 				EA215CDE2A60F9AF005C5D30 /* SearchView.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
-				EA7656E42B2462CA0025FAC1 /* VerticalBarChartView.swift in Sources */,
 				EA181F372A624F1F006EAF72 /* TimeUtil.swift in Sources */,
 				EA4774F82B1AF357009A59B0 /* HomeView.swift in Sources */,
 				EA70DD742A59089D00B4B167 /* DateBasedView.swift in Sources */,

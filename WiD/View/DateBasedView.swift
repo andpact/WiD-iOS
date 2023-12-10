@@ -115,12 +115,12 @@ struct DateBasedView: View {
                                 ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
                                     HStack {
                                         Text(titleDictionary[title] ?? "")
-                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                         
                                         Spacer()
                                     
                                         Text(formatDuration(duration, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                     }
                                     .padding()
                                     .background(
@@ -187,7 +187,7 @@ struct DateBasedView: View {
                                             Spacer()
                                             
                                             Text(formatDuration(wiD.duration, mode: 3))
-                                                .font(.custom("PyeongChangPeace-Bold", size: 25))
+                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
                                         }
                                         .padding(.horizontal)
                                         .padding(.vertical, 8)

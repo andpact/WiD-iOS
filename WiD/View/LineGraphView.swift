@@ -45,6 +45,12 @@ struct LineGraphView: UIViewRepresentable {
 
         for index in 0...dayCount {
             let currentDate = calendar.date(byAdding: .day, value: index, to: startDate)!
+                        
+            let day = calendar.component(.day, from: currentDate)
+            let dateString = "\(day)일"
+
+            dates.append(dateString)
+            
             let xValue = Double(index)
 
             let yValue: TimeInterval
@@ -56,9 +62,6 @@ struct LineGraphView: UIViewRepresentable {
 
             let entry = ChartDataEntry(x: xValue, y: yValue)
             entries.append(entry)
-
-            let dateString = "\(calendar.component(.day, from: currentDate))일"
-            dates.append(dateString)
         }
 
         self.dateList = dates
@@ -72,10 +75,12 @@ struct LineGraphView: UIViewRepresentable {
     // makeUIView가 아닌 updateUIView에 작성해야 선 그래프가 정상 동작, 갱신이 된다.
     func updateUIView(_ uiView: LineChartView, context: Context) {
         // 데이터
-        let dataSet = LineChartDataSet(entries: entryList)
-        dataSet.valueFormatter = LineGraphDataValueFormatter()
+        let dataSet = LineChartDataSet(entries: entryList, label: "단위 : 시간")
+//        dataSet.valueFormatter = LineGraphDataValueFormatter()
+        dataSet.drawValuesEnabled = false
         dataSet.setColor(.black) // 선 색상
         dataSet.lineWidth = 2 // 선 굵기
+//        dataSet.valueFont = UIFont.systemFont(ofSize: 14) // 데이터 글자 크기
         dataSet.drawCirclesEnabled = false // 선 꼭지점 원 표시
         dataSet.mode = .horizontalBezier // 선 스타일
         dataSet.drawFilledEnabled = true // 선 아래 공간 채우기
@@ -115,14 +120,16 @@ struct LineGraphView: UIViewRepresentable {
         dataSet.fill = LinearGradientFill(gradient: gradient!, angle: 90.0)
         
         // 차트 설정
-        uiView.legend.enabled = false
-        uiView.chartDescription.text = "단위 : 시간"
-//        uiView.chartDescription.yOffset = 190.0
+        uiView.data = LineChartData(dataSet: dataSet)
+        uiView.legend.font = UIFont.systemFont(ofSize: 14) // 범례 글자 크기
+        uiView.legend.form = .line // 범례 아이콘 형태
+        uiView.legend.horizontalAlignment = .right // 범례 수평 정렬
+        uiView.legend.verticalAlignment = .top // 범례 수직 정렬
         uiView.dragEnabled = false
         uiView.pinchZoomEnabled = false
-        uiView.scaleXEnabled = false
-        uiView.scaleYEnabled = false
-        uiView.data = LineChartData(dataSet: dataSet)
+        uiView.scaleXEnabled = false // x축 확대 허용 여부
+        uiView.scaleYEnabled = false // y축 확대 허용 여부
+        uiView.highlightPerTapEnabled = false // 클릭 허용 여부
 
         // x축
         let xAxis = uiView.xAxis
@@ -130,16 +137,17 @@ struct LineGraphView: UIViewRepresentable {
         xAxis.drawGridLinesEnabled = false // 그리드 라인
         xAxis.drawAxisLineEnabled = false // 축선 표시
         xAxis.granularity = 1 // 축 라벨 표시 간격
-//        xAxis.valueFormatter = XAxisValueFormatter(dateList: dateList)
+        xAxis.labelFont = UIFont.systemFont(ofSize: 14) // 축 라벨 글자 크기
         xAxis.valueFormatter = IndexAxisValueFormatter(values: dateList)
-//        xAxis.setLabelCount(dateList.count, force: false) // X축 레이블 갯수 최대로 설정
-
+        let labelCount = dateList.count <= 7 ? dateList.count / 1 : dateList.count / 3
+        xAxis.setLabelCount(labelCount, force: false) // 라벨 표시 간격
 
         // 왼쪽 축
         let axisLeft = uiView.leftAxis
         axisLeft.drawAxisLineEnabled = false // 축 표시 여부
-        axisLeft.drawGridLinesEnabled = false // 그리드 라인
-        axisLeft.drawLabelsEnabled = false // 라벨
+        axisLeft.drawGridLinesEnabled = true // 그리드 라인
+        axisLeft.drawLabelsEnabled = true // 라벨
+        axisLeft.labelFont = UIFont.systemFont(ofSize: 14) // 축 라벨 글자 크기
 
         // 오른쪽 축
         let axisRight = uiView.rightAxis
@@ -149,82 +157,32 @@ struct LineGraphView: UIViewRepresentable {
     }
 }
 
-struct LineGraphView_Previews: PreviewProvider {
-    static var previews: some View {
-        let calendar = Calendar.current
-
-        let tmpWiDList = createTempWiDList()
-
-        // currentDate의 시간을 오전 12:00:00으로 맞춰줌.
-        let startDate = calendar.startOfDay(for: Date())
-        let finishDate = calendar.date(byAdding: .day, value: 6, to: startDate) ?? Date()
-
-        LineGraphView(title: "STUDY", wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
-            .aspectRatio(1.5 / 1.0, contentMode: .fit)
-    }
-}
-
-func createTempWiDList() -> [WiD] {
-    var tempWiDList: [WiD] = []
-
-    let calendar = Calendar.current
-    let startDate = Date()
-    let finishDate = calendar.date(byAdding: .day, value: 6, to: startDate) ?? Date()
-
-    // currentDate의 시간을 오전 12:00:00으로 설정.
-    var currentDate = calendar.startOfDay(for: startDate)
-
-    while currentDate <= finishDate {
-        let wiD = WiD(id: 0,
-                      date: currentDate,
-                      title: "STUDY",
-                      start: Date(),
-                      finish: Date(),
-                      duration: 3 * 60 * 60,
-                      detail: "Detail"
-        )
-
-        tempWiDList.append(wiD)
-
-        let randomMinutes = Int(arc4random_uniform(60))
-        let randomSeconds = Int(arc4random_uniform(60))
-
-        let randomDuration = TimeInterval((randomMinutes * 60) + randomSeconds)
-        let wiD2 = WiD(id: 0,
-                      date: currentDate,
-                      title: "STUDY",
-                      start: Date(),
-                      finish: Date(),
-                      duration: randomDuration,
-                      detail: "Detail"
-        )
-
-        tempWiDList.append(wiD2)
-
-        currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
-    }
-
-    return tempWiDList
-}
-
-//class XAxisValueFormatter: NSObject, AxisValueFormatter {
-//    private let dateList: [String]
+//class LineGraphDataValueFormatter: NSObject, ValueFormatter {
+//    func stringForValue(_ value: Double,
+//                        entry: ChartDataEntry,
+//                        dataSetIndex: Int,
+//                        viewPortHandler: ViewPortHandler?) -> String {
+//        // value가 0이면 빈 문자열 반환
+//        guard value != 0 else {
+//            return ""
+//        }
 //
-//    init(dateList: [String]) {
-//        self.dateList = dateList
-//    }
-//
-//    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-//        return "\(dateList[Int(value)])일"
+//        let valueWithoutDecimalPart = String(format: "%.1f", value)
+//        return "\(valueWithoutDecimalPart)"
 //    }
 //}
 
-class LineGraphDataValueFormatter : NSObject, ValueFormatter {
-    func stringForValue(_ value: Double,
-                        entry: ChartDataEntry,
-                        dataSetIndex: Int,
-                        viewPortHandler: ViewPortHandler?) -> String {
-        let valueWithoutDecimalPart = String(format: "%.1f", value)
-        return "\(valueWithoutDecimalPart)"
+struct LineGraphView_Previews: PreviewProvider {
+    static var previews: some View {
+        let calendar = Calendar.current
+        let days = 30
+        let tmpWiDList = getRandomWiDList(days: days)
+
+        // currentDate의 시간을 오전 12:00:00으로 맞춰줌.
+        let startDate = calendar.startOfDay(for: Date())
+        let finishDate = calendar.date(byAdding: .day, value: days - 1, to: startDate) ?? Date()
+
+        LineGraphView(title: "STUDY", wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
+            .aspectRatio(1.5 / 1.0, contentMode: .fit)
     }
 }

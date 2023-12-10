@@ -119,7 +119,7 @@ struct NewWiDView: View {
                 //                            .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
                 //                    }
                                     
-                                    MyHorizontalBarChartView(wiDList: wiDList)
+                                    StackedHorizontalBarChartView(wiDList: wiDList)
                                 }
                                 .padding(.vertical)
                                 .frame(maxWidth: .infinity)
@@ -280,7 +280,7 @@ struct NewWiDView: View {
                                                 Spacer()
                                                 
                                                 Text(formatDuration(emptyWiD.duration, mode: 3))
-                                                    .font(.custom("BlackHanSans-Regular", size: 25))
+                                                    .font(.custom("PyeongChangPeace-Bold", size: 20))
                                             }
                                             .padding(.horizontal)
                                             .padding(.vertical, 8)

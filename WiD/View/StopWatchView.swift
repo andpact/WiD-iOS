@@ -126,9 +126,9 @@ struct StopWatchView: View {
             .background(Color("ghost_white"))
             .onTapGesture {
                 if stopWatchStarted {
-                    stopWatchTopBottomBarVisible = true
-                    
-                    hideStopWatchTopBottomBar()
+                    withAnimation {
+                        stopWatchTopBottomBarVisible.toggle()
+                    }
                 }
             }
         }
@@ -153,8 +153,6 @@ struct StopWatchView: View {
         
         date = Date()
         start = Date()
-        
-        hideStopWatchTopBottomBar()
     }
 
     private func pauseStopWatch() {
@@ -193,8 +191,6 @@ struct StopWatchView: View {
                 wiDService.insertWiD(wid: secondDayWiD)
             }
         }
-        
-        stopWatchTopBottomBarVisible = true
     }
 
     private func resetStopWatch() {
@@ -202,16 +198,6 @@ struct StopWatchView: View {
         stopWatchReset = true
         elapsedTime = 0
         buttonText = "시작"
-    }
-    
-    private func hideStopWatchTopBottomBar() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            withAnimation {
-                if stopWatchStarted {
-                    stopWatchTopBottomBarVisible = false
-                }
-            }
-        }
     }
 }
 
