@@ -44,10 +44,10 @@ struct StopWatchView: View {
     
     var body: some View {
         NavigationView {
-            // 전체 화면
+            // MARK: - 전체 화면
             ZStack {
                 if stopWatchTopBottomBarVisible {
-                    // 상단 바
+                    // MARK: - 상단 바
                     ZStack {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
@@ -59,22 +59,23 @@ struct StopWatchView: View {
                             Image(systemName: "chevron.backward")
                             
                             Text("뒤로 가기")
+                                .font(.system(size: 18, weight: .medium))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(.blue)
 
                         Text("스톱워치")
-                            .bold()
+                            .font(.system(size: 20, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
                 
-                // 컨텐츠
+                // MARK: - 컨텐츠
                 formatStopWatchTime(elapsedTime)
                 
                 if stopWatchTopBottomBarVisible {
-                    // 하단 바
+                    // MARK: - 하단 바
                     HStack {
                         HStack {
                             Circle()
@@ -84,6 +85,7 @@ struct StopWatchView: View {
                             Picker("", selection: $title) {
                                 ForEach(Array(Title.allCases), id: \.self) { title in
                                     Text(title.koreanValue)
+//                                        .font(.system(size: 18, weight: .medium))
                                 }
                             }
                             .disabled(!stopWatchReset)
@@ -99,6 +101,7 @@ struct StopWatchView: View {
                                     Image(systemName: "arrow.clockwise")
                                     
                                     Text("초기화")
+                                        .font(.system(size: 18, weight: .medium))
                                 }
                                 .foregroundColor(.blue)
                             }
@@ -113,6 +116,7 @@ struct StopWatchView: View {
                                 Image(systemName: buttonText == "중지" ? "pause.fill" : "play.fill")
                                 
                                 Text(buttonText)
+                                    .font(.system(size: 18, weight: .medium))
                             }
                             .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .blue))
                         }

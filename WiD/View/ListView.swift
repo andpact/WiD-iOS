@@ -52,6 +52,7 @@ struct ListView: View {
             ForEach(ListTapInfo.allCases, id: \.self) { item in
                 VStack {
                     Text(item.rawValue)
+                        .font(.system(size: 18, weight: .medium))
                         .frame(maxWidth: .infinity)
                         .foregroundColor(selectedPicker == item ? .black : .gray)
                     if selectedPicker == item {
@@ -77,8 +78,8 @@ struct ListView: View {
 }
 
 enum ListTapInfo: String, CaseIterable {
-    case DATEBASED = "날짜 별 조회"
-    case PERIODBASED = "기간 별 조회"
+    case DATEBASED = "날짜"
+    case PERIODBASED = "기간"
 }
 
 struct ListHolderView: View {

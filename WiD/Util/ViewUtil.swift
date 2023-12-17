@@ -10,15 +10,26 @@ import Foundation
 
 func getEmptyView(message: String) -> some View {
     return HStack {
-        Image(systemName: "ellipsis.bubble")
-
         Text(message)
+            .font(.system(size: 16, weight: .light))
     }
     .padding()
     .padding(.vertical, 32)
     .frame(maxWidth: .infinity)
-    .foregroundColor(.gray)
     .background(.white)
     .cornerRadius(8)
     .shadow(radius: 1)
+}
+
+func getEmptyViewWithMultipleLines(message: String) -> some View {
+    let lines = message.components(separatedBy: " ")
+    
+    return VStack {
+        ForEach(lines, id: \.self) { line in
+            Text(line)
+                .font(.system(size: 16, weight: .light))
+                .multilineTextAlignment(.center)
+        }
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
 }

@@ -26,67 +26,61 @@ func formatTimerTime(_ time: Int) -> some View {
     if 0 < hours {
         hourViews.append(
             Text("\(hours)")
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
         hourViews.append(
             Text("h")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
         
         minuteViews.append(
             Text(String(format: "%02d", minutes))
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
 
         minuteViews.append(
             Text("m")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
         
         secondViews.append(
             Text(String(format: "%02d", seconds))
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
         
         secondViews.append(
             Text("s")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
     } else if 0 < minutes {
         minuteViews.append(
             Text("\(minutes)")
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
 
         minuteViews.append(
             Text("m")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
         
         secondViews.append(
             Text(String(format: "%02d", seconds))
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
         
         secondViews.append(
             Text("s")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
     } else {
         secondViews.append(
             Text("\(seconds)")
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
         
         secondViews.append(
             Text("s")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
     }
 
@@ -129,67 +123,61 @@ func formatStopWatchTime(_ time: Int) -> some View {
     if 0 < hours {
         hourViews.append(
             Text("\(hours)")
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
         hourViews.append(
             Text("h")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
         
         minuteViews.append(
             Text(String(format: "%02d", minutes))
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
 
         minuteViews.append(
             Text("m")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
         
         secondViews.append(
             Text(String(format: "%02d", seconds))
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
         
         secondViews.append(
             Text("s")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
     } else if 0 < minutes {
         minuteViews.append(
             Text("\(minutes)")
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
 
         minuteViews.append(
             Text("m")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
         
         secondViews.append(
             Text(String(format: "%02d", seconds))
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
         
         secondViews.append(
             Text("s")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
     } else {
         secondViews.append(
             Text("\(seconds)")
-                .font(.custom("Wellfleet-Regular", size: 80))
+                .font(.system(size: 80, weight: .medium, design: .monospaced))
         )
         
         secondViews.append(
             Text("s")
-                .font(.custom("UbuntuMono-Regular", size: 20))
-                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .light, design: .monospaced))
         )
     }
 

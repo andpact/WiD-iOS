@@ -65,12 +65,13 @@ struct TimerView: View {
                             Image(systemName: "chevron.backward")
                             
                             Text("뒤로 가기")
+                                .font(.system(size: 18, weight: .medium))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(.blue)
 
                         Text("타이머")
-                            .bold()
+                            .font(.system(size: 20, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .center)
                         
                         if timerStarted {
@@ -188,6 +189,7 @@ struct TimerView: View {
                                     Image(systemName: "arrow.clockwise")
                                     
                                     Text("초기화")
+                                        .font(.system(size: 18, weight: .medium))
                                 }
                                 .foregroundColor(.blue)
                             }
@@ -202,6 +204,7 @@ struct TimerView: View {
                                 Image(systemName: buttonText == "중지" ? "pause.fill" : "play.fill")
                                 
                                 Text(buttonText)
+                                    .font(.system(size: 18, weight: .medium))
                             }
                             .disabled(remainingTime == 0)
                             .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : (remainingTime == 0 ? .gray : .blue)))

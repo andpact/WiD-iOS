@@ -176,7 +176,7 @@ struct DayPieChartView: View {
                     let y = sin(numberTextangle.radians) * numberTextRadius
 
                     Text("\(adjustedNumber)")
-                        .font(.custom("Agbalumo-Regular", size: geo.size.width / 15))
+                        .font(.system(size: geo.size.width / 15))
                         .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 - 5 + y) // y를 5만큼 올려줌.
                     
 //                    let tickAngle = getAngle(for: number)
