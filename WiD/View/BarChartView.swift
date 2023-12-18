@@ -1,4 +1,4 @@
-//
+///
 //  BarChartUtil.swift
 //  WiD
 //
@@ -138,7 +138,21 @@ struct StackedHorizontalBarChartView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
+            HStack(spacing: 0) {
+                Text("오전")
+                    .bodyMedium()
+                    .frame(width: UIScreen.main.bounds.size.width * 0.4)
+                
+                Divider()
+                    .background(.black)
+                
+                Text("오후")
+                    .bodyMedium()
+                    .frame(width: UIScreen.main.bounds.size.width * 0.4)
+            }
+            .aspectRatio(contentMode: .fit)
+            
             HStack(spacing: 0) {
                 ForEach(0..<barChartData.count, id: \.self) { index in
                     StackedHorizontalBarView(data: barChartData[index])
@@ -150,8 +164,8 @@ struct StackedHorizontalBarChartView: View {
             
             HStack(spacing: 0) {
                 ForEach(0..<13, id: \.self) { hour in
-                    Text("\(hour * 2)")
-                        .font(.system(size: 12))
+                    Text("\(hour * 2 % 12 == 0 ? 12 : hour * 2 % 12)")
+                        .labelSmall()
                         .frame(width: UIScreen.main.bounds.size.width * 0.8 / 12)
                 }
             }
@@ -312,7 +326,7 @@ class VerticalBarChartDataValueFormatter : NSObject, ValueFormatter {
 struct BarChartView_Previews: PreviewProvider {
     static var previews: some View {
 //        StackedVerticalBarChartView(wiDList: [])
-//        StackedHorizontalBarChartView(wiDList: [])
+        StackedHorizontalBarChartView(wiDList: [])
         
         let calendar = Calendar.current
         let days = 30
@@ -322,7 +336,7 @@ struct BarChartView_Previews: PreviewProvider {
         let startDate = calendar.startOfDay(for: Date())
         let finishDate = calendar.date(byAdding: .day, value: days - 1, to: startDate) ?? Date()
 
-        VerticalBarChartView(wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
-            .aspectRatio(1.5 / 1.0, contentMode: .fit)
+//        VerticalBarChartView(wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
+//            .aspectRatio(1.5 / 1.0, contentMode: .fit)
     }
 }

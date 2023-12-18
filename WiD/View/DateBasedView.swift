@@ -15,11 +15,15 @@ struct DateBasedView: View {
     // 다이어리
     private let diaryService = DiaryService()
     @State private var diary: Diary = Diary(id: -1, date: Date(), title: "", content: "")
+    @State private var expandDiary: Bool = false
+    @State private var diaryTitleOverflow: Bool = false
+    @State private var diaryContentOverflow: Bool = false
     
     // 합계
     @State private var totalDurationDictionary: [String: TimeInterval] = [:]
     
     // 날짜
+    private let today = Date()
     private let calendar = Calendar.current
     @State private var currentDate: Date = Date()
     
@@ -32,40 +36,21 @@ struct DateBasedView: View {
              컨텐츠
              */
             ScrollView {
+                Spacer()
+                    .frame(height: 16)
+                
                 VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        GeometryReader { geo in
+                    GeometryReader { geo in
+                        HStack {
                             getDayStringWith3Lines(date: currentDate)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .font(.system(size: 22, weight: .bold))
-                        }
-                        .aspectRatio(contentMode: .fit)
-                        
-                        GeometryReader { geo in
-                            ZStack(alignment: .center) {
+                            
+                            ZStack {
                                 if wiDList.isEmpty {
                                     getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
                                 } else {
-                                    HStack(spacing: 0) {
-                                        DayPieChartView(wiDList: wiDList)
-        //                                        .frame(width: geo.size.width * 2 / 3)
-                                        
-        //                                VStack(spacing: 10) {
-        //                                    Text("기록률")
-        //                                        .bold()
-        //
-        //                                    Text("\(getTotalDurationPercentageFromWiDList(wiDList: wiDList))%")
-        //                                        .font(.custom("PyeongChangPeace-Bold", size: 30))
-        //
-        //                                    Text("\(formatDuration(getTotalDurationFromWiDList(wiDList: wiDList), mode: 1)) / 24시간")
-        //                                        .font(.system(size: 14))
-        //                                        .foregroundColor(.gray)
-        //                                }
-        //                                .padding(.trailing)
-                                    }
-//                                    .background(.white)
-//                                    .cornerRadius(8)
-//                                    .shadow(radius: 1)
+                                    DayPieChartView(wiDList: wiDList)
                                 }
                             }
                             .background(.white)
@@ -74,71 +59,92 @@ struct DateBasedView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
                     }
-                }
-                .padding(.horizontal)
-                
-                // 다이어리
-                VStack(alignment: .leading, spacing: 8) {
-//                    if diary.id < 0 { // 다이어리가 데이터베이스에 없을 때
-//                        getEmptyView(message: "표시할 다이어리가 없습니다.")
-//                    } else {
-//                        VStack(alignment: .leading, spacing: 8) {
-//                            Text(diary.title)
-//                                .bold()
-//                                .lineLimit(1)
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                            Text(diary.content)
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                        }
-//                        .padding()
-//                        .background(.white)
-//                        .cornerRadius(8)
-//                        .shadow(radius: 1)
-//                    }
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(diary.id < 0 ? "제목을 입력해 주세요." : diary.title)
-                            .font(.system(size: 18, weight: .medium))
+                    .aspectRatio(2 / 1, contentMode: .fit)
+                    
+                    VStack(spacing: 16) {
+                        Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
+                            .bodyMedium()
+                            .lineLimit(expandDiary ? nil : 1)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .onTapGesture {
+                                expandDiary = true
+                            }
+                            .background(
+                                Text(diary.title)
+                                    .lineLimit(3)
+                                    .background(GeometryReader { displayedGeometry in
+                                        ZStack {
+                                            Text(diary.title)
+                                                .background(GeometryReader { fullGeometry in
+                                                    Color.clear.onAppear {
+                                                        self.diaryTitleOverflow = fullGeometry.size.height > displayedGeometry.size.height
+                                                    }
+                                                })
+                                        }
+                                        .frame(height: .greatestFiniteMagnitude)
+                                    })
+                                    .hidden()
+                                )
                         
                         Divider()
                     
-                        Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
-                            .font(.system(size: 18, weight: .light))
+                        Text((diary.id < 0 ? "내용을 입력해 주세요." : diary.content) + (expandDiary ? "" : "\n\n"))
+                            .labelMedium()
+                            .lineLimit(expandDiary ? nil : 3)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .onTapGesture {
+                                if diaryContentOverflow {
+                                    expandDiary = true
+                                }
+                            }
+                            .background(
+                                Text(diary.content)
+                                    .lineLimit(3)
+                                    .background(GeometryReader { displayedGeometry in
+                                        ZStack {
+                                            Text(diary.content)
+                                                .background(GeometryReader { fullGeometry in
+                                                    Color.clear.onAppear {
+                                                        self.diaryContentOverflow = fullGeometry.size.height > displayedGeometry.size.height
+                                                    }
+                                                })
+                                        }
+                                        .frame(height: .greatestFiniteMagnitude)
+                                    })
+                                    .hidden()
+                                )
                     }
                     .padding()
                     .background(.white)
                     .cornerRadius(8)
                     .shadow(radius: 1)
-                }
-                .padding(.horizontal)
-                
-                Button(action: {
                     
-                }) {
-                    NavigationLink(destination: DiaryView(date: currentDate)) {
-                        Text("다이어리 수정")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
+                    Button(action: {
+                        
+                    }) {
+                        NavigationLink(destination: DiaryView(date: currentDate)) {
+                            Text("다이어리 수정")
+                                .bodyMedium()
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                        }
                     }
+                    .background(.blue)
+                    .cornerRadius(8)
+                    
                 }
-                .background(.blue)
-                .cornerRadius(8)
                 .padding(.horizontal)
                 
                 Rectangle()
                     .frame(height: 8)
                     .padding(.vertical)
-                    .foregroundColor(.red)
+                    .foregroundColor(.white)
                 
                 // 합계 기록
                 VStack(alignment: .leading, spacing: 8) {
                     Text("합계 기록")
-                        .font(.system(size: 18, weight: .bold))
+                        .titleMedium()
                     
                     if wiDList.isEmpty {
                         getEmptyView(message: "표시할 기록이 없습니다.")
@@ -173,12 +179,12 @@ struct DateBasedView: View {
                 Rectangle()
                     .frame(height: 8)
                     .padding(.vertical)
-                    .foregroundColor(.red)
+                    .foregroundColor(.white)
                 
                 // WiD 리스트
                 VStack(alignment: .leading, spacing: 8) {
                     Text("WiD 리스트")
-                        .font(.system(size: 18, weight: .bold))
+                        .titleLarge()
 
                     if wiDList.isEmpty {
                         getEmptyView(message: "표시할 WiD가 없습니다.")
@@ -192,10 +198,11 @@ struct DateBasedView: View {
                                             .frame(width: 10)
                                         
                                         Text(titleDictionary[wiD.title] ?? "")
+                                            .labelMedium()
                                         
                                         Spacer()
                                         
-                                        Image(systemName: "arrow.forward")
+                                        Image(systemName: "chevron.forward")
                                             .foregroundColor(.blue)
                                     }
                                     .padding(.horizontal)
@@ -205,20 +212,12 @@ struct DateBasedView: View {
                                     Divider()
                                     
                                     HStack {
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            HStack(spacing: 0) {
-                                                Text(formatTime(wiD.start, format: "a h:mm:ss"))
-                                                    .bold()
-                                                
-                                                Text("부터")
-                                            }
-
-                                            HStack(spacing: 0) {
-                                                Text(formatTime(wiD.finish, format: "a h:mm:ss"))
-                                                    .bold()
-                                                
-                                                Text("까지")
-                                            }
+                                        VStack(alignment: .leading) {
+                                            Text(formatTime(wiD.start, format: "a HH:mm:ss"))
+                                                .bodyMedium()
+                                            
+                                            Text(formatTime(wiD.finish, format: "a HH:mm:ss"))
+                                                .bodyMedium()
                                         }
                                         
                                         Spacer()
@@ -246,40 +245,52 @@ struct DateBasedView: View {
                     }
                 }
                 .padding(.horizontal)
+                
+                Spacer()
+                    .frame(height: 16)
             }
             
-            // 하단 바
+            /**
+             하단 바
+             */
             HStack {
+                DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                    .labelsHidden()
+                
+                Spacer()
+                
                 Button(action: {
                     withAnimation {
                         currentDate = Date()
                     }
                 }) {
                     Image(systemName: "arrow.clockwise")
+                        .frame(maxWidth: 15, maxHeight: 15)
                 }
-                .padding(.horizontal, 8)
                 .disabled(calendar.isDateInToday(currentDate))
+                .padding(.horizontal)
                 
                 Button(action: {
                     withAnimation {
                         currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
                     }
                 }) {
-                    Image(systemName: "arrowtriangle.backward.fill")
+                    Image(systemName: "chevron.backward")
+                        .frame(maxWidth: 15, maxHeight: 15)
                 }
-                .padding(.horizontal, 8)
+                .padding(.horizontal)
                 
                 Button(action: {
                     withAnimation {
                         currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
                     }
                 }) {
-                    Image(systemName: "arrowtriangle.forward.fill")
+                    Image(systemName: "chevron.forward")
+                        .frame(maxWidth: 15, maxHeight: 15)
                 }
-                .padding(.horizontal, 8)
                 .disabled(calendar.isDateInToday(currentDate))
+                .padding(.horizontal)
             }
-            .frame(maxWidth: .infinity, alignment: .trailing)
             .padding()
             .background(.white)
             .compositingGroup()

@@ -59,13 +59,13 @@ struct StopWatchView: View {
                             Image(systemName: "chevron.backward")
                             
                             Text("뒤로 가기")
-                                .font(.system(size: 18, weight: .medium))
+                                .bodyMedium()
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(.blue)
 
                         Text("스톱워치")
-                            .font(.system(size: 20, weight: .bold))
+                            .titleLarge()
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -101,7 +101,7 @@ struct StopWatchView: View {
                                     Image(systemName: "arrow.clockwise")
                                     
                                     Text("초기화")
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
                                 }
                                 .foregroundColor(.blue)
                             }
@@ -116,7 +116,7 @@ struct StopWatchView: View {
                                 Image(systemName: buttonText == "중지" ? "pause.fill" : "play.fill")
                                 
                                 Text(buttonText)
-                                    .font(.system(size: 18, weight: .medium))
+                                    .bodyMedium()
                             }
                             .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .blue))
                         }

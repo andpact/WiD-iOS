@@ -22,7 +22,7 @@ struct NewWiDView: View {
     private let calendar = Calendar.current
     private let today = Date()
     @State private var date = Date()
-    private let currenTime = Calendar.current.date(bySetting: .second, value: 0, of: Date())
+    private let currentTime = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
     @State private var expandDatePicker: Bool = false
 
     // 제목
@@ -70,13 +70,13 @@ struct NewWiDView: View {
                         Image(systemName: "chevron.backward")
                         
                         Text("뒤로 가기")
-                            .font(.system(size: 18, weight: .medium))
+                            .bodyMedium()
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.blue)
 
                     Text("새로운 WiD")
-                        .font(.system(size: 20, weight: .bold))
+                        .titleLarge()
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button(action: {
@@ -85,14 +85,14 @@ struct NewWiDView: View {
 
                         wiDList = wiDService.selectWiDsByDate(date: date)
                         
-                        emptyWiDList = getEmptyWiDListFromWiDList(date: date, wiDList: wiDList)
+                        emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
                         
                         checkWiDAvailableByStartAndFinish()
                     }) {
                         Image(systemName: "plus")
                         
                         Text("등록")
-                            .font(.system(size: 18, weight: .medium))
+                            .bodyMedium()
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist)
@@ -104,9 +104,12 @@ struct NewWiDView: View {
                  컨텐츠
                  */
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
+                    VStack(spacing: 0) {
+                        Spacer()
+                            .frame(height: 16)
+                        
                         // 날짜 선택
-                        VStack {
+                        VStack(spacing: 0) {
                             HStack(spacing: 16) {
                                 Image(systemName: "calendar")
                                     .imageScale(.large)
@@ -114,10 +117,10 @@ struct NewWiDView: View {
                                 
                                 VStack(alignment: .leading) {
                                     Text("날짜")
-                                        .font(.system(size: 16, weight: .light))
+                                        .labelSmall()
                                     
                                     getDayString(date: date)
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
                                 }
                                 
                                 Spacer()
@@ -125,7 +128,6 @@ struct NewWiDView: View {
                                 Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
                             }
                             .padding()
-                            .background(.blue)
                             .onTapGesture {
                                 withAnimation {
                                     expandDatePicker.toggle()
@@ -135,22 +137,22 @@ struct NewWiDView: View {
                             if expandDatePicker {
                                 HStack {
                                     Text("날짜를 선택해 주세요.")
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
+                                        .foregroundColor(.blue)
                                     
                                     Spacer()
                                     
                                     DatePicker("", selection: $date, in: ...today, displayedComponents: .date)
                                         .labelsHidden()
                                 }
-                                .padding(.horizontal)
-                                .padding(.bottom)
+                                .padding()
                             }
                         }
                         
                         Divider()
-                            .padding(.horizontal)
 
-                        VStack {
+                        // 제목 선택
+                        VStack(spacing: 0) {
                             HStack(spacing: 16) {
                                 Image(systemName: "character.ko")
                                     .imageScale(.large)
@@ -159,10 +161,10 @@ struct NewWiDView: View {
                                 
                                 VStack(alignment: .leading) {
                                     Text("제목")
-                                        .font(.system(size: 16, weight: .light))
+                                        .labelSmall()
                                     
                                     Text(title.koreanValue)
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
                                 }
                                 
                                 Spacer()
@@ -179,7 +181,8 @@ struct NewWiDView: View {
                             if expandTitleMenu {
                                 HStack {
                                     Text("제목을 선택해 주세요.")
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
+                                        .foregroundColor(.blue)
                                     
                                     Spacer()
                                     
@@ -189,15 +192,14 @@ struct NewWiDView: View {
                                         }
                                     }
                                 }
-                                .padding(.leading)
-                                .padding(.bottom)
+                                .padding()
                             }
                         }
                         
                         Divider()
-                            .padding(.horizontal)
                         
-                        VStack {
+                        // 시작 시간 선택
+                        VStack(spacing: 0) {
                             HStack(spacing: 16) {
                                 Image(systemName: "clock")
                                     .imageScale(.large)
@@ -205,10 +207,10 @@ struct NewWiDView: View {
                                 
                                 VStack(alignment: .leading) {
                                     Text("시작")
-                                        .font(.system(size: 16, weight: .light))
+                                        .labelSmall()
                                     
                                     Text(formatTime(start, format: "a h:mm:ss"))
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
                                 }
                                 
                                 Spacer()
@@ -225,22 +227,22 @@ struct NewWiDView: View {
                             if expandStartPicker {
                                 HStack {
                                     Text("시작 시간을 선택해 주세요.")
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
+                                        .foregroundColor(.blue)
                                     
                                     Spacer()
                                     
                                     DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
                                         .labelsHidden()
                                 }
-                                .padding(.horizontal)
-                                .padding(.bottom)
+                                .padding()
                             }
                         }
                         
                         Divider()
-                            .padding(.horizontal)
                             
-                        VStack {
+                        // 종료 시간 선택
+                        VStack(spacing: 0) {
                             HStack(spacing: 16) {
                                 Image(systemName: "clock.badge.checkmark")
                                     .imageScale(.large)
@@ -248,10 +250,10 @@ struct NewWiDView: View {
                                 
                                 VStack(alignment: .leading) {
                                     Text("종료")
-                                        .font(.system(size: 16, weight: .light))
+                                        .labelSmall()
                                     
                                     Text(formatTime(finish, format: "a h:mm:ss"))
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
                                 }
                                 
                                 Spacer()
@@ -268,20 +270,19 @@ struct NewWiDView: View {
                             if expandFinishPicker {
                                 HStack {
                                     Text("종료 시간을 선택해 주세요.")
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
+                                        .foregroundColor(.blue)
                                     
                                     Spacer()
                                     
                                     DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
                                         .labelsHidden()
                                 }
-                                .padding(.horizontal)
-                                .padding(.bottom)
+                                .padding()
                             }
                         }
 
                         Divider()
-                            .padding(.horizontal)
                             
                         HStack(spacing: 16) {
                             Image(systemName: "clock.fill")
@@ -290,10 +291,10 @@ struct NewWiDView: View {
                             
                             VStack(alignment: .leading) {
                                 Text("소요")
-                                    .font(.system(size: 16, weight: .light))
+                                    .labelSmall()
 
                                 Text(formatDuration(duration, mode: 3))
-                                    .font(.system(size: 18, weight: .medium))
+                                    .bodyMedium()
                             }
                             
                             Spacer()
@@ -310,10 +311,10 @@ struct NewWiDView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 0) {
                             getDayString(date: date)
-                                .font(.system(size: 18, weight: .bold))
+                                .titleMedium()
                             
                             Text("의 타임 라인")
-                                .font(.system(size: 18, weight: .bold))
+                                .titleMedium()
                         }
                         
                         if wiDList.isEmpty {
@@ -349,7 +350,7 @@ struct NewWiDView: View {
                     
                     VStack(alignment: .leading, spacing: 8) {
                         Text("선택 가능한 시간대")
-                            .font(.system(size: 18, weight: .bold))
+                            .titleMedium()
                         
                         if wiDList.isEmpty {
                             getEmptyView(message: "표시할 시간대가 없습니다.")
@@ -366,6 +367,7 @@ struct NewWiDView: View {
                                                 .frame(width: 10)
                                             
                                             Text("제목 없음")
+                                                .labelMedium()
                                             
                                             Spacer()
                                             
@@ -379,20 +381,12 @@ struct NewWiDView: View {
                                         Divider()
                                         
                                         HStack {
-                                            VStack(alignment: .leading, spacing: 8) {
-                                                HStack(spacing: 0) {
-                                                    Text(formatTime(emptyWiD.start, format: "a h:mm:ss"))
-                                                        .bold()
-                                                    
-                                                    Text("부터")
-                                                }
-                                                
-                                                HStack(spacing: 0) {
-                                                    Text(formatTime(emptyWiD.finish, format: "a h:mm:ss"))
-                                                        .bold()
-                                                    
-                                                    Text("까지")
-                                                }
+                                            VStack(alignment: .leading) {
+                                                Text(formatTime(emptyWiD.start, format: "a h:mm:ss"))
+                                                    .bodyMedium()
+                                            
+                                                Text(formatTime(emptyWiD.finish, format: "a h:mm:ss"))
+                                                    .bodyMedium()
                                             }
                                             
                                             Spacer()
@@ -411,6 +405,9 @@ struct NewWiDView: View {
                         }
                     }
                     .padding(.horizontal)
+                    
+                    Spacer()
+                        .frame(height: 16)
                 }
                 
                 /**
@@ -425,13 +422,13 @@ struct NewWiDView: View {
             .background(Color("ghost_white"))
             .onAppear {
                 self.wiDList = wiDService.selectWiDsByDate(date: date)
-                self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, wiDList: wiDList)
+                self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
             }
             .onChange(of: date) { newDate in
                 wiDList = wiDService.selectWiDsByDate(date: newDate)
                 print("new Date : \(formatTime(newDate, format: "yyyy-MM-dd a h:mm:ss"))")
                 
-                emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, wiDList: wiDList)
+                emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
                 
                 // date를 수정해도 start의 날짜는 그대로이므로 start의 날짜를 date에서 가져옴.
                 let newStartComponents = calendar.dateComponents([.hour, .minute, .second], from: start)
@@ -468,8 +465,8 @@ struct NewWiDView: View {
         
         if calendar.isDate(date, inSameDayAs: today) {
             withAnimation {
-                isStartOverCurrentTime = currenTime! < start
-                isFinishOverCurrentTime = currenTime! < finish
+                isStartOverCurrentTime = currentTime < start
+                isFinishOverCurrentTime = currentTime < finish
             }
         } else {
             withAnimation {
@@ -532,7 +529,7 @@ struct NewWiDView: View {
                 let existingFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: existingWiD.finish)
                 let existingFinish = calendar.date(bySettingHour: existingFinishComponents.hour!, minute: existingFinishComponents.minute!, second: existingFinishComponents.second!, of: date)!
 
-                if start < existingStart && existingFinish < finish {
+                if start <= existingStart && existingFinish <= finish {
                     withAnimation {
                         isStartOverlap = true
                         isFinishOverlap = true

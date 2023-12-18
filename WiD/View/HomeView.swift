@@ -28,7 +28,7 @@ struct HomeView: View {
                                     .imageScale(.large)
                                 
                                 Text("스톱워치")
-                                    .font(.system(size: 18, weight: .medium))
+                                    .bodyMedium()
                             }
                         }
                     }
@@ -42,7 +42,7 @@ struct HomeView: View {
                                     .imageScale(.large)
                                 
                                 Text("타이머")
-                                    .font(.system(size: 18, weight: .medium))
+                                    .bodyMedium()
                             }
                         }
                     }
@@ -56,7 +56,7 @@ struct HomeView: View {
                                     .imageScale(.large)
                                 
                                 Text("새로운 WiD")
-                                    .font(.system(size: 18, weight: .medium))
+                                    .bodyMedium()
                             }
                         }
                     }

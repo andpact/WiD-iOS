@@ -12,6 +12,7 @@ func getEmptyView(message: String) -> some View {
     return HStack {
         Text(message)
             .font(.system(size: 16, weight: .light))
+            .foregroundColor(.gray)
     }
     .padding()
     .padding(.vertical, 32)
@@ -28,6 +29,7 @@ func getEmptyViewWithMultipleLines(message: String) -> some View {
         ForEach(lines, id: \.self) { line in
             Text(line)
                 .font(.system(size: 16, weight: .light))
+                .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
         }
     }

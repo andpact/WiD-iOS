@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-func getEmptyWiDListFromWiDList(date: Date, wiDList: [WiD]) -> [WiD] {
+func getEmptyWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) -> [WiD] {
     let calendar = Calendar.current
+    let today = Date()
     var emptyWiDStart = calendar.startOfDay(for: date)
 
     var emptyWiDList: [WiD] = []
@@ -28,7 +29,7 @@ func getEmptyWiDListFromWiDList(date: Date, wiDList: [WiD]) -> [WiD] {
             
             // 빈 WiD를 마지막으로 추가함.
             if index == wiDList.count - 1 {
-                let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
+                let endOfDay = calendar.isDate(date, inSameDayAs: today) ? currentTime : calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
                 let lastEmptyWiD = WiD(id: index + 1, date: date, title: "", start: emptyWiDStart, finish: endOfDay, duration: endOfDay.timeIntervalSince(emptyWiDStart), detail: "")
                 
                 emptyWiDList.append(lastEmptyWiD)
@@ -49,7 +50,7 @@ func getEmptyWiDListFromWiDList(date: Date, wiDList: [WiD]) -> [WiD] {
         
         // 빈 WiD를 마지막으로 추가함.
         if index == wiDList.count - 1 {
-            let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
+            let endOfDay = calendar.isDate(date, inSameDayAs: today) ? currentTime : calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
             let lastEmptyWiD = WiD(id: index + 1, date: date, title: "", start: emptyWiDStart, finish: endOfDay, duration: endOfDay.timeIntervalSince(emptyWiDStart), detail: "")
             
             emptyWiDList.append(lastEmptyWiD)

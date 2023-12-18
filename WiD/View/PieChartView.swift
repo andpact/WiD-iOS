@@ -138,16 +138,16 @@ struct DayPieChartView: View {
         return array
     }
     
-//    var totalDurationPercentage: Int {
-//        let totalMinutesInDay = 60 * 24
-//        var totalDurationMinutes: Int = 0
-//
-//        for wid in wiDList {
-//            totalDurationMinutes += Int(wid.duration / 60) // Convert duration to minutes
-//        }
-//
-//        return Int(Double(totalDurationMinutes) / Double(totalMinutesInDay) * 100)
-//    }
+    var totalDurationPercentage: Int {
+        let totalMinutesInDay = 60 * 24
+        var totalDurationMinutes: Int = 0
+
+        for wid in wiDList {
+            totalDurationMinutes += Int(wid.duration / 60) // Convert duration to minutes
+        }
+
+        return Int(Double(totalDurationMinutes) / Double(totalMinutesInDay) * 100)
+    }
 
     init(wiDList: [WiD]) {
         self.wiDList = wiDList
@@ -176,40 +176,27 @@ struct DayPieChartView: View {
                     let y = sin(numberTextangle.radians) * numberTextRadius
 
                     Text("\(adjustedNumber)")
-                        .font(.system(size: geo.size.width / 15))
-                        .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 - 5 + y) // y를 5만큼 올려줌.
-                    
-//                    let tickAngle = getAngle(for: number)
-//                    let tickRadius = geo.size.width * 0.474 // 눈금의 길이
-//
-//                    let startX = cos(tickAngle.radians) * tickRadius
-//                    let startY = sin(tickAngle.radians) * tickRadius
-//                    let endX = cos(tickAngle.radians) * (tickRadius - 8) // 눈금의 길이
-//                    let endY = sin(tickAngle.radians) * (tickRadius - 8)
-//
-//                    Line(start: CGPoint(x: geo.size.width / 2 + startX, y: geo.size.width / 2 + startY),
-//                         end: CGPoint(x: geo.size.width / 2 + endX, y: geo.size.width / 2 + endY))
-//                        .stroke(Color.black, lineWidth: 1)
+                        .font(.system(size: geo.size.width / 15, weight: .medium))
+                        .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 + y)
                 }
                 
-                Text("오후 | 오전")
-                    .bold()
-                    .font(.system(size: geo.size.width / 15))
-                    .position(x: geo.size.width / 2, y: geo.size.width / 1.3)
-//                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
+
                 
 //                Text("WiD")
-//                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
-//                    .font(.custom("Acme-Regular", size: 20))
-//                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
+//                    .position(x: geo.size.width / 2, y: geo.size.width / 4)
+//                    .font(.custom("Acme-Regular", size: geo.size.width / 8))
                 
-                // 총 소요 시간이 하루(24시간) 중 몇 퍼센트인지 표시
-//                Text("\(totalDurationPercentage)%")
-//                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
-//                    .foregroundColor(pieChartDataArray.count == 1 ? .gray : .black)
+                Text("\(totalDurationPercentage)%")
+                    .font(.system(size: geo.size.width / 5, weight: .heavy))
+                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
                 
-//                BatteryView(battery: totalDurationPercentage)
-//                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
+                Text("\(formatDuration(getTotalDurationFromWiDList(wiDList: wiDList), mode: 1)) / 24시간")
+                    .font(.system(size: geo.size.width / 15, weight: .medium))
+                    .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
+                
+//                Text("오후 | 오전")
+//                    .font(.system(size: geo.size.width / 15, weight: .medium))
+//                    .position(x: geo.size.width / 2, y: geo.size.width / 1.3)
             }
         }
         .aspectRatio(contentMode: .fit)

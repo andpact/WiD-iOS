@@ -38,6 +38,7 @@
 		EA82C5032B240A2F00835DE4 /* PyeongChangPeace-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */; };
 		EA9D41742AB18B0D008D6DE2 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D41732AB18B0D008D6DE2 /* TimerView.swift */; };
 		EAA2E1922AEE8AF900D6486B /* OpacityChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA2E1912AEE8AF900D6486B /* OpacityChartView.swift */; };
+		EAA5E85C2B2FE6A8004DEA29 /* FontUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */; };
 		EAC5D7212A56A76E00FA2499 /* StopWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7202A56A76E00FA2499 /* StopWatchView.swift */; };
 		EAC5E1582B19B35500AD8516 /* PeriodBasedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5E1572B19B35500AD8516 /* PeriodBasedView.swift */; };
 		EACB45152AB9CA8200DEF739 /* NewWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACB45142AB9CA8200DEF739 /* NewWiDView.swift */; };
@@ -105,6 +106,7 @@
 		EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PyeongChangPeace-Bold.otf"; sourceTree = "<group>"; };
 		EA9D41732AB18B0D008D6DE2 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EAA2E1912AEE8AF900D6486B /* OpacityChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityChartView.swift; sourceTree = "<group>"; };
+		EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontUtil.swift; sourceTree = "<group>"; };
 		EAC5D7202A56A76E00FA2499 /* StopWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWatchView.swift; sourceTree = "<group>"; };
 		EAC5E1572B19B35500AD8516 /* PeriodBasedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodBasedView.swift; sourceTree = "<group>"; };
 		EACB45142AB9CA8200DEF739 /* NewWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWiDView.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				EA1AF4A92AB54EBD00BEBA93 /* AppOpenAdUtil.swift */,
 				EA1B5BDF2B22AF5800E1BC87 /* ViewUtil.swift */,
 				EAA2E1912AEE8AF900D6486B /* OpacityChartView.swift */,
+				EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -551,6 +554,7 @@
 				EAD531ED2B1E862700E3C78B /* WiDView.swift in Sources */,
 				EA1BF4E02B04703D004DEBC4 /* WiDListUtil.swift in Sources */,
 				EAA2E1922AEE8AF900D6486B /* OpacityChartView.swift in Sources */,
+				EAA5E85C2B2FE6A8004DEA29 /* FontUtil.swift in Sources */,
 				EA05E95C2B1CA6B800A0DF42 /* DiaryView.swift in Sources */,
 				EAC5D7212A56A76E00FA2499 /* StopWatchView.swift in Sources */,
 				EA215CE42A60FCD6005C5D30 /* ListView.swift in Sources */,

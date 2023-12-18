@@ -65,19 +65,19 @@ struct TimerView: View {
                             Image(systemName: "chevron.backward")
                             
                             Text("뒤로 가기")
-                                .font(.system(size: 18, weight: .medium))
+                                .bodyMedium()
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(.blue)
 
                         Text("타이머")
-                            .font(.system(size: 20, weight: .bold))
+                            .titleLarge()
                             .frame(maxWidth: .infinity, alignment: .center)
                         
-                        if timerStarted {
-                            Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                        }
+//                        if timerStarted {
+//                            Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
+//                                .frame(maxWidth: .infinity, alignment: .trailing)
+//                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
@@ -90,9 +90,10 @@ struct TimerView: View {
                             ForEach(0..<24, id: \.self) { hour in
                                 if selectedHour == hour {
                                     Text("\(hour)h")
-                                        .bold()
+                                        .titleMedium()
                                 } else {
                                     Text("\(hour)h")
+                                        .bodyMedium()
                                 }
                             }
                         }
@@ -103,9 +104,10 @@ struct TimerView: View {
                             ForEach(0..<60, id: \.self) { minute in
                                 if selectedMinute == minute {
                                     Text("\(minute)m")
-                                        .bold()
+                                        .titleMedium()
                                 } else {
                                     Text("\(minute)m")
+                                        .bodyMedium()
                                 }
                             }
                         }
@@ -116,9 +118,10 @@ struct TimerView: View {
                             ForEach(0..<60, id: \.self) { second in
                                 if selectedSecond == second {
                                     Text("\(second)s")
-                                        .bold()
+                                        .titleMedium()
                                 } else {
                                     Text("\(second)s")
+                                        .bodyMedium()
                                 }
                             }
                         }
@@ -189,7 +192,7 @@ struct TimerView: View {
                                     Image(systemName: "arrow.clockwise")
                                     
                                     Text("초기화")
-                                        .font(.system(size: 18, weight: .medium))
+                                        .bodyMedium()
                                 }
                                 .foregroundColor(.blue)
                             }
@@ -204,7 +207,7 @@ struct TimerView: View {
                                 Image(systemName: buttonText == "중지" ? "pause.fill" : "play.fill")
                                 
                                 Text(buttonText)
-                                    .font(.system(size: 18, weight: .medium))
+                                    .bodyMedium()
                             }
                             .disabled(remainingTime == 0)
                             .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : (remainingTime == 0 ? .gray : .blue)))

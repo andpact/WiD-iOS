@@ -39,44 +39,27 @@ struct PeriodBasedView: View {
     @State private var seletedDictionaryText: String = ""
     
     var body: some View {
-        // 전체 화면
         VStack(spacing: 0) {
-            // 상단 바
-            HStack {
-                Picker("", selection: $selectedPeriod) {
-                    ForEach(Array(Period.allCases), id: \.self) { period in
-                        Text(period.koreanValue)
-                    }
-                }
-                .pickerStyle(.segmented)
-                
-                Circle()
-                    .fill(Color(selectedTitle.rawValue))
-                    .frame(width: 10)
-                
-                Picker("", selection: $selectedTitle) {
-                    ForEach(Array(TitleWithALL.allCases), id: \.self) { title in
-                        Text(title.koreanValue)
-                    }
-                }
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-            .background(.white)
-            .frame(maxWidth: .infinity)
-            .compositingGroup()
-            .shadow(radius: 1)
-            
-            // 컨텐츠
+            /**
+             컨텐츠
+             */
             ScrollView {
-                VStack(spacing: 32) {
+                VStack(spacing: 0) {
+                    Spacer()
+                        .frame(height: 16)
+                    
                     if selectedTitle == TitleWithALL.ALL { // 제목이 "전체" 일 때
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("시간 그래프")
-                                .bold()
+                            if selectedPeriod == Period.WEEK {
+                                getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
+                                    .titleMedium()
+                            } else if selectedPeriod == Period.MONTH {
+                                getMonthString(date: startDate)
+                                    .titleMedium()
+                            }
                             
                             if wiDList.isEmpty {
-                                getEmptyView(message: "표시할 그래프가 없습니다.")
+                                getEmptyView(message: "표시할 타임라인이 없습니다.")
                             } else {
                                 VStack(spacing: 0) {
                                     HStack {
@@ -141,10 +124,15 @@ struct PeriodBasedView: View {
                         }
                         .padding(.horizontal)
                         
+                        Rectangle()
+                            .frame(height: 8)
+                            .padding(.vertical)
+                            .foregroundColor(.white)
+                        
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Text("\(seletedDictionaryText) 기록")
-                                    .bold()
+                                    .titleMedium()
                                 
                                 Spacer()
                                 
@@ -154,6 +142,7 @@ struct PeriodBasedView: View {
                                         seletedDictionaryText = "합계"
                                     }) {
                                         Text("합계")
+                                            .bodySmall()
                                             .foregroundColor(seletedDictionaryText == "합계" ? .black : .gray)
                                     }
                                     
@@ -162,6 +151,7 @@ struct PeriodBasedView: View {
                                         seletedDictionaryText = "평균"
                                     }) {
                                         Text("평균")
+                                            .bodySmall()
                                             .foregroundColor(seletedDictionaryText == "평균" ? .black : .gray)
                                     }
                                     
@@ -170,6 +160,7 @@ struct PeriodBasedView: View {
                                         seletedDictionaryText = "최고"
                                     }) {
                                         Text("최고")
+                                            .bodySmall()
                                             .foregroundColor(seletedDictionaryText == "최고" ? .black : .gray)
                                     }
                                 }
@@ -205,9 +196,14 @@ struct PeriodBasedView: View {
                         }
                         .padding(.horizontal)
                         
+                        Rectangle()
+                            .frame(height: 8)
+                            .padding(.vertical)
+                            .foregroundColor(.white)
+                        
                         VStack(alignment: .leading, spacing: 8) {
                             Text("기록률")
-                                .bold()
+                                .titleMedium()
                             
                             if wiDList.isEmpty {
                                 getEmptyView(message: "표시할 기록률이 없습니다.")
@@ -225,8 +221,13 @@ struct PeriodBasedView: View {
                         .padding(.horizontal)
                     } else { // 제목이 "전체"가 아닐 떄
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("시간 그래프")
-                                .bold()
+                            if selectedPeriod == Period.WEEK {
+                                getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
+                                    .titleMedium()
+                            } else if selectedPeriod == Period.MONTH {
+                                getMonthString(date: startDate)
+                                    .titleMedium()
+                            }
                             
                             if filteredWiDListByTitle.isEmpty {
                                 getEmptyView(message: "표시할 그래프가 없습니다.")
@@ -243,9 +244,14 @@ struct PeriodBasedView: View {
                         }
                         .padding(.horizontal)
                         
+                        Rectangle()
+                            .frame(height: 8)
+                            .padding(.vertical)
+                            .foregroundColor(.white)
+                        
                         VStack(alignment: .leading, spacing: 8) {
                             Text("시간 기록")
-                                .bold()
+                                .titleMedium()
                             
                             if filteredWiDListByTitle.isEmpty {
                                 getEmptyView(message: "표시할 기록이 없습니다.")
@@ -315,19 +321,30 @@ struct PeriodBasedView: View {
                         }
                         .padding(.horizontal)
                     }
+                    
+                    Spacer()
+                        .frame(height: 16)
                 }
-                .padding(.vertical)
             }
             
-            // 하단 바
+            /**
+             하단 바
+             */
             HStack {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    if selectedPeriod == Period.WEEK {
-                        getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
-                    } else if selectedPeriod == Period.MONTH {
-                        getMonthString(date: startDate)
+                Picker("", selection: $selectedPeriod) {
+                    ForEach(Array(Period.allCases), id: \.self) { period in
+                        Text(period.koreanValue)
                     }
                 }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                
+                Picker("", selection: $selectedTitle) {
+                    ForEach(Array(TitleWithALL.allCases), id: \.self) { title in
+                        Text(title.koreanValue)
+                    }
+                }
+                .labelsHidden()
                 
                 Button(action: {
                     if selectedPeriod == Period.WEEK {
@@ -342,7 +359,7 @@ struct PeriodBasedView: View {
                 }) {
                     Image(systemName: "arrow.clockwise")
                 }
-                .padding(.horizontal, 8)
+                .padding(.horizontal)
                 .disabled(
                     selectedPeriod == Period.WEEK &&
                     calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
@@ -364,9 +381,9 @@ struct PeriodBasedView: View {
                     
                     updateDataFromPeriod()
                 }) {
-                    Image(systemName: "arrowtriangle.backward.fill")
+                    Image(systemName: "chevron.backward")
                 }
-                .padding(.horizontal, 8)
+                .padding(.horizontal)
                 
                 Button(action: {
                     if selectedPeriod == Period.WEEK {
@@ -379,9 +396,9 @@ struct PeriodBasedView: View {
 
                     updateDataFromPeriod()
                 }) {
-                    Image(systemName: "arrowtriangle.forward.fill")
+                    Image(systemName: "chevron.forward")
                 }
-                .padding(.horizontal, 8)
+                .padding(.horizontal)
                 .disabled(
                     selectedPeriod == Period.WEEK &&
                     calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&

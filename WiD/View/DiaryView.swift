@@ -11,24 +11,35 @@ struct DiaryView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
     
+    // WiD
+    private let wiDService = WiDService()
+    private let wiDList: [WiD]
+    
     // 다이어리
     private let date: Date
     private let diaryService = DiaryService()
     private let diary: Diary
     @State private var diaryTitle: String = ""
+    @State private var titlePlaceHolder: String = "제목을 입력해 주세요."
     @State private var diaryContent: String = ""
     @State private var contentPlaceHolder: String = "내용을 입력해 주세요."
     
     init(date: Date) {
+        self.wiDList = wiDService.selectWiDsByDate(date: date)
+        
         self.date = date
         self.diary = diaryService.selectDiaryByDate(date: date) ?? Diary(id: -1, date: Date(), title: "", content: "")
     }
     
     var body: some View {
         NavigationView {
-            // 전체 화면
+            /**
+             전체 화면
+             */
             VStack {
-                // 상단 바
+                /**
+                 상단 바
+                 */
                 ZStack {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
@@ -36,12 +47,13 @@ struct DiaryView: View {
                         Image(systemName: "chevron.backward")
                         
                         Text("뒤로 가기")
+                            .font(.system(size: 18, weight: .medium))
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.blue)
                     
                     Text("다이어리")
-                        .bold()
+                        .font(.system(size: 20, weight: .bold))
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button(action: {
@@ -59,6 +71,7 @@ struct DiaryView: View {
                         Image(systemName: "checkmark")
                         
                         Text("완료")
+                            .font(.system(size: 18, weight: .medium))
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .foregroundColor(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
@@ -67,15 +80,44 @@ struct DiaryView: View {
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity)
                 
-                getDayString(date: date)
-                    .font(.custom("BlackHanSans-Regular", size: 25))
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack {
+                    GeometryReader { geo in
+                        getDayStringWith3Lines(date: date)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .font(.system(size: 22, weight: .bold))
+                    }
+                    .aspectRatio(contentMode: .fit)
+                    
+                    GeometryReader { geo in
+                        ZStack {
+                            if wiDList.isEmpty {
+                                getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+                            } else {
+                                DayPieChartView(wiDList: wiDList)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                    .aspectRatio(contentMode: .fit)
+                }
                 
-                TextField("제목을 입력해 주세요.", text: $diaryTitle)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 8)
-                    .font(Font.body.bold())
+                Divider()
+                    .padding(.horizontal)
+                
+                ZStack {
+                    // Place holder
+                    TextEditor(text: $titlePlaceHolder)
+                        .padding(.horizontal)
+                        .disabled(true)
+                        .frame(minHeight: 40)
+                        .fixedSize(horizontal: false, vertical: true)
+                    
+                    TextEditor(text: $diaryTitle)
+                        .padding(.horizontal)
+                        .opacity(diaryTitle.isEmpty ? 0.75 : 1)
+                        .frame(minHeight: 40)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
                 
                 Divider()
                     .padding(.horizontal)
