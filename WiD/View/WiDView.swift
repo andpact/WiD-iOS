@@ -140,12 +140,13 @@ struct WiDView: View {
                                 
                                 Image(systemName: expandTitleMenu ? "chevron.up" : "chevron.down")
                             }
+                            .padding()
+                            .background(Color("ghost_white"))
                             .onTapGesture {
                                 withAnimation {
                                     expandTitleMenu.toggle()
                                 }
                             }
-                            .padding()
                             
                             if expandTitleMenu {
                                 HStack {
@@ -186,12 +187,13 @@ struct WiDView: View {
                                 
                                 Image(systemName: expandStartPicker ? "chevron.up" : "chevron.down")
                             }
+                            .padding()
+                            .background(Color("ghost_white"))
                             .onTapGesture {
                                 withAnimation {
                                     expandStartPicker.toggle()
                                 }
                             }
-                            .padding()
                             
                             if expandStartPicker {
                                 HStack {
@@ -229,12 +231,13 @@ struct WiDView: View {
                                 
                                 Image(systemName: expandFinishPicker ? "chevron.up" : "chevron.down")
                             }
+                            .padding()
+                            .background(Color("ghost_white"))
                             .onTapGesture {
                                 withAnimation {
                                     expandFinishPicker.toggle()
                                 }
                             }
-                            .padding()
                             
                             if expandFinishPicker {
                                 HStack {
@@ -339,10 +342,12 @@ struct WiDView: View {
                 /**
                  하단 바
                  */
-                HStack {
-                    Text("하단 바 입니다.")
-                        .frame(maxWidth: .infinity)
-                }
+//                HStack {
+//                    Text("WiD")
+//                        .font(.custom("Acme-Regular", size: 20))
+//                        
+//                }
+//                .frame(maxWidth: .infinity)
             }
             .tint(.black)
             .background(Color("ghost_white"))

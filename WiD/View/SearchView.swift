@@ -48,30 +48,30 @@ struct SearchView: View {
                                 .padding(.horizontal)
                         } else {
                             ForEach(Array(diaryList.enumerated()), id: \.element.id) { (index, diary) in
-                                NavigationLink(destination: DiaryView(date: diary.date)) {
-                                    VStack(spacing: 8) {
-                                        GeometryReader { geo in
-                                            HStack {
-                                                getDayStringWith3Lines(date: diary.date)
-                                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                                    .font(.system(size: 22, weight: .bold))
-                                                
-                                                ZStack {
-                                                    let wiDList = wiDService.selectWiDsByDate(date: diary.date)
-                                                    if wiDList.isEmpty {
-                                                        getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-                                                    } else {
-                                                        DayPieChartView(wiDList: wiDList)
-                                                    }
-                                                }
+                                VStack(spacing: 8) {
+                                    GeometryReader { geo in
+                                        HStack {
+                                            getDayStringWith3Lines(date: diary.date)
                                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                                .background(.white)
-                                                .cornerRadius(8)
-                                                .shadow(radius: 1)
+                                                .font(.system(size: 22, weight: .bold))
+                                            
+                                            ZStack {
+                                                let wiDList = wiDService.selectWiDsByDate(date: diary.date)
+                                                if wiDList.isEmpty {
+                                                    getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+                                                } else {
+                                                    DayPieChartView(wiDList: wiDList)
+                                                }
                                             }
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .background(.white)
+                                            .cornerRadius(8)
+                                            .shadow(radius: 1)
                                         }
-                                        .aspectRatio(2 / 1, contentMode: .fit)
-                                        
+                                    }
+                                    .aspectRatio(2 / 1, contentMode: .fit)
+                                    
+                                    NavigationLink(destination: DiaryView(date: diary.date)) {
                                         VStack(spacing: 0) {
                                             Text(diary.title)
                                                 .bodyMedium()
@@ -90,8 +90,8 @@ struct SearchView: View {
                                         .cornerRadius(8)
                                         .shadow(radius: 1)
                                     }
-                                    .padding(.horizontal)
                                 }
+                                .padding(.horizontal)
                                 
                                 if index != diaryList.count - 1 {
                                     Rectangle()

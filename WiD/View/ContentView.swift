@@ -46,9 +46,11 @@ struct ContentView: View {
 }
 
 enum ContentViewTapInfo: String, CaseIterable {
-    case HOME = "house.fill" // 등록 이미지
-    case LIST = "list.bullet" // 조회 이미지
-    case SEARCH = "magnifyingglass" // 검색 이미지
+    case HOME = "house.fill" // 홈
+//    case LIST = "list.bullet" // 조회
+    case DATE = "list.bullet" // 날짜
+    case PERIOD = "square.grid.2x2.fill" // 기간
+    case SEARCH = "magnifyingglass" // 검색
 }
 
 struct ContentHolderView: View {
@@ -58,8 +60,12 @@ struct ContentHolderView: View {
         switch currentTab {
         case .HOME:
             HomeView()
-        case .LIST:
-            ListView()
+//        case .LIST:
+//            ListView()
+        case .DATE:
+            DateBasedView()
+        case .PERIOD:
+            PeriodBasedView()
         case .SEARCH:
             SearchView()
         }

@@ -128,6 +128,7 @@ struct NewWiDView: View {
                                 Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
                             }
                             .padding()
+                            .background(Color("ghost_white"))
                             .onTapGesture {
                                 withAnimation {
                                     expandDatePicker.toggle()
@@ -171,12 +172,13 @@ struct NewWiDView: View {
                                 
                                 Image(systemName: expandTitleMenu ? "chevron.up" : "chevron.down")
                             }
+                            .padding()
+                            .background(Color("ghost_white"))
                             .onTapGesture {
                                 withAnimation {
                                     expandTitleMenu.toggle()
                                 }
                             }
-                            .padding()
                             
                             if expandTitleMenu {
                                 HStack {
@@ -217,12 +219,13 @@ struct NewWiDView: View {
                                 
                                 Image(systemName: expandStartPicker ? "chevron.up" : "chevron.down")
                             }
+                            .padding()
+                            .background(Color("ghost_white"))
                             .onTapGesture {
                                 withAnimation {
                                     expandStartPicker.toggle()
                                 }
                             }
-                            .padding()
                             
                             if expandStartPicker {
                                 HStack {
@@ -260,12 +263,13 @@ struct NewWiDView: View {
                                 
                                 Image(systemName: expandFinishPicker ? "chevron.up" : "chevron.down")
                             }
+                            .padding()
+                            .background(Color("ghost_white"))
                             .onTapGesture {
                                 withAnimation {
                                     expandFinishPicker.toggle()
                                 }
                             }
-                            .padding()
                             
                             if expandFinishPicker {
                                 HStack {
@@ -414,9 +418,11 @@ struct NewWiDView: View {
                  하단 바
                  */
 //                HStack {
-//                    Text("하단 바 입니다.")
-//                        .frame(maxWidth: .infinity)
+//                    Text("WiD")
+//                        .font(.custom("Acme-Regular", size: 20))
+//                        
 //                }
+//                .frame(maxWidth: .infinity)
             }
             .tint(.black)
             .background(Color("ghost_white"))

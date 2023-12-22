@@ -13,7 +13,6 @@ struct HomeView: View {
         VStack {
             ZStack {
                 Text("WiD")
-                    .bold()
                     .font(.custom("Acme-Regular", size: 100))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

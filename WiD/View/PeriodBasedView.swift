@@ -326,6 +326,7 @@ struct PeriodBasedView: View {
                         .frame(height: 16)
                 }
             }
+            .background(Color("ghost_white"))
             
             /**
              하단 바

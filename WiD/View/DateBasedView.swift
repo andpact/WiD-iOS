@@ -64,55 +64,23 @@ struct DateBasedView: View {
                     VStack(spacing: 16) {
                         Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
                             .bodyMedium()
-                            .lineLimit(expandDiary ? nil : 1)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
                             .onTapGesture {
-                                expandDiary = true
-                            }
-                            .background(
-                                Text(diary.title)
-                                    .lineLimit(3)
-                                    .background(GeometryReader { displayedGeometry in
-                                        ZStack {
-                                            Text(diary.title)
-                                                .background(GeometryReader { fullGeometry in
-                                                    Color.clear.onAppear {
-                                                        self.diaryTitleOverflow = fullGeometry.size.height > displayedGeometry.size.height
-                                                    }
-                                                })
-                                        }
-                                        .frame(height: .greatestFiniteMagnitude)
-                                    })
-                                    .hidden()
-                                )
-                        
-                        Divider()
-                    
-                        Text((diary.id < 0 ? "내용을 입력해 주세요." : diary.content) + (expandDiary ? "" : "\n\n"))
-                            .labelMedium()
-                            .lineLimit(expandDiary ? nil : 3)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .onTapGesture {
-                                if diaryContentOverflow {
+                                if expandDiary == false {
                                     expandDiary = true
                                 }
                             }
-                            .background(
-                                Text(diary.content)
-                                    .lineLimit(3)
-                                    .background(GeometryReader { displayedGeometry in
-                                        ZStack {
-                                            Text(diary.content)
-                                                .background(GeometryReader { fullGeometry in
-                                                    Color.clear.onAppear {
-                                                        self.diaryContentOverflow = fullGeometry.size.height > displayedGeometry.size.height
-                                                    }
-                                                })
-                                        }
-                                        .frame(height: .greatestFiniteMagnitude)
-                                    })
-                                    .hidden()
-                                )
+                        
+                        Divider()
+                        
+                        Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
+                            .labelMedium()
+                            .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
+                            .onTapGesture {
+                                if expandDiary == false {
+                                    expandDiary = true
+                                }
+                            }
                     }
                     .padding()
                     .background(.white)
@@ -249,6 +217,7 @@ struct DateBasedView: View {
                 Spacer()
                     .frame(height: 16)
             }
+            .background(Color("ghost_white"))
             
             /**
              하단 바
