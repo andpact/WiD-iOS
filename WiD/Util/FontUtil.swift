@@ -10,15 +10,15 @@ import SwiftUI
 
 extension View {
     func labelSmall() -> some View {
-        return self.font(.system(size: 16, weight: .thin))
+        return self.font(.system(size: 16, weight: .light))
     }
     
     func labelMedium() -> some View {
-        return self.font(.system(size: 18, weight: .thin))
+        return self.font(.system(size: 18, weight: .light))
     }
     
     func labelLarge() -> some View {
-        return self.font(.system(size: 20, weight: .thin))
+        return self.font(.system(size: 20, weight: .light))
     }
     
     func bodySmall() -> some View {

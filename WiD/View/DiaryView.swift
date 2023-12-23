@@ -33,9 +33,6 @@ struct DiaryView: View {
     
     var body: some View {
         NavigationView {
-            /**
-             전체 화면
-             */
             VStack {
                 /**
                  상단 바
@@ -80,15 +77,13 @@ struct DiaryView: View {
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity)
                 
-                HStack {
-                    GeometryReader { geo in
+                
+                GeometryReader { geo in
+                    HStack {
                         getDayStringWith3Lines(date: date)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .font(.system(size: 22, weight: .bold))
-                    }
-                    .aspectRatio(contentMode: .fit)
-                    
-                    GeometryReader { geo in
+
                         ZStack {
                             if wiDList.isEmpty {
                                 getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
@@ -98,8 +93,8 @@ struct DiaryView: View {
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
-                    .aspectRatio(contentMode: .fit)
                 }
+                .aspectRatio(2 / 1, contentMode: .fit)
                 
                 Divider()
                     .padding(.horizontal)

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3641806776840744~1384188377</string>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -210,12 +210,7 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
-		<string>BlackHanSans-Regular.ttf</string>
-		<string>Agbalumo-Regular.ttf</string>
-		<string>UbuntuMono-Regular.ttf</string>
-		<string>Wellfleet-Regular.ttf</string>
 		<string>Acme-Regular.ttf</string>
-		<string>Tektur-Regular.ttf</string>
 		<string>PyeongChangPeace-Bold.otf</string>
 	</array>
 </dict>

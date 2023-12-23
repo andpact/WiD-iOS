@@ -44,7 +44,6 @@ struct StopWatchView: View {
     
     var body: some View {
         NavigationView {
-            // MARK: - 전체 화면
             ZStack {
                 if stopWatchTopBottomBarVisible {
                     // MARK: - 상단 바
@@ -127,7 +126,7 @@ struct StopWatchView: View {
             .tint(.black)
             .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color("ghost_white"))
+            .background(.white)
             .onTapGesture {
                 if stopWatchStarted {
                     withAnimation {

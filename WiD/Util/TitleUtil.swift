@@ -46,6 +46,31 @@ enum Title: String, CaseIterable, Identifiable {
             return "기타"
         }
     }
+    
+    var example: String {
+        switch self {
+        case .STUDY:
+            return "중간 및 기말고사, 자격증, 공시, 승진시험"
+        case .WORK:
+            return "직장, 부업, 알바"
+        case .EXERCISE:
+            return "헬스, 홈트, 요가, 필라테스, 런닝, 조깅"
+        case .HOBBY:
+            return "유튜브, 영화, 드라마 시청, 독서"
+        case .PLAY:
+            return "친구 만남, 데이트"
+        case .MEAL:
+            return "아침, 점심, 저녁"
+        case .SHOWER:
+            return "세안, 샤워, 목욕"
+        case .TRAVEL:
+            return "등하교, 출퇴근, 버스, 지하철, 도보"
+        case .SLEEP:
+            return "낮잠"
+        case .ETC:
+            return "그 외 기타 활동"
+        }
+    }
 }
 
 // WiD 조회시 필요한 enum

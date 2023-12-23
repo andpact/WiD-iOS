@@ -48,56 +48,47 @@ struct SearchView: View {
                                 .padding(.horizontal)
                         } else {
                             ForEach(Array(diaryList.enumerated()), id: \.element.id) { (index, diary) in
-                                VStack(spacing: 8) {
-                                    GeometryReader { geo in
-                                        HStack {
-                                            getDayStringWith3Lines(date: diary.date)
-                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                                .font(.system(size: 22, weight: .bold))
-                                            
-                                            ZStack {
-                                                let wiDList = wiDService.selectWiDsByDate(date: diary.date)
-                                                if wiDList.isEmpty {
-                                                    getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-                                                } else {
-                                                    DayPieChartView(wiDList: wiDList)
-                                                }
-                                            }
+                                GeometryReader { geo in
+                                    HStack {
+                                        getDayStringWith3Lines(date: diary.date)
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                            .background(.white)
-                                            .cornerRadius(8)
-                                            .shadow(radius: 1)
+                                            .font(.system(size: 22, weight: .bold))
+                                        
+                                        ZStack {
+                                            let wiDList = wiDService.selectWiDsByDate(date: diary.date)
+                                            if wiDList.isEmpty {
+                                                getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+                                            } else {
+                                                DayPieChartView(wiDList: wiDList)
+                                            }
                                         }
-                                    }
-                                    .aspectRatio(2 / 1, contentMode: .fit)
-                                    
-                                    NavigationLink(destination: DiaryView(date: diary.date)) {
-                                        VStack(spacing: 0) {
-                                            Text(diary.title)
-                                                .bodyMedium()
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                                .padding()
-                                            
-                                            Divider()
-                                            
-                                            Text(diary.content)
-                                                .labelMedium()
-                                                .frame(maxWidth: .infinity, minHeight: 200,  alignment: .topLeading)
-                                                .padding()
-                                        }
-                                        .frame(maxWidth: .infinity)
-                                        .background(.white)
-                                        .cornerRadius(8)
-                                        .shadow(radius: 1)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     }
                                 }
-                                .padding(.horizontal)
+                                .aspectRatio(2 / 1, contentMode: .fit)
+                                
+                                NavigationLink(destination: DiaryView(date: diary.date)) {
+                                    VStack(spacing: 0) {
+                                        Text(diary.title)
+                                            .bodyMedium()
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding()
+                                        
+                                        Divider()
+                                        
+                                        Text(diary.content)
+                                            .labelMedium()
+                                            .frame(maxWidth: .infinity, minHeight: 200,  alignment: .topLeading)
+                                            .padding()
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                }
                                 
                                 if index != diaryList.count - 1 {
                                     Rectangle()
                                         .frame(height: 8)
                                         .padding(.vertical)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Color("ghost_white"))
                                 }
                             }
                             
@@ -121,7 +112,7 @@ struct SearchView: View {
                 }
             }
         }
-        .background(Color("ghost_white"))
+        .background(.white)
     }
 }
 

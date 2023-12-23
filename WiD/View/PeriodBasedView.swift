@@ -49,48 +49,67 @@ struct PeriodBasedView: View {
                         .frame(height: 16)
                     
                     if selectedTitle == TitleWithALL.ALL { // 제목이 "전체" 일 때
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(spacing: 0) {
                             if selectedPeriod == Period.WEEK {
                                 getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
                                     .titleMedium()
+                                    .padding(.horizontal)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             } else if selectedPeriod == Period.MONTH {
                                 getMonthString(date: startDate)
                                     .titleMedium()
+                                    .padding(.horizontal)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             
                             if wiDList.isEmpty {
                                 getEmptyView(message: "표시할 타임라인이 없습니다.")
                             } else {
-                                VStack(spacing: 0) {
-                                    HStack {
-                                        if selectedPeriod == Period.WEEK {
-                                            ForEach(0...6, id: \.self) { index in
-                                                let textColor = index == 5 ? Color.blue : (index == 6 ? Color.red : Color.black)
-                                                
-                                                Text(formatWeekdayLetterFromMonday(index))
-                                                    .frame(maxWidth: .infinity)
-                                                    .foregroundColor(textColor)
-                                            }
-                                        } else if selectedPeriod == Period.MONTH {
-                                            ForEach(0...6, id: \.self) { index in
-                                                let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
-                                                
-                                                Text(formatWeekdayLetterFromSunday(index))
-                                                    .frame(maxWidth: .infinity)
-                                                    .foregroundColor(textColor)
-                                            }
+                                HStack {
+                                    if selectedPeriod == Period.WEEK {
+                                        ForEach(0...6, id: \.self) { index in
+                                            let textColor = index == 5 ? Color.blue : (index == 6 ? Color.red : Color.black)
+                                            
+                                            Text(formatWeekdayLetterFromMonday(index))
+                                                .frame(maxWidth: .infinity)
+                                                .foregroundColor(textColor)
+                                        }
+                                    } else if selectedPeriod == Period.MONTH {
+                                        ForEach(0...6, id: \.self) { index in
+                                            let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
+                                            
+                                            Text(formatWeekdayLetterFromSunday(index))
+                                                .frame(maxWidth: .infinity)
+                                                .foregroundColor(textColor)
                                         }
                                     }
-                                    .padding(.vertical, 8)
-                                    
-                                    // Weekday 1 - 일, 2 - 월...
-                                    let weekday = calendar.component(.weekday, from: startDate)
-                                    let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
-                                    
-                                    if selectedPeriod == Period.WEEK {
-                                        LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
-                                            ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
-                                                let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
+                                }
+                                .padding(.horizontal)
+                                
+                                // Weekday 1 - 일, 2 - 월...
+                                let weekday = calendar.component(.weekday, from: startDate)
+                                let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
+                                
+                                if selectedPeriod == Period.WEEK {
+                                    LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+                                        ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
+                                            let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
+
+                                            let filteredWiDList = wiDList.filter { wiD in
+                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                            }
+
+                                            CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                        }
+                                    }
+                                    .padding()
+                                } else if selectedPeriod == Period.MONTH {
+                                    LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+                                        ForEach(0..<(daysDifference + 1) + (weekday - 1), id: \.self) { gridIndex in
+                                            if gridIndex < weekday - 1 {
+                                                Text("")
+                                            } else {
+                                                let currentDate = calendar.date(byAdding: .day, value: gridIndex - (weekday - 1), to: startDate) ?? Date()
 
                                                 let filteredWiDList = wiDList.filter { wiD in
                                                     return calendar.isDate(wiD.date, inSameDayAs: currentDate)
@@ -99,37 +118,18 @@ struct PeriodBasedView: View {
                                                 CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
                                             }
                                         }
-                                    } else if selectedPeriod == Period.MONTH {
-                                        LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
-                                            ForEach(0..<(daysDifference + 1) + (weekday - 1), id: \.self) { gridIndex in
-                                                if gridIndex < weekday - 1 {
-                                                    Text("")
-                                                } else {
-                                                    let currentDate = calendar.date(byAdding: .day, value: gridIndex - (weekday - 1), to: startDate) ?? Date()
-
-                                                    let filteredWiDList = wiDList.filter { wiD in
-                                                        return calendar.isDate(wiD.date, inSameDayAs: currentDate)
-                                                    }
-
-                                                    CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
-                                                }
-                                            }
-                                        }
                                     }
+                                    .padding()
                                 }
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
                             }
                         }
-                        .padding(.horizontal)
                         
                         Rectangle()
                             .frame(height: 8)
                             .padding(.vertical)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color("ghost_white"))
                         
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(spacing: 0) {
                             HStack {
                                 Text("\(seletedDictionaryText) 기록")
                                     .titleMedium()
@@ -165,168 +165,134 @@ struct PeriodBasedView: View {
                                     }
                                 }
                             }
+                            .padding(.horizontal)
                             
                             if wiDList.isEmpty {
                                 getEmptyView(message: "표시할 \(seletedDictionaryText) 기록이 없습니다.")
                             } else {
-                                VStack(spacing: 8) {
-                                    ForEach(Array(seletedDictionary), id: \.key) { title, duration in
-                                        HStack {
-                                            Text(titleDictionary[title] ?? "")
-                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                            
-                                            Spacer()
+                                ForEach(Array(seletedDictionary.enumerated()), id: \.key) { index, title, duration in
+                                    HStack {
+                                        Text(titleDictionary[title] ?? "")
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
                                         
-                                            Text(formatDuration(duration, mode: 3))
-                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                        }
-                                        .padding()
-                                        .background(
-                                            LinearGradient(
-                                                gradient: Gradient(colors: [Color(title), Color.white]),
-                                                startPoint: .leading,
-                                                endPoint: .trailing
-                                            )
-                                        )
-                                        .cornerRadius(8)
-                                        .shadow(radius: 1)
+                                        Spacer()
+                                    
+                                        Text(formatDuration(duration, mode: 3))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                    }
+                                    .padding()
+                                    
+                                    if index != seletedDictionary.count - 1 {
+                                        Divider()
+                                            .padding(.horizontal)
                                     }
                                 }
                             }
                         }
-                        .padding(.horizontal)
                         
                         Rectangle()
                             .frame(height: 8)
                             .padding(.vertical)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color("ghost_white"))
                         
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(spacing: 0) {
                             Text("기록률")
                                 .titleMedium()
+                                .padding(.horizontal)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if wiDList.isEmpty {
                                 getEmptyView(message: "표시할 기록률이 없습니다.")
                             } else {
-                                ZStack {
-                                    VerticalBarChartView(wiDList: wiDList, startDate: startDate, finishDate: finishDate)
-                                }
-                                .padding()
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
-                                .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
+                                VerticalBarChartView(wiDList: wiDList, startDate: startDate, finishDate: finishDate)
+                                    .padding()
+                                    .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
                             }
                         }
-                        .padding(.horizontal)
                     } else { // 제목이 "전체"가 아닐 떄
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(spacing: 0) {
                             if selectedPeriod == Period.WEEK {
                                 getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
                                     .titleMedium()
+                                    .padding(.horizontal)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             } else if selectedPeriod == Period.MONTH {
                                 getMonthString(date: startDate)
                                     .titleMedium()
+                                    .padding(.horizontal)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             
                             if filteredWiDListByTitle.isEmpty {
                                 getEmptyView(message: "표시할 그래프가 없습니다.")
                             } else {
-                                ZStack {
-                                    LineGraphView(title: selectedTitle.rawValue, wiDList: filteredWiDListByTitle, startDate: startDate, finishDate: finishDate)
-                                }
-                                .padding()
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
-                                .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
+                                LineGraphView(title: selectedTitle.rawValue, wiDList: filteredWiDListByTitle, startDate: startDate, finishDate: finishDate)
+                                    .padding()
+                                    .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
                             }
                         }
-                        .padding(.horizontal)
                         
                         Rectangle()
                             .frame(height: 8)
                             .padding(.vertical)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color("ghost_white"))
                         
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(spacing: 0) {
                             Text("시간 기록")
                                 .titleMedium()
+                                .padding(.horizontal)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if filteredWiDListByTitle.isEmpty {
                                 getEmptyView(message: "표시할 기록이 없습니다.")
                             } else {
-                                VStack(spacing: 8) {
-                                    HStack {
-                                        Text("합계")
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                        
-                                        Spacer()
+                                HStack {
+                                    Text("합계")
+                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
                                     
-                                        Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                    }
-                                    .padding()
-                                    .background(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [Color("light_gray"), Color.white]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .cornerRadius(8)
-                                    .shadow(radius: 1)
-                                    
-                                    HStack {
-                                        Text("평균")
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                        
-                                        Spacer()
-                                    
-                                        Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                    }
-                                    .padding()
-                                    .background(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [Color("light_gray"), Color.white]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .cornerRadius(8)
-                                    .shadow(radius: 1)
-                                    
-                                    HStack {
-                                        Text("최고")
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                        
-                                        Spacer()
-                                    
-                                        Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                    }
-                                    .padding()
-                                    .background(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [Color("light_gray"), Color.white]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .cornerRadius(8)
-                                    .shadow(radius: 1)
+                                    Spacer()
+                                
+                                    Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
                                 }
+                                .padding()
+                                
+                                Divider()
+                                    .padding(.horizontal)
+                                
+                                HStack {
+                                    Text("평균")
+                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                    
+                                    Spacer()
+                                
+                                    Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                }
+                                .padding()
+                                
+                                Divider()
+                                    .padding(.horizontal)
+                                
+                                HStack {
+                                    Text("최고")
+                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                    
+                                    Spacer()
+                                
+                                    Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                }
+                                .padding()
                             }
                         }
-                        .padding(.horizontal)
                     }
                     
                     Spacer()
                         .frame(height: 16)
                 }
             }
-            .background(Color("ghost_white"))
+            .background(.white)
             
             /**
              하단 바

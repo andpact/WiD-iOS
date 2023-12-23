@@ -14,12 +14,12 @@ func getEmptyView(message: String) -> some View {
             .font(.system(size: 16, weight: .light))
             .foregroundColor(.gray)
     }
-    .padding()
-    .padding(.vertical, 32)
+//    .padding()
+    .padding(.vertical, 48)
     .frame(maxWidth: .infinity)
-    .background(.white)
-    .cornerRadius(8)
-    .shadow(radius: 1)
+//    .background(Color("ghost_white"))
+//    .cornerRadius(8)
+//    .shadow(radius: 1)
 }
 
 func getEmptyViewWithMultipleLines(message: String) -> some View {

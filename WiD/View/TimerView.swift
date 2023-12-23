@@ -220,7 +220,7 @@ struct TimerView: View {
             .navigationBarBackButtonHidden()
             .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color("ghost_white"))
+            .background(.white)
             .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
                 remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
                 

@@ -28,196 +28,171 @@ struct DateBasedView: View {
     @State private var currentDate: Date = Date()
     
     var body: some View {
-        /**
-         전체 화면
-         */
         VStack(spacing: 0) {
             /**
              컨텐츠
              */
             ScrollView {
-                Spacer()
-                    .frame(height: 16)
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    GeometryReader { geo in
-                        HStack {
-                            getDayStringWith3Lines(date: currentDate)
+                VStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                        GeometryReader { geo in
+                            HStack {
+                                getDayStringWith3Lines(date: currentDate)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .font(.system(size: 22, weight: .bold))
+                                
+                                ZStack {
+                                    if wiDList.isEmpty {
+                                        getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+                                    } else {
+                                        DayPieChartView(wiDList: wiDList)
+                                    }
+                                }
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .font(.system(size: 22, weight: .bold))
-                            
-                            ZStack {
-                                if wiDList.isEmpty {
-                                    getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-                                } else {
-                                    DayPieChartView(wiDList: wiDList)
-                                }
                             }
-                            .background(.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
-                    }
-                    .aspectRatio(2 / 1, contentMode: .fit)
-                    
-                    VStack(spacing: 16) {
-                        Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
-                            .bodyMedium()
-                            .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
-                            .onTapGesture {
-                                if expandDiary == false {
-                                    expandDiary = true
-                                }
-                            }
+                        .aspectRatio(2 / 1, contentMode: .fit)
                         
                         Divider()
+                            .padding(.horizontal)
                         
-                        Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
-                            .labelMedium()
-                            .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
-                            .onTapGesture {
-                                if expandDiary == false {
-                                    expandDiary = true
-                                }
-                            }
-                    }
-                    .padding()
-                    .background(.white)
-                    .cornerRadius(8)
-                    .shadow(radius: 1)
-                    
-                    Button(action: {
-                        
-                    }) {
-                        NavigationLink(destination: DiaryView(date: currentDate)) {
-                            Text("다이어리 수정")
+                        VStack(spacing: 16) {
+                            Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
                                 .bodyMedium()
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
+                                .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
+                                .onTapGesture {
+                                    if expandDiary == false {
+                                        expandDiary = true
+                                    }
+                                }
+                            
+                            Divider()
+                            
+                            Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
+                                .labelMedium()
+                                .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
+                                .onTapGesture {
+                                    if expandDiary == false {
+                                        expandDiary = true
+                                    }
+                                }
                         }
+                        .padding()
+                        
+                        Button(action: {
+                            
+                        }) {
+                            NavigationLink(destination: DiaryView(date: currentDate)) {
+                                Text("다이어리 수정")
+                                    .bodyMedium()
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            }
+                        }
+                        .background(.blue)
+                        .cornerRadius(8)
+                        .padding()
                     }
-                    .background(.blue)
-                    .cornerRadius(8)
                     
-                }
-                .padding(.horizontal)
-                
-                Rectangle()
-                    .frame(height: 8)
-                    .padding(.vertical)
-                    .foregroundColor(.white)
-                
-                // 합계 기록
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("합계 기록")
-                        .titleMedium()
+                    Rectangle()
+                        .frame(height: 8)
+                        .padding(.vertical)
+                        .foregroundColor(Color("ghost_white"))
                     
-                    if wiDList.isEmpty {
-                        getEmptyView(message: "표시할 기록이 없습니다.")
-                    } else {
-                        VStack(spacing: 8) {
-                            ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
+                    // 합계 기록
+                    VStack(spacing: 0) {
+                        Text("합계 기록")
+                            .titleMedium()
+                            .padding(.horizontal)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        if wiDList.isEmpty {
+                            getEmptyView(message: "표시할 기록이 없습니다.")
+                        } else {
+    //                        ForEach(totalDurationDictionary.sorted(by: { $0.key < $1.key }), id: \.key) { title, duration in // 정렬 안되는 듯?
+                            ForEach(Array(totalDurationDictionary.enumerated()), id: \.key) { index, title, duration in
                                 HStack {
                                     Text(titleDictionary[title] ?? "")
                                         .font(.custom("PyeongChangPeace-Bold", size: 20))
                                     
                                     Spacer()
-                                
+                                    
                                     Text(formatDuration(duration, mode: 3))
                                         .font(.custom("PyeongChangPeace-Bold", size: 20))
                                 }
                                 .padding()
-                                .background(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Color(title), Color.white]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
+                                
+                                if index != totalDurationDictionary.count - 1 {
+                                    Divider()
+                                        .padding(.horizontal)
+                                }
                             }
                         }
                     }
-                }
-                .padding(.horizontal)
+                    
+                    Rectangle()
+                        .frame(height: 8)
+                        .padding(.vertical)
+                        .foregroundColor(Color("ghost_white"))
+                    
+                    // WiD 리스트
+                    VStack(spacing: 0) {
+                        Text("WiD 리스트")
+                            .titleLarge()
+                            .padding(.horizontal)
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
-                Rectangle()
-                    .frame(height: 8)
-                    .padding(.vertical)
-                    .foregroundColor(.white)
-                
-                // WiD 리스트
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("WiD 리스트")
-                        .titleLarge()
-
-                    if wiDList.isEmpty {
-                        getEmptyView(message: "표시할 WiD가 없습니다.")
-                    } else {
-                        ForEach(Array(wiDList.enumerated()), id: \.element.id) { (index, wiD) in
-                            NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                                VStack(spacing: 0) {
-                                    HStack {
-                                        Circle()
-                                            .fill(Color(wiD.title))
-                                            .frame(width: 10)
-                                        
-                                        Text(titleDictionary[wiD.title] ?? "")
-                                            .labelMedium()
-                                        
-                                        Spacer()
-                                        
-                                        Image(systemName: "chevron.forward")
-                                            .foregroundColor(.blue)
-                                    }
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 8)
-                                    .background(Color("light_gray"))
-                                    
-                                    Divider()
-                                    
-                                    HStack {
-                                        VStack(alignment: .leading) {
-                                            Text(formatTime(wiD.start, format: "a HH:mm:ss"))
+                        if wiDList.isEmpty {
+                            getEmptyView(message: "표시할 WiD가 없습니다.")
+                        } else {
+                            ForEach(Array(wiDList.enumerated()), id: \.element.id) { (index, wiD) in
+                                NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
+                                    VStack(spacing: 8) {
+                                        HStack {
+                                            Rectangle()
+                                                .fill(Color(wiD.title))
+                                                .frame(width: 5)
+                                            
+                                            Text(titleDictionary[wiD.title] ?? "")
                                                 .bodyMedium()
                                             
-                                            Text(formatTime(wiD.finish, format: "a HH:mm:ss"))
-                                                .bodyMedium()
+                                            Spacer()
+                                            
+                                            Image(systemName: "chevron.forward")
                                         }
                                         
-                                        Spacer()
-                                        
-                                        Text(formatDuration(wiD.duration, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        HStack {
+                                            VStack(alignment: .leading) {
+                                                Text(formatTime(wiD.start, format: "a HH:mm:ss"))
+                                                    .bodyMedium()
+                                                
+                                                Text(formatTime(wiD.finish, format: "a HH:mm:ss"))
+                                                    .bodyMedium()
+                                            }
+                                            
+                                            Spacer()
+                                            
+                                            Text(formatDuration(wiD.duration, mode: 3))
+                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        }
                                     }
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 8)
-                                    
-//                                        Divider()
-//                                        
-//                                        Text(wiD.detail.isEmpty ? "설명 입력.." : wiD.detail)
-//                                            .padding(.horizontal)
-//                                            .padding(.vertical, 8)
-//                                            .frame(maxWidth: .infinity, alignment: .leading)
-//                                            .foregroundColor(wiD.detail.isEmpty ? .gray : .black)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
                                 }
-                                .frame(maxWidth: .infinity)
-                                .background(.white)
-                                .cornerRadius(8)
-                                .shadow(radius: 1)
+                                
+                                if index < wiDList.count - 1 {
+                                    Divider()
+                                        .padding(.horizontal)
+                                }
                             }
                         }
                     }
+                    
+                    Spacer()
+                        .frame(height: 16)
                 }
-                .padding(.horizontal)
-                
-                Spacer()
-                    .frame(height: 16)
             }
-            .background(Color("ghost_white"))
             
             /**
              하단 바
@@ -265,6 +240,7 @@ struct DateBasedView: View {
             .compositingGroup()
             .shadow(radius: 1)
         }
+        .background(.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
             self.wiDList = wiDService.selectWiDsByDate(date: currentDate)

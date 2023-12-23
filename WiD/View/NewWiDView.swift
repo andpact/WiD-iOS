@@ -59,7 +59,7 @@ struct NewWiDView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 /**
                  상단 바
                  */
@@ -109,11 +109,11 @@ struct NewWiDView: View {
                             .frame(height: 16)
                         
                         // 날짜 선택
-                        VStack(spacing: 0) {
+                        VStack(spacing: 0) { // 뷰 개수 관리를 위해 수직 스택으로 한 번 더 감쌈
                             HStack(spacing: 16) {
                                 Image(systemName: "calendar")
                                     .imageScale(.large)
-                                    .frame(width: 20)
+                                    .frame(width: 30)
                                 
                                 VStack(alignment: .leading) {
                                     Text("날짜")
@@ -128,7 +128,7 @@ struct NewWiDView: View {
                                 Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
                             }
                             .padding()
-                            .background(Color("ghost_white"))
+                            .background(.white)
                             .onTapGesture {
                                 withAnimation {
                                     expandDatePicker.toggle()
@@ -151,6 +151,7 @@ struct NewWiDView: View {
                         }
                         
                         Divider()
+                            .padding(.horizontal)
 
                         // 제목 선택
                         VStack(spacing: 0) {
@@ -158,7 +159,7 @@ struct NewWiDView: View {
                                 Image(systemName: "character.ko")
                                     .imageScale(.large)
                                     .foregroundColor(Color(title.rawValue))
-                                    .frame(width: 20)
+                                    .frame(width: 30)
                                 
                                 VStack(alignment: .leading) {
                                     Text("제목")
@@ -173,7 +174,7 @@ struct NewWiDView: View {
                                 Image(systemName: expandTitleMenu ? "chevron.up" : "chevron.down")
                             }
                             .padding()
-                            .background(Color("ghost_white"))
+                            .background(.white)
                             .onTapGesture {
                                 withAnimation {
                                     expandTitleMenu.toggle()
@@ -199,13 +200,14 @@ struct NewWiDView: View {
                         }
                         
                         Divider()
+                            .padding(.horizontal)
                         
                         // 시작 시간 선택
                         VStack(spacing: 0) {
                             HStack(spacing: 16) {
                                 Image(systemName: "clock")
                                     .imageScale(.large)
-                                    .frame(width: 20)
+                                    .frame(width: 30)
                                 
                                 VStack(alignment: .leading) {
                                     Text("시작")
@@ -220,7 +222,7 @@ struct NewWiDView: View {
                                 Image(systemName: expandStartPicker ? "chevron.up" : "chevron.down")
                             }
                             .padding()
-                            .background(Color("ghost_white"))
+                            .background(.white)
                             .onTapGesture {
                                 withAnimation {
                                     expandStartPicker.toggle()
@@ -243,13 +245,14 @@ struct NewWiDView: View {
                         }
                         
                         Divider()
+                            .padding(.horizontal)
                             
                         // 종료 시간 선택
                         VStack(spacing: 0) {
                             HStack(spacing: 16) {
                                 Image(systemName: "clock.badge.checkmark")
                                     .imageScale(.large)
-                                    .frame(width: 20)
+                                    .frame(width: 30)
                                 
                                 VStack(alignment: .leading) {
                                     Text("종료")
@@ -264,7 +267,7 @@ struct NewWiDView: View {
                                 Image(systemName: expandFinishPicker ? "chevron.up" : "chevron.down")
                             }
                             .padding()
-                            .background(Color("ghost_white"))
+                            .background(.white)
                             .onTapGesture {
                                 withAnimation {
                                     expandFinishPicker.toggle()
@@ -287,11 +290,12 @@ struct NewWiDView: View {
                         }
 
                         Divider()
+                            .padding(.horizontal)
                             
                         HStack(spacing: 16) {
                             Image(systemName: "clock.fill")
                                 .imageScale(.large)
-                                .frame(width: 20)
+                                .frame(width: 30)
                             
                             VStack(alignment: .leading) {
                                 Text("소요")
@@ -305,14 +309,13 @@ struct NewWiDView: View {
                         }
                         .padding()
                     }
-                    .padding(.horizontal)
                     
                     Rectangle()
                         .frame(height: 8)
                         .padding(.vertical)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color("ghost_white"))
                     
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 0) {
                         HStack(spacing: 0) {
                             getDayString(date: date)
                                 .titleMedium()
@@ -320,11 +323,13 @@ struct NewWiDView: View {
                             Text("의 타임 라인")
                                 .titleMedium()
                         }
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         
                         if wiDList.isEmpty {
                             getEmptyView(message: "표시할 타임라인이 없습니다.")
                         } else {
-                            VStack {
+//                            VStack {
             //                    ZStack {
             //                        Image(systemName: "arrowtriangle.down")
             //                            .foregroundColor(isStartOverlap || isStartOverCurrentTime || DurationExist ? .red : .none)
@@ -336,25 +341,20 @@ struct NewWiDView: View {
             //                    }
                                 
                                 StackedHorizontalBarChartView(wiDList: wiDList)
-                            }
-                            .padding(.vertical)
-                            .frame(maxWidth: .infinity)
-                            .background(.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 1)
+//                            }
                         }
                     }
-                    .padding(.horizontal)
                     
                     Rectangle()
                         .frame(height: 8)
                         .padding(.vertical)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color("ghost_white"))
                         
-                    
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(spacing: 0) {
                         Text("선택 가능한 시간대")
                             .titleMedium()
+                            .padding(.horizontal)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
                         if wiDList.isEmpty {
                             getEmptyView(message: "표시할 시간대가 없습니다.")
@@ -364,25 +364,19 @@ struct NewWiDView: View {
                                     start = emptyWiD.start
                                     finish = emptyWiD.finish
                                 }) {
-                                    VStack(spacing: 0) {
+                                    VStack(spacing: 8) {
                                         HStack {
-                                            Circle()
+                                            Rectangle()
                                                 .fill(.black)
-                                                .frame(width: 10)
+                                                .frame(width: 5)
                                             
                                             Text("제목 없음")
-                                                .labelMedium()
+                                                .bodyMedium()
                                             
                                             Spacer()
                                             
                                             Image(systemName: "square.and.arrow.down")
-                                                .foregroundColor(.blue)
                                         }
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 8)
-                                        .background(Color("light_gray"))
-                                        
-                                        Divider()
                                         
                                         HStack {
                                             VStack(alignment: .leading) {
@@ -398,18 +392,18 @@ struct NewWiDView: View {
                                             Text(formatDuration(emptyWiD.duration, mode: 3))
                                                 .font(.custom("PyeongChangPeace-Bold", size: 20))
                                         }
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 8)
                                     }
-                                    .background(.white)
-                                    .cornerRadius(8)
-                                    .shadow(radius: 1)
+                                }
+                                .padding()
+                                
+                                if index != emptyWiDList.count - 1 {
+                                    Divider()
+                                        .padding(.horizontal)
                                 }
                             }
                         }
                     }
-                    .padding(.horizontal)
-                    
+
                     Spacer()
                         .frame(height: 16)
                 }
@@ -425,7 +419,7 @@ struct NewWiDView: View {
 //                .frame(maxWidth: .infinity)
             }
             .tint(.black)
-            .background(Color("ghost_white"))
+            .background(.white)
             .onAppear {
                 self.wiDList = wiDService.selectWiDsByDate(date: date)
                 self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
