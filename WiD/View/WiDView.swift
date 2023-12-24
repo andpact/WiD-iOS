@@ -90,16 +90,14 @@ struct WiDView: View {
                     .foregroundColor(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? .gray : .green)
                     .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist)
                 }
-                .padding(.horizontal)
+                .padding()
+                .background(.white)
                 
                 /**
                  컨텐츠
                  */
                 ScrollView {
-                    VStack(spacing: 0) {
-                        Spacer()
-                            .frame(height: 16)
-                        
+                    VStack(spacing: 16) {
                         VStack(spacing: 0) {
                             // 날짜
                             HStack(spacing: 16) {
@@ -123,7 +121,7 @@ struct WiDView: View {
                                 .padding(.horizontal)
                             
                             // 제목
-                            VStack(spacing: 0) {
+                            VStack(spacing: 0) { // 더미 스택
                                 HStack(spacing: 16) {
                                     Image(systemName: "character.ko")
                                         .imageScale(.large)
@@ -172,7 +170,7 @@ struct WiDView: View {
                             }
                             
                             // 시작 시간 선택
-                            VStack(spacing: 0) {
+                            VStack(spacing: 0) { // 더미 스택
                                 HStack(spacing: 16) {
                                     Image(systemName: "clock")
                                         .imageScale(.large)
@@ -217,7 +215,7 @@ struct WiDView: View {
                             }
                             
                             // 종료 시간 선택
-                            VStack(spacing: 0) {
+                            VStack(spacing: 0) { // 더미 스택
                                 HStack(spacing: 16) {
                                     Image(systemName: "clock.badge.checkmark")
                                         .imageScale(.large)
@@ -318,11 +316,8 @@ struct WiDView: View {
                             .cornerRadius(8)
                             .padding(.horizontal)
                         }
-                        
-                        Rectangle()
-                            .frame(height: 8)
-                            .padding(.vertical)
-                            .foregroundColor(Color("ghost_white"))
+                        .padding(.vertical)
+                        .background(.white)
                         
                         VStack(spacing: 0) {
                             Text("선택 가능한 시간 범위")
@@ -342,6 +337,8 @@ struct WiDView: View {
                             }
                             .padding(.vertical)
                         }
+                        .padding(.vertical)
+                        .background(.white)
                         
                         Spacer()
                             .frame(height: 16)
@@ -359,7 +356,7 @@ struct WiDView: View {
 //                .frame(maxWidth: .infinity)
             }
             .tint(.black)
-            .background(.white)
+            .background(Color("ghost_white"))
             .onAppear {
                 self.date = clickedWiD!.date
                 self.title = Title(rawValue: clickedWiD!.title) ?? .STUDY

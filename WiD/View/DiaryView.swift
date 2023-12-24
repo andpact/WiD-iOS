@@ -74,9 +74,7 @@ struct DiaryView: View {
                     .foregroundColor(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
                     .disabled(diaryTitle.isEmpty || diaryContent.isEmpty)
                 }
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity)
-                
+                .padding()
                 
                 GeometryReader { geo in
                     HStack {

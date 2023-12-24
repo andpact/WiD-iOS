@@ -10,51 +10,16 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
-//                Text("WiD")
-//                    .font(.custom("Acme-Regular", size: 50))
-                
-                Text("제목")
-                    .titleLarge()
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            VStack(spacing: 16) {
+                Text("WiD")
+                    .font(.custom("Acme-Regular", size: 80))
                 
                 VStack(spacing: 0) {
-                    ForEach(Title.allCases.indices, id: \.self) { index in
-                        let title = Title.allCases[index]
-                        HStack {
-                            Rectangle()
-                                .frame(width: 3)
-                                .foregroundColor(Color(title.rawValue))
-                            
-                            Text(title.koreanValue)
-                                .bodyMedium()
-
-                            Spacer()
-
-                            Text(title.example)
-                                .labelSmall()
-                        }
-                        .padding()
-
-                        if index != Title.allCases.count - 1 {
-                            Divider()
-                                .padding(.horizontal)
-                        }
-                    }
-                }
+                    Text("도구")
+                        .titleMedium()
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Rectangle()
-                    .frame(height: 8)
-                    .padding(.vertical)
-                    .foregroundColor(Color("ghost_white"))
-                
-                Text("도구")
-                    .titleLarge()
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                VStack(alignment: .leading, spacing: 0) {
                     NavigationLink(destination: StopWatchView()) {
                         HStack(spacing: 16) {
                             Image(systemName: "stopwatch")
@@ -127,19 +92,53 @@ struct HomeView: View {
                     }
                     .foregroundColor(.black)
                 }
+                .padding(.vertical)
+                .background(.white)
+                
+                VStack(spacing: 0) {
+                    Text("사용 가능한 제목")
+                        .titleMedium()
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                
+                    ForEach(Title.allCases.indices, id: \.self) { index in
+                        let title = Title.allCases[index]
+                        
+                        HStack {
+                            Rectangle()
+                                .frame(width: 3)
+                                .foregroundColor(Color(title.rawValue))
+                            
+                            Text(title.koreanValue)
+                                .bodyMedium()
 
-//                Rectangle()
-//                    .frame(height: 8)
-//                    .padding(.vertical)
-//                    .foregroundColor(Color("ghost_white"))
-//
-//                Text("랜덤 다이어리")
-//                    .titleLarge()
-//                    .padding(.horizontal)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
+                            Spacer()
+
+                            Text(title.example)
+                                .labelSmall()
+                        }
+                        .padding()
+
+                        if index != Title.allCases.count - 1 {
+                            Divider()
+                                .padding(.horizontal)
+                        }
+                    }
+                }
+                .padding(.vertical)
+                .background(.white)
+                
+//                VStack(spacing: 0) {
+//                    Text("랜덤 다이어리")
+//                        .titleLarge()
+//                        .padding(.horizontal)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                }
+//                .padding(.vertical)
+//                .background(.white)
             }
         }
-        .background(.white)
+        .background(Color("ghost_white"))
         .tint(.black)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

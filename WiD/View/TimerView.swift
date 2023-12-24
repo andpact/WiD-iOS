@@ -79,6 +79,7 @@ struct TimerView: View {
 //                                .frame(maxWidth: .infinity, alignment: .trailing)
 //                        }
                     }
+                    .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
                 
@@ -127,6 +128,7 @@ struct TimerView: View {
                         }
                         .pickerStyle(.inline)
                     }
+                    .padding()
                 } else {
                     formatTimerTime(remainingTime)
                     
@@ -213,12 +215,13 @@ struct TimerView: View {
                             .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : (remainingTime == 0 ? .gray : .blue)))
                         }
                     }
+                    .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 }
             }
             .tint(.black)
             .navigationBarBackButtonHidden()
-            .padding(.horizontal)
+//            .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.white)
             .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in

@@ -33,7 +33,8 @@ struct DateBasedView: View {
              컨텐츠
              */
             ScrollView {
-                VStack(spacing: 0) {
+                VStack(spacing: 16) {
+                    // 다이어리 및 타임라인
                     VStack(spacing: 0) {
                         GeometryReader { geo in
                             HStack {
@@ -94,11 +95,7 @@ struct DateBasedView: View {
                         .cornerRadius(8)
                         .padding()
                     }
-                    
-                    Rectangle()
-                        .frame(height: 8)
-                        .padding(.vertical)
-                        .foregroundColor(Color("ghost_white"))
+                    .background(.white)
                     
                     // 합계 기록
                     VStack(spacing: 0) {
@@ -111,7 +108,10 @@ struct DateBasedView: View {
                             getEmptyView(message: "표시할 기록이 없습니다.")
                         } else {
     //                        ForEach(totalDurationDictionary.sorted(by: { $0.key < $1.key }), id: \.key) { title, duration in // 정렬 안되는 듯?
-                            ForEach(Array(totalDurationDictionary.enumerated()), id: \.key) { index, title, duration in
+//                            ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
+                            ForEach(Array(totalDurationDictionary.enumerated()), id: \.element.key) { item in
+                                let (index, (title, duration)) = item // 이 변수를 위 item에 직접 사용하면 동작을 안함.
+                                
                                 HStack {
                                     Text(titleDictionary[title] ?? "")
                                         .font(.custom("PyeongChangPeace-Bold", size: 20))
@@ -124,17 +124,14 @@ struct DateBasedView: View {
                                 .padding()
                                 
                                 if index != totalDurationDictionary.count - 1 {
-                                    Divider()
-                                        .padding(.horizontal)
+                                     Divider()
+                                         .padding(.horizontal)
                                 }
                             }
                         }
                     }
-                    
-                    Rectangle()
-                        .frame(height: 8)
-                        .padding(.vertical)
-                        .foregroundColor(Color("ghost_white"))
+                    .padding(.vertical)
+                    .background(.white)
                     
                     // WiD 리스트
                     VStack(spacing: 0) {
@@ -188,6 +185,8 @@ struct DateBasedView: View {
                             }
                         }
                     }
+                    .padding(.vertical)
+                    .background(.white)
                     
                     Spacer()
                         .frame(height: 16)
@@ -240,7 +239,7 @@ struct DateBasedView: View {
             .compositingGroup()
             .shadow(radius: 1)
         }
-        .background(.white)
+        .background(Color("ghost_white"))
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
             self.wiDList = wiDService.selectWiDsByDate(date: currentDate)

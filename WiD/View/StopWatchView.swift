@@ -67,6 +67,7 @@ struct StopWatchView: View {
                             .titleLarge()
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
+                    .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
                 
@@ -120,11 +121,11 @@ struct StopWatchView: View {
                             .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .blue))
                         }
                     }
+                    .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 }
             }
             .tint(.black)
-            .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.white)
             .onTapGesture {

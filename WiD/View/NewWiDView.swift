@@ -98,314 +98,315 @@ struct NewWiDView: View {
                     .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist)
                     .foregroundColor(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? .gray : .blue)
                 }
-                .padding(.horizontal)
+                .padding()
+                .background(.white)
                 
                 /**
                  컨텐츠
                  */
                 ScrollView {
-                    VStack(spacing: 0) {
-                        Spacer()
-                            .frame(height: 16)
-                        
-                        // 날짜 선택
-                        VStack(spacing: 0) { // 뷰 개수 관리를 위해 수직 스택으로 한 번 더 감쌈
-                            HStack(spacing: 16) {
-                                Image(systemName: "calendar")
-                                    .imageScale(.large)
-                                    .frame(width: 30)
-                                
-                                VStack(alignment: .leading) {
-                                    Text("날짜")
-                                        .labelSmall()
-                                    
-                                    getDayString(date: date)
-                                        .bodyMedium()
-                                }
-                                
-                                Spacer()
-                                
-                                Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
-                            }
-                            .padding()
-                            .background(.white)
-                            .onTapGesture {
-                                withAnimation {
-                                    expandDatePicker.toggle()
-                                }
-                            }
+                    VStack(spacing: 16) {
+                        VStack(spacing: 0) {
+                            Text("정보 입력")
+                                .titleMedium()
+                                .padding(.horizontal)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            if expandDatePicker {
-                                HStack {
-                                    Text("날짜를 선택해 주세요.")
-                                        .bodyMedium()
-                                        .foregroundColor(.blue)
+                            // 날짜 선택
+                            VStack(spacing: 0) { // 더미 스택
+                                HStack(spacing: 16) {
+                                    Image(systemName: "calendar")
+                                        .imageScale(.large)
+                                        .frame(width: 30)
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text("날짜")
+                                            .labelSmall()
+                                        
+                                        getDayString(date: date)
+                                            .bodyMedium()
+                                    }
                                     
                                     Spacer()
                                     
-                                    DatePicker("", selection: $date, in: ...today, displayedComponents: .date)
-                                        .labelsHidden()
+                                    Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
                                 }
                                 .padding()
-                            }
-                        }
-                        
-                        Divider()
-                            .padding(.horizontal)
-
-                        // 제목 선택
-                        VStack(spacing: 0) {
-                            HStack(spacing: 16) {
-                                Image(systemName: "character.ko")
-                                    .imageScale(.large)
-                                    .foregroundColor(Color(title.rawValue))
-                                    .frame(width: 30)
-                                
-                                VStack(alignment: .leading) {
-                                    Text("제목")
-                                        .labelSmall()
-                                    
-                                    Text(title.koreanValue)
-                                        .bodyMedium()
-                                }
-                                
-                                Spacer()
-                                
-                                Image(systemName: expandTitleMenu ? "chevron.up" : "chevron.down")
-                            }
-                            .padding()
-                            .background(.white)
-                            .onTapGesture {
-                                withAnimation {
-                                    expandTitleMenu.toggle()
-                                }
-                            }
-                            
-                            if expandTitleMenu {
-                                HStack {
-                                    Text("제목을 선택해 주세요.")
-                                        .bodyMedium()
-                                        .foregroundColor(.blue)
-                                    
-                                    Spacer()
-                                    
-                                    Picker("", selection: $title) {
-                                        ForEach(Array(Title.allCases), id: \.self) { title in
-                                            Text(title.koreanValue)
-                                        }
+                                .background(.white)
+                                .onTapGesture {
+                                    withAnimation {
+                                        expandDatePicker.toggle()
                                     }
                                 }
-                                .padding()
+                                
+                                if expandDatePicker {
+                                    HStack {
+                                        Text("날짜를 선택해 주세요.")
+                                            .bodyMedium()
+                                            .foregroundColor(.blue)
+                                        
+                                        Spacer()
+                                        
+                                        DatePicker("", selection: $date, in: ...today, displayedComponents: .date)
+                                            .labelsHidden()
+                                    }
+                                    .padding()
+                                }
                             }
-                        }
-                        
-                        Divider()
-                            .padding(.horizontal)
-                        
-                        // 시작 시간 선택
-                        VStack(spacing: 0) {
+                            
+                            Divider()
+                                .padding(.horizontal)
+
+                            // 제목 선택
+                            VStack(spacing: 0) { // 더미 스택
+                                HStack(spacing: 16) {
+                                    Image(systemName: "character.ko")
+                                        .imageScale(.large)
+                                        .foregroundColor(Color(title.rawValue))
+                                        .frame(width: 30)
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text("제목")
+                                            .labelSmall()
+                                        
+                                        Text(title.koreanValue)
+                                            .bodyMedium()
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: expandTitleMenu ? "chevron.up" : "chevron.down")
+                                }
+                                .padding()
+                                .background(.white)
+                                .onTapGesture {
+                                    withAnimation {
+                                        expandTitleMenu.toggle()
+                                    }
+                                }
+                                
+                                if expandTitleMenu {
+                                    HStack {
+                                        Text("제목을 선택해 주세요.")
+                                            .bodyMedium()
+                                            .foregroundColor(.blue)
+                                        
+                                        Spacer()
+                                        
+                                        Picker("", selection: $title) {
+                                            ForEach(Array(Title.allCases), id: \.self) { title in
+                                                Text(title.koreanValue)
+                                            }
+                                        }
+                                    }
+                                    .padding()
+                                }
+                            }
+                            
+                            Divider()
+                                .padding(.horizontal)
+                            
+                            // 시작 시간 선택
+                            VStack(spacing: 0) { // 더미 스택
+                                HStack(spacing: 16) {
+                                    Image(systemName: "clock")
+                                        .imageScale(.large)
+                                        .frame(width: 30)
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text("시작")
+                                            .labelSmall()
+                                        
+                                        Text(formatTime(start, format: "a h:mm:ss"))
+                                            .bodyMedium()
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: expandStartPicker ? "chevron.up" : "chevron.down")
+                                }
+                                .padding()
+                                .background(.white)
+                                .onTapGesture {
+                                    withAnimation {
+                                        expandStartPicker.toggle()
+                                    }
+                                }
+                                
+                                if expandStartPicker {
+                                    HStack {
+                                        Text("시작 시간을 선택해 주세요.")
+                                            .bodyMedium()
+                                            .foregroundColor(.blue)
+                                        
+                                        Spacer()
+                                        
+                                        DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
+                                            .labelsHidden()
+                                    }
+                                    .padding()
+                                }
+                            }
+                            
+                            Divider()
+                                .padding(.horizontal)
+                                
+                            // 종료 시간 선택
+                            VStack(spacing: 0) { // 더미 스택
+                                HStack(spacing: 16) {
+                                    Image(systemName: "clock.badge.checkmark")
+                                        .imageScale(.large)
+                                        .frame(width: 30)
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text("종료")
+                                            .labelSmall()
+                                        
+                                        Text(formatTime(finish, format: "a h:mm:ss"))
+                                            .bodyMedium()
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: expandFinishPicker ? "chevron.up" : "chevron.down")
+                                }
+                                .padding()
+                                .background(.white)
+                                .onTapGesture {
+                                    withAnimation {
+                                        expandFinishPicker.toggle()
+                                    }
+                                }
+                                
+                                if expandFinishPicker {
+                                    HStack {
+                                        Text("종료 시간을 선택해 주세요.")
+                                            .bodyMedium()
+                                            .foregroundColor(.blue)
+                                        
+                                        Spacer()
+                                        
+                                        DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
+                                            .labelsHidden()
+                                    }
+                                    .padding()
+                                }
+                            }
+
+                            Divider()
+                                .padding(.horizontal)
+                                
                             HStack(spacing: 16) {
-                                Image(systemName: "clock")
+                                Image(systemName: "clock.fill")
                                     .imageScale(.large)
                                     .frame(width: 30)
                                 
                                 VStack(alignment: .leading) {
-                                    Text("시작")
+                                    Text("소요")
                                         .labelSmall()
-                                    
-                                    Text(formatTime(start, format: "a h:mm:ss"))
+
+                                    Text(formatDuration(duration, mode: 3))
                                         .bodyMedium()
                                 }
                                 
                                 Spacer()
-                                
-                                Image(systemName: expandStartPicker ? "chevron.up" : "chevron.down")
                             }
                             .padding()
-                            .background(.white)
-                            .onTapGesture {
-                                withAnimation {
-                                    expandStartPicker.toggle()
-                                }
-                            }
-                            
-                            if expandStartPicker {
-                                HStack {
-                                    Text("시작 시간을 선택해 주세요.")
-                                        .bodyMedium()
-                                        .foregroundColor(.blue)
-                                    
-                                    Spacer()
-                                    
-                                    DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
-                                        .labelsHidden()
-                                }
-                                .padding()
-                            }
                         }
+                        .padding(.vertical)
+                        .background(.white)
                         
-                        Divider()
-                            .padding(.horizontal)
-                            
-                        // 종료 시간 선택
                         VStack(spacing: 0) {
-                            HStack(spacing: 16) {
-                                Image(systemName: "clock.badge.checkmark")
-                                    .imageScale(.large)
-                                    .frame(width: 30)
+                            HStack(spacing: 0) {
+                                getDayString(date: date)
+                                    .titleMedium()
                                 
-                                VStack(alignment: .leading) {
-                                    Text("종료")
-                                        .labelSmall()
-                                    
-                                    Text(formatTime(finish, format: "a h:mm:ss"))
-                                        .bodyMedium()
-                                }
-                                
-                                Spacer()
-                                
-                                Image(systemName: expandFinishPicker ? "chevron.up" : "chevron.down")
+                                Text("의 타임 라인")
+                                    .titleMedium()
                             }
-                            .padding()
-                            .background(.white)
-                            .onTapGesture {
-                                withAnimation {
-                                    expandFinishPicker.toggle()
-                                }
-                            }
-                            
-                            if expandFinishPicker {
-                                HStack {
-                                    Text("종료 시간을 선택해 주세요.")
-                                        .bodyMedium()
-                                        .foregroundColor(.blue)
-                                    
-                                    Spacer()
-                                    
-                                    DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
-                                        .labelsHidden()
-                                }
-                                .padding()
-                            }
-                        }
-
-                        Divider()
-                            .padding(.horizontal)
-                            
-                        HStack(spacing: 16) {
-                            Image(systemName: "clock.fill")
-                                .imageScale(.large)
-                                .frame(width: 30)
-                            
-                            VStack(alignment: .leading) {
-                                Text("소요")
-                                    .labelSmall()
-
-                                Text(formatDuration(duration, mode: 3))
-                                    .bodyMedium()
-                            }
-                            
-                            Spacer()
-                        }
-                        .padding()
-                    }
-                    
-                    Rectangle()
-                        .frame(height: 8)
-                        .padding(.vertical)
-                        .foregroundColor(Color("ghost_white"))
-                    
-                    VStack(alignment: .leading, spacing: 0) {
-                        HStack(spacing: 0) {
-                            getDayString(date: date)
-                                .titleMedium()
-                            
-                            Text("의 타임 라인")
-                                .titleMedium()
-                        }
-                        .padding(.horizontal)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        if wiDList.isEmpty {
-                            getEmptyView(message: "표시할 타임라인이 없습니다.")
-                        } else {
-//                            VStack {
-            //                    ZStack {
-            //                        Image(systemName: "arrowtriangle.down")
-            //                            .foregroundColor(isStartOverlap || isStartOverCurrentTime || DurationExist ? .red : .none)
-            //                            .offset(x: CGFloat(startMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
-            //
-            //                        Image(systemName: "arrowtriangle.down.fill")
-            //                            .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || DurationExist ? .red : .none)
-            //                            .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
-            //                    }
-                                
-                                StackedHorizontalBarChartView(wiDList: wiDList)
-//                            }
-                        }
-                    }
-                    
-                    Rectangle()
-                        .frame(height: 8)
-                        .padding(.vertical)
-                        .foregroundColor(Color("ghost_white"))
-                        
-                    VStack(spacing: 0) {
-                        Text("선택 가능한 시간대")
-                            .titleMedium()
                             .padding(.horizontal)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        if wiDList.isEmpty {
-                            getEmptyView(message: "표시할 시간대가 없습니다.")
-                        } else {
-                            ForEach(Array(emptyWiDList.enumerated()), id: \.element.id) { (index, emptyWiD) in
-                                Button(action: {
-                                    start = emptyWiD.start
-                                    finish = emptyWiD.finish
-                                }) {
-                                    VStack(spacing: 8) {
-                                        HStack {
-                                            Rectangle()
-                                                .fill(.black)
-                                                .frame(width: 5)
-                                            
-                                            Text("제목 없음")
-                                                .bodyMedium()
-                                            
-                                            Spacer()
-                                            
-                                            Image(systemName: "square.and.arrow.down")
-                                        }
-                                        
-                                        HStack {
-                                            VStack(alignment: .leading) {
-                                                Text(formatTime(emptyWiD.start, format: "a h:mm:ss"))
+                            
+                            if wiDList.isEmpty {
+                                getEmptyView(message: "표시할 타임라인이 없습니다.")
+                            } else {
+    //                            VStack {
+                //                    ZStack {
+                //                        Image(systemName: "arrowtriangle.down")
+                //                            .foregroundColor(isStartOverlap || isStartOverCurrentTime || DurationExist ? .red : .none)
+                //                            .offset(x: CGFloat(startMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
+                //
+                //                        Image(systemName: "arrowtriangle.down.fill")
+                //                            .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || DurationExist ? .red : .none)
+                //                            .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
+                //                    }
+                                    
+                                    StackedHorizontalBarChartView(wiDList: wiDList)
+    //                            }
+                            }
+                        }
+                        .padding(.vertical)
+                        .background(.white)
+                            
+                        VStack(spacing: 0) {
+                            Text("선택 가능한 시간대")
+                                .titleMedium()
+                                .padding(.horizontal)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            if wiDList.isEmpty {
+                                getEmptyView(message: "표시할 시간대가 없습니다.")
+                            } else {
+                                ForEach(Array(emptyWiDList.enumerated()), id: \.element.id) { (index, emptyWiD) in
+                                    Button(action: {
+                                        start = emptyWiD.start
+                                        finish = emptyWiD.finish
+                                    }) {
+                                        VStack(spacing: 8) {
+                                            HStack {
+                                                Rectangle()
+                                                    .fill(.black)
+                                                    .frame(width: 5)
+                                                
+                                                Text("제목 없음")
                                                     .bodyMedium()
-                                            
-                                                Text(formatTime(emptyWiD.finish, format: "a h:mm:ss"))
-                                                    .bodyMedium()
+                                                
+                                                Spacer()
+                                                
+                                                Image(systemName: "square.and.arrow.down")
                                             }
                                             
-                                            Spacer()
-                                            
-                                            Text(formatDuration(emptyWiD.duration, mode: 3))
-                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                            HStack {
+                                                VStack(alignment: .leading) {
+                                                    Text(formatTime(emptyWiD.start, format: "a h:mm:ss"))
+                                                        .bodyMedium()
+                                                
+                                                    Text(formatTime(emptyWiD.finish, format: "a h:mm:ss"))
+                                                        .bodyMedium()
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                                Text(formatDuration(emptyWiD.duration, mode: 3))
+                                                    .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                            }
                                         }
                                     }
-                                }
-                                .padding()
-                                
-                                if index != emptyWiDList.count - 1 {
-                                    Divider()
-                                        .padding(.horizontal)
+                                    .padding()
+                                    
+                                    if index != emptyWiDList.count - 1 {
+                                        Divider()
+                                            .padding(.horizontal)
+                                    }
                                 }
                             }
                         }
+                        .padding(.vertical)
+                        .background(.white)
                     }
 
-                    Spacer()
-                        .frame(height: 16)
+//                    Spacer()
+//                        .frame(height: 16)
                 }
                 
                 /**
@@ -414,12 +415,12 @@ struct NewWiDView: View {
 //                HStack {
 //                    Text("WiD")
 //                        .font(.custom("Acme-Regular", size: 20))
-//                        
+//
 //                }
 //                .frame(maxWidth: .infinity)
             }
             .tint(.black)
-            .background(.white)
+            .background(Color("ghost_white"))
             .onAppear {
                 self.wiDList = wiDService.selectWiDsByDate(date: date)
                 self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
