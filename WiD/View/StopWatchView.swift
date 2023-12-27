@@ -20,6 +20,7 @@ struct StopWatchView: View {
     
     // 제목
     @State private var title: Title = .STUDY
+    @State private var titleMenuExpand: Bool = false
     
     // 시작 시간
     @State private var start: Date = Date()
@@ -46,7 +47,9 @@ struct StopWatchView: View {
         NavigationView {
             ZStack {
                 if stopWatchTopBottomBarVisible {
-                    // MARK: - 상단 바
+                    /**
+                     상단 바
+                     */
                     ZStack {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
@@ -69,41 +72,80 @@ struct StopWatchView: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    
                 }
                 
-                // MARK: - 컨텐츠
+                /**
+                 컨텐츠
+                 */
                 formatStopWatchTime(elapsedTime)
                 
+                /**
+                 하단 바
+                 */
                 if stopWatchTopBottomBarVisible {
-                    // MARK: - 하단 바
-                    HStack {
-                        HStack {
-                            Circle()
-                                .fill(Color(title.rawValue))
-                                .frame(width: 10)
+                    VStack {
+                        if titleMenuExpand {
+                            Text("현재 사용할 제목을 선택해 주세요.")
+                                .titleMedium()
+                                .foregroundColor(.white)
+//                                .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            Picker("", selection: $title) {
-                                ForEach(Array(Title.allCases), id: \.self) { title in
-                                    Text(title.koreanValue)
-//                                        .font(.system(size: 18, weight: .medium))
+                            LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
+                                ForEach(Title.allCases) { buttonTitle in
+                                    Button(action: {
+                                        title = buttonTitle
+                                        withAnimation {
+                                            titleMenuExpand.toggle()
+                                        }
+                                    }) {
+                                        Text(buttonTitle.koreanValue)
+                                            .bodyMedium()
+                                            .frame(maxWidth: .infinity)
+                                            .padding(8)
+                                            .background(title == buttonTitle ? .white : .gray)
+                                            .foregroundColor(title == buttonTitle ? .black : .white)
+                                            .cornerRadius(8)
+                                    }
                                 }
                             }
-                            .disabled(!stopWatchReset)
+                            
+                            Divider()
+                                .background(.white)
                         }
-                        
-                        Spacer()
-                        
-                        HStack(spacing: 16) {
+
+                        HStack {
+                            Button(action: {
+                                withAnimation {
+                                    titleMenuExpand.toggle()
+                                }
+                            }) {
+                                Rectangle()
+                                    .frame(maxWidth: 5, maxHeight: 20)
+                                    .foregroundColor(Color(title.rawValue))
+                                
+                                Text(title.koreanValue)
+                                    .bodyMedium()
+                                
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .imageScale(.small)
+                            }
+                            .foregroundColor(.white)
+                            
+                            Spacer()
+                            
                             if stopWatchPaused {
                                 Button(action: {
                                     resetStopWatch()
                                 }) {
                                     Image(systemName: "arrow.clockwise")
-                                    
-                                    Text("초기화")
-                                        .bodyMedium()
+                                        .imageScale(.large)
                                 }
-                                .foregroundColor(.blue)
+                                .frame(maxWidth: 25, maxHeight: 25)
+                                .padding()
+                                .background(.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(80)
                             }
                             
                             Button(action: {
@@ -112,15 +154,20 @@ struct StopWatchView: View {
                                 } else {
                                     startStopWatch()
                                 }
-                            }) { // 버튼 안에 기본적으로 수평 스택이 생성되는 듯.
+                            }) {
                                 Image(systemName: buttonText == "중지" ? "pause.fill" : "play.fill")
-                                
-                                Text(buttonText)
-                                    .bodyMedium()
+                                    .imageScale(.large)
                             }
-                            .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .blue))
+                            .frame(maxWidth: 25, maxHeight: 25)
+                            .padding()
+                            .background(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : .blue))
+                            .foregroundColor(.white)
+                            .cornerRadius(80)
                         }
                     }
+                    .padding()
+                    .background(.black)
+                    .cornerRadius(8)
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 }

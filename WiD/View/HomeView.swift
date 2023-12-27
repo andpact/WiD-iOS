@@ -106,7 +106,7 @@ struct HomeView: View {
                         
                         HStack {
                             Rectangle()
-                                .frame(width: 3)
+                                .frame(width: 5)
                                 .foregroundColor(Color(title.rawValue))
                             
                             Text(title.koreanValue)
