@@ -47,11 +47,6 @@ struct NewWiDView: View {
     @State private var duration: TimeInterval = 0
     @State private var DurationExist: Bool = false
     
-    // 설명
-    @State private var detail: String = ""
-    
-    @State private var gradientOffset: CGFloat = 0.0
-    
 //    init() {
 //        self._wiDList = State(initialValue: wiDService.selectWiDsByDate(date: date))
 //        self.emptyWiDList = getEmptyWiDListFromWiDList(wiDList: wiDList)
@@ -80,7 +75,7 @@ struct NewWiDView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button(action: {
-                        let newWiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration, detail: detail)
+                        let newWiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration)
                         wiDService.insertWiD(wid: newWiD)
 
                         wiDList = wiDService.selectWiDsByDate(date: date)
@@ -118,6 +113,7 @@ struct NewWiDView: View {
                                     Image(systemName: "calendar")
                                         .imageScale(.large)
                                         .frame(width: 30)
+                                        .padding(.leading, 8)
                                     
                                     VStack(alignment: .leading) {
                                         Text("날짜")
@@ -164,6 +160,7 @@ struct NewWiDView: View {
                                         .imageScale(.large)
                                         .foregroundColor(Color(title.rawValue))
                                         .frame(width: 30)
+                                        .padding(.leading, 8)
                                     
                                     VStack(alignment: .leading) {
                                         Text("제목")
@@ -212,6 +209,7 @@ struct NewWiDView: View {
                                     Image(systemName: "clock")
                                         .imageScale(.large)
                                         .frame(width: 30)
+                                        .padding(.leading, 8)
                                     
                                     VStack(alignment: .leading) {
                                         Text("시작")
@@ -257,6 +255,7 @@ struct NewWiDView: View {
                                     Image(systemName: "clock.badge.checkmark")
                                         .imageScale(.large)
                                         .frame(width: 30)
+                                        .padding(.leading, 8)
                                     
                                     VStack(alignment: .leading) {
                                         Text("종료")
@@ -300,6 +299,7 @@ struct NewWiDView: View {
                                 Image(systemName: "clock.fill")
                                     .imageScale(.large)
                                     .frame(width: 30)
+                                    .padding(.leading, 8)
                                 
                                 VStack(alignment: .leading) {
                                     Text("소요")
@@ -378,11 +378,21 @@ struct NewWiDView: View {
                                             
                                             HStack {
                                                 VStack(alignment: .leading) {
-                                                    Text(formatTime(emptyWiD.start, format: "a h:mm:ss"))
-                                                        .bodyMedium()
+                                                    HStack {
+                                                        Text(formatTime(emptyWiD.start, format: "a"))
+                                                            .bodyMedium()
+                                                        
+                                                        Text(formatTime(emptyWiD.start, format: "hh:mm:ss"))
+                                                            .font(.custom("ChivoMono-Regular", size: 17))
+                                                    }
                                                 
-                                                    Text(formatTime(emptyWiD.finish, format: "a h:mm:ss"))
-                                                        .bodyMedium()
+                                                    HStack {
+                                                        Text(formatTime(emptyWiD.finish, format: "a"))
+                                                            .bodyMedium()
+                                                        
+                                                        Text(formatTime(emptyWiD.finish, format: "hh:mm:ss"))
+                                                            .font(.custom("ChivoMono-Regular", size: 17))
+                                                    }
                                                 }
                                                 
                                                 Spacer()

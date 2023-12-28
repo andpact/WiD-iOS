@@ -54,8 +54,6 @@ struct DiaryView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                        
                         let newDiary = Diary(id: 0, date: date, title: diaryTitle, content: diaryContent)
                         
                         if diary.id == -1 { // 다이어리가 데이터베이스에 없을 때
@@ -64,6 +62,8 @@ struct DiaryView: View {
                         } else {
                             diaryService.updateDiary(withID: diary.id, newTitle: diaryTitle, newContent: diaryContent)
                         }
+                        
+                        presentationMode.wrappedValue.dismiss()
                     }) {
                         Image(systemName: "checkmark")
                         

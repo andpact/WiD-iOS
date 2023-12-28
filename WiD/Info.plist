@@ -212,6 +212,8 @@
 	<array>
 		<string>Acme-Regular.ttf</string>
 		<string>PyeongChangPeace-Bold.otf</string>
+		<string>ChivoMono-BlackItalic.ttf</string>
+		<string>ChivoMono-Regular.ttf</string>
 	</array>
 </dict>
 </plist>

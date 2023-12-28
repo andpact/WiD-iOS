@@ -45,9 +45,6 @@ struct WiDView: View {
     // 소요 시간
     @State private var duration: TimeInterval = 0.0
     @State private var DurationExist: Bool = false
-    
-    // 설명
-    @State private var detail: String = ""
 
     init(clickedWiDId: Int) {
         self.clickedWiDId = clickedWiDId
@@ -77,9 +74,11 @@ struct WiDView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button(action: {
-                        wiDService.updateWiD(withID: clickedWiDId, newTitle: title.rawValue, newStart: start, newFinish: finish, newDuration: duration, newDetail: detail)
+                        wiDService.updateWiD(withID: clickedWiDId, newTitle: title.rawValue, newStart: start, newFinish: finish, newDuration: duration)
                         
                         wiDList = wiDService.selectWiDsByDate(date: date)
+                        
+                        presentationMode.wrappedValue.dismiss()
                     }) {
                         Image(systemName: "checkmark")
                         
@@ -104,6 +103,7 @@ struct WiDView: View {
                                 Image(systemName: "calendar")
                                     .imageScale(.large)
                                     .frame(width: 30)
+                                    .padding(.leading, 8)
                                     
                                 VStack(alignment: .leading) {
                                     Text("날짜")
@@ -127,6 +127,7 @@ struct WiDView: View {
                                         .imageScale(.large)
                                         .foregroundColor(Color(title.rawValue))
                                         .frame(width: 30)
+                                        .padding(.leading, 8)
                                     
                                     VStack(alignment: .leading) {
                                         Text("제목")
@@ -175,6 +176,7 @@ struct WiDView: View {
                                     Image(systemName: "clock")
                                         .imageScale(.large)
                                         .frame(width: 30)
+                                        .padding(.leading, 8)
                                     
                                     VStack(alignment: .leading) {
                                         Text("시작")
@@ -220,6 +222,7 @@ struct WiDView: View {
                                     Image(systemName: "clock.badge.checkmark")
                                         .imageScale(.large)
                                         .frame(width: 30)
+                                        .padding(.leading, 8)
                                     
                                     VStack(alignment: .leading) {
                                         Text("종료")
@@ -264,6 +267,7 @@ struct WiDView: View {
                                 Image(systemName: "clock.fill")
                                     .imageScale(.large)
                                     .frame(width: 30)
+                                    .padding(.leading, 8)
 
                                 VStack(alignment: .leading) {
                                     Text("소요")
@@ -325,17 +329,51 @@ struct WiDView: View {
                                 .padding(.horizontal)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            HStack {
-                                Text("\(formatTime(startLimit, format: "a hh:mm:ss"))")
-                                    .titleLarge()
-                                
-                                Text("~")
-                                    .labelSmall()
-                                
-                                Text("\(formatTime(finishLimit, format: "a hh:mm:ss"))")
-                                    .titleLarge()
+                            Button(action: {
+                                start = startLimit
+                                finish = finishLimit
+                            }) {
+                                VStack(spacing: 8) {
+                                    HStack {
+                                        Rectangle()
+                                            .fill(.black)
+                                            .frame(width: 5)
+                                        
+                                        Text("제목 없음")
+                                            .bodyMedium()
+                                        
+                                        Spacer()
+                                        
+                                        Image(systemName: "square.and.arrow.down")
+                                    }
+                                    
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            HStack {
+                                                Text(formatTime(startLimit, format: "a"))
+                                                    .bodyMedium()
+                                                
+                                                Text(formatTime(startLimit, format: "hh:mm:ss"))
+                                                    .font(.custom("ChivoMono-Regular", size: 17))
+                                            }
+                                        
+                                            HStack {
+                                                Text(formatTime(finishLimit, format: "a"))
+                                                    .bodyMedium()
+                                                
+                                                Text(formatTime(finishLimit, format: "hh:mm:ss"))
+                                                    .font(.custom("ChivoMono-Regular", size: 17))
+                                            }
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Text(formatDuration(finishLimit.timeIntervalSince(startLimit), mode: 3))
+                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                    }
+                                }
                             }
-                            .padding(.vertical)
+                            .padding()
                         }
                         .padding(.vertical)
                         .background(.white)
@@ -369,7 +407,6 @@ struct WiDView: View {
                 self.finish = calendar.date(bySettingHour: clickedWiDFinishComponents.hour!, minute: clickedWiDFinishComponents.minute!, second: clickedWiDFinishComponents.second!, of: date)!
                 
                 self.duration = clickedWiD!.duration
-                self.detail = clickedWiD!.detail
                 
                 self.wiDList = wiDService.selectWiDsByDate(date: date)
                 

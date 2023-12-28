@@ -25,6 +25,7 @@ struct HomeView: View {
                             Image(systemName: "stopwatch")
                                 .imageScale(.large)
                                 .frame(width: 30)
+                                .padding(.leading, 8)
                             
                             VStack(alignment: .leading) {
                                 Text("스톱워치")
@@ -50,6 +51,7 @@ struct HomeView: View {
                             Image(systemName: "timer")
                                 .imageScale(.large)
                                 .frame(width: 30)
+                                .padding(.leading, 8)
                             
                             VStack(alignment: .leading) {
                                 Text("타이머")
@@ -75,6 +77,7 @@ struct HomeView: View {
                             Image(systemName: "plus.square")
                                 .imageScale(.large)
                                 .frame(width: 30)
+                                .padding(.leading, 8)
                             
                             VStack(alignment: .leading) {
                                 Text("새로운 WiD")

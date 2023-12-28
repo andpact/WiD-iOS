@@ -21,6 +21,7 @@ struct TimerView: View {
     
     // 제목
     @State private var title: Title = .STUDY
+    @State private var titleMenuExpand: Bool = false
     
     // 시작 시간
     @State private var start: Date = Date()
@@ -30,12 +31,6 @@ struct TimerView: View {
     
     // 소요 시간
     @State private var duration: TimeInterval = 0
-    
-    // 설명
-    private let detail: String = ""
-    
-    // 버튼
-    @State private var buttonText: String = "시작"
     
     // 타이머
     @State private var timer: Timer?
@@ -53,7 +48,9 @@ struct TimerView: View {
         NavigationView {
             ZStack {
                 if timerTopBottomBarVisible {
-                    // 상단 바
+                    /**
+                     상단 바
+                     */
                     ZStack {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
@@ -83,7 +80,9 @@ struct TimerView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
                 
-                // 컨텐츠
+                /**
+                 컨텐츠
+                 */
                 if timerReset {
                     HStack(spacing: 0) {
                         // 시간(Hour) 선택
@@ -169,34 +168,73 @@ struct TimerView: View {
                 }
                 
                 if timerTopBottomBarVisible {
-                    // 하단 바
-                    HStack {
-                        HStack {
-                            Circle()
-                                .fill(Color(title.rawValue))
-                                .frame(width: 10)
+                    /**
+                     하단 바
+                     */
+                    VStack {
+                        if titleMenuExpand {
+                            Text("사용할 제목을 선택해 주세요.")
+                                .titleMedium()
                             
-                            Picker("", selection: $title) {
-                                ForEach(Array(Title.allCases), id: \.self) { title in
-                                    Text(title.koreanValue)
+                            LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
+                                ForEach(Title.allCases) { menuTitle in
+                                    Button(action: {
+//                                        if timerStarted && title != menuTitle { // 이어서 기록
+//                                            restartTimer()
+//                                        }
+                                        title = menuTitle
+                                        withAnimation {
+                                            titleMenuExpand.toggle()
+                                        }
+                                    }) {
+                                        Text(menuTitle.koreanValue)
+                                            .bodyMedium()
+                                            .frame(maxWidth: .infinity)
+                                            .padding(8)
+                                            .background(title == menuTitle ? .black : .white)
+                                            .foregroundColor(title == menuTitle ? .white : .black)
+                                            .cornerRadius(8)
+                                    }
+                                }
+                            }
+                            
+                            Divider()
+                        }
+
+                        HStack {
+                            Button(action: {
+                                withAnimation {
+                                    titleMenuExpand.toggle()
+                                }
+                            }) {
+                                Rectangle()
+                                    .frame(maxWidth: 5, maxHeight: 20)
+                                    .foregroundColor(Color(title.rawValue))
+                                
+                                Text(title.koreanValue)
+                                    .bodyMedium()
+                                
+                                if timerReset {
+                                    Image(systemName: "chevron.up.chevron.down")
+                                        .imageScale(.small)
                                 }
                             }
                             .disabled(!timerReset)
-                        }
-                        
-                        Spacer()
-                        
-                        HStack(spacing: 16) {
+                            
+                            Spacer()
+                            
                             if timerPaused {
                                 Button(action: {
                                     resetTimer()
                                 }) {
                                     Image(systemName: "arrow.clockwise")
-                                    
-                                    Text("초기화")
-                                        .bodyMedium()
+                                        .imageScale(.large)
                                 }
-                                .foregroundColor(.blue)
+                                .frame(maxWidth: 25, maxHeight: 25)
+                                .padding()
+                                .background(.blue)
+                                .foregroundColor(.white)
+                                .clipShape(Circle())
                             }
                             
                             Button(action: {
@@ -206,22 +244,26 @@ struct TimerView: View {
                                     startTimer()
                                 }
                             }) {
-                                Image(systemName: buttonText == "중지" ? "pause.fill" : "play.fill")
-                                
-                                Text(buttonText)
-                                    .bodyMedium()
+                                Image(systemName: timerStarted ? "pause.fill" : "play.fill")
+                                    .imageScale(.large)
                             }
+                            .frame(maxWidth: 25, maxHeight: 25)
+                            .padding()
+                            .background(timerStarted ? .red : (timerPaused ? .green : (remainingTime == 0 ? .gray : .blue)))
+                            .foregroundColor(.white)
+                            .clipShape(Circle())
                             .disabled(remainingTime == 0)
-                            .foregroundColor(buttonText == "중지" ? .red : (buttonText == "계속" ? .green : (remainingTime == 0 ? .gray : .blue)))
                         }
                     }
+                    .padding()
+                    .background(Color("light_gray"))
+                    .cornerRadius(8)
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 }
             }
             .tint(.black)
             .navigationBarBackButtonHidden()
-//            .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.white)
             .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
@@ -244,7 +286,6 @@ struct TimerView: View {
         timerStarted = true
         timerPaused = false
         timerReset = false
-        buttonText = "중지"
         
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timerInterval), repeats: true) { timer in
@@ -259,11 +300,14 @@ struct TimerView: View {
         date = Date()
         start = Date()
     }
+    
+//    private func restartTimer() {
+//
+//    }
 
     private func pauseTimer() {
         timerStarted = false
         timerPaused = true
-        buttonText = "계속"
         
         timer?.invalidate()
         timer = nil
@@ -282,17 +326,17 @@ struct TimerView: View {
             // Check if the duration spans across multiple days
             if calendar.isDate(startDate, inSameDayAs: finishDate) {
                 // WiD duration is within the same day
-                let wiD = WiD(id: 0, date: startDate, title: title.rawValue, start: start, finish: finish, duration: duration, detail: detail)
+                let wiD = WiD(id: 0, date: startDate, title: title.rawValue, start: start, finish: finish, duration: duration)
                 wiDService.insertWiD(wid: wiD)
             } else {
                 // WiD duration spans across multiple days
                 let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
-                let firstDayWiD = WiD(id: 0, date: startDate, title: title.rawValue, start: start, finish: midnightEndDate, duration: midnightEndDate.timeIntervalSince(start), detail: detail)
+                let firstDayWiD = WiD(id: 0, date: startDate, title: title.rawValue, start: start, finish: midnightEndDate, duration: midnightEndDate.timeIntervalSince(start))
                 wiDService.insertWiD(wid: firstDayWiD)
 
                 let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
                 let midnightEndDateNextDay = calendar.startOfDay(for: nextDayStartDate)
-                let secondDayWiD = WiD(id: 0, date: nextDayStartDate, title: title.rawValue, start: midnightEndDateNextDay, finish: finish, duration: finish.timeIntervalSince(midnightEndDateNextDay), detail: detail)
+                let secondDayWiD = WiD(id: 0, date: nextDayStartDate, title: title.rawValue, start: midnightEndDateNextDay, finish: finish, duration: finish.timeIntervalSince(midnightEndDateNextDay))
                 wiDService.insertWiD(wid: secondDayWiD)
             }
         }
@@ -301,7 +345,6 @@ struct TimerView: View {
     private func resetTimer() {
         timerPaused = false
         timerReset = true
-        buttonText = "시작"
         remainingTime = 0
     }
 }

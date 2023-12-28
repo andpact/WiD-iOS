@@ -30,7 +30,7 @@ func getEmptyWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) -
             // 빈 WiD를 마지막으로 추가함.
             if index == wiDList.count - 1 {
                 let endOfDay = calendar.isDate(date, inSameDayAs: today) ? currentTime : calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
-                let lastEmptyWiD = WiD(id: index + 1, date: date, title: "", start: emptyWiDStart, finish: endOfDay, duration: endOfDay.timeIntervalSince(emptyWiDStart), detail: "")
+                let lastEmptyWiD = WiD(id: index + 1, date: date, title: "", start: emptyWiDStart, finish: endOfDay, duration: endOfDay.timeIntervalSince(emptyWiDStart))
                 
                 emptyWiDList.append(lastEmptyWiD)
                 
@@ -41,7 +41,7 @@ func getEmptyWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) -
         }
         
         // id에 0을 넣지 말고, 각각 다르게 설정해줘야 정상 동작함.
-        let emptyWiD = WiD(id: index, date: date, title: "", start: emptyWiDStart, finish: emptyWiDFinish!, duration: emptyWiDFinish!.timeIntervalSince(emptyWiDStart), detail: "")
+        let emptyWiD = WiD(id: index, date: date, title: "", start: emptyWiDStart, finish: emptyWiDFinish!, duration: emptyWiDFinish!.timeIntervalSince(emptyWiDStart))
         emptyWiDList.append(emptyWiD)
         
         let currentWIDFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: currentWiD.finish)
@@ -51,7 +51,7 @@ func getEmptyWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) -
         // 빈 WiD를 마지막으로 추가함.
         if index == wiDList.count - 1 {
             let endOfDay = calendar.isDate(date, inSameDayAs: today) ? currentTime : calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
-            let lastEmptyWiD = WiD(id: index + 1, date: date, title: "", start: emptyWiDStart, finish: endOfDay, duration: endOfDay.timeIntervalSince(emptyWiDStart), detail: "")
+            let lastEmptyWiD = WiD(id: index + 1, date: date, title: "", start: emptyWiDStart, finish: endOfDay, duration: endOfDay.timeIntervalSince(emptyWiDStart))
             
             emptyWiDList.append(lastEmptyWiD)
             
@@ -78,8 +78,7 @@ func getRandomWiDList(days: Int) -> [WiD] {
                       title: "STUDY",
                       start: Date(),
                       finish: Date(),
-                      duration: 3 * 60 * 60,
-                      detail: "Detail"
+                      duration: 3 * 60 * 60
         )
 
         randomWiDList.append(wiD)
@@ -93,8 +92,7 @@ func getRandomWiDList(days: Int) -> [WiD] {
                       title: "STUDY",
                       start: Date(),
                       finish: Date(),
-                      duration: randomDuration,
-                      detail: "Detail"
+                      duration: randomDuration
         )
 
         randomWiDList.append(wiD2)

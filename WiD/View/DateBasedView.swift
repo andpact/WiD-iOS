@@ -26,9 +26,10 @@ struct DateBasedView: View {
     private let today = Date()
     private let calendar = Calendar.current
     @State private var currentDate: Date = Date()
+    @State private var expandDatePicker: Bool = false
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack {
             /**
              컨텐츠
              */
@@ -161,11 +162,21 @@ struct DateBasedView: View {
                                         
                                         HStack {
                                             VStack(alignment: .leading) {
-                                                Text(formatTime(wiD.start, format: "a HH:mm:ss"))
-                                                    .bodyMedium()
+                                                HStack {
+                                                    Text(formatTime(wiD.start, format: "a"))
+                                                        .bodyMedium()
+                                                    
+                                                    Text(formatTime(wiD.start, format: "hh:mm:ss"))
+                                                        .font(.custom("ChivoMono-Regular", size: 17))
+                                                }
                                                 
-                                                Text(formatTime(wiD.finish, format: "a HH:mm:ss"))
-                                                    .bodyMedium()
+                                                HStack {
+                                                    Text(formatTime(wiD.finish, format: "a"))
+                                                        .bodyMedium()
+                                                    
+                                                    Text(formatTime(wiD.finish, format: "hh:mm:ss"))
+                                                        .font(.custom("ChivoMono-Regular", size: 17))
+                                                }
                                             }
                                             
                                             Spacer()
@@ -189,58 +200,99 @@ struct DateBasedView: View {
                     .background(.white)
                     
                     Spacer()
-                        .frame(height: 16)
+                        .frame(height: 80)
                 }
             }
             
             /**
              하단 바
              */
-            HStack {
-                DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
-                    .labelsHidden()
-                
-                Spacer()
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = Date()
+            VStack {
+                if expandDatePicker {
+                    HStack {
+                        Text("날짜를 선택해 주세요.")
+                            .bodyMedium()
+                            .foregroundColor(.blue)
+                        
+                        Spacer()
+                        
+                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                            .labelsHidden()
                     }
-                }) {
-                    Image(systemName: "arrow.clockwise")
-                        .frame(maxWidth: 15, maxHeight: 15)
+                    .padding(8)
+                    
+                    Divider()
                 }
-                .disabled(calendar.isDateInToday(currentDate))
-                .padding(.horizontal)
                 
-                Button(action: {
-                    withAnimation {
-                        currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+                HStack {
+                    Button(action: {
+                        withAnimation {
+                            expandDatePicker.toggle()
+                        }
+                    }) {
+                        Image(systemName: "calendar")
+                            .frame(maxWidth: 10, maxHeight: 10)
                     }
-                }) {
-                    Image(systemName: "chevron.backward")
-                        .frame(maxWidth: 15, maxHeight: 15)
-                }
-                .padding(.horizontal)
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                    .padding()
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentDate = Date()
+                        }
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                            .frame(maxWidth: 10, maxHeight: 10)
                     }
-                }) {
-                    Image(systemName: "chevron.forward")
-                        .frame(maxWidth: 15, maxHeight: 15)
+                    .padding()
+                    .background(calendar.isDateInToday(currentDate) ? .gray: .green)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .disabled(calendar.isDateInToday(currentDate))
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+                        }
+                    }) {
+                        Image(systemName: "chevron.backward")
+                            .frame(maxWidth: 10, maxHeight: 10)
+                    }
+                    .padding()
+                    .background(.black)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .foregroundColor(.black)
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                        }
+                    }) {
+                        Image(systemName: "chevron.forward")
+                            .frame(maxWidth: 10, maxHeight: 10)
+                    }
+                    .padding()
+                    .background(calendar.isDateInToday(currentDate) ? .gray: .black)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .disabled(calendar.isDateInToday(currentDate))
                 }
-                .disabled(calendar.isDateInToday(currentDate))
-                .padding(.horizontal)
             }
-            .padding()
+            .padding(8)
             .background(.white)
+            .cornerRadius(8)
+            .padding()
             .compositingGroup()
             .shadow(radius: 1)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
         .background(Color("ghost_white"))
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             self.wiDList = wiDService.selectWiDsByDate(date: currentDate)
             self.totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
