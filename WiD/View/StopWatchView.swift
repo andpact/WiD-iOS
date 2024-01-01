@@ -122,9 +122,12 @@ struct StopWatchView: View {
                                 Text(title.koreanValue)
                                     .bodyMedium()
                                 
-                                Image(systemName: "chevron.up.chevron.down")
-                                    .imageScale(.small)
+                                if !stopWatchPaused {
+                                    Image(systemName: "chevron.up.chevron.down")
+                                        .imageScale(.small)
+                                }
                             }
+                            .disabled(stopWatchPaused)
                             
                             Spacer()
                             
