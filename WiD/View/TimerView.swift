@@ -45,237 +45,233 @@ struct TimerView: View {
     @State private var selectedSecond: Int = 0
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                if timerTopBottomBarVisible {
-                    /**
-                     상단 바
-                     */
-                    ZStack {
-                        Button(action: {
-                            presentationMode.wrappedValue.dismiss()
-                            
-                            if timerStarted {
-                                pauseTimer()
-                            }
-                        }) {
-                            Image(systemName: "chevron.backward")
-                            
-                            Text("뒤로 가기")
-                                .bodyMedium()
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.blue)
-
-                        Text("타이머")
-                            .titleLarge()
-                            .frame(maxWidth: .infinity, alignment: .center)
+        ZStack {
+            /**
+             상단 바
+             */
+            if timerTopBottomBarVisible {
+                ZStack {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
                         
+                        if timerStarted {
+                            pauseTimer()
+                        }
+                    }) {
+                        Image(systemName: "arrow.backward")
+                            .imageScale(.large)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.blue)
+
+                    Text("타이머")
+                        .titleLarge()
+//                            .frame(maxWidth: .infinity, alignment: .center)
+                    
 //                        if timerStarted {
 //                            Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
 //                                .frame(maxWidth: .infinity, alignment: .trailing)
 //                        }
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            }
+            
+            /**
+             컨텐츠
+             */
+            if timerReset {
+                HStack(spacing: 0) {
+                    // 시간(Hour) 선택
+                    Picker("", selection: $selectedHour) {
+                        ForEach(0..<24, id: \.self) { hour in
+                            if selectedHour == hour {
+                                Text("\(hour)h")
+                                    .titleMedium()
+                            } else {
+                                Text("\(hour)h")
+                                    .bodyMedium()
+                            }
+                        }
+                    }
+                    .pickerStyle(.inline)
+
+                    // 분(Minute) 선택
+                    Picker("", selection: $selectedMinute) {
+                        ForEach(0..<60, id: \.self) { minute in
+                            if selectedMinute == minute {
+                                Text("\(minute)m")
+                                    .titleMedium()
+                            } else {
+                                Text("\(minute)m")
+                                    .bodyMedium()
+                            }
+                        }
+                    }
+                    .pickerStyle(.inline)
+
+                    // 초(Second) 선택
+                    Picker("", selection: $selectedSecond) {
+                        ForEach(0..<60, id: \.self) { second in
+                            if selectedSecond == second {
+                                Text("\(second)s")
+                                    .titleMedium()
+                            } else {
+                                Text("\(second)s")
+                                    .bodyMedium()
+                            }
+                        }
+                    }
+                    .pickerStyle(.inline)
+                }
+                .padding()
+            } else {
+                formatTimerTime(remainingTime)
                 
+                // 타이머 시간 추가
+//                HStack(spacing: 20) {
+//                    Button(action: {
+//                        remainingTime += 5 * 60
+//
+//                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
+//                    }) {
+//                        Text("+ 5m")
+//                    }
+//
+//                    Button(action: {
+//                        remainingTime += 15 * 60
+//
+//                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
+//                    }) {
+//                        Text("+ 15m")
+//                    }
+//
+//                    Button(action: {
+//                        remainingTime += 30 * 60
+//
+//                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
+//                    }) {
+//                        Text("+ 30m")
+//                    }
+//
+//                    Button(action: {
+//                        remainingTime += 60 * 60
+//
+//                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
+//                    }) {
+//                        Text("+ 60m")
+//                    }
+//                }
+            }
+            
+            if timerTopBottomBarVisible {
                 /**
-                 컨텐츠
+                 하단 바
                  */
-                if timerReset {
-                    HStack(spacing: 0) {
-                        // 시간(Hour) 선택
-                        Picker("", selection: $selectedHour) {
-                            ForEach(0..<24, id: \.self) { hour in
-                                if selectedHour == hour {
-                                    Text("\(hour)h")
-                                        .titleMedium()
-                                } else {
-                                    Text("\(hour)h")
-                                        .bodyMedium()
-                                }
-                            }
-                        }
-                        .pickerStyle(.inline)
-
-                        // 분(Minute) 선택
-                        Picker("", selection: $selectedMinute) {
-                            ForEach(0..<60, id: \.self) { minute in
-                                if selectedMinute == minute {
-                                    Text("\(minute)m")
-                                        .titleMedium()
-                                } else {
-                                    Text("\(minute)m")
-                                        .bodyMedium()
-                                }
-                            }
-                        }
-                        .pickerStyle(.inline)
-
-                        // 초(Second) 선택
-                        Picker("", selection: $selectedSecond) {
-                            ForEach(0..<60, id: \.self) { second in
-                                if selectedSecond == second {
-                                    Text("\(second)s")
-                                        .titleMedium()
-                                } else {
-                                    Text("\(second)s")
-                                        .bodyMedium()
-                                }
-                            }
-                        }
-                        .pickerStyle(.inline)
-                    }
-                    .padding()
-                } else {
-                    formatTimerTime(remainingTime)
-                    
-                    // 타이머 시간 추가
-    //                HStack(spacing: 20) {
-    //                    Button(action: {
-    //                        remainingTime += 5 * 60
-    //
-    //                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-    //                    }) {
-    //                        Text("+ 5m")
-    //                    }
-    //
-    //                    Button(action: {
-    //                        remainingTime += 15 * 60
-    //
-    //                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-    //                    }) {
-    //                        Text("+ 15m")
-    //                    }
-    //
-    //                    Button(action: {
-    //                        remainingTime += 30 * 60
-    //
-    //                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-    //                    }) {
-    //                        Text("+ 30m")
-    //                    }
-    //
-    //                    Button(action: {
-    //                        remainingTime += 60 * 60
-    //
-    //                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-    //                    }) {
-    //                        Text("+ 60m")
-    //                    }
-    //                }
-                }
-                
-                if timerTopBottomBarVisible {
-                    /**
-                     하단 바
-                     */
-                    VStack {
-                        if titleMenuExpand {
-                            Text("사용할 제목을 선택해 주세요.")
-                                .titleMedium()
-                            
-                            LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
-                                ForEach(Title.allCases) { menuTitle in
-                                    Button(action: {
+                VStack {
+                    if titleMenuExpand {
+                        Text("사용할 제목을 선택해 주세요.")
+                            .titleMedium()
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
+                            ForEach(Title.allCases) { menuTitle in
+                                Button(action: {
 //                                        if timerStarted && title != menuTitle { // 이어서 기록
 //                                            restartTimer()
 //                                        }
-                                        title = menuTitle
-                                        withAnimation {
-                                            titleMenuExpand.toggle()
-                                        }
-                                    }) {
-                                        Text(menuTitle.koreanValue)
-                                            .bodyMedium()
-                                            .frame(maxWidth: .infinity)
-                                            .padding(8)
-                                            .background(title == menuTitle ? .black : .white)
-                                            .foregroundColor(title == menuTitle ? .white : .black)
-                                            .cornerRadius(8)
+                                    title = menuTitle
+                                    withAnimation {
+                                        titleMenuExpand.toggle()
                                     }
-                                }
-                            }
-                            
-                            Divider()
-                        }
-
-                        HStack {
-                            Button(action: {
-                                withAnimation {
-                                    titleMenuExpand.toggle()
-                                }
-                            }) {
-                                Rectangle()
-                                    .frame(maxWidth: 5, maxHeight: 20)
-                                    .foregroundColor(Color(title.rawValue))
-                                
-                                Text(title.koreanValue)
-                                    .bodyMedium()
-                                
-                                if timerReset {
-                                    Image(systemName: "chevron.up.chevron.down")
-                                        .imageScale(.small)
-                                }
-                            }
-                            .disabled(!timerReset)
-                            
-                            Spacer()
-                            
-                            if timerPaused {
-                                Button(action: {
-                                    resetTimer()
                                 }) {
-                                    Image(systemName: "arrow.clockwise")
-                                        .imageScale(.large)
+                                    Text(menuTitle.koreanValue)
+                                        .bodyMedium()
+                                        .frame(maxWidth: .infinity)
+                                        .padding(8)
+                                        .background(title == menuTitle ? .black : .white)
+                                        .foregroundColor(title == menuTitle ? .white : .black)
+                                        .cornerRadius(8)
                                 }
-                                .frame(maxWidth: 25, maxHeight: 25)
-                                .padding()
-                                .background(.blue)
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
                             }
+                        }
+                        
+                        Divider()
+                    }
+
+                    HStack {
+                        Button(action: {
+                            withAnimation {
+                                titleMenuExpand.toggle()
+                            }
+                        }) {
+                            Rectangle()
+                                .frame(maxWidth: 5, maxHeight: 20)
+                                .foregroundColor(Color(title.rawValue))
                             
+                            Text(title.koreanValue)
+                                .bodyMedium()
+                            
+                            if timerReset {
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .imageScale(.small)
+                            }
+                        }
+                        .disabled(!timerReset)
+                        
+                        Spacer()
+                        
+                        if timerPaused {
                             Button(action: {
-                                if timerStarted {
-                                    pauseTimer()
-                                } else {
-                                    startTimer()
-                                }
+                                resetTimer()
                             }) {
-                                Image(systemName: timerStarted ? "pause.fill" : "play.fill")
+                                Image(systemName: "arrow.clockwise")
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 25, maxHeight: 25)
                             .padding()
-                            .background(timerStarted ? .red : (timerPaused ? .green : (remainingTime == 0 ? .gray : .blue)))
+                            .background(.blue)
                             .foregroundColor(.white)
                             .clipShape(Circle())
-                            .disabled(remainingTime == 0)
                         }
+                        
+                        Button(action: {
+                            if timerStarted {
+                                pauseTimer()
+                            } else {
+                                startTimer()
+                            }
+                        }) {
+                            Image(systemName: timerStarted ? "pause.fill" : "play.fill")
+                                .imageScale(.large)
+                        }
+                        .frame(maxWidth: 25, maxHeight: 25)
+                        .padding()
+                        .background(timerStarted ? .red : (timerPaused ? .green : (remainingTime == 0 ? .gray : .blue)))
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
+                        .disabled(remainingTime == 0)
                     }
-                    .padding()
-                    .background(Color("light_gray"))
-                    .cornerRadius(8)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 }
+                .padding()
+                .background(Color("light_gray"))
+                .cornerRadius(8)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
-            .tint(.black)
-            .navigationBarBackButtonHidden()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(.white)
-            .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
-                remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
-                
-                finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-            }
-            .onTapGesture {
-                if timerStarted {
-                    withAnimation {
-                        timerTopBottomBarVisible.toggle()
-                    }
+        }
+        .tint(.black)
+        .navigationBarBackButtonHidden()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white)
+        .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
+            remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
+            
+            finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
+        }
+        .onTapGesture {
+            if timerStarted {
+                withAnimation {
+                    timerTopBottomBarVisible.toggle()
                 }
             }
         }

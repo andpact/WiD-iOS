@@ -40,143 +40,138 @@ struct StopWatchView: View {
     private let timerInterval = 1
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                if stopWatchTopBottomBarVisible {
-                    /**
-                     상단 바
-                     */
-                    ZStack {
+        ZStack {
+            /**
+             상단 바
+             */
+            if stopWatchTopBottomBarVisible {
+                ZStack {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                        
+                        if stopWatchStarted {
+                            pauseStopWatch()
+                        }
+                    }) {
+                        Image(systemName: "arrow.backward")
+                            .imageScale(.large)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.blue)
+
+                    Text("스톱워치")
+                        .titleLarge()
+                }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            }
+            
+            /**
+             컨텐츠
+             */
+            formatStopWatchTime(elapsedTime)
+            
+            /**
+             하단 바
+             */
+            if stopWatchTopBottomBarVisible {
+                VStack {
+                    if expandTitleMenu {
+                        Text(stopWatchStarted ? "선택한 제목이 이어서 사용됩니다." : "사용할 제목을 선택해 주세요.")
+                            .titleMedium()
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
+                            ForEach(Title.allCases) { menuTitle in
+                                Button(action: {
+                                    if stopWatchStarted && title != menuTitle { // 이어서 기록
+                                        restartStopWatch()
+                                    }
+                                    title = menuTitle
+                                    withAnimation {
+                                        expandTitleMenu.toggle()
+                                    }
+                                }) {
+                                    Text(menuTitle.koreanValue)
+                                        .bodyMedium()
+                                        .frame(maxWidth: .infinity)
+                                        .padding(8)
+                                        .background(title == menuTitle ? .black : .white)
+                                        .foregroundColor(title == menuTitle ? .white : .black)
+                                        .cornerRadius(8)
+                                }
+                            }
+                        }
+                        
+                        Divider()
+                    }
+
+                    HStack {
                         Button(action: {
-                            presentationMode.wrappedValue.dismiss()
-                            
-                            if stopWatchStarted {
-                                pauseStopWatch()
+                            withAnimation {
+                                expandTitleMenu.toggle()
                             }
                         }) {
-                            Image(systemName: "chevron.backward")
+                            Rectangle()
+                                .frame(maxWidth: 5, maxHeight: 20)
+                                .foregroundColor(Color(title.rawValue))
                             
-                            Text("뒤로 가기")
+                            Text(title.koreanValue)
                                 .bodyMedium()
+                            
+                            if !stopWatchPaused {
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .imageScale(.small)
+                            }
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.blue)
-
-                        Text("스톱워치")
-                            .titleLarge()
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                }
-                
-                /**
-                 컨텐츠
-                 */
-                formatStopWatchTime(elapsedTime)
-                
-                /**
-                 하단 바
-                 */
-                if stopWatchTopBottomBarVisible {
-                    VStack {
-                        if expandTitleMenu {
-                            Text(stopWatchStarted ? "선택한 제목이 이어서 사용됩니다." : "사용할 제목을 선택해 주세요.")
-                                .titleMedium()
-                            
-                            LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
-                                ForEach(Title.allCases) { menuTitle in
-                                    Button(action: {
-                                        if stopWatchStarted && title != menuTitle { // 이어서 기록
-                                            restartStopWatch()
-                                        }
-                                        title = menuTitle
-                                        withAnimation {
-                                            expandTitleMenu.toggle()
-                                        }
-                                    }) {
-                                        Text(menuTitle.koreanValue)
-                                            .bodyMedium()
-                                            .frame(maxWidth: .infinity)
-                                            .padding(8)
-                                            .background(title == menuTitle ? .black : .white)
-                                            .foregroundColor(title == menuTitle ? .white : .black)
-                                            .cornerRadius(8)
-                                    }
-                                }
-                            }
-                            
-                            Divider()
-                        }
-
-                        HStack {
+                        .disabled(stopWatchPaused)
+                        
+                        Spacer()
+                        
+                        if stopWatchPaused {
                             Button(action: {
-                                withAnimation {
-                                    expandTitleMenu.toggle()
-                                }
+                                resetStopWatch()
                             }) {
-                                Rectangle()
-                                    .frame(maxWidth: 5, maxHeight: 20)
-                                    .foregroundColor(Color(title.rawValue))
-                                
-                                Text(title.koreanValue)
-                                    .bodyMedium()
-                                
-                                if !stopWatchPaused {
-                                    Image(systemName: "chevron.up.chevron.down")
-                                        .imageScale(.small)
-                                }
-                            }
-                            .disabled(stopWatchPaused)
-                            
-                            Spacer()
-                            
-                            if stopWatchPaused {
-                                Button(action: {
-                                    resetStopWatch()
-                                }) {
-                                    Image(systemName: "arrow.clockwise")
-                                        .imageScale(.large)
-                                }
-                                .frame(maxWidth: 25, maxHeight: 25)
-                                .padding()
-                                .background(.blue)
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
-                            }
-                            
-                            Button(action: {
-                                if stopWatchStarted {
-                                    pauseStopWatch()
-                                } else {
-                                    startStopWatch()
-                                }
-                            }) {
-                                Image(systemName: stopWatchStarted ? "pause.fill" : "play.fill")
+                                Image(systemName: "arrow.clockwise")
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 25, maxHeight: 25)
                             .padding()
-                            .background(stopWatchStarted ? .red : (stopWatchPaused ? .green : .blue))
+                            .background(.blue)
                             .foregroundColor(.white)
                             .clipShape(Circle())
                         }
+                        
+                        Button(action: {
+                            if stopWatchStarted {
+                                pauseStopWatch()
+                            } else {
+                                startStopWatch()
+                            }
+                        }) {
+                            Image(systemName: stopWatchStarted ? "pause.fill" : "play.fill")
+                                .imageScale(.large)
+                        }
+                        .frame(maxWidth: 25, maxHeight: 25)
+                        .padding()
+                        .background(stopWatchStarted ? .red : (stopWatchPaused ? .green : .black))
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
                     }
-                    .padding()
-                    .background(Color("light_gray"))
-                    .cornerRadius(8)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 }
+                .padding()
+                .background(Color("light_gray"))
+                .cornerRadius(8)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
-            .tint(.black)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(.white)
-            .onTapGesture {
-                if stopWatchStarted {
-                    withAnimation {
-                        stopWatchTopBottomBarVisible.toggle()
-                    }
+        }
+        .tint(.black)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white)
+        .onTapGesture {
+            if stopWatchStarted {
+                withAnimation {
+                    stopWatchTopBottomBarVisible.toggle()
                 }
             }
         }

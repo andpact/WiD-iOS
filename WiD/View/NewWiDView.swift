@@ -62,17 +62,14 @@ struct NewWiDView: View {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Image(systemName: "chevron.backward")
-                        
-                        Text("뒤로 가기")
-                            .bodyMedium()
+                        Image(systemName: "arrow.backward")
+                            .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.blue)
 
                     Text("새로운 WiD")
                         .titleLarge()
-                        .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button(action: {
                         let newWiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration)
@@ -84,24 +81,29 @@ struct NewWiDView: View {
                         
                         checkWiDAvailableByStartAndFinish()
                     }) {
-                        Image(systemName: "plus")
-                        
                         Text("등록")
                             .bodyMedium()
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? .gray : .blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist)
-                    .foregroundColor(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? .gray : .blue)
                 }
-                .padding()
+                .frame(maxWidth: .infinity, maxHeight: 44)
+                .padding(.horizontal)
                 .background(.white)
+                
+                Divider()
                 
                 /**
                  컨텐츠
                  */
                 ScrollView {
                     VStack(spacing: 16) {
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             Text("정보 입력")
                                 .titleMedium()
                                 .padding(.horizontal)
@@ -112,12 +114,14 @@ struct NewWiDView: View {
                                 HStack(spacing: 16) {
                                     Image(systemName: "calendar")
                                         .imageScale(.large)
-                                        .frame(width: 30)
-                                        .padding(.leading, 8)
+                                        .frame(width: 30, height: 30)
+                                        .padding()
+                                        .background(Color("light_gray"))
+                                        .cornerRadius(8)
                                     
-                                    VStack(alignment: .leading) {
+                                    VStack(alignment: .leading, spacing: 4) {
                                         Text("날짜")
-                                            .labelSmall()
+                                            .labelMedium()
                                         
                                         getDayString(date: date)
                                             .bodyMedium()
@@ -127,7 +131,7 @@ struct NewWiDView: View {
                                     
                                     Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
                                 }
-                                .padding()
+                                .padding(.horizontal)
                                 .background(.white)
                                 .onTapGesture {
                                     withAnimation {
@@ -149,9 +153,6 @@ struct NewWiDView: View {
                                     .padding()
                                 }
                             }
-                            
-                            Divider()
-                                .padding(.horizontal)
 
                             // 제목 선택
                             VStack(spacing: 0) { // 더미 스택
@@ -159,12 +160,14 @@ struct NewWiDView: View {
                                     Image(systemName: "character.ko")
                                         .imageScale(.large)
                                         .foregroundColor(Color(title.rawValue))
-                                        .frame(width: 30)
-                                        .padding(.leading, 8)
+                                        .frame(width: 30, height: 30)
+                                        .padding()
+                                        .background(Color("light_gray"))
+                                        .cornerRadius(8)
                                     
-                                    VStack(alignment: .leading) {
+                                    VStack(alignment: .leading, spacing: 4) {
                                         Text("제목")
-                                            .labelSmall()
+                                            .labelMedium()
                                         
                                         Text(title.koreanValue)
                                             .bodyMedium()
@@ -174,7 +177,7 @@ struct NewWiDView: View {
                                     
                                     Image(systemName: expandTitleMenu ? "chevron.up" : "chevron.down")
                                 }
-                                .padding()
+                                .padding(.horizontal)
                                 .background(.white)
                                 .onTapGesture {
                                     withAnimation {
@@ -200,20 +203,19 @@ struct NewWiDView: View {
                                 }
                             }
                             
-                            Divider()
-                                .padding(.horizontal)
-                            
                             // 시작 시간 선택
                             VStack(spacing: 0) { // 더미 스택
                                 HStack(spacing: 16) {
                                     Image(systemName: "clock")
                                         .imageScale(.large)
-                                        .frame(width: 30)
-                                        .padding(.leading, 8)
+                                        .frame(width: 30, height: 30)
+                                        .padding()
+                                        .background(Color("light_gray"))
+                                        .cornerRadius(8)
                                     
-                                    VStack(alignment: .leading) {
+                                    VStack(alignment: .leading, spacing: 4) {
                                         Text("시작")
-                                            .labelSmall()
+                                            .labelMedium()
                                         
                                         Text(formatTime(start, format: "a h:mm:ss"))
                                             .bodyMedium()
@@ -223,7 +225,7 @@ struct NewWiDView: View {
                                     
                                     Image(systemName: expandStartPicker ? "chevron.up" : "chevron.down")
                                 }
-                                .padding()
+                                .padding(.horizontal)
                                 .background(.white)
                                 .onTapGesture {
                                     withAnimation {
@@ -245,21 +247,20 @@ struct NewWiDView: View {
                                     .padding()
                                 }
                             }
-                            
-                            Divider()
-                                .padding(.horizontal)
                                 
                             // 종료 시간 선택
                             VStack(spacing: 0) { // 더미 스택
                                 HStack(spacing: 16) {
                                     Image(systemName: "clock.badge.checkmark")
                                         .imageScale(.large)
-                                        .frame(width: 30)
-                                        .padding(.leading, 8)
+                                        .frame(width: 30, height: 30)
+                                        .padding()
+                                        .background(Color("light_gray"))
+                                        .cornerRadius(8)
                                     
-                                    VStack(alignment: .leading) {
+                                    VStack(alignment: .leading, spacing: 4) {
                                         Text("종료")
-                                            .labelSmall()
+                                            .labelMedium()
                                         
                                         Text(formatTime(finish, format: "a h:mm:ss"))
                                             .bodyMedium()
@@ -269,7 +270,7 @@ struct NewWiDView: View {
                                     
                                     Image(systemName: expandFinishPicker ? "chevron.up" : "chevron.down")
                                 }
-                                .padding()
+                                .padding(.horizontal)
                                 .background(.white)
                                 .onTapGesture {
                                     withAnimation {
@@ -291,19 +292,18 @@ struct NewWiDView: View {
                                     .padding()
                                 }
                             }
-
-                            Divider()
-                                .padding(.horizontal)
                                 
                             HStack(spacing: 16) {
                                 Image(systemName: "clock.fill")
                                     .imageScale(.large)
-                                    .frame(width: 30)
-                                    .padding(.leading, 8)
+                                    .frame(width: 30, height: 30)
+                                    .padding()
+                                    .background(Color("light_gray"))
+                                    .cornerRadius(8)
                                 
-                                VStack(alignment: .leading) {
+                                VStack(alignment: .leading, spacing: 4) {
                                     Text("소요")
-                                        .labelSmall()
+                                        .labelMedium()
 
                                     Text(formatDuration(duration, mode: 3))
                                         .bodyMedium()
@@ -311,51 +311,126 @@ struct NewWiDView: View {
                                 
                                 Spacer()
                             }
-                            .padding()
+                            .padding(.horizontal)
                         }
                         .padding(.vertical)
                         .background(.white)
                         
-                        VStack(spacing: 0) {
-                            HStack(spacing: 0) {
-                                getDayString(date: date)
-                                    .titleMedium()
-                                
-                                Text("의 타임 라인")
-                                    .titleMedium()
-                            }
-                            .padding(.horizontal)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+//                        VStack(spacing: 0) {
+//                            HStack(spacing: 0) {
+//                                getDayString(date: date)
+//                                    .titleMedium()
+//
+//                                Text("의 타임 라인")
+//                                    .titleMedium()
+//                            }
+//                            .padding(.horizontal)
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//
+//                            if wiDList.isEmpty {
+//                                getEmptyView(message: "표시할 타임라인이 없습니다.")
+//                            } else {
+//    //                            VStack {
+//                //                    ZStack {
+//                //                        Image(systemName: "arrowtriangle.down")
+//                //                            .foregroundColor(isStartOverlap || isStartOverCurrentTime || DurationExist ? .red : .none)
+//                //                            .offset(x: CGFloat(startMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
+//                //
+//                //                        Image(systemName: "arrowtriangle.down.fill")
+//                //                            .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || DurationExist ? .red : .none)
+//                //                            .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
+//                //                    }
+//
+//                                    StackedHorizontalBarChartView(wiDList: wiDList)
+//    //                            }
+//                            }
+//                        }
+//                        .padding(.vertical)
+//                        .background(.white)
                             
-                            if wiDList.isEmpty {
-                                getEmptyView(message: "표시할 타임라인이 없습니다.")
-                            } else {
-    //                            VStack {
-                //                    ZStack {
-                //                        Image(systemName: "arrowtriangle.down")
-                //                            .foregroundColor(isStartOverlap || isStartOverCurrentTime || DurationExist ? .red : .none)
-                //                            .offset(x: CGFloat(startMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
-                //
-                //                        Image(systemName: "arrowtriangle.down.fill")
-                //                            .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || DurationExist ? .red : .none)
-                //                            .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
-                //                    }
-                                    
-                                    StackedHorizontalBarChartView(wiDList: wiDList)
-    //                            }
-                            }
-                        }
-                        .padding(.vertical)
-                        .background(.white)
-                            
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             Text("선택 가능한 시간대")
                                 .titleMedium()
                                 .padding(.horizontal)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if wiDList.isEmpty {
-                                getEmptyView(message: "표시할 시간대가 없습니다.")
+//                                getEmptyView(message: "표시할 시간대가 없습니다.")
+                                
+                                Button(action: {
+                                    start = Date()
+                                    finish = Date()
+                                }) {
+                                    HStack {
+                                        VStack {
+                                            Text("10시간 10분 10초")
+                                                .titleMedium()
+                                            
+                                            Text("오전 10:10:00")
+                                                .font(.custom("ChivoMono-Regular", size: 17))
+                                        
+                                            Text("오전 10:11:11")
+                                                .font(.custom("ChivoMono-Regular", size: 17))
+                                        }
+                                        
+                                        Spacer()
+                                    }
+
+                                    Image(systemName: "square.and.arrow.down")
+                                }
+                                .padding()
+                                .background(Color("light_gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
+                                
+                                Button(action: {
+                                    start = Date()
+                                    finish = Date()
+                                }) {
+                                    VStack(spacing: 8) {
+                                        HStack {
+                                            Rectangle()
+                                                .fill(.black)
+                                                .frame(width: 5)
+                                            
+                                            Text("제목 없음")
+                                                .bodyMedium()
+                                            
+                                            Spacer()
+                                            
+                                            Image(systemName: "square.and.arrow.down")
+                                        }
+                                        
+                                        HStack {
+                                            VStack(alignment: .leading) {
+                                                HStack {
+                                                    Text(formatTime(Date(), format: "a"))
+                                                        .bodyMedium()
+                                                    
+                                                    Text(formatTime(Date(), format: "hh:mm:ss"))
+                                                        .font(.custom("ChivoMono-Regular", size: 17))
+                                                }
+                                            
+                                                HStack {
+                                                    Text(formatTime(Date(), format: "a"))
+                                                        .bodyMedium()
+                                                    
+                                                    Text(formatTime(Date(), format: "hh:mm:ss"))
+                                                        .font(.custom("ChivoMono-Regular", size: 17))
+                                                }
+                                            }
+                                            
+                                            Spacer()
+                                            
+                                            Text(formatDuration(Date().timeIntervalSinceNow, mode: 3))
+                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        }
+                                    }
+                                }
+                                .padding()
+                                .background(Color("light_gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
                             } else {
                                 ForEach(Array(emptyWiDList.enumerated()), id: \.element.id) { (index, emptyWiD) in
                                     Button(action: {
@@ -430,7 +505,7 @@ struct NewWiDView: View {
 //                .frame(maxWidth: .infinity)
             }
             .tint(.black)
-            .background(Color("ghost_white"))
+            .background(Color("light_gray"))
             .onAppear {
                 self.wiDList = wiDService.selectWiDsByDate(date: date)
                 self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)

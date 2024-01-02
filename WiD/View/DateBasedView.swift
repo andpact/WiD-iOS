@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct DateBasedView: View {
+    // 화면
+    @Environment(\.presentationMode) var presentationMode
+    
     // WiD
     private let wiDService = WiDService()
     @State private var wiDList: [WiD] = []
@@ -29,7 +32,30 @@ struct DateBasedView: View {
     @State private var expandDatePicker: Bool = false
     
     var body: some View {
-        ZStack {
+        VStack(spacing: 0) { // spacing: 0일 때, 상단 바에 그림자를 적용시키면 컨텐츠가 상단 바의 그림자를 덮어서 가림. (상단 바가 렌더링 된 후, 컨텐츠가 렌더링되기 때문)
+            /**
+             상단 바
+             */
+            ZStack {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "arrow.backward")
+                        .imageScale(.large)
+                    
+//                    Text("뒤로 가기")
+//                        .bodyMedium()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(.blue)
+
+                Text("날짜 별 조회")
+                    .titleLarge()
+            }
+            .padding()
+            
+            Divider()
+            
             /**
              컨텐츠
              */
@@ -198,16 +224,16 @@ struct DateBasedView: View {
                     }
                     .padding(.vertical)
                     .background(.white)
-                    
-                    Spacer()
-                        .frame(height: 80)
                 }
             }
+            .background(Color("ghost_white"))
+            
+            Divider()
             
             /**
              하단 바
              */
-            VStack {
+            VStack(spacing: 8) {
                 if expandDatePicker {
                     HStack {
                         Text("날짜를 선택해 주세요.")
@@ -220,23 +246,17 @@ struct DateBasedView: View {
                             .labelsHidden()
                     }
                     .padding(8)
-                    
-                    Divider()
                 }
                 
-                HStack {
+                HStack(spacing: 32) {
                     Button(action: {
                         withAnimation {
                             expandDatePicker.toggle()
                         }
                     }) {
                         Image(systemName: "calendar")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
                     
                     Spacer()
                     
@@ -246,12 +266,8 @@ struct DateBasedView: View {
                         }
                     }) {
                         Image(systemName: "arrow.clockwise")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(calendar.isDateInToday(currentDate) ? .gray: .green)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
                     .disabled(calendar.isDateInToday(currentDate))
                     
                     Button(action: {
@@ -260,13 +276,8 @@ struct DateBasedView: View {
                         }
                     }) {
                         Image(systemName: "chevron.backward")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(.black)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
-                    .foregroundColor(.black)
                     
                     Button(action: {
                         withAnimation {
@@ -274,24 +285,16 @@ struct DateBasedView: View {
                         }
                     }) {
                         Image(systemName: "chevron.forward")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(calendar.isDateInToday(currentDate) ? .gray: .black)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
                     .disabled(calendar.isDateInToday(currentDate))
                 }
             }
-            .padding(8)
-            .background(.white)
-            .cornerRadius(8)
             .padding()
-            .compositingGroup()
-            .shadow(radius: 1)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .background(.white)
         }
-        .background(Color("ghost_white"))
+        .tint(.black)
+        .navigationBarHidden(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             self.wiDList = wiDService.selectWiDsByDate(date: currentDate)

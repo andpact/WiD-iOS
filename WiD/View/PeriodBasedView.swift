@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct PeriodBasedView: View {
+    // 화면
+    @Environment(\.presentationMode) var presentationMode
+    
     // WiD
     private let wiDService = WiDService()
     @State private var wiDList: [WiD] = []
@@ -41,7 +44,31 @@ struct PeriodBasedView: View {
     @State private var seletedDictionaryText: String = ""
     
     var body: some View {
-        ZStack {
+        VStack(spacing: 0) {
+            /**
+             상단 바
+             */
+            ZStack {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "arrow.backward")
+                        .imageScale(.large)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(.blue)
+
+                Text("기간 별 조회")
+                    .titleLarge()
+                
+                Text("\(selectedTitle.koreanValue) • \(selectedPeriod.koreanValue)")
+                    .bodySmall()
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+            }
+            .padding()
+            
+            Divider()
+            
             /**
              컨텐츠
              */
@@ -288,16 +315,16 @@ struct PeriodBasedView: View {
                         .padding(.vertical)
                         .background(.white)
                     }
-                    
-                    Spacer()
-                        .frame(height: 80)
                 }
             }
+            .background(Color("ghost_white"))
+            
+            Divider()
             
             /**
              하단 바
              */
-            VStack {
+            VStack(spacing: 8) {
                 if expandDatePicker {
                     Text("조회할 기간을 선택해 주세요.")
                         .titleMedium()
@@ -320,8 +347,6 @@ struct PeriodBasedView: View {
                             }
                         }
                     }
-
-                    Divider()
                 }
                 
                 if expandTitleMenu {
@@ -361,11 +386,9 @@ struct PeriodBasedView: View {
                             }
                         }
                     }
-
-                    Divider()
                 }
                 
-                HStack {
+                HStack(spacing: 32) {
                     Button(action: {
                         withAnimation {
                             if expandTitleMenu {
@@ -375,12 +398,8 @@ struct PeriodBasedView: View {
                         }
                     }) {
                         Image(systemName: "calendar")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
                     
                     Button(action: {
                         withAnimation {
@@ -391,12 +410,8 @@ struct PeriodBasedView: View {
                         }
                     }) {
                         Image(systemName: "textformat")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(Color(selectedTitle.rawValue))
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
                     
                     Spacer()
                     
@@ -412,19 +427,8 @@ struct PeriodBasedView: View {
                         updateDataFromPeriod()
                     }) {
                         Image(systemName: "arrow.clockwise")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(
-                        selectedPeriod == Period.WEEK &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
-                        calendar.isDate(finishDate, inSameDayAs: getLastDayOfWeek(for: today)) ||
-                        
-                        selectedPeriod == Period.MONTH &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDayOfMonth(for: today)) &&
-                        calendar.isDate(finishDate, inSameDayAs: getLastDayOfMonth(for: today)) ? .gray : .green)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
                     .disabled(
                         selectedPeriod == Period.WEEK &&
                         calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
@@ -447,12 +451,8 @@ struct PeriodBasedView: View {
                         updateDataFromPeriod()
                     }) {
                         Image(systemName: "chevron.backward")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(.black)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
                     
                     Button(action: {
                         if selectedPeriod == Period.WEEK {
@@ -466,19 +466,8 @@ struct PeriodBasedView: View {
                         updateDataFromPeriod()
                     }) {
                         Image(systemName: "chevron.forward")
-                            .frame(maxWidth: 10, maxHeight: 10)
+                            .imageScale(.large)
                     }
-                    .padding()
-                    .background(
-                        selectedPeriod == Period.WEEK &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
-                        calendar.isDate(finishDate, inSameDayAs: getLastDayOfWeek(for: today)) ||
-                        
-                        selectedPeriod == Period.MONTH &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDayOfMonth(for: today)) &&
-                        calendar.isDate(finishDate, inSameDayAs: getLastDayOfMonth(for: today)) ? .gray : .black)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
                     .disabled(
                         selectedPeriod == Period.WEEK &&
                         calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
@@ -490,22 +479,18 @@ struct PeriodBasedView: View {
                     )
                 }
             }
-            .padding(8)
-            .background(.white)
-            .cornerRadius(8)
             .padding()
-            .compositingGroup()
-            .shadow(radius: 1)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .background(.white)
         }
+        .tint(.black)
+        .navigationBarHidden(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("ghost_white"))
         .onAppear {
             self.startDate = getFirstDayOfWeek(for: today)
             self.finishDate = getLastDayOfWeek(for: today)
             
-            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
-            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+//            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+//            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
             
             updateDataFromPeriod()
         }
