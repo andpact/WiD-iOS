@@ -355,143 +355,42 @@ struct NewWiDView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if wiDList.isEmpty {
-//                                getEmptyView(message: "표시할 시간대가 없습니다.")
-                                
-                                Button(action: {
-                                    start = Date()
-                                    finish = Date()
-                                }) {
-                                    HStack {
-                                        VStack {
-                                            Text("10시간 10분 10초")
-                                                .titleMedium()
-                                            
-                                            Text("오전 10:10:00")
-                                                .font(.custom("ChivoMono-Regular", size: 17))
-                                        
-                                            Text("오전 10:11:11")
-                                                .font(.custom("ChivoMono-Regular", size: 17))
-                                        }
-                                        
-                                        Spacer()
-                                    }
-
-                                    Image(systemName: "square.and.arrow.down")
-                                }
-                                .padding()
-                                .background(Color("light_gray"))
-                                .cornerRadius(8)
-                                .padding(.horizontal)
-                                
-                                Button(action: {
-                                    start = Date()
-                                    finish = Date()
-                                }) {
-                                    VStack(spacing: 8) {
-                                        HStack {
-                                            Rectangle()
-                                                .fill(.black)
-                                                .frame(width: 5)
-                                            
-                                            Text("제목 없음")
-                                                .bodyMedium()
-                                            
-                                            Spacer()
-                                            
-                                            Image(systemName: "square.and.arrow.down")
-                                        }
-                                        
-                                        HStack {
-                                            VStack(alignment: .leading) {
-                                                HStack {
-                                                    Text(formatTime(Date(), format: "a"))
-                                                        .bodyMedium()
-                                                    
-                                                    Text(formatTime(Date(), format: "hh:mm:ss"))
-                                                        .font(.custom("ChivoMono-Regular", size: 17))
-                                                }
-                                            
-                                                HStack {
-                                                    Text(formatTime(Date(), format: "a"))
-                                                        .bodyMedium()
-                                                    
-                                                    Text(formatTime(Date(), format: "hh:mm:ss"))
-                                                        .font(.custom("ChivoMono-Regular", size: 17))
-                                                }
-                                            }
-                                            
-                                            Spacer()
-                                            
-                                            Text(formatDuration(Date().timeIntervalSinceNow, mode: 3))
-                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                        }
-                                    }
-                                }
-                                .padding()
-                                .background(Color("light_gray"))
-                                .cornerRadius(8)
-                                .padding(.horizontal)
+                                getEmptyView(message: "표시할 시간대가 없습니다.")
                             } else {
                                 ForEach(Array(emptyWiDList.enumerated()), id: \.element.id) { (index, emptyWiD) in
                                     Button(action: {
                                         start = emptyWiD.start
                                         finish = emptyWiD.finish
                                     }) {
-                                        VStack(spacing: 8) {
-                                            HStack {
-                                                Rectangle()
-                                                    .fill(.black)
-                                                    .frame(width: 5)
-                                                
-                                                Text("제목 없음")
-                                                    .bodyMedium()
-                                                
-                                                Spacer()
-                                                
-                                                Image(systemName: "square.and.arrow.down")
-                                            }
+                                        HStack(spacing: 16) {
+                                            Rectangle()
+                                                .fill(.black)
+                                                .frame(maxWidth: 8)
                                             
-                                            HStack {
-                                                VStack(alignment: .leading) {
-                                                    HStack {
-                                                        Text(formatTime(emptyWiD.start, format: "a"))
-                                                            .bodyMedium()
-                                                        
-                                                        Text(formatTime(emptyWiD.start, format: "hh:mm:ss"))
-                                                            .font(.custom("ChivoMono-Regular", size: 17))
-                                                    }
-                                                
-                                                    HStack {
-                                                        Text(formatTime(emptyWiD.finish, format: "a"))
-                                                            .bodyMedium()
-                                                        
-                                                        Text(formatTime(emptyWiD.finish, format: "hh:mm:ss"))
-                                                            .font(.custom("ChivoMono-Regular", size: 17))
-                                                    }
-                                                }
-                                                
-                                                Spacer()
-                                                
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text("\(formatTime(emptyWiD.start, format: "a hh:mm:ss")) ~ \(formatTime(emptyWiD.finish, format: "a hh:mm:ss"))")
+                                                    .bodyMedium()
+
                                                 Text(formatDuration(emptyWiD.duration, mode: 3))
-                                                    .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                                    .labelMedium()
                                             }
+                                            .padding(.vertical)
+
+                                            Spacer()
+
+                                            Image(systemName: "square.and.arrow.down")
+                                                .padding(.horizontal)
                                         }
                                     }
-                                    .padding()
-                                    
-                                    if index != emptyWiDList.count - 1 {
-                                        Divider()
-                                            .padding(.horizontal)
-                                    }
+                                    .background(Color("light_gray"))
+                                    .cornerRadius(8)
+                                    .padding(.horizontal)
                                 }
                             }
                         }
                         .padding(.vertical)
                         .background(.white)
                     }
-
-//                    Spacer()
-//                        .frame(height: 16)
                 }
                 
                 /**

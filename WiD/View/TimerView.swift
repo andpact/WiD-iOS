@@ -51,29 +51,31 @@ struct TimerView: View {
              */
             if timerTopBottomBarVisible {
                 ZStack {
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                        
-                        if timerStarted {
-                            pauseTimer()
+                    ZStack {
+                        Button(action: {
+                            presentationMode.wrappedValue.dismiss()
+                            
+                            if timerStarted {
+                                pauseTimer()
+                            }
+                        }) {
+                            Image(systemName: "arrow.backward")
+                                .imageScale(.large)
                         }
-                    }) {
-                        Image(systemName: "arrow.backward")
-                            .imageScale(.large)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.blue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.blue)
 
-                    Text("타이머")
-                        .titleLarge()
-//                            .frame(maxWidth: .infinity, alignment: .center)
-                    
-//                        if timerStarted {
-//                            Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
-//                                .frame(maxWidth: .infinity, alignment: .trailing)
-//                        }
+                        Text("타이머")
+                            .titleLarge()
+                        
+    //                        if timerStarted {
+    //                            Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
+    //                                .frame(maxWidth: .infinity, alignment: .trailing)
+    //                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 44)
+                    .padding(.horizontal)
                 }
-                .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             
@@ -246,7 +248,7 @@ struct TimerView: View {
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
-                        .background(timerStarted ? .red : (timerPaused ? .green : (remainingTime == 0 ? .gray : .blue)))
+                        .background(timerStarted ? .red : (timerPaused ? .green : (remainingTime == 0 ? .gray : .black)))
                         .foregroundColor(.white)
                         .clipShape(Circle())
                         .disabled(remainingTime == 0)

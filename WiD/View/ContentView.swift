@@ -30,7 +30,7 @@ struct ContentView: View {
 //                    Image(systemName: "sun.max.fill")
 //                        .imageScale(.large)
                 }
-                .padding()
+                .frame(maxWidth: .infinity, maxHeight: 44)
                 
                 /**
                  컨텐츠

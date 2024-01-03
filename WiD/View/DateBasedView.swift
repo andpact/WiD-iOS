@@ -42,9 +42,6 @@ struct DateBasedView: View {
                 }) {
                     Image(systemName: "arrow.backward")
                         .imageScale(.large)
-                    
-//                    Text("뒤로 가기")
-//                        .bodyMedium()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(.blue)
@@ -52,7 +49,9 @@ struct DateBasedView: View {
                 Text("날짜 별 조회")
                     .titleLarge()
             }
-            .padding()
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, maxHeight: 44)
+            .background(.white)
             
             Divider()
             
@@ -68,7 +67,7 @@ struct DateBasedView: View {
                                 getDayStringWith3Lines(date: currentDate)
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     .font(.system(size: 22, weight: .bold))
-                                
+
                                 ZStack {
                                     if wiDList.isEmpty {
                                         getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
@@ -80,10 +79,10 @@ struct DateBasedView: View {
                             }
                         }
                         .aspectRatio(2 / 1, contentMode: .fit)
-                        
+
                         Divider()
                             .padding(.horizontal)
-                        
+
                         VStack(spacing: 16) {
                             Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
                                 .bodyMedium()
@@ -93,9 +92,9 @@ struct DateBasedView: View {
                                         expandDiary = true
                                     }
                                 }
-                            
+
                             Divider()
-                            
+
                             Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
                                 .labelMedium()
                                 .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
@@ -106,9 +105,9 @@ struct DateBasedView: View {
                                 }
                         }
                         .padding()
-                        
+
                         Button(action: {
-                            
+
                         }) {
                             NavigationLink(destination: DiaryView(date: currentDate)) {
                                 Text("다이어리 수정")
@@ -125,7 +124,7 @@ struct DateBasedView: View {
                     .background(.white)
                     
                     // 합계 기록
-                    VStack(spacing: 0) {
+                    VStack(spacing: 8) {
                         Text("합계 기록")
                             .titleMedium()
                             .padding(.horizontal)
@@ -133,91 +132,148 @@ struct DateBasedView: View {
                         
                         if wiDList.isEmpty {
                             getEmptyView(message: "표시할 기록이 없습니다.")
+                            
+//                            HStack {
+//                                VStack(spacing: 16) {
+//                                    HStack {
+//                                        Image(systemName: "book")
+//                                            .frame(maxWidth: 15, maxHeight: 15)
+//                                            .padding(8)
+//                                            .background(Color("STUDY"))
+//                                            .foregroundColor(.white)
+//                                            .clipShape(Circle())
+//
+//                                        Text("공부")
+//                                            .font(.system(size: 24, weight: .bold))
+//                                    }
+//                                    .frame(maxWidth: .infinity)
+//
+//
+//                                    Text("1시간 29분 29초")
+//                                        .bodyMedium()
+//                                        .frame(maxWidth: .infinity)
+//                                }
+//                                .padding(.vertical)
+//                                .frame(maxWidth: .infinity)
+//                                .background(Color("light_gray"))
+//                                .cornerRadius(8)
+//
+//                                VStack(spacing: 16) {
+//                                    HStack {
+//                                        Image(systemName: "hammer")
+//                                            .frame(maxWidth: 15, maxHeight: 15)
+//                                            .padding(8)
+//                                            .background(Color("WORK"))
+//                                            .foregroundColor(.white)
+//                                            .clipShape(Circle())
+//
+//                                        Text("노동")
+//                                            .font(.system(size: 24, weight: .bold))
+//                                    }
+//                                    .frame(maxWidth: .infinity)
+//
+//
+//                                    Text("1시간 29분 29초")
+//                                        .bodyMedium()
+//                                        .frame(maxWidth: .infinity)
+//                                }
+//                                .padding(.vertical)
+//                                .frame(maxWidth: .infinity)
+//                                .background(Color("light_gray"))
+//                                .cornerRadius(8)
+//                            }
+//                            .padding(.horizontal)
                         } else {
-    //                        ForEach(totalDurationDictionary.sorted(by: { $0.key < $1.key }), id: \.key) { title, duration in // 정렬 안되는 듯?
-//                            ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
-                            ForEach(Array(totalDurationDictionary.enumerated()), id: \.element.key) { item in
-                                let (index, (title, duration)) = item // 이 변수를 위 item에 직접 사용하면 동작을 안함.
-                                
-                                HStack {
-                                    Text(titleDictionary[title] ?? "")
-                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                    
-                                    Spacer()
-                                    
-                                    Text(formatDuration(duration, mode: 3))
-                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                }
-                                .padding()
-                                
-                                if index != totalDurationDictionary.count - 1 {
-                                     Divider()
-                                         .padding(.horizontal)
+                            LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
+                                ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
+                                    VStack(spacing: 16) {
+                                        HStack {
+//                                            Image(systemName: titleImageDictionary[title])
+                                            Image(systemName: "book")
+                                                .frame(maxWidth: 15, maxHeight: 15)
+                                                .padding(8)
+                                                .background(Color(title))
+                                                .foregroundColor(.white)
+                                                .clipShape(Circle())
+                                            
+                                            Text(titleDictionary[title] ?? "")
+                                                .font(.system(size: 24, weight: .bold))
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        
+                                        Text(formatDuration(duration, mode: 3))
+                                            .bodyMedium()
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    .padding(.vertical)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color("light_gray"))
+                                    .cornerRadius(8)
                                 }
                             }
+                            .padding(.horizontal)
                         }
                     }
                     .padding(.vertical)
                     .background(.white)
                     
                     // WiD 리스트
-                    VStack(spacing: 0) {
+                    VStack(spacing: 8) {
                         Text("WiD 리스트")
-                            .titleLarge()
+                            .titleMedium()
                             .padding(.horizontal)
                             .frame(maxWidth: .infinity, alignment: .leading)
-
+                        
                         if wiDList.isEmpty {
                             getEmptyView(message: "표시할 WiD가 없습니다.")
+                            
+//                            HStack(spacing: 16) {
+//                                Rectangle()
+//                                    .fill(.red)
+//                                    .frame(maxWidth: 8)
+//
+//                                VStack(alignment: .leading, spacing: 4) {
+//                                    Text("공부 • 1시간 10분 10초")
+//                                        .bodyMedium()
+//
+//                                    Text("오전 10:00:00 ~ 오전 11:10:10")
+//                                        .labelMedium()
+//                                }
+//                                .padding(.vertical)
+//
+//                                Spacer()
+//
+//                                Image(systemName: "chevron.forward")
+//                                    .padding(.horizontal)
+//                            }
+//                            .background(Color("light_gray"))
+//                            .cornerRadius(8)
+//                            .padding(.horizontal)
                         } else {
                             ForEach(Array(wiDList.enumerated()), id: \.element.id) { (index, wiD) in
                                 NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                                    VStack(spacing: 8) {
-                                        HStack {
-                                            Rectangle()
-                                                .fill(Color(wiD.title))
-                                                .frame(width: 5)
-                                            
-                                            Text(titleDictionary[wiD.title] ?? "")
+                                    HStack(spacing: 16) {
+                                        Rectangle()
+                                            .fill(Color(wiD.title))
+                                            .frame(maxWidth: 8)
+                                        
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("\(titleDictionary[wiD.title] ?? "") • \(formatDuration(wiD.duration, mode: 3))")
                                                 .bodyMedium()
                                             
-                                            Spacer()
-                                            
-                                            Image(systemName: "chevron.forward")
+                                            Text("\(formatTime(wiD.start, format: "a hh:mm:ss")) ~ \(formatTime(wiD.finish, format: "a hh:mm:ss"))")
+                                                .labelMedium()
                                         }
+                                        .padding(.vertical)
                                         
-                                        HStack {
-                                            VStack(alignment: .leading) {
-                                                HStack {
-                                                    Text(formatTime(wiD.start, format: "a"))
-                                                        .bodyMedium()
-                                                    
-                                                    Text(formatTime(wiD.start, format: "hh:mm:ss"))
-                                                        .font(.custom("ChivoMono-Regular", size: 17))
-                                                }
-                                                
-                                                HStack {
-                                                    Text(formatTime(wiD.finish, format: "a"))
-                                                        .bodyMedium()
-                                                    
-                                                    Text(formatTime(wiD.finish, format: "hh:mm:ss"))
-                                                        .font(.custom("ChivoMono-Regular", size: 17))
-                                                }
-                                            }
-                                            
-                                            Spacer()
-                                            
-                                            Text(formatDuration(wiD.duration, mode: 3))
-                                                .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                        }
+                                        Spacer()
+                                        
+                                        Image(systemName: "chevron.forward")
+                                            .padding(.horizontal)
                                     }
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                }
-                                
-                                if index < wiDList.count - 1 {
-                                    Divider()
-                                        .padding(.horizontal)
+                                    .background(Color("light_gray"))
+                                    .cornerRadius(8)
+                                    .padding(.horizontal)
                                 }
                             }
                         }
@@ -226,7 +282,7 @@ struct DateBasedView: View {
                     .background(.white)
                 }
             }
-            .background(Color("ghost_white"))
+            .background(Color("light_gray"))
             
             Divider()
             
@@ -257,8 +313,10 @@ struct DateBasedView: View {
                         Image(systemName: "calendar")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     
                     Spacer()
+                        .frame(maxWidth: .infinity)
                     
                     Button(action: {
                         withAnimation {
@@ -268,6 +326,7 @@ struct DateBasedView: View {
                         Image(systemName: "arrow.clockwise")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     .disabled(calendar.isDateInToday(currentDate))
                     
                     Button(action: {
@@ -278,6 +337,7 @@ struct DateBasedView: View {
                         Image(systemName: "chevron.backward")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     
                     Button(action: {
                         withAnimation {
@@ -287,6 +347,7 @@ struct DateBasedView: View {
                         Image(systemName: "chevron.forward")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     .disabled(calendar.isDateInToday(currentDate))
                 }
             }

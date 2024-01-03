@@ -71,6 +71,31 @@ enum Title: String, CaseIterable, Identifiable {
             return "그 외 기타 활동"
         }
     }
+    
+    var imageName: String {
+        switch self {
+        case .STUDY:
+            return "book"
+        case .WORK:
+            return "hammer"
+        case .EXERCISE:
+            return "dumbbell"
+        case .HOBBY:
+            return "paintbrush"
+        case .PLAY:
+            return "gamecontroller"
+        case .MEAL:
+            return "fork.knife"
+        case .SHOWER:
+            return "shower.handheld"
+        case .TRAVEL:
+            return "car.side"
+        case .SLEEP:
+            return "zzz"
+        case .ETC:
+            return "ellipsis"
+        }
+    }
 }
 
 // WiD 조회시 필요한 enum
@@ -129,6 +154,20 @@ let titleDictionary: [String: String] = [
     Title.TRAVEL.rawValue: Title.TRAVEL.koreanValue,
     Title.SLEEP.rawValue: Title.SLEEP.koreanValue,
     Title.ETC.rawValue: Title.ETC.koreanValue
+]
+
+// 제목 - 이미지
+let titleImageDictionary: [String: String] = [
+    Title.STUDY.rawValue: Title.STUDY.imageName,
+    Title.WORK.rawValue: Title.WORK.imageName,
+    Title.EXERCISE.rawValue: Title.EXERCISE.imageName,
+    Title.HOBBY.rawValue: Title.HOBBY.imageName,
+    Title.PLAY.rawValue: Title.PLAY.imageName,
+    Title.MEAL.rawValue: Title.MEAL.imageName,
+    Title.SHOWER.rawValue: Title.SHOWER.imageName,
+    Title.TRAVEL.rawValue: Title.TRAVEL.imageName,
+    Title.SLEEP.rawValue: Title.SLEEP.imageName,
+    Title.ETC.rawValue: Title.ETC.imageName
 ]
 
 struct Year: Identifiable {

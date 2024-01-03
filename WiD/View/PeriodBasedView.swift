@@ -62,10 +62,12 @@ struct PeriodBasedView: View {
                     .titleLarge()
                 
                 Text("\(selectedTitle.koreanValue) • \(selectedPeriod.koreanValue)")
-                    .bodySmall()
+                    .bodyMedium()
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .padding()
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, maxHeight: 44)
+            .background(.white)
             
             Divider()
             
@@ -76,7 +78,7 @@ struct PeriodBasedView: View {
                 VStack(spacing: 16) {
                     if selectedTitle == TitleWithALL.ALL { // 제목이 "전체" 일 때
                         // 타임라인
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             if selectedPeriod == Period.WEEK {
                                 getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
                                     .titleMedium()
@@ -154,7 +156,7 @@ struct PeriodBasedView: View {
                         .background(.white)
                         
                         // 합계, 평균, 최고 기록
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             HStack {
                                 Text("\(seletedDictionaryText) 기록")
                                     .titleMedium()
@@ -195,32 +197,59 @@ struct PeriodBasedView: View {
                             if wiDList.isEmpty {
                                 getEmptyView(message: "표시할 \(seletedDictionaryText) 기록이 없습니다.")
                             } else {
-                                ForEach(Array(seletedDictionary.enumerated()), id: \.element.key) {  item in
-                                    let (index, (title, duration)) = item
-                                    
-                                    HStack {
-                                        Text(titleDictionary[title] ?? "")
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
+                                    ForEach(Array(seletedDictionary.enumerated()), id: \.element.key) {  item in
+                                        let (_, (title, duration)) = item
                                         
-                                        Spacer()
-                                    
-                                        Text(formatDuration(duration, mode: 3))
-                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                    }
-                                    .padding()
-                                    
-                                    if index != seletedDictionary.count - 1 {
-                                        Divider()
-                                            .padding(.horizontal)
+                                        VStack(spacing: 16) {
+                                            HStack {
+    //                                            Image(systemName: titleImageDictionary[title])
+                                                Image(systemName: "book")
+                                                    .frame(maxWidth: 15, maxHeight: 15)
+                                                    .padding(8)
+                                                    .background(Color(title))
+                                                    .foregroundColor(.white)
+                                                    .clipShape(Circle())
+                                                
+                                                Text(titleDictionary[title] ?? "")
+                                                    .font(.system(size: 24, weight: .bold))
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            
+                                            Text(formatDuration(duration, mode: 3))
+                                                .bodyMedium()
+                                                .frame(maxWidth: .infinity)
+                                        }
+                                        .padding(.vertical)
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color("light_gray"))
+                                        .cornerRadius(8)
+                                        
+    //                                    HStack {
+    //                                        Text(titleDictionary[title] ?? "")
+    //                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
+    //
+    //                                        Spacer()
+    //
+    //                                        Text(formatDuration(duration, mode: 3))
+    //                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
+    //                                    }
+    //                                    .padding()
+                                        
+    //                                    if index != seletedDictionary.count - 1 {
+    //                                        Divider()
+    //                                            .padding(.horizontal)
+    //                                    }
                                     }
                                 }
+                                .padding(.horizontal)
                             }
                         }
                         .padding(.vertical)
                         .background(.white)
                         
                         // 기록률
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             Text("기록률")
                                 .titleMedium()
                                 .padding(.horizontal)
@@ -238,7 +267,7 @@ struct PeriodBasedView: View {
                         .background(.white)
                     } else { // 제목이 "전체"가 아닐 떄
                         // 그래프
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             if selectedPeriod == Period.WEEK {
                                 getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
                                     .titleMedium()
@@ -263,14 +292,62 @@ struct PeriodBasedView: View {
                         .background(.white)
                         
                         // 시간 기록
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             Text("시간 기록")
                                 .titleMedium()
                                 .padding(.horizontal)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if filteredWiDListByTitle.isEmpty {
-                                getEmptyView(message: "표시할 기록이 없습니다.")
+//                                getEmptyView(message: "표시할 기록이 없습니다.")
+                                
+                                HStack {
+                                    Text("합계")
+                                        .bodyLarge()
+//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                    
+                                    Spacer()
+                                
+                                    Text("1시간 20분 10초")
+                                        .bodyLarge()
+//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                }
+                                .padding()
+                                .background(Color("light_gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
+                                
+                                HStack {
+                                    Text("평균")
+                                        .bodyLarge()
+//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                    
+                                    Spacer()
+                                
+                                    Text("1시간 20분 10초")
+                                        .bodyLarge()
+//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                }
+                                .padding()
+                                .background(Color("light_gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
+                                
+                                HStack {
+                                    Text("최고")
+                                        .bodyLarge()
+//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                    
+                                    Spacer()
+                                
+                                    Text("1시간 20분 10초")
+                                        .bodyLarge()
+//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                }
+                                .padding()
+                                .background(Color("light_gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
                             } else {
                                 HStack {
                                     Text("합계")
@@ -317,7 +394,7 @@ struct PeriodBasedView: View {
                     }
                 }
             }
-            .background(Color("ghost_white"))
+            .background(Color("light_gray"))
             
             Divider()
             
@@ -400,6 +477,7 @@ struct PeriodBasedView: View {
                         Image(systemName: "calendar")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     
                     Button(action: {
                         withAnimation {
@@ -412,8 +490,9 @@ struct PeriodBasedView: View {
                         Image(systemName: "textformat")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     
-                    Spacer()
+//                    Spacer()
                     
                     Button(action: {
                         if selectedPeriod == Period.WEEK {
@@ -429,6 +508,7 @@ struct PeriodBasedView: View {
                         Image(systemName: "arrow.clockwise")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     .disabled(
                         selectedPeriod == Period.WEEK &&
                         calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
@@ -453,6 +533,7 @@ struct PeriodBasedView: View {
                         Image(systemName: "chevron.backward")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     
                     Button(action: {
                         if selectedPeriod == Period.WEEK {
@@ -468,6 +549,7 @@ struct PeriodBasedView: View {
                         Image(systemName: "chevron.forward")
                             .imageScale(.large)
                     }
+                    .frame(maxWidth: .infinity)
                     .disabled(
                         selectedPeriod == Period.WEEK &&
                         calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&

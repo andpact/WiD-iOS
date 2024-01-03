@@ -46,23 +46,26 @@ struct StopWatchView: View {
              */
             if stopWatchTopBottomBarVisible {
                 ZStack {
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                        
-                        if stopWatchStarted {
-                            pauseStopWatch()
+                    ZStack {
+                        Button(action: {
+                            presentationMode.wrappedValue.dismiss()
+                            
+                            if stopWatchStarted {
+                                pauseStopWatch()
+                            }
+                        }) {
+                            Image(systemName: "arrow.backward")
+                                .imageScale(.large)
                         }
-                    }) {
-                        Image(systemName: "arrow.backward")
-                            .imageScale(.large)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.blue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.blue)
 
-                    Text("스톱워치")
-                        .titleLarge()
+                        Text("스톱워치")
+                            .titleLarge()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 44)
+                    .padding(.horizontal)
                 }
-                .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             
