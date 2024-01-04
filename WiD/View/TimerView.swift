@@ -63,10 +63,10 @@ struct TimerView: View {
                                 .imageScale(.large)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.blue)
 
                         Text("타이머")
                             .titleLarge()
+                            .foregroundColor(Color("Black-White"))
                         
     //                        if timerStarted {
     //                            Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
@@ -88,39 +88,49 @@ struct TimerView: View {
                     Picker("", selection: $selectedHour) {
                         ForEach(0..<24, id: \.self) { hour in
                             if selectedHour == hour {
-                                Text("\(hour)h")
-                                    .titleMedium()
+                                Text("\(hour)")
+                                    .font(.custom("ChivoMono-BlackItalic", size: 35))
+                                    .foregroundColor(Color("Black-White"))
                             } else {
-                                Text("\(hour)h")
-                                    .bodyMedium()
+                                Text("\(hour)")
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundColor(Color("Black-White"))
                             }
                         }
                     }
                     .pickerStyle(.inline)
+                    
+                    Text(":")
 
                     // 분(Minute) 선택
                     Picker("", selection: $selectedMinute) {
                         ForEach(0..<60, id: \.self) { minute in
                             if selectedMinute == minute {
-                                Text("\(minute)m")
-                                    .titleMedium()
+                                Text("\(minute)")
+                                    .font(.custom("ChivoMono-BlackItalic", size: 35))
+                                    .foregroundColor(Color("Black-White"))
                             } else {
-                                Text("\(minute)m")
-                                    .bodyMedium()
+                                Text("\(minute)")
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundColor(Color("Black-White"))
                             }
                         }
                     }
                     .pickerStyle(.inline)
 
+                    Text(":")
+                    
                     // 초(Second) 선택
                     Picker("", selection: $selectedSecond) {
                         ForEach(0..<60, id: \.self) { second in
                             if selectedSecond == second {
-                                Text("\(second)s")
-                                    .titleMedium()
+                                Text("\(second)")
+                                    .font(.custom("ChivoMono-BlackItalic", size: 35))
+                                    .foregroundColor(Color("Black-White"))
                             } else {
-                                Text("\(second)s")
-                                    .bodyMedium()
+                                Text("\(second)")
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundColor(Color("Black-White"))
                             }
                         }
                     }
@@ -173,14 +183,12 @@ struct TimerView: View {
                 VStack {
                     if titleMenuExpand {
                         Text("사용할 제목을 선택해 주세요.")
-                            .titleMedium()
+                            .bodyMedium()
+                            .foregroundColor(Color("Black"))
                         
                         LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
                             ForEach(Title.allCases) { menuTitle in
                                 Button(action: {
-//                                        if timerStarted && title != menuTitle { // 이어서 기록
-//                                            restartTimer()
-//                                        }
                                     title = menuTitle
                                     withAnimation {
                                         titleMenuExpand.toggle()
@@ -190,8 +198,8 @@ struct TimerView: View {
                                         .bodyMedium()
                                         .frame(maxWidth: .infinity)
                                         .padding(8)
-                                        .background(title == menuTitle ? .black : .white)
-                                        .foregroundColor(title == menuTitle ? .white : .black)
+                                        .background(title == menuTitle ? Color("Black") : Color("White"))
+                                        .foregroundColor(title == menuTitle ? Color("White") : Color("Black"))
                                         .cornerRadius(8)
                                 }
                             }
@@ -218,6 +226,7 @@ struct TimerView: View {
                                     .imageScale(.small)
                             }
                         }
+                        .foregroundColor(Color("Black"))
                         .disabled(!timerReset)
                         
                         Spacer()
@@ -231,8 +240,8 @@ struct TimerView: View {
                             }
                             .frame(maxWidth: 25, maxHeight: 25)
                             .padding()
-                            .background(.blue)
-                            .foregroundColor(.white)
+                            .background(Color("DeepSkyBlue"))
+                            .foregroundColor(Color("White"))
                             .clipShape(Circle())
                         }
                         
@@ -248,23 +257,22 @@ struct TimerView: View {
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
-                        .background(timerStarted ? .red : (timerPaused ? .green : (remainingTime == 0 ? .gray : .black)))
-                        .foregroundColor(.white)
+                        .background(timerStarted ? Color("OrangeRed") : (timerPaused ? Color("LimeGreen") : (remainingTime == 0 ? Color("Gray") : Color("Black"))))
+                        .foregroundColor(Color("White"))
                         .clipShape(Circle())
                         .disabled(remainingTime == 0)
                     }
                 }
                 .padding()
-                .background(Color("light_gray"))
+                .background(Color("LightGray"))
                 .cornerRadius(8)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
-        .tint(.black)
-        .navigationBarBackButtonHidden()
+        .tint(Color("Black-White"))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.white)
+        .background(Color("White-Black"))
         .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
             remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
             
@@ -349,6 +357,12 @@ struct TimerView: View {
 
 struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
-        TimerView()
+        Group {
+            TimerView()
+                .environment(\.colorScheme, .light)
+            
+            TimerView()
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

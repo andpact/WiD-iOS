@@ -217,7 +217,7 @@ struct NewWiDView: View {
                                         Text("시작")
                                             .labelMedium()
                                         
-                                        Text(formatTime(start, format: "a h:mm:ss"))
+                                        Text(formatTime(start, format: "a hh:mm:ss"))
                                             .bodyMedium()
                                     }
                                     
@@ -262,7 +262,7 @@ struct NewWiDView: View {
                                         Text("종료")
                                             .labelMedium()
                                         
-                                        Text(formatTime(finish, format: "a h:mm:ss"))
+                                        Text(formatTime(finish, format: "a hh:mm:ss"))
                                             .bodyMedium()
                                     }
                                     
@@ -357,7 +357,7 @@ struct NewWiDView: View {
                             if wiDList.isEmpty {
                                 getEmptyView(message: "표시할 시간대가 없습니다.")
                             } else {
-                                ForEach(Array(emptyWiDList.enumerated()), id: \.element.id) { (index, emptyWiD) in
+                                ForEach(Array(emptyWiDList), id: \.id) { emptyWiD in
                                     Button(action: {
                                         start = emptyWiD.start
                                         finish = emptyWiD.finish
@@ -366,7 +366,7 @@ struct NewWiDView: View {
                                             Rectangle()
                                                 .fill(.black)
                                                 .frame(maxWidth: 8)
-                                            
+
                                             VStack(alignment: .leading, spacing: 4) {
                                                 Text("\(formatTime(emptyWiD.start, format: "a hh:mm:ss")) ~ \(formatTime(emptyWiD.finish, format: "a hh:mm:ss"))")
                                                     .bodyMedium()

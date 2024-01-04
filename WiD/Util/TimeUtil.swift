@@ -46,6 +46,7 @@ func formatStopWatchTime(_ time: Int) -> some View {
                 .font(.custom("ChivoMono-BlackItalic", size: 120))
         }
     }
+    .foregroundColor(Color("Black-White"))
 }
 
 func formatTimerTime(_ time: Int) -> some View {
@@ -56,5 +57,6 @@ func formatTimerTime(_ time: Int) -> some View {
     return HStack {
         Text("\(hours):\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))")
             .font(.custom("ChivoMono-BlackItalic", size: 70))
+            .foregroundColor(Color("Black-White"))
     }
 }

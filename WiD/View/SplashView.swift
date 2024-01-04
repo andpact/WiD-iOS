@@ -15,7 +15,7 @@ struct SplashView: View {
             VStack {
                 Text("WiD")
                     .font(.custom("Acme-Regular", size: 70))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color("Black-White"))
             }
             
 //            if !isInternetConnected {
@@ -27,7 +27,7 @@ struct SplashView: View {
 //            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.black)
+        .background(Color("White-Black"))
     }
 }
 
@@ -35,6 +35,13 @@ struct SplashView_Previews: PreviewProvider {
     static var previews: some View {
 //        let isInternetConnected = Binding.constant(true)
 //        SplashView(isInternetConnected: isInternetConnected)
-        SplashView()
+        
+        Group {
+            SplashView()
+                .environment(\.colorScheme, .light)
+            
+            SplashView()
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

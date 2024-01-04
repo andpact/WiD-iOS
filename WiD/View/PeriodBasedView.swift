@@ -100,6 +100,7 @@ struct PeriodBasedView: View {
                                             let textColor = index == 5 ? Color.blue : (index == 6 ? Color.red : Color.black)
                                             
                                             Text(formatWeekdayLetterFromMonday(index))
+                                                .bodySmall()
                                                 .frame(maxWidth: .infinity)
                                                 .foregroundColor(textColor)
                                         }
@@ -108,12 +109,16 @@ struct PeriodBasedView: View {
                                             let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
                                             
                                             Text(formatWeekdayLetterFromSunday(index))
+                                                .bodySmall()
                                                 .frame(maxWidth: .infinity)
                                                 .foregroundColor(textColor)
                                         }
                                     }
                                 }
-                                .padding()
+                                .padding(.vertical, 8)
+                                .background(Color("light_gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
                                 
                                 // Weekday 1 - 일, 2 - 월...
                                 let weekday = calendar.component(.weekday, from: startDate)
@@ -198,17 +203,14 @@ struct PeriodBasedView: View {
                                 getEmptyView(message: "표시할 \(seletedDictionaryText) 기록이 없습니다.")
                             } else {
                                 LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
-                                    ForEach(Array(seletedDictionary.enumerated()), id: \.element.key) {  item in
-                                        let (_, (title, duration)) = item
-                                        
+                                    ForEach(Array(seletedDictionary), id: \.key) { title, duration in
                                         VStack(spacing: 16) {
                                             HStack {
-    //                                            Image(systemName: titleImageDictionary[title])
-                                                Image(systemName: "book")
+                                                Image(systemName: titleImageDictionary[title] ?? "") // (?? "") 반드시 붙혀야 함.
                                                     .frame(maxWidth: 15, maxHeight: 15)
                                                     .padding(8)
-                                                    .background(Color(title))
-                                                    .foregroundColor(.white)
+                                                    .background(Color(title).overlay(.white.opacity(0.9)))
+                                                    .foregroundColor(Color(title))
                                                     .clipShape(Circle())
                                                 
                                                 Text(titleDictionary[title] ?? "")
@@ -224,22 +226,6 @@ struct PeriodBasedView: View {
                                         .frame(maxWidth: .infinity)
                                         .background(Color("light_gray"))
                                         .cornerRadius(8)
-                                        
-    //                                    HStack {
-    //                                        Text(titleDictionary[title] ?? "")
-    //                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-    //
-    //                                        Spacer()
-    //
-    //                                        Text(formatDuration(duration, mode: 3))
-    //                                            .font(.custom("PyeongChangPeace-Bold", size: 20))
-    //                                    }
-    //                                    .padding()
-                                        
-    //                                    if index != seletedDictionary.count - 1 {
-    //                                        Divider()
-    //                                            .padding(.horizontal)
-    //                                    }
                                     }
                                 }
                                 .padding(.horizontal)
@@ -299,55 +285,49 @@ struct PeriodBasedView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if filteredWiDListByTitle.isEmpty {
-//                                getEmptyView(message: "표시할 기록이 없습니다.")
+                                getEmptyView(message: "표시할 기록이 없습니다.")
                                 
-                                HStack {
-                                    Text("합계")
-                                        .bodyLarge()
-//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                    
-                                    Spacer()
-                                
-                                    Text("1시간 20분 10초")
-                                        .bodyLarge()
-//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                }
-                                .padding()
-                                .background(Color("light_gray"))
-                                .cornerRadius(8)
-                                .padding(.horizontal)
-                                
-                                HStack {
-                                    Text("평균")
-                                        .bodyLarge()
-//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                    
-                                    Spacer()
-                                
-                                    Text("1시간 20분 10초")
-                                        .bodyLarge()
-//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                }
-                                .padding()
-                                .background(Color("light_gray"))
-                                .cornerRadius(8)
-                                .padding(.horizontal)
-                                
-                                HStack {
-                                    Text("최고")
-                                        .bodyLarge()
-//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                    
-                                    Spacer()
-                                
-                                    Text("1시간 20분 10초")
-                                        .bodyLarge()
-//                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
-                                }
-                                .padding()
-                                .background(Color("light_gray"))
-                                .cornerRadius(8)
-                                .padding(.horizontal)
+//                                HStack {
+//                                    Text("합계")
+//                                        .bodyLarge()
+//                                    
+//                                    Spacer()
+//                                
+//                                    Text("1시간 20분 10초")
+//                                        .bodyLarge()
+//                                }
+//                                .padding()
+//                                .background(Color("light_gray"))
+//                                .cornerRadius(8)
+//                                .padding(.horizontal)
+//                                
+//                                HStack {
+//                                    Text("평균")
+//                                        .bodyLarge()
+//                                    
+//                                    Spacer()
+//                                
+//                                    Text("1시간 20분 10초")
+//                                        .bodyLarge()
+//                                }
+//                                .padding()
+//                                .background(Color("light_gray"))
+//                                .cornerRadius(8)
+//                                .padding(.horizontal)
+//                                
+//                                HStack {
+//                                    Text("최고")
+//                                        .bodyLarge()
+//                                    
+//                                    Spacer()
+//                                
+//                                    Text("1시간 20분 10초")
+//                                        .bodyLarge()
+//                                }
+//                                .padding()
+//                                .background(Color("light_gray"))
+//                                .cornerRadius(8)
+//                                .padding(.horizontal)
                             } else {
                                 HStack {
                                     Text("합계")

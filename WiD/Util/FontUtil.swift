@@ -44,6 +44,4 @@ extension View {
     func titleLarge() -> some View {
         return self.font(.system(size: 20, weight: .bold))
     }
-    
-    
 }

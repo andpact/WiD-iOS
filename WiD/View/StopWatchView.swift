@@ -58,10 +58,11 @@ struct StopWatchView: View {
                                 .imageScale(.large)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.blue)
 
                         Text("스톱워치")
                             .titleLarge()
+                            .foregroundColor(Color("Black-White"))
+                            
                     }
                     .frame(maxWidth: .infinity, maxHeight: 44)
                     .padding(.horizontal)
@@ -81,7 +82,8 @@ struct StopWatchView: View {
                 VStack {
                     if expandTitleMenu {
                         Text(stopWatchStarted ? "선택한 제목이 이어서 사용됩니다." : "사용할 제목을 선택해 주세요.")
-                            .titleMedium()
+                            .bodyMedium()
+                            .foregroundColor(Color("Black"))
                         
                         LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
                             ForEach(Title.allCases) { menuTitle in
@@ -98,8 +100,8 @@ struct StopWatchView: View {
                                         .bodyMedium()
                                         .frame(maxWidth: .infinity)
                                         .padding(8)
-                                        .background(title == menuTitle ? .black : .white)
-                                        .foregroundColor(title == menuTitle ? .white : .black)
+                                        .background(title == menuTitle ? Color("Black") : Color("White"))
+                                        .foregroundColor(title == menuTitle ? Color("White") : Color("Black"))
                                         .cornerRadius(8)
                                 }
                             }
@@ -126,6 +128,7 @@ struct StopWatchView: View {
                                     .imageScale(.small)
                             }
                         }
+                        .foregroundColor(Color("Black"))
                         .disabled(stopWatchPaused)
                         
                         Spacer()
@@ -139,8 +142,8 @@ struct StopWatchView: View {
                             }
                             .frame(maxWidth: 25, maxHeight: 25)
                             .padding()
-                            .background(.blue)
-                            .foregroundColor(.white)
+                            .background(Color("DeepSkyBlue"))
+                            .foregroundColor(Color("White"))
                             .clipShape(Circle())
                         }
                         
@@ -156,21 +159,21 @@ struct StopWatchView: View {
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
-                        .background(stopWatchStarted ? .red : (stopWatchPaused ? .green : .black))
-                        .foregroundColor(.white)
+                        .background(stopWatchStarted ? .red : (stopWatchPaused ? Color("LimeGreen") : Color("Black")))
+                        .foregroundColor(Color("White"))
                         .clipShape(Circle())
                     }
                 }
                 .padding()
-                .background(Color("light_gray"))
+                .background(Color("LightGray"))
                 .cornerRadius(8)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
-        .tint(.black)
+        .tint(Color("Black-White"))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.white)
+        .background(Color("White-Black"))
         .onTapGesture {
             if stopWatchStarted {
                 withAnimation {
@@ -297,6 +300,12 @@ struct StopWatchView: View {
 
 struct StopWatchView_Previews: PreviewProvider {
     static var previews: some View {
-        return StopWatchView()
+        Group {
+            StopWatchView()
+                .environment(\.colorScheme, .light)
+            
+            StopWatchView()
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

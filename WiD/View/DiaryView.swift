@@ -33,7 +33,7 @@ struct DiaryView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 /**
                  상단 바
                  */
@@ -41,17 +41,14 @@ struct DiaryView: View {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Image(systemName: "chevron.backward")
-                        
-                        Text("뒤로 가기")
-                            .font(.system(size: 18, weight: .medium))
+                        Image(systemName: "arrow.backward")
+                            .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.blue)
                     
                     Text("다이어리")
-                        .font(.system(size: 20, weight: .bold))
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .titleLarge()
                     
                     Button(action: {
                         let newDiary = Diary(id: 0, date: date, title: diaryTitle, content: diaryContent)
@@ -65,16 +62,23 @@ struct DiaryView: View {
                         
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Image(systemName: "checkmark")
-                        
                         Text("완료")
-                            .font(.system(size: 18, weight: .medium))
+                            .bodyMedium()
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                    .foregroundColor(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
+//                    .foregroundColor(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
                     .disabled(diaryTitle.isEmpty || diaryContent.isEmpty)
                 }
-                .padding()
+                .frame(maxWidth: .infinity, maxHeight: 44)
+                .padding(.horizontal)
+                .background(.white)
+                
+                Divider()
                 
                 GeometryReader { geo in
                     HStack {

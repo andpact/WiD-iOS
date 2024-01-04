@@ -61,67 +61,67 @@ struct DateBasedView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     // 다이어리 및 타임라인
-                    VStack(spacing: 0) {
-                        GeometryReader { geo in
-                            HStack {
-                                getDayStringWith3Lines(date: currentDate)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .font(.system(size: 22, weight: .bold))
-
-                                ZStack {
-                                    if wiDList.isEmpty {
-                                        getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-                                    } else {
-                                        DayPieChartView(wiDList: wiDList)
-                                    }
-                                }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            }
-                        }
-                        .aspectRatio(2 / 1, contentMode: .fit)
-
-                        Divider()
-                            .padding(.horizontal)
-
-                        VStack(spacing: 16) {
-                            Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
-                                .bodyMedium()
-                                .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
-                                .onTapGesture {
-                                    if expandDiary == false {
-                                        expandDiary = true
-                                    }
-                                }
-
-                            Divider()
-
-                            Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
-                                .labelMedium()
-                                .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
-                                .onTapGesture {
-                                    if expandDiary == false {
-                                        expandDiary = true
-                                    }
-                                }
-                        }
-                        .padding()
-
-                        Button(action: {
-
-                        }) {
-                            NavigationLink(destination: DiaryView(date: currentDate)) {
-                                Text("다이어리 수정")
-                                    .bodyMedium()
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                            }
-                        }
-                        .background(.blue)
-                        .cornerRadius(8)
-                        .padding()
-                    }
-                    .background(.white)
+//                    VStack(spacing: 0) {
+//                        GeometryReader { geo in
+//                            HStack {
+//                                getDayStringWith3Lines(date: currentDate)
+//                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                    .font(.system(size: 22, weight: .bold))
+//
+//                                ZStack {
+//                                    if wiDList.isEmpty {
+//                                        getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+//                                    } else {
+//                                        DayPieChartView(wiDList: wiDList)
+//                                    }
+//                                }
+//                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                            }
+//                        }
+//                        .aspectRatio(2 / 1, contentMode: .fit)
+//
+//                        Divider()
+//                            .padding(.horizontal)
+//
+//                        VStack(spacing: 16) {
+//                            Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
+//                                .bodyMedium()
+//                                .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
+//                                .onTapGesture {
+//                                    if expandDiary == false {
+//                                        expandDiary = true
+//                                    }
+//                                }
+//
+//                            Divider()
+//
+//                            Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
+//                                .labelMedium()
+//                                .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
+//                                .onTapGesture {
+//                                    if expandDiary == false {
+//                                        expandDiary = true
+//                                    }
+//                                }
+//                        }
+//                        .padding()
+//
+//                        Button(action: {
+//
+//                        }) {
+//                            NavigationLink(destination: DiaryView(date: currentDate)) {
+//                                Text("다이어리 수정")
+//                                    .bodyMedium()
+//                                    .foregroundColor(.white)
+//                                    .frame(maxWidth: .infinity)
+//                                    .padding()
+//                            }
+//                        }
+//                        .background(.blue)
+//                        .cornerRadius(8)
+//                        .padding()
+//                    }
+//                    .background(.white)
                     
                     // 합계 기록
                     VStack(spacing: 8) {
@@ -139,8 +139,8 @@ struct DateBasedView: View {
 //                                        Image(systemName: "book")
 //                                            .frame(maxWidth: 15, maxHeight: 15)
 //                                            .padding(8)
-//                                            .background(Color("STUDY"))
-//                                            .foregroundColor(.white)
+//                                            .background(Color("STUDY").overlay(.white.opacity(0.9)))
+//                                            .foregroundColor(Color("STUDY"))
 //                                            .clipShape(Circle())
 //
 //                                        Text("공부")
@@ -163,8 +163,8 @@ struct DateBasedView: View {
 //                                        Image(systemName: "hammer")
 //                                            .frame(maxWidth: 15, maxHeight: 15)
 //                                            .padding(8)
-//                                            .background(Color("WORK"))
-//                                            .foregroundColor(.white)
+//                                            .background(Color("WORK").overlay(.white.opacity(0.9)))
+//                                            .foregroundColor(Color("WORK"))
 //                                            .clipShape(Circle())
 //
 //                                        Text("노동")
@@ -188,12 +188,11 @@ struct DateBasedView: View {
                                 ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
                                     VStack(spacing: 16) {
                                         HStack {
-//                                            Image(systemName: titleImageDictionary[title])
-                                            Image(systemName: "book")
+                                            Image(systemName: titleImageDictionary[title] ?? "")
                                                 .frame(maxWidth: 15, maxHeight: 15)
                                                 .padding(8)
-                                                .background(Color(title))
-                                                .foregroundColor(.white)
+                                                .background(Color(title).overlay(.white.opacity(0.9)))
+                                                .foregroundColor(Color(title))
                                                 .clipShape(Circle())
                                             
                                             Text(titleDictionary[title] ?? "")
@@ -250,7 +249,7 @@ struct DateBasedView: View {
 //                            .cornerRadius(8)
 //                            .padding(.horizontal)
                         } else {
-                            ForEach(Array(wiDList.enumerated()), id: \.element.id) { (index, wiD) in
+                            ForEach(Array(wiDList), id: \.id) { wiD in
                                 NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                                     HStack(spacing: 16) {
                                         Rectangle()

@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SearchView: View {
+    // 화면
+    @Environment(\.presentationMode) var presentationMode
+    
     // WiD
     private let wiDService = WiDService()
 //    @State private var wiDList: [WiD] = []
@@ -25,8 +28,19 @@ struct SearchView: View {
             /**
              검색 창
              */
-            HStack {
+            HStack(spacing: 16) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "arrow.backward")
+                        .imageScale(.large)
+                }
+                .foregroundColor(.blue)
+                
                 TextField("제목 또는 내용으로 검색..", text: $searchText)
+                    .padding(8)
+                    .background(Color("light_gray"))
+                    .cornerRadius(8)
                 
                 Button(action: {
                     withAnimation {
@@ -34,70 +48,105 @@ struct SearchView: View {
                     }
                 }) {
                     Image(systemName: "magnifyingglass")
+                        .imageScale(.large)
                 }
             }
-            .padding()
-            .background(.white) // 배경색이 있어야 그림자가 적용됨
-            .shadow(radius: 1)
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, maxHeight: 44)
             
             /**
              검색 결과
              */
-            ScrollViewReader { sp in
-                ScrollView {
-                    VStack(spacing: 16) { // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
-                        if diaryList.isEmpty {
-                            getEmptyView(message: "검색으로 다이어리를 찾아보세요.")
-                                .padding(.horizontal)
-                        } else {
-                            ForEach(Array(diaryList.enumerated()), id: \.element.id) { (index, diary) in
-                                VStack(spacing: 0) {
-                                    GeometryReader { geo in
-                                        HStack {
-                                            getDayStringWith3Lines(date: diary.date)
-                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                                .font(.system(size: 22, weight: .bold))
-                                            
-                                            ZStack {
-                                                let wiDList = wiDService.selectWiDsByDate(date: diary.date)
-                                                if wiDList.isEmpty {
-                                                    getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-                                                } else {
-                                                    DayPieChartView(wiDList: wiDList)
-                                                }
-                                            }
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                        }
-                                    }
-                                    .aspectRatio(2 / 1, contentMode: .fit)
+            ScrollView {
+                VStack(spacing: 8) { // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
+                    if diaryList.isEmpty {
+                        getEmptyView(message: "검색으로 다이어리를 찾아보세요.")
+                        
+//                        HStack(spacing: 16) {
+//                            let wiDList = getRandomWiDList(days: 1)
+//
+//                            CalendarPieChartView(date: Date(), wiDList: wiDList)
+//                                .frame(maxWidth: 70)
+//
+//                            VStack(alignment: .leading, spacing: 4) {
+//                                Text("2023년 10월 10일")
+//                                    .labelMedium()
+//
+//                                Text("제목제목제목제목제목제목제목제목제목")
+//                                    .bodyMedium()
+//                                    .lineLimit(1)
+//
+//                                Text("내용")
+//                                    .bodyMedium()
+//                                    .lineLimit(1)
+//                            }
+//
+//                            Spacer()
+//
+//                            Image(systemName: "chevron.forward")
+//                        }
+//                        .padding(.horizontal)
+//
+//                        HStack(spacing: 16) {
+//                            let wiDList = getRandomWiDList(days: 1)
+//
+//                            CalendarPieChartView(date: Date(), wiDList: wiDList)
+//                                .frame(maxWidth: 70)
+//
+//                            VStack(alignment: .leading, spacing: 4) {
+//                                Text("2023년 10월 10일")
+//                                    .labelMedium()
+//
+//                                Text("제목")
+//                                    .bodyMedium()
+//                                    .lineLimit(1)
+//
+//                                Text("내용")
+//                                    .bodyMedium()
+//                                    .lineLimit(1)
+//                            }
+//
+//                            Spacer()
+//
+//                            Image(systemName: "chevron.forward")
+//                        }
+//                        .padding(.horizontal)
+                    } else {
+                        ForEach(Array(diaryList), id: \.id) { diary in
+                            NavigationLink(destination: DiaryView(date: diary.date)) {
+                                HStack(spacing: 16) {
+                                    let wiDList = wiDService.selectWiDsByDate(date: diary.date)
                                     
-                                    NavigationLink(destination: DiaryView(date: diary.date)) {
-                                        VStack(spacing: 0) {
-                                            Text(diary.title)
-                                                .bodyMedium()
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                                .padding()
-                                            
-                                            Divider()
-                                                .padding(.horizontal)
-                                            
-                                            Text(diary.content)
-                                                .labelMedium()
-                                                .frame(maxWidth: .infinity, minHeight: 200,  alignment: .topLeading)
-                                                .padding()
-                                        }
-                                        .frame(maxWidth: .infinity)
+                                    CalendarPieChartView(date: diary.date, wiDList: wiDList)
+                                        .frame(maxWidth: 70)
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        getDayString(date: diary.date)
+                                            .labelMedium()
+                                        
+                                        Text(diary.title)
+                                            .bodyMedium()
+                                            .lineLimit(1)
+                                        
+                                        Text(diary.content)
+                                            .bodyMedium()
+                                            .lineLimit(1)
                                     }
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: "chevron.forward")
                                 }
-                                .padding(.vertical)
-                                .background(.white)
+                                .padding(.horizontal)
                             }
                         }
                     }
                 }
+                .padding(.vertical)
             }
         }
-        .background(Color("ghost_white"))
+        .background(.white)
+        .navigationBarHidden(true)
     }
 }
 

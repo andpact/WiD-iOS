@@ -18,19 +18,12 @@ struct ContentView: View {
                 /**
                  상단 바
                  */
-                ZStack {
-                    Text("WiD")
-                        .font(.custom("Acme-Regular", size: 25))
-//                        .titleLarge()
-                    
-//                    Image(systemName: "moon.fill")
-//                        .imageScale(.large)
-//                        .frame(maxWidth: .infinity, alignment: .trailing)
-                    
-//                    Image(systemName: "sun.max.fill")
-//                        .imageScale(.large)
-                }
-                .frame(maxWidth: .infinity, maxHeight: 44)
+//                ZStack {
+//                    Text("WiD")
+//                        .font(.custom("Acme-Regular", size: 25))
+//                        .foregroundColor(Color("Black-White"))
+//                }
+//                .frame(maxWidth: .infinity, maxHeight: 44)
                 
                 /**
                  컨텐츠
@@ -40,16 +33,16 @@ struct ContentView: View {
                         NavigationLink(destination: StopWatchView()) {
                             VStack {
                                 Image(systemName: "stopwatch")
-                                    .frame(width: 30, height: 30)
+                                    .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(.gray)
-                                    .foregroundColor(.white)
+                                    .background(Color("Gray"))
+                                    .foregroundColor(Color("White"))
                                     .cornerRadius(8)
                                 
                                 Text("스톱 워치")
                                     .bodyMedium()
-                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -57,15 +50,16 @@ struct ContentView: View {
                         NavigationLink(destination: TimerView()) {
                             VStack {
                                 Image(systemName: "timer")
-                                    .frame(width: 30, height: 30)
+                                    .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(.gray)
-                                    .foregroundColor(.white)
+                                    .background(Color("Gray"))
+                                    .foregroundColor(Color("White"))
                                     .cornerRadius(8)
                                 
                                 Text("타이머")
                                     .bodyMedium()
+                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -73,34 +67,19 @@ struct ContentView: View {
                         NavigationLink(destination: NewWiDView()) {
                             VStack {
                                 Image(systemName: "plus.square")
-                                    .frame(width: 30, height: 30)
+                                    .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(.gray)
-                                    .foregroundColor(.white)
+                                    .background(Color("Gray"))
+                                    .foregroundColor(Color("White"))
                                     .cornerRadius(8)
                                 
                                 Text("새로운 WiD")
                                     .bodyMedium()
-                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
-                        
-    //                    VStack {
-    //                        Image(systemName: "rectangle.and.text.magnifyingglass.rtl")
-    //                            .frame(width: 30, height: 30)
-    //                            .imageScale(.large)
-    //                            .padding()
-    //                            .background(.gray)
-    //                            .foregroundColor(.white)
-    //                            .cornerRadius(8)
-    //
-    //                        Text("WiD\n검색")
-    //                            .bodyMedium()
-    //                            .multilineTextAlignment(.center)
-    //                    }
-    //                    .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
                     
@@ -108,16 +87,16 @@ struct ContentView: View {
                         NavigationLink(destination: DateBasedView()) {
                             VStack {
                                 Image(systemName: "scope")
-                                    .frame(width: 30, height: 30)
+                                    .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(.gray)
-                                    .foregroundColor(.white)
+                                    .background(Color("Gray"))
+                                    .foregroundColor(Color("White"))
                                     .cornerRadius(8)
                                 
                                 Text("날짜 별 조회")
                                     .bodyMedium()
-                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -125,16 +104,16 @@ struct ContentView: View {
                         NavigationLink(destination: PeriodBasedView()) {
                             VStack {
                                 Image(systemName: "calendar")
-                                    .frame(width: 30, height: 30)
+                                    .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(.gray)
-                                    .foregroundColor(.white)
+                                    .background(Color("Gray"))
+                                    .foregroundColor(Color("White"))
                                     .cornerRadius(8)
                                 
                                 Text("기간 별 조회")
                                     .bodyMedium()
-                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -142,38 +121,33 @@ struct ContentView: View {
                         NavigationLink(destination: SearchView()) {
                             VStack {
                                 Image(systemName: "doc.text.magnifyingglass")
-                                    .frame(width: 30, height: 30)
+                                    .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(.gray)
-                                    .foregroundColor(.white)
+                                    .background(Color("Gray"))
+                                    .foregroundColor(Color("White"))
                                     .cornerRadius(8)
                                 
                                 Text("다이어리 검색")
                                     .bodyMedium()
-                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
-                        
-    //                    VStack {
-    //                        Image(systemName: "gearshape")
-    //                            .frame(width: 30, height: 30)
-    //                            .imageScale(.large)
-    //                            .padding()
-    //                            .background(.gray)
-    //                            .foregroundColor(.white)
-    //                            .cornerRadius(8)
-    //
-    //                        Text("환경\n설정")
-    //                            .bodyMedium()
-    //                            .multilineTextAlignment(.center)
-    //                    }
-    //                    .frame(maxWidth: .infinity)
                     }
                     .padding(.horizontal)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                /**
+                 하단 바
+                 */
+                ZStack {
+                    Text("WiD")
+                        .font(.custom("Acme-Regular", size: 25))
+                        .foregroundColor(Color("Black-White"))
+                }
+                .frame(maxWidth: .infinity, maxHeight: 44)
             }
         }
         .tint(.black)
@@ -239,7 +213,14 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        Group {
+            ContentView()
+                .environment(\.colorScheme, .light)
+            
+            ContentView()
+                .environment(\.colorScheme, .dark)
+        }
+
     }
 }
 
