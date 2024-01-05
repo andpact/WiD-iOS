@@ -66,7 +66,7 @@ struct NewWiDView: View {
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.blue)
+                    .tint(Color("Black-White"))
 
                     Text("새로운 WiD")
                         .titleLarge()
@@ -85,8 +85,8 @@ struct NewWiDView: View {
                             .bodyMedium()
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
-                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? .gray : .blue)
-                            .foregroundColor(.white)
+                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? Color("DarkGray") : Color("DeepSkyBlue"))
+                            .foregroundColor(Color("White"))
                             .cornerRadius(8)
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -94,9 +94,10 @@ struct NewWiDView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-                .background(.white)
+                .background(Color("White-Gray"))
                 
                 Divider()
+                    .background(Color("LightGray"))
                 
                 /**
                  컨텐츠
@@ -116,7 +117,7 @@ struct NewWiDView: View {
                                         .imageScale(.large)
                                         .frame(width: 30, height: 30)
                                         .padding()
-                                        .background(Color("light_gray"))
+                                        .background(Color("LightGray-Black"))
                                         .cornerRadius(8)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -132,7 +133,7 @@ struct NewWiDView: View {
                                     Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
                                 }
                                 .padding(.horizontal)
-                                .background(.white)
+                                .background(Color("White-Gray"))
                                 .onTapGesture {
                                     withAnimation {
                                         expandDatePicker.toggle()
@@ -143,12 +144,13 @@ struct NewWiDView: View {
                                     HStack {
                                         Text("날짜를 선택해 주세요.")
                                             .bodyMedium()
-                                            .foregroundColor(.blue)
                                         
                                         Spacer()
                                         
                                         DatePicker("", selection: $date, in: ...today, displayedComponents: .date)
                                             .labelsHidden()
+                                            .background(Color("LightGray-DarkGray"))
+                                            .cornerRadius(8)
                                     }
                                     .padding()
                                 }
@@ -159,10 +161,9 @@ struct NewWiDView: View {
                                 HStack(spacing: 16) {
                                     Image(systemName: "character.ko")
                                         .imageScale(.large)
-                                        .foregroundColor(Color(title.rawValue))
                                         .frame(width: 30, height: 30)
                                         .padding()
-                                        .background(Color("light_gray"))
+                                        .background(Color("LightGray-Black"))
                                         .cornerRadius(8)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -178,7 +179,7 @@ struct NewWiDView: View {
                                     Image(systemName: expandTitleMenu ? "chevron.up" : "chevron.down")
                                 }
                                 .padding(.horizontal)
-                                .background(.white)
+                                .background(Color("White-Gray"))
                                 .onTapGesture {
                                     withAnimation {
                                         expandTitleMenu.toggle()
@@ -189,15 +190,18 @@ struct NewWiDView: View {
                                     HStack {
                                         Text("제목을 선택해 주세요.")
                                             .bodyMedium()
-                                            .foregroundColor(.blue)
                                         
                                         Spacer()
                                         
                                         Picker("", selection: $title) {
                                             ForEach(Array(Title.allCases), id: \.self) { title in
                                                 Text(title.koreanValue)
+                                                    
                                             }
                                         }
+                                        .tint(Color("Black-White"))
+                                        .background(Color("LightGray-DarkGray"))
+                                        .cornerRadius(8)
                                     }
                                     .padding()
                                 }
@@ -210,7 +214,7 @@ struct NewWiDView: View {
                                         .imageScale(.large)
                                         .frame(width: 30, height: 30)
                                         .padding()
-                                        .background(Color("light_gray"))
+                                        .background(Color("LightGray-Black"))
                                         .cornerRadius(8)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -226,7 +230,7 @@ struct NewWiDView: View {
                                     Image(systemName: expandStartPicker ? "chevron.up" : "chevron.down")
                                 }
                                 .padding(.horizontal)
-                                .background(.white)
+                                .background(Color("White-Gray"))
                                 .onTapGesture {
                                     withAnimation {
                                         expandStartPicker.toggle()
@@ -237,12 +241,13 @@ struct NewWiDView: View {
                                     HStack {
                                         Text("시작 시간을 선택해 주세요.")
                                             .bodyMedium()
-                                            .foregroundColor(.blue)
                                         
                                         Spacer()
                                         
                                         DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
                                             .labelsHidden()
+                                            .background(Color("LightGray-DarkGray"))
+                                            .cornerRadius(8)
                                     }
                                     .padding()
                                 }
@@ -255,7 +260,7 @@ struct NewWiDView: View {
                                         .imageScale(.large)
                                         .frame(width: 30, height: 30)
                                         .padding()
-                                        .background(Color("light_gray"))
+                                        .background(Color("LightGray-Black"))
                                         .cornerRadius(8)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -271,7 +276,7 @@ struct NewWiDView: View {
                                     Image(systemName: expandFinishPicker ? "chevron.up" : "chevron.down")
                                 }
                                 .padding(.horizontal)
-                                .background(.white)
+                                .background(Color("White-Gray"))
                                 .onTapGesture {
                                     withAnimation {
                                         expandFinishPicker.toggle()
@@ -282,23 +287,25 @@ struct NewWiDView: View {
                                     HStack {
                                         Text("종료 시간을 선택해 주세요.")
                                             .bodyMedium()
-                                            .foregroundColor(.blue)
                                         
                                         Spacer()
                                         
                                         DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
                                             .labelsHidden()
+                                            .background(Color("LightGray-DarkGray"))
+                                            .cornerRadius(8)
                                     }
                                     .padding()
                                 }
                             }
                                 
+                            // 소요 시간
                             HStack(spacing: 16) {
-                                Image(systemName: "clock.fill")
+                                Image(systemName: "hourglass")
                                     .imageScale(.large)
                                     .frame(width: 30, height: 30)
                                     .padding()
-                                    .background(Color("light_gray"))
+                                    .background(Color("LightGray-Black"))
                                     .cornerRadius(8)
                                 
                                 VStack(alignment: .leading, spacing: 4) {
@@ -314,7 +321,7 @@ struct NewWiDView: View {
                             .padding(.horizontal)
                         }
                         .padding(.vertical)
-                        .background(.white)
+                        .background(Color("White-Gray"))
                         
 //                        VStack(spacing: 0) {
 //                            HStack(spacing: 0) {
@@ -364,7 +371,7 @@ struct NewWiDView: View {
                                     }) {
                                         HStack(spacing: 16) {
                                             Rectangle()
-                                                .fill(.black)
+                                                .fill(Color("Black-White"))
                                                 .frame(maxWidth: 8)
 
                                             VStack(alignment: .leading, spacing: 4) {
@@ -382,14 +389,15 @@ struct NewWiDView: View {
                                                 .padding(.horizontal)
                                         }
                                     }
-                                    .background(Color("light_gray"))
+                                    .tint(Color("Black-White"))
+                                    .background(Color("LightGray-Black"))
                                     .cornerRadius(8)
                                     .padding(.horizontal)
                                 }
                             }
                         }
                         .padding(.vertical)
-                        .background(.white)
+                        .background(Color("White-Gray"))
                     }
                 }
                 
@@ -403,8 +411,7 @@ struct NewWiDView: View {
 //                }
 //                .frame(maxWidth: .infinity)
             }
-            .tint(.black)
-            .background(Color("light_gray"))
+            .background(Color("LightGray-Black"))
             .onAppear {
                 self.wiDList = wiDService.selectWiDsByDate(date: date)
                 self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
@@ -528,6 +535,11 @@ struct NewWiDView: View {
 
 struct NewWiDView_Previews: PreviewProvider {
     static var previews: some View {
-        NewWiDView()
+        Group {
+            NewWiDView()
+            
+            NewWiDView()
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

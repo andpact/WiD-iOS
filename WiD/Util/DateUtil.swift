@@ -24,7 +24,7 @@ func getDayString(date: Date) -> some View {
             Text("(")
 
             Text(formatWeekday(date))
-                .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
+                .foregroundColor(calendar.component(.weekday, from: date) == 1 ? Color("OrangeRed") : (calendar.component(.weekday, from: date) == 7 ? Color("DeepSkyBlue") : Color("Black-White")))
 
             Text(")")
         }
@@ -44,7 +44,7 @@ func getDayStringWith2Lines(date: Date) -> some View {
                 Text("(")
 
                 Text(formatWeekday(date))
-                    .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
+                    .foregroundColor(calendar.component(.weekday, from: date) == 1 ? Color("OrangeRed") : (calendar.component(.weekday, from: date) == 7 ? Color("DeepSkyBlue") : Color("Black-White")))
 
                 Text(")")
             }
@@ -62,7 +62,7 @@ func getDayStringWith3Lines(date: Date) -> some View {
         
         HStack(spacing: 0) {
             Text(formatWeekday(date))
-                .foregroundColor(calendar.component(.weekday, from: date) == 1 ? .red : (calendar.component(.weekday, from: date) == 7 ? .blue : .black))
+                .foregroundColor(calendar.component(.weekday, from: date) == 1 ? Color("OrangeRed") : (calendar.component(.weekday, from: date) == 7 ? Color("DeepSkyBlue") : Color("Black-White")))
 
             Text("요일")
         }
@@ -79,7 +79,7 @@ func getWeekString(firstDayOfWeek: Date, lastDayOfWeek: Date) -> some View {
             Text("(")
 
             Text(formatWeekday(firstDayOfWeek))
-                .foregroundColor(calendar.component(.weekday, from: firstDayOfWeek) == 1 ? .red : (calendar.component(.weekday, from: firstDayOfWeek) == 7 ? .blue : .black))
+                .foregroundColor(calendar.component(.weekday, from: firstDayOfWeek) == 1 ? Color("OrangeRed") : (calendar.component(.weekday, from: firstDayOfWeek) == 7 ? Color("DeepSkyBlue") : Color("Black-White")))
 
             Text(")")
         }
@@ -98,7 +98,7 @@ func getWeekString(firstDayOfWeek: Date, lastDayOfWeek: Date) -> some View {
             Text("(")
             
             Text(formatWeekday(lastDayOfWeek))
-                .foregroundColor(calendar.component(.weekday, from: lastDayOfWeek) == 1 ? .red : (calendar.component(.weekday, from: lastDayOfWeek) == 7 ? .blue : .black))
+                .foregroundColor(calendar.component(.weekday, from: lastDayOfWeek) == 1 ? Color("OrangeRed") : (calendar.component(.weekday, from: lastDayOfWeek) == 7 ? Color("DeepSkyBlue") : Color("Black-White")))
             
             Text(")")
         }

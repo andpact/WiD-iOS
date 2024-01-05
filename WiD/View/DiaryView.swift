@@ -45,7 +45,6 @@ struct DiaryView: View {
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.blue)
                     
                     Text("다이어리")
                         .titleLarge()
@@ -66,19 +65,18 @@ struct DiaryView: View {
                             .bodyMedium()
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
-                            .background(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
-                            .foregroundColor(.white)
+                            .background(diaryTitle.isEmpty || diaryContent.isEmpty ? Color("DarkGray") : Color("DeepSkyBlue"))
+                            .foregroundColor(Color("White"))
                             .cornerRadius(8)
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
-//                    .foregroundColor(diaryTitle.isEmpty || diaryContent.isEmpty ? .gray : .blue)
                     .disabled(diaryTitle.isEmpty || diaryContent.isEmpty)
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-                .background(.white)
                 
                 Divider()
+                    .background(Color("LightGray"))
                 
                 GeometryReader { geo in
                     HStack {
@@ -99,6 +97,7 @@ struct DiaryView: View {
                 .aspectRatio(2 / 1, contentMode: .fit)
                 
                 Divider()
+                    .background(Color("LightGray"))
                     .padding(.horizontal)
                 
                 ZStack {
@@ -117,6 +116,7 @@ struct DiaryView: View {
                 }
                 
                 Divider()
+                    .background(Color("LightGray"))
                     .padding(.horizontal)
                 
                 ZStack {
@@ -130,7 +130,7 @@ struct DiaryView: View {
                         .opacity(diaryContent.isEmpty ? 0.75 : 1)
                 }
             }
-            .tint(.black)
+            .tint(Color("Black-White"))
             .onAppear {
                 self.diaryTitle = diary.title
                 self.diaryContent = diary.content
@@ -142,6 +142,11 @@ struct DiaryView: View {
 
 struct DiaryView_Previews: PreviewProvider {
     static var previews: some View {
-        DiaryView(date: Date())
+        Group {
+            DiaryView(date: Date())
+            
+            DiaryView(date: Date())
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

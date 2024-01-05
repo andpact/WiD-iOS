@@ -56,7 +56,6 @@ struct PeriodBasedView: View {
                         .imageScale(.large)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .foregroundColor(.blue)
 
                 Text("기간 별 조회")
                     .titleLarge()
@@ -67,9 +66,10 @@ struct PeriodBasedView: View {
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: 44)
-            .background(.white)
+            .background(Color("White-Gray"))
             
             Divider()
+                .background(Color("LightGray"))
             
             /**
              컨텐츠
@@ -97,7 +97,7 @@ struct PeriodBasedView: View {
                                 HStack {
                                     if selectedPeriod == Period.WEEK {
                                         ForEach(0...6, id: \.self) { index in
-                                            let textColor = index == 5 ? Color.blue : (index == 6 ? Color.red : Color.black)
+                                            let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black"))
                                             
                                             Text(formatWeekdayLetterFromMonday(index))
                                                 .bodySmall()
@@ -106,7 +106,7 @@ struct PeriodBasedView: View {
                                         }
                                     } else if selectedPeriod == Period.MONTH {
                                         ForEach(0...6, id: \.self) { index in
-                                            let textColor = index == 0 ? Color.red : (index == 6 ? Color.blue : Color.black)
+                                            let textColor = index == 0 ? Color("OrangeRed") : (index == 6 ? Color("DeepSkyBlue") : Color("Black"))
                                             
                                             Text(formatWeekdayLetterFromSunday(index))
                                                 .bodySmall()
@@ -116,7 +116,7 @@ struct PeriodBasedView: View {
                                     }
                                 }
                                 .padding(.vertical, 8)
-                                .background(Color("light_gray"))
+                                .background(Color("LightGray"))
                                 .cornerRadius(8)
                                 .padding(.horizontal)
                                 
@@ -158,7 +158,7 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(.white)
+                        .background(Color("White-Gray"))
                         
                         // 합계, 평균, 최고 기록
                         VStack(spacing: 8) {
@@ -175,7 +175,7 @@ struct PeriodBasedView: View {
                                     }) {
                                         Text("합계")
                                             .bodySmall()
-                                            .foregroundColor(seletedDictionaryText == "합계" ? .black : .gray)
+                                            .foregroundColor(seletedDictionaryText == "합계" ? Color("Black-White") : Color("DarkGray"))
                                     }
                                     
                                     Button(action: {
@@ -184,7 +184,7 @@ struct PeriodBasedView: View {
                                     }) {
                                         Text("평균")
                                             .bodySmall()
-                                            .foregroundColor(seletedDictionaryText == "평균" ? .black : .gray)
+                                            .foregroundColor(seletedDictionaryText == "평균" ? Color("Black-White") : Color("DarkGray"))
                                     }
                                     
                                     Button(action: {
@@ -193,7 +193,7 @@ struct PeriodBasedView: View {
                                     }) {
                                         Text("최고")
                                             .bodySmall()
-                                            .foregroundColor(seletedDictionaryText == "최고" ? .black : .gray)
+                                            .foregroundColor(seletedDictionaryText == "최고" ? Color("Black-White") : Color("DarkGray"))
                                     }
                                 }
                             }
@@ -224,7 +224,7 @@ struct PeriodBasedView: View {
                                         }
                                         .padding(.vertical)
                                         .frame(maxWidth: .infinity)
-                                        .background(Color("light_gray"))
+                                        .background(Color("LightGray-DarkGray"))
                                         .cornerRadius(8)
                                     }
                                 }
@@ -232,7 +232,7 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(.white)
+                        .background(Color("White-Gray"))
                         
                         // 기록률
                         VStack(spacing: 8) {
@@ -250,7 +250,7 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(.white)
+                        .background(Color("White-Gray"))
                     } else { // 제목이 "전체"가 아닐 떄
                         // 그래프
                         VStack(spacing: 8) {
@@ -275,7 +275,7 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(.white)
+                        .background(Color("White-Gray"))
                         
                         // 시간 기록
                         VStack(spacing: 8) {
@@ -341,6 +341,7 @@ struct PeriodBasedView: View {
                                 .padding()
                                 
                                 Divider()
+                                    .background(Color("LightGray"))
                                     .padding(.horizontal)
                                 
                                 HStack {
@@ -355,6 +356,7 @@ struct PeriodBasedView: View {
                                 .padding()
                                 
                                 Divider()
+                                    .background(Color("LightGray"))
                                     .padding(.horizontal)
                                 
                                 HStack {
@@ -370,13 +372,14 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(.white)
+                        .background(Color("White-Gray"))
                     }
                 }
             }
-            .background(Color("light_gray"))
+            .background(Color("LightGray-Black"))
             
             Divider()
+                .background(Color("LightGray"))
             
             /**
              하단 바
@@ -384,7 +387,7 @@ struct PeriodBasedView: View {
             VStack(spacing: 8) {
                 if expandDatePicker {
                     Text("조회할 기간을 선택해 주세요.")
-                        .titleMedium()
+                        .bodyMedium()
 
                     LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
                         ForEach(Period.allCases) { menuPeriod in
@@ -398,8 +401,8 @@ struct PeriodBasedView: View {
                                     .bodyMedium()
                                     .frame(maxWidth: .infinity)
                                     .padding(8)
-                                    .background(selectedPeriod == menuPeriod ? .black : Color("light_gray"))
-                                    .foregroundColor(selectedPeriod == menuPeriod ? .white : .black)
+                                    .background(selectedPeriod == menuPeriod ? Color("Black-White") : Color("LightGray-DarkGray"))
+                                    .foregroundColor(selectedPeriod == menuPeriod ? Color("White-Black") : Color("Black-White"))
                                     .cornerRadius(8)
                             }
                         }
@@ -408,7 +411,7 @@ struct PeriodBasedView: View {
                 
                 if expandTitleMenu {
                     Text("조회할 제목을 선택해 주세요.")
-                        .titleMedium()
+                        .bodyMedium()
                     
                     Button(action: {
                         selectedTitle = TitleWithALL.ALL
@@ -420,8 +423,8 @@ struct PeriodBasedView: View {
                             .bodyMedium()
                             .frame(maxWidth: .infinity)
                             .padding(8)
-                            .background(selectedTitle == TitleWithALL.ALL ? .black : Color("light_gray"))
-                            .foregroundColor(selectedTitle == TitleWithALL.ALL ? .white : .black)
+                            .background(selectedTitle == TitleWithALL.ALL ? Color("Black-White") : Color("LightGray-DarkGray"))
+                            .foregroundColor(selectedTitle == TitleWithALL.ALL ? Color("White-Black") : Color("Black-White"))
                             .cornerRadius(8)
                     }
                     
@@ -437,15 +440,15 @@ struct PeriodBasedView: View {
                                     .bodyMedium()
                                     .frame(maxWidth: .infinity)
                                     .padding(8)
-                                    .background(selectedTitle == menuTitle ? .black : Color("light_gray"))
-                                    .foregroundColor(selectedTitle == menuTitle ? .white : .black)
+                                    .background(selectedTitle == menuTitle ? Color("Black-White") : Color("LightGray-DarkGray"))
+                                    .foregroundColor(selectedTitle == menuTitle ? Color("White-Black") : Color("Black-White"))
                                     .cornerRadius(8)
                             }
                         }
                     }
                 }
                 
-                HStack(spacing: 32) {
+                HStack {
                     Button(action: {
                         withAnimation {
                             if expandTitleMenu {
@@ -471,8 +474,6 @@ struct PeriodBasedView: View {
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity)
-                    
-//                    Spacer()
                     
                     Button(action: {
                         if selectedPeriod == Period.WEEK {
@@ -542,9 +543,9 @@ struct PeriodBasedView: View {
                 }
             }
             .padding()
-            .background(.white)
+            .background(Color("White-Gray"))
         }
-        .tint(.black)
+        .tint(Color("Black-White"))
         .navigationBarHidden(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
@@ -594,6 +595,11 @@ struct PeriodBasedView: View {
 
 struct PeriodBasedView_Previews: PreviewProvider {
     static var previews: some View {
-        PeriodBasedView()
+        Group {
+            PeriodBasedView()
+            
+            PeriodBasedView()
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

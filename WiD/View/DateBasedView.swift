@@ -44,16 +44,17 @@ struct DateBasedView: View {
                         .imageScale(.large)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .foregroundColor(.blue)
+                .tint(Color("Black-White"))
 
                 Text("날짜 별 조회")
                     .titleLarge()
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: 44)
-            .background(.white)
+            .background(Color("White-Gray"))
             
             Divider()
+                .background(Color("LightGray"))
             
             /**
              컨텐츠
@@ -61,67 +62,70 @@ struct DateBasedView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     // 다이어리 및 타임라인
-//                    VStack(spacing: 0) {
-//                        GeometryReader { geo in
-//                            HStack {
-//                                getDayStringWith3Lines(date: currentDate)
-//                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                                    .font(.system(size: 22, weight: .bold))
-//
-//                                ZStack {
-//                                    if wiDList.isEmpty {
-//                                        getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-//                                    } else {
-//                                        DayPieChartView(wiDList: wiDList)
-//                                    }
-//                                }
-//                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                            }
-//                        }
-//                        .aspectRatio(2 / 1, contentMode: .fit)
-//
-//                        Divider()
-//                            .padding(.horizontal)
-//
-//                        VStack(spacing: 16) {
-//                            Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
-//                                .bodyMedium()
-//                                .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
-//                                .onTapGesture {
-//                                    if expandDiary == false {
-//                                        expandDiary = true
-//                                    }
-//                                }
-//
-//                            Divider()
-//
-//                            Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
-//                                .labelMedium()
-//                                .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
-//                                .onTapGesture {
-//                                    if expandDiary == false {
-//                                        expandDiary = true
-//                                    }
-//                                }
-//                        }
-//                        .padding()
-//
-//                        Button(action: {
-//
-//                        }) {
-//                            NavigationLink(destination: DiaryView(date: currentDate)) {
-//                                Text("다이어리 수정")
-//                                    .bodyMedium()
-//                                    .foregroundColor(.white)
-//                                    .frame(maxWidth: .infinity)
-//                                    .padding()
-//                            }
-//                        }
-//                        .background(.blue)
-//                        .cornerRadius(8)
-//                        .padding()
-//                    }
-//                    .background(.white)
+                    VStack(spacing: 0) {
+                        GeometryReader { geo in
+                            HStack {
+                                getDayStringWith3Lines(date: currentDate)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .font(.system(size: 22, weight: .bold))
+
+                                ZStack {
+                                    if wiDList.isEmpty {
+                                        getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+                                    } else {
+                                        DayPieChartView(wiDList: wiDList)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                        }
+                        .aspectRatio(2 / 1, contentMode: .fit)
+
+                        Divider()
+                            .background(Color("LightGray"))
+                            .padding(.horizontal)
+                            
+
+                        VStack(spacing: 16) {
+                            Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
+                                .bodyMedium()
+                                .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
+                                .onTapGesture {
+                                    if expandDiary == false {
+                                        expandDiary = true
+                                    }
+                                }
+
+                            Divider()
+                                .background(Color("LightGray"))
+
+                            Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
+                                .labelMedium()
+                                .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
+                                .onTapGesture {
+                                    if expandDiary == false {
+                                        expandDiary = true
+                                    }
+                                }
+                        }
+                        .padding()
+
+                        Button(action: {
+
+                        }) {
+                            NavigationLink(destination: DiaryView(date: currentDate)) {
+                                Text("다이어리 수정")
+                                    .bodyMedium()
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            }
+                        }
+                        .background(Color("DeepSkyBlue"))
+                        .cornerRadius(8)
+                        .padding()
+                    }
+                    .background(Color("White-Gray"))
                     
                     // 합계 기록
                     VStack(spacing: 8) {
@@ -155,7 +159,7 @@ struct DateBasedView: View {
 //                                }
 //                                .padding(.vertical)
 //                                .frame(maxWidth: .infinity)
-//                                .background(Color("light_gray"))
+//                                .background(Color("LightGray-Black"))
 //                                .cornerRadius(8)
 //
 //                                VStack(spacing: 16) {
@@ -179,7 +183,7 @@ struct DateBasedView: View {
 //                                }
 //                                .padding(.vertical)
 //                                .frame(maxWidth: .infinity)
-//                                .background(Color("light_gray"))
+//                                .background(Color("LightGray-Black"))
 //                                .cornerRadius(8)
 //                            }
 //                            .padding(.horizontal)
@@ -206,7 +210,7 @@ struct DateBasedView: View {
                                     }
                                     .padding(.vertical)
                                     .frame(maxWidth: .infinity)
-                                    .background(Color("light_gray"))
+                                    .background(Color("LightGray-Black"))
                                     .cornerRadius(8)
                                 }
                             }
@@ -214,7 +218,7 @@ struct DateBasedView: View {
                         }
                     }
                     .padding(.vertical)
-                    .background(.white)
+                    .background(Color("White-Gray"))
                     
                     // WiD 리스트
                     VStack(spacing: 8) {
@@ -270,7 +274,7 @@ struct DateBasedView: View {
                                         Image(systemName: "chevron.forward")
                                             .padding(.horizontal)
                                     }
-                                    .background(Color("light_gray"))
+                                    .background(Color("Black"))
                                     .cornerRadius(8)
                                     .padding(.horizontal)
                                 }
@@ -278,12 +282,13 @@ struct DateBasedView: View {
                         }
                     }
                     .padding(.vertical)
-                    .background(.white)
+                    .background(Color("White-Gray"))
                 }
             }
-            .background(Color("light_gray"))
+            .background(Color("LightGray-Black"))
             
             Divider()
+                .background(Color("LightGray"))
             
             /**
              하단 바
@@ -293,17 +298,17 @@ struct DateBasedView: View {
                     HStack {
                         Text("날짜를 선택해 주세요.")
                             .bodyMedium()
-                            .foregroundColor(.blue)
                         
                         Spacer()
                         
                         DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
                             .labelsHidden()
+                            .tint(Color("Black"))
                     }
                     .padding(8)
                 }
                 
-                HStack(spacing: 32) {
+                HStack {
                     Button(action: {
                         withAnimation {
                             expandDatePicker.toggle()
@@ -313,6 +318,7 @@ struct DateBasedView: View {
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity)
+                    .tint(Color("Black-White"))
                     
                     Spacer()
                         .frame(maxWidth: .infinity)
@@ -326,6 +332,7 @@ struct DateBasedView: View {
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity)
+                    .tint(Color("Black-White"))
                     .disabled(calendar.isDateInToday(currentDate))
                     
                     Button(action: {
@@ -337,6 +344,7 @@ struct DateBasedView: View {
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity)
+                    .tint(Color("Black-White"))
                     
                     Button(action: {
                         withAnimation {
@@ -347,13 +355,13 @@ struct DateBasedView: View {
                             .imageScale(.large)
                     }
                     .frame(maxWidth: .infinity)
+                    .tint(Color("Black-White"))
                     .disabled(calendar.isDateInToday(currentDate))
                 }
             }
             .padding()
-            .background(.white)
+            .background(Color("White-Gray"))
         }
-        .tint(.black)
         .navigationBarHidden(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
@@ -373,6 +381,11 @@ struct DateBasedView: View {
 
 struct DateBasedView_Previews: PreviewProvider {
     static var previews: some View {
-        DateBasedView()
+        Group {
+            DateBasedView()
+            
+            DateBasedView()
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

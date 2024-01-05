@@ -35,11 +35,10 @@ struct SearchView: View {
                     Image(systemName: "arrow.backward")
                         .imageScale(.large)
                 }
-                .foregroundColor(.blue)
                 
                 TextField("제목 또는 내용으로 검색..", text: $searchText)
                     .padding(8)
-                    .background(Color("light_gray"))
+                    .background(Color("LightGray-Gray"))
                     .cornerRadius(8)
                 
                 Button(action: {
@@ -62,55 +61,55 @@ struct SearchView: View {
                     if diaryList.isEmpty {
                         getEmptyView(message: "검색으로 다이어리를 찾아보세요.")
                         
-//                        HStack(spacing: 16) {
-//                            let wiDList = getRandomWiDList(days: 1)
-//
-//                            CalendarPieChartView(date: Date(), wiDList: wiDList)
-//                                .frame(maxWidth: 70)
-//
-//                            VStack(alignment: .leading, spacing: 4) {
-//                                Text("2023년 10월 10일")
-//                                    .labelMedium()
-//
-//                                Text("제목제목제목제목제목제목제목제목제목")
-//                                    .bodyMedium()
-//                                    .lineLimit(1)
-//
-//                                Text("내용")
-//                                    .bodyMedium()
-//                                    .lineLimit(1)
-//                            }
-//
-//                            Spacer()
-//
-//                            Image(systemName: "chevron.forward")
-//                        }
-//                        .padding(.horizontal)
-//
-//                        HStack(spacing: 16) {
-//                            let wiDList = getRandomWiDList(days: 1)
-//
-//                            CalendarPieChartView(date: Date(), wiDList: wiDList)
-//                                .frame(maxWidth: 70)
-//
-//                            VStack(alignment: .leading, spacing: 4) {
-//                                Text("2023년 10월 10일")
-//                                    .labelMedium()
-//
-//                                Text("제목")
-//                                    .bodyMedium()
-//                                    .lineLimit(1)
-//
-//                                Text("내용")
-//                                    .bodyMedium()
-//                                    .lineLimit(1)
-//                            }
-//
-//                            Spacer()
-//
-//                            Image(systemName: "chevron.forward")
-//                        }
-//                        .padding(.horizontal)
+                        HStack(spacing: 16) {
+                            let wiDList = getRandomWiDList(days: 1)
+
+                            CalendarPieChartView(date: Date(), wiDList: wiDList)
+                                .frame(maxWidth: 70)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("2023년 10월 10일")
+                                    .titleMedium()
+
+                                Text("제목제목제목제목제목제목제목제목제목")
+                                    .bodyMedium()
+                                    .lineLimit(1)
+
+                                Text("내용")
+                                    .bodyMedium()
+                                    .lineLimit(1)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.forward")
+                        }
+                        .padding(.horizontal)
+
+                        HStack(spacing: 16) {
+                            let wiDList = getRandomWiDList(days: 1)
+
+                            CalendarPieChartView(date: Date(), wiDList: wiDList)
+                                .frame(maxWidth: 70)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("2023년 10월 10일")
+                                    .titleMedium()
+
+                                Text("제목")
+                                    .bodyMedium()
+                                    .lineLimit(1)
+
+                                Text("내용")
+                                    .bodyMedium()
+                                    .lineLimit(1)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.forward")
+                        }
+                        .padding(.horizontal)
                     } else {
                         ForEach(Array(diaryList), id: \.id) { diary in
                             NavigationLink(destination: DiaryView(date: diary.date)) {
@@ -145,13 +144,19 @@ struct SearchView: View {
                 .padding(.vertical)
             }
         }
-        .background(.white)
+        .tint(Color("Black-White"))
+        .background(Color("White-Black"))
         .navigationBarHidden(true)
     }
 }
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchView()
+        Group {
+            SearchView()
+            
+            SearchView()
+                .environment(\.colorScheme, .dark)
+        }
     }
 }
