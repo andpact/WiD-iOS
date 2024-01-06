@@ -85,7 +85,7 @@ struct NewWiDView: View {
                             .bodyMedium()
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
-                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? Color("DarkGray") : Color("DeepSkyBlue"))
+                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? Color("LightGray-Gray") : Color("DeepSkyBlue"))
                             .foregroundColor(Color("White"))
                             .cornerRadius(8)
                     }
@@ -94,7 +94,6 @@ struct NewWiDView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-                .background(Color("White-Gray"))
                 
                 Divider()
                     .background(Color("LightGray"))
@@ -103,7 +102,7 @@ struct NewWiDView: View {
                  컨텐츠
                  */
                 ScrollView {
-                    VStack(spacing: 16) {
+                    VStack(spacing: 8) {
                         VStack(spacing: 8) {
                             Text("정보 입력")
                                 .titleMedium()
@@ -117,7 +116,7 @@ struct NewWiDView: View {
                                         .imageScale(.large)
                                         .frame(width: 30, height: 30)
                                         .padding()
-                                        .background(Color("LightGray-Black"))
+                                        .background(Color("LightGray-Gray"))
                                         .cornerRadius(8)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -133,7 +132,7 @@ struct NewWiDView: View {
                                     Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
                                 }
                                 .padding(.horizontal)
-                                .background(Color("White-Gray"))
+                                .background(Color("White-Black"))
                                 .onTapGesture {
                                     withAnimation {
                                         expandDatePicker.toggle()
@@ -149,7 +148,8 @@ struct NewWiDView: View {
                                         
                                         DatePicker("", selection: $date, in: ...today, displayedComponents: .date)
                                             .labelsHidden()
-                                            .background(Color("LightGray-DarkGray"))
+                                            .background(Color("LightGray-Gray"))
+                                            .tint(Color("Black-White"))
                                             .cornerRadius(8)
                                     }
                                     .padding()
@@ -163,7 +163,7 @@ struct NewWiDView: View {
                                         .imageScale(.large)
                                         .frame(width: 30, height: 30)
                                         .padding()
-                                        .background(Color("LightGray-Black"))
+                                        .background(Color("LightGray-Gray"))
                                         .cornerRadius(8)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -179,7 +179,7 @@ struct NewWiDView: View {
                                     Image(systemName: expandTitleMenu ? "chevron.up" : "chevron.down")
                                 }
                                 .padding(.horizontal)
-                                .background(Color("White-Gray"))
+                                .background(Color("White-Black"))
                                 .onTapGesture {
                                     withAnimation {
                                         expandTitleMenu.toggle()
@@ -199,8 +199,8 @@ struct NewWiDView: View {
                                                     
                                             }
                                         }
+                                        .background(Color("LightGray-Gray"))
                                         .tint(Color("Black-White"))
-                                        .background(Color("LightGray-DarkGray"))
                                         .cornerRadius(8)
                                     }
                                     .padding()
@@ -214,7 +214,7 @@ struct NewWiDView: View {
                                         .imageScale(.large)
                                         .frame(width: 30, height: 30)
                                         .padding()
-                                        .background(Color("LightGray-Black"))
+                                        .background(Color("LightGray-Gray"))
                                         .cornerRadius(8)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -230,7 +230,7 @@ struct NewWiDView: View {
                                     Image(systemName: expandStartPicker ? "chevron.up" : "chevron.down")
                                 }
                                 .padding(.horizontal)
-                                .background(Color("White-Gray"))
+                                .background(Color("White-Black"))
                                 .onTapGesture {
                                     withAnimation {
                                         expandStartPicker.toggle()
@@ -246,7 +246,8 @@ struct NewWiDView: View {
                                         
                                         DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
                                             .labelsHidden()
-                                            .background(Color("LightGray-DarkGray"))
+                                            .background(Color("LightGray-Gray"))
+                                            .tint(Color("Black-White"))
                                             .cornerRadius(8)
                                     }
                                     .padding()
@@ -260,7 +261,7 @@ struct NewWiDView: View {
                                         .imageScale(.large)
                                         .frame(width: 30, height: 30)
                                         .padding()
-                                        .background(Color("LightGray-Black"))
+                                        .background(Color("LightGray-Gray"))
                                         .cornerRadius(8)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -276,7 +277,7 @@ struct NewWiDView: View {
                                     Image(systemName: expandFinishPicker ? "chevron.up" : "chevron.down")
                                 }
                                 .padding(.horizontal)
-                                .background(Color("White-Gray"))
+                                .background(Color("White-Black"))
                                 .onTapGesture {
                                     withAnimation {
                                         expandFinishPicker.toggle()
@@ -292,7 +293,8 @@ struct NewWiDView: View {
                                         
                                         DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
                                             .labelsHidden()
-                                            .background(Color("LightGray-DarkGray"))
+                                            .background(Color("LightGray-Gray"))
+                                            .tint(Color("Black-White"))
                                             .cornerRadius(8)
                                     }
                                     .padding()
@@ -305,7 +307,7 @@ struct NewWiDView: View {
                                     .imageScale(.large)
                                     .frame(width: 30, height: 30)
                                     .padding()
-                                    .background(Color("LightGray-Black"))
+                                    .background(Color("LightGray-Gray"))
                                     .cornerRadius(8)
                                 
                                 VStack(alignment: .leading, spacing: 4) {
@@ -321,7 +323,7 @@ struct NewWiDView: View {
                             .padding(.horizontal)
                         }
                         .padding(.vertical)
-                        .background(Color("White-Gray"))
+                        .background(Color("White-Black"))
                         
 //                        VStack(spacing: 0) {
 //                            HStack(spacing: 0) {
@@ -371,7 +373,7 @@ struct NewWiDView: View {
                                     }) {
                                         HStack(spacing: 16) {
                                             Rectangle()
-                                                .fill(Color("Black-White"))
+                                                .fill(Color("DarkGray"))
                                                 .frame(maxWidth: 8)
 
                                             VStack(alignment: .leading, spacing: 4) {
@@ -390,16 +392,17 @@ struct NewWiDView: View {
                                         }
                                     }
                                     .tint(Color("Black-White"))
-                                    .background(Color("LightGray-Black"))
+                                    .background(Color("LightGray-Gray"))
                                     .cornerRadius(8)
                                     .padding(.horizontal)
                                 }
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Gray"))
+                        .background(Color("White-Black"))
                     }
                 }
+                .background(Color("LightGray-Gray"))
                 
                 /**
                  하단 바
@@ -411,41 +414,40 @@ struct NewWiDView: View {
 //                }
 //                .frame(maxWidth: .infinity)
             }
-            .background(Color("LightGray-Black"))
-            .onAppear {
-                self.wiDList = wiDService.selectWiDsByDate(date: date)
-                self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
-            }
-            .onChange(of: date) { newDate in
-                wiDList = wiDService.selectWiDsByDate(date: newDate)
-                print("new Date : \(formatTime(newDate, format: "yyyy-MM-dd a h:mm:ss"))")
-                
-                emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
-                
-                // date를 수정해도 start의 날짜는 그대로이므로 start의 날짜를 date에서 가져옴.
-                let newStartComponents = calendar.dateComponents([.hour, .minute, .second], from: start)
-                start = calendar.date(bySettingHour: newStartComponents.hour!, minute: newStartComponents.minute!, second: newStartComponents.second!, of: newDate)!
-                
-                // date를 수정해도 finish의 날짜는 그대로이므로 finish의 날짜를 date에서 가져옴.
-                let newFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: finish)
-                finish = calendar.date(bySettingHour: newFinishComponents.hour!, minute: newFinishComponents.minute!, second: newFinishComponents.second!, of: newDate)!
-                
-                checkWiDAvailableByStartAndFinish()
-            }
-            .onChange(of: start) { newStart in
-    //            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
-    //            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")
-                
-                checkWiDAvailableByStartAndFinish()
-            }
-            .onChange(of: finish) { newFinish in
-    //            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
-    //            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")
-
-                checkWiDAvailableByStartAndFinish()
-            }
         }
         .navigationBarHidden(true)
+        .onAppear {
+            self.wiDList = wiDService.selectWiDsByDate(date: date)
+            self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
+        }
+        .onChange(of: date) { newDate in
+            wiDList = wiDService.selectWiDsByDate(date: newDate)
+            print("new Date : \(formatTime(newDate, format: "yyyy-MM-dd a h:mm:ss"))")
+            
+            emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
+            
+            // date를 수정해도 start의 날짜는 그대로이므로 start의 날짜를 date에서 가져옴.
+            let newStartComponents = calendar.dateComponents([.hour, .minute, .second], from: start)
+            start = calendar.date(bySettingHour: newStartComponents.hour!, minute: newStartComponents.minute!, second: newStartComponents.second!, of: newDate)!
+            
+            // date를 수정해도 finish의 날짜는 그대로이므로 finish의 날짜를 date에서 가져옴.
+            let newFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: finish)
+            finish = calendar.date(bySettingHour: newFinishComponents.hour!, minute: newFinishComponents.minute!, second: newFinishComponents.second!, of: newDate)!
+            
+            checkWiDAvailableByStartAndFinish()
+        }
+        .onChange(of: start) { newStart in
+//            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
+//            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")
+            
+            checkWiDAvailableByStartAndFinish()
+        }
+        .onChange(of: finish) { newFinish in
+//            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
+//            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")
+
+            checkWiDAvailableByStartAndFinish()
+        }
     }
     
     func checkWiDAvailableByStartAndFinish() {

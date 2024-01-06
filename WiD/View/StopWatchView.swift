@@ -61,8 +61,6 @@ struct StopWatchView: View {
 
                         Text("스톱워치")
                             .titleLarge()
-                            .foregroundColor(Color("Black-White"))
-                            
                     }
                     .frame(maxWidth: .infinity, maxHeight: 44)
                     .padding(.horizontal)
@@ -83,7 +81,6 @@ struct StopWatchView: View {
                     if expandTitleMenu {
                         Text(stopWatchStarted ? "선택한 제목이 이어서 사용됩니다." : "사용할 제목을 선택해 주세요.")
                             .bodyMedium()
-                            .foregroundColor(Color("Black"))
                         
                         LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
                             ForEach(Title.allCases) { menuTitle in
@@ -100,14 +97,15 @@ struct StopWatchView: View {
                                         .bodyMedium()
                                         .frame(maxWidth: .infinity)
                                         .padding(8)
-                                        .background(title == menuTitle ? Color("Black") : Color("White"))
-                                        .foregroundColor(title == menuTitle ? Color("White") : Color("Black"))
-                                        .cornerRadius(8)
+                                        .background(title == menuTitle ? Color("Black-White") : Color("White-Black"))
+                                        .foregroundColor(title == menuTitle ? Color("White-Black") : Color("Black-White"))
+                                        .clipShape(Capsule())
                                 }
                             }
                         }
                         
                         Divider()
+                            .background(Color("LightGray"))
                     }
 
                     HStack {
@@ -128,7 +126,6 @@ struct StopWatchView: View {
                                     .imageScale(.small)
                             }
                         }
-                        .foregroundColor(Color("Black"))
                         .disabled(stopWatchPaused)
                         
                         Spacer()
@@ -159,18 +156,19 @@ struct StopWatchView: View {
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
-                        .background(stopWatchStarted ? .red : (stopWatchPaused ? Color("LimeGreen") : Color("Black")))
-                        .foregroundColor(Color("White"))
+                        .background(stopWatchStarted ? Color("OrangeRed") : (stopWatchPaused ? Color("LimeGreen") : Color("Black-White")))
+                        .foregroundColor(stopWatchReset ? Color("White-Black") : Color("White"))
                         .clipShape(Circle())
                     }
                 }
                 .padding()
-                .background(Color("LightGray"))
+                .background(Color("LightGray-Gray"))
                 .cornerRadius(8)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
+        .navigationBarHidden(true)
         .tint(Color("Black-White"))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
@@ -181,7 +179,6 @@ struct StopWatchView: View {
                 }
             }
         }
-        .navigationBarHidden(true)
     }
     
     private func startStopWatch() {

@@ -78,7 +78,7 @@ struct LineGraphView: UIViewRepresentable {
         let dataSet = LineChartDataSet(entries: entryList, label: "단위 : 시간")
 //        dataSet.valueFormatter = LineGraphDataValueFormatter()
         dataSet.drawValuesEnabled = false
-        dataSet.setColor(.black) // 선 색상
+        dataSet.setColor(NSUIColor(named: "Black-White") ?? .gray) // 선 색상
         dataSet.lineWidth = 2 // 선 굵기
 //        dataSet.valueFont = UIFont.systemFont(ofSize: 14) // 데이터 글자 크기
         dataSet.drawCirclesEnabled = false // 선 꼭지점 원 표시
@@ -112,7 +112,7 @@ struct LineGraphView: UIViewRepresentable {
         default:
             startColor = NSUIColor.white
         }
-        let endColor = NSUIColor.white // 그라디언트 끝 색
+        let endColor = NSUIColor(named: "White-Black") ?? .gray // 그라디언트 끝 색
         let gradientColors = [startColor.cgColor, endColor.cgColor] as CFArray
         let colorLocations: [CGFloat] = [1.0, 0.0]
         let gradient = CGGradient(colorsSpace: nil, colors: gradientColors, locations: colorLocations)
@@ -181,8 +181,14 @@ struct LineGraphView_Previews: PreviewProvider {
         // currentDate의 시간을 오전 12:00:00으로 맞춰줌.
         let startDate = calendar.startOfDay(for: Date())
         let finishDate = calendar.date(byAdding: .day, value: days - 1, to: startDate) ?? Date()
-
-        LineGraphView(title: "STUDY", wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
-            .aspectRatio(1.5 / 1.0, contentMode: .fit)
+        
+        Group {
+            LineGraphView(title: "STUDY", wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
+                .aspectRatio(1.5 / 1.0, contentMode: .fit)
+            
+            LineGraphView(title: "STUDY", wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
+                .aspectRatio(1.5 / 1.0, contentMode: .fit)
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

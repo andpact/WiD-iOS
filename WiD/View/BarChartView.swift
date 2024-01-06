@@ -247,7 +247,7 @@ struct VerticalBarChartView: UIViewRepresentable {
         dataSet.drawValuesEnabled = false
 //        dataSet.valueFormatter = VerticalBarChartDataValueFormatter()
 //        dataSet.valueFont = UIFont.systemFont(ofSize: 14) // 데이터 글자 크기
-//        dataSet.setColor(.white) // 막대 색상
+        dataSet.setColor(NSUIColor(named: "DarkGray") ?? .gray) // 막대 색상
 //        dataSet.barBorderColor = .black // 막대 테두리 색상
 //        dataSet.barBorderWidth = 2 // 막대 테두리 굵기
         
@@ -335,8 +335,14 @@ struct BarChartView_Previews: PreviewProvider {
         // currentDate의 시간을 오전 12:00:00으로 맞춰줌.
         let startDate = calendar.startOfDay(for: Date())
         let finishDate = calendar.date(byAdding: .day, value: days - 1, to: startDate) ?? Date()
-
-//        VerticalBarChartView(wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
-//            .aspectRatio(1.5 / 1.0, contentMode: .fit)
+        
+        Group {
+            VerticalBarChartView(wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
+                .aspectRatio(1.5 / 1.0, contentMode: .fit)
+            
+            VerticalBarChartView(wiDList: tmpWiDList, startDate: startDate, finishDate: finishDate)
+                .aspectRatio(1.5 / 1.0, contentMode: .fit)
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

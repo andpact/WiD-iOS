@@ -53,7 +53,7 @@ struct DiaryView: View {
                         let newDiary = Diary(id: 0, date: date, title: diaryTitle, content: diaryContent)
                         
                         if diary.id == -1 { // 다이어리가 데이터베이스에 없을 때
-                            print("insertDiary - \(newDiary)")
+//                            print("insertDiary - \(newDiary)")
                             diaryService.insertDiary(diary: newDiary)
                         } else {
                             diaryService.updateDiary(withID: diary.id, newTitle: diaryTitle, newContent: diaryContent)
@@ -61,11 +61,11 @@ struct DiaryView: View {
                         
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Text("완료")
+                        Text("저장")
                             .bodyMedium()
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
-                            .background(diaryTitle.isEmpty || diaryContent.isEmpty ? Color("DarkGray") : Color("DeepSkyBlue"))
+                            .background(diaryTitle.isEmpty || diaryContent.isEmpty ? Color("LightGray-Gray") : Color("DeepSkyBlue"))
                             .foregroundColor(Color("White"))
                             .cornerRadius(8)
                     }

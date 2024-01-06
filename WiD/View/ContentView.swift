@@ -13,18 +13,8 @@ struct ContentView: View {
 //    @State private var selectedPicker: ContentViewTapInfo = .HOME
     
     var body: some View {
-        NavigationView { // 네비게이션 뷰로 감싸지 않으면 네비게이션 링크를 통한 전환이 안됨.
+        NavigationView { // 네비게이션 출발지는 무조건 네비게이션 뷰로 감싸야함.
             VStack {
-                /**
-                 상단 바
-                 */
-//                ZStack {
-//                    Text("WiD")
-//                        .font(.custom("Acme-Regular", size: 25))
-//                        .foregroundColor(Color("Black-White"))
-//                }
-//                .frame(maxWidth: .infinity, maxHeight: 44)
-                
                 /**
                  컨텐츠
                  */
@@ -36,13 +26,11 @@ struct ContentView: View {
                                     .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(Color("Gray"))
-                                    .foregroundColor(Color("White"))
+                                    .background(Color("LightGray-Gray"))
                                     .cornerRadius(8)
                                 
                                 Text("스톱 워치")
                                     .bodyMedium()
-                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -53,13 +41,11 @@ struct ContentView: View {
                                     .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(Color("Gray"))
-                                    .foregroundColor(Color("White"))
+                                    .background(Color("LightGray-Gray"))
                                     .cornerRadius(8)
                                 
                                 Text("타이머")
                                     .bodyMedium()
-                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -70,13 +56,11 @@ struct ContentView: View {
                                     .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(Color("Gray"))
-                                    .foregroundColor(Color("White"))
+                                    .background(Color("LightGray-Gray"))
                                     .cornerRadius(8)
                                 
                                 Text("새로운 WiD")
                                     .bodyMedium()
-                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -90,13 +74,11 @@ struct ContentView: View {
                                     .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(Color("Gray"))
-                                    .foregroundColor(Color("White"))
+                                    .background(Color("LightGray-Gray"))
                                     .cornerRadius(8)
                                 
                                 Text("날짜 별 조회")
                                     .bodyMedium()
-                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -107,13 +89,11 @@ struct ContentView: View {
                                     .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(Color("Gray"))
-                                    .foregroundColor(Color("White"))
+                                    .background(Color("LightGray-Gray"))
                                     .cornerRadius(8)
                                 
                                 Text("기간 별 조회")
                                     .bodyMedium()
-                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -124,20 +104,20 @@ struct ContentView: View {
                                     .frame(maxWidth: 40, maxHeight: 40)
                                     .imageScale(.large)
                                     .padding()
-                                    .background(Color("Gray"))
-                                    .foregroundColor(Color("White"))
+                                    .background(Color("LightGray-Gray"))
                                     .cornerRadius(8)
                                 
                                 Text("다이어리 검색")
                                     .bodyMedium()
-                                    .foregroundColor(Color("Black-White"))
                             }
                             .frame(maxWidth: .infinity)
                         }
+                        
                     }
                     .padding(.horizontal)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .tint(Color("Black-White"))
                 
                 /**
                  하단 바
@@ -145,12 +125,10 @@ struct ContentView: View {
                 ZStack {
                     Text("WiD")
                         .font(.custom("Acme-Regular", size: 25))
-                        .foregroundColor(Color("Black-White"))
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
             }
         }
-        .tint(.black)
         
         // 전체 화면
 //        NavigationView {

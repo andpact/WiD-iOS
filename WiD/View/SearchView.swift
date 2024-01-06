@@ -60,56 +60,6 @@ struct SearchView: View {
                 VStack(spacing: 8) { // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
                     if diaryList.isEmpty {
                         getEmptyView(message: "검색으로 다이어리를 찾아보세요.")
-                        
-                        HStack(spacing: 16) {
-                            let wiDList = getRandomWiDList(days: 1)
-
-                            CalendarPieChartView(date: Date(), wiDList: wiDList)
-                                .frame(maxWidth: 70)
-
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("2023년 10월 10일")
-                                    .titleMedium()
-
-                                Text("제목제목제목제목제목제목제목제목제목")
-                                    .bodyMedium()
-                                    .lineLimit(1)
-
-                                Text("내용")
-                                    .bodyMedium()
-                                    .lineLimit(1)
-                            }
-
-                            Spacer()
-
-                            Image(systemName: "chevron.forward")
-                        }
-                        .padding(.horizontal)
-
-                        HStack(spacing: 16) {
-                            let wiDList = getRandomWiDList(days: 1)
-
-                            CalendarPieChartView(date: Date(), wiDList: wiDList)
-                                .frame(maxWidth: 70)
-
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("2023년 10월 10일")
-                                    .titleMedium()
-
-                                Text("제목")
-                                    .bodyMedium()
-                                    .lineLimit(1)
-
-                                Text("내용")
-                                    .bodyMedium()
-                                    .lineLimit(1)
-                            }
-
-                            Spacer()
-
-                            Image(systemName: "chevron.forward")
-                        }
-                        .padding(.horizontal)
                     } else {
                         ForEach(Array(diaryList), id: \.id) { diary in
                             NavigationLink(destination: DiaryView(date: diary.date)) {
@@ -121,7 +71,7 @@ struct SearchView: View {
                                     
                                     VStack(alignment: .leading, spacing: 4) {
                                         getDayString(date: diary.date)
-                                            .labelMedium()
+                                            .titleMedium()
                                         
                                         Text(diary.title)
                                             .bodyMedium()

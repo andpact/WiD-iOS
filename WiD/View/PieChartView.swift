@@ -18,7 +18,7 @@ struct CalendarPieChartView: View {
 
         // 비어 있는 시간대에 대한 PieChartData 생성
         if wiDList.isEmpty {
-            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("LightGray-Gray"))
+            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("DarkGray"))
             array.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -28,7 +28,7 @@ struct CalendarPieChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("LightGray-Gray"))
+                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("DarkGray"))
                     array.append(emptyPieChartData)
                 }
 
@@ -44,7 +44,7 @@ struct CalendarPieChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("LightGray-Gray"))
+                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("DarkGray"))
                 array.append(emptyPieChartData)
             }
         }
@@ -67,7 +67,7 @@ struct CalendarPieChartView: View {
                 // 중앙에 원
                 Circle()
                     .frame(width: geo.size.width * 0.8, height: geo.size.width * 0.8)
-                    .foregroundColor(Color("White-Gray"))
+                    .foregroundColor(Color("White-Black"))
                 
                 Text(formatDate(date, format: "d"))
                     .font(.system(size: 14))
@@ -105,7 +105,7 @@ struct DayPieChartView: View {
 
         // 비어 있는 시간대에 대한 PieChartData 생성
         if wiDList.isEmpty {
-            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("LightGray-Gray"))
+            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("DarkGray"))
             array.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -115,7 +115,7 @@ struct DayPieChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("LightGray-Gray"))
+                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("DarkGray"))
                     array.append(emptyPieChartData)
                 }
 
@@ -131,7 +131,7 @@ struct DayPieChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("LightGray-Gray"))
+                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("DarkGray"))
                 array.append(emptyPieChartData)
             }
         }
@@ -164,7 +164,7 @@ struct DayPieChartView: View {
                 // 중앙에 원
                 Circle()
                     .frame(width: geo.size.width * 0.95, height: geo.size.width * 0.95)
-                    .foregroundColor(Color("White-Gray"))
+                    .foregroundColor(Color("White-Black"))
                 
                 // 숫자 텍스트
                 ForEach(1...24, id: \.self) { number in
@@ -324,7 +324,13 @@ struct PieSliceView: Shape {
 
 struct PieChartView_Previews: PreviewProvider {
     static var previews: some View {
-        DayPieChartView(wiDList: [])
 //        CalendarPieChartView(date: Date(), wiDList: [])
+        
+        Group {
+            DayPieChartView(wiDList: [])
+            
+            DayPieChartView(wiDList: [])
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

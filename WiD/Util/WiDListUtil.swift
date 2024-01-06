@@ -317,6 +317,38 @@ func getAverageDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterva
 //    return numberOfDays > 0 ? totalDuration / numberOfDays : 0
 //}
 
+func getMinDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
+    var titleTotalDuration: [String: [Date: TimeInterval]] = [:]
+
+    for wiD in wiDList {
+        if var existingDurations = titleTotalDuration[wiD.title] {
+            existingDurations[wiD.date, default: 0] += wiD.duration
+            titleTotalDuration[wiD.title] = existingDurations
+        } else {
+            titleTotalDuration[wiD.title] = [wiD.date: wiD.duration]
+        }
+    }
+
+    // Calculate max duration for each title
+    var minDurationByTitle: [String: TimeInterval] = [:]
+
+    for (title, durations) in titleTotalDuration {
+        if let minDuration = durations.values.min() {
+            minDurationByTitle[title] = minDuration
+        }
+    }
+
+//    return maxDurationByTitle
+    
+    // Dictionary를 소요시간에 따라 내림차순 정렬
+    let sortedTitleMinDuration = minDurationByTitle.sorted { $0.value > $1.value }
+
+    // 정렬된 Dictionary를 새로운 Dictionary로 변환
+    let sortedDictionary = Dictionary(uniqueKeysWithValues: sortedTitleMinDuration)
+
+    return sortedDictionary
+}
+
 func getMaxDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
     var titleTotalDuration: [String: [Date: TimeInterval]] = [:]
 

@@ -11,15 +11,10 @@ import Foundation
 func getEmptyView(message: String) -> some View {
     return HStack {
         Text(message)
-            .font(.system(size: 16, weight: .light))
-            .foregroundColor(.gray)
+            .labelSmall()
     }
-//    .padding()
     .padding(.vertical, 48)
     .frame(maxWidth: .infinity)
-//    .background(Color("ghost_white"))
-//    .cornerRadius(8)
-//    .shadow(radius: 1)
 }
 
 func getEmptyViewWithMultipleLines(message: String) -> some View {
@@ -28,8 +23,7 @@ func getEmptyViewWithMultipleLines(message: String) -> some View {
     return VStack {
         ForEach(lines, id: \.self) { line in
             Text(line)
-                .font(.system(size: 16, weight: .light))
-                .foregroundColor(.gray)
+                .labelSmall()
                 .multilineTextAlignment(.center)
         }
     }

@@ -15,7 +15,6 @@ struct SplashView: View {
             VStack {
                 Text("WiD")
                     .font(.custom("Acme-Regular", size: 70))
-                    .foregroundColor(Color("Black-White"))
             }
             
 //            if !isInternetConnected {

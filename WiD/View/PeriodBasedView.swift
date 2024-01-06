@@ -36,6 +36,9 @@ struct PeriodBasedView: View {
     // 평균
     @State private var averageDurationDictionary: [String: TimeInterval] = [:]
     
+    // 최저
+    @State private var minDurationDictionary: [String: TimeInterval] = [:]
+    
     // 최고
     @State private var maxDurationDictionary: [String: TimeInterval] = [:]
     
@@ -66,7 +69,7 @@ struct PeriodBasedView: View {
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: 44)
-            .background(Color("White-Gray"))
+            .background(Color("White-Black"))
             
             Divider()
                 .background(Color("LightGray"))
@@ -75,7 +78,7 @@ struct PeriodBasedView: View {
              컨텐츠
              */
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: 8) {
                     if selectedTitle == TitleWithALL.ALL { // 제목이 "전체" 일 때
                         // 타임라인
                         VStack(spacing: 8) {
@@ -97,7 +100,7 @@ struct PeriodBasedView: View {
                                 HStack {
                                     if selectedPeriod == Period.WEEK {
                                         ForEach(0...6, id: \.self) { index in
-                                            let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black"))
+                                            let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black-White"))
                                             
                                             Text(formatWeekdayLetterFromMonday(index))
                                                 .bodySmall()
@@ -106,7 +109,7 @@ struct PeriodBasedView: View {
                                         }
                                     } else if selectedPeriod == Period.MONTH {
                                         ForEach(0...6, id: \.self) { index in
-                                            let textColor = index == 0 ? Color("OrangeRed") : (index == 6 ? Color("DeepSkyBlue") : Color("Black"))
+                                            let textColor = index == 0 ? Color("OrangeRed") : (index == 6 ? Color("DeepSkyBlue") : Color("Black-White"))
                                             
                                             Text(formatWeekdayLetterFromSunday(index))
                                                 .bodySmall()
@@ -115,9 +118,6 @@ struct PeriodBasedView: View {
                                         }
                                     }
                                 }
-                                .padding(.vertical, 8)
-                                .background(Color("LightGray"))
-                                .cornerRadius(8)
                                 .padding(.horizontal)
                                 
                                 // Weekday 1 - 일, 2 - 월...
@@ -158,7 +158,7 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Gray"))
+                        .background(Color("White-Black"))
                         
                         // 합계, 평균, 최고 기록
                         VStack(spacing: 8) {
@@ -174,7 +174,7 @@ struct PeriodBasedView: View {
                                         seletedDictionaryText = "합계"
                                     }) {
                                         Text("합계")
-                                            .bodySmall()
+                                            .bodyMedium()
                                             .foregroundColor(seletedDictionaryText == "합계" ? Color("Black-White") : Color("DarkGray"))
                                     }
                                     
@@ -183,8 +183,17 @@ struct PeriodBasedView: View {
                                         seletedDictionaryText = "평균"
                                     }) {
                                         Text("평균")
-                                            .bodySmall()
+                                            .bodyMedium()
                                             .foregroundColor(seletedDictionaryText == "평균" ? Color("Black-White") : Color("DarkGray"))
+                                    }
+                                    
+                                    Button(action: {
+                                        seletedDictionary = minDurationDictionary
+                                        seletedDictionaryText = "최저"
+                                    }) {
+                                        Text("최저")
+                                            .bodyMedium()
+                                            .foregroundColor(seletedDictionaryText == "최저" ? Color("Black-White") : Color("DarkGray"))
                                     }
                                     
                                     Button(action: {
@@ -192,7 +201,7 @@ struct PeriodBasedView: View {
                                         seletedDictionaryText = "최고"
                                     }) {
                                         Text("최고")
-                                            .bodySmall()
+                                            .bodyMedium()
                                             .foregroundColor(seletedDictionaryText == "최고" ? Color("Black-White") : Color("DarkGray"))
                                     }
                                 }
@@ -224,7 +233,7 @@ struct PeriodBasedView: View {
                                         }
                                         .padding(.vertical)
                                         .frame(maxWidth: .infinity)
-                                        .background(Color("LightGray-DarkGray"))
+                                        .background(Color("LightGray-Gray"))
                                         .cornerRadius(8)
                                     }
                                 }
@@ -232,7 +241,7 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Gray"))
+                        .background(Color("White-Black"))
                         
                         // 기록률
                         VStack(spacing: 8) {
@@ -250,7 +259,7 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Gray"))
+                        .background(Color("White-Black"))
                     } else { // 제목이 "전체"가 아닐 떄
                         // 그래프
                         VStack(spacing: 8) {
@@ -275,7 +284,7 @@ struct PeriodBasedView: View {
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Gray"))
+                        .background(Color("White-Black"))
                         
                         // 시간 기록
                         VStack(spacing: 8) {
@@ -286,97 +295,70 @@ struct PeriodBasedView: View {
                             
                             if filteredWiDListByTitle.isEmpty {
                                 getEmptyView(message: "표시할 기록이 없습니다.")
-                                
-//                                HStack {
-//                                    Text("합계")
-//                                        .bodyLarge()
-//                                    
-//                                    Spacer()
-//                                
-//                                    Text("1시간 20분 10초")
-//                                        .bodyLarge()
-//                                }
-//                                .padding()
-//                                .background(Color("light_gray"))
-//                                .cornerRadius(8)
-//                                .padding(.horizontal)
-//                                
-//                                HStack {
-//                                    Text("평균")
-//                                        .bodyLarge()
-//                                    
-//                                    Spacer()
-//                                
-//                                    Text("1시간 20분 10초")
-//                                        .bodyLarge()
-//                                }
-//                                .padding()
-//                                .background(Color("light_gray"))
-//                                .cornerRadius(8)
-//                                .padding(.horizontal)
-//                                
-//                                HStack {
-//                                    Text("최고")
-//                                        .bodyLarge()
-//                                    
-//                                    Spacer()
-//                                
-//                                    Text("1시간 20분 10초")
-//                                        .bodyLarge()
-//                                }
-//                                .padding()
-//                                .background(Color("light_gray"))
-//                                .cornerRadius(8)
-//                                .padding(.horizontal)
                             } else {
                                 HStack {
                                     Text("합계")
-                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        .bodyLarge()
                                     
                                     Spacer()
                                 
                                     Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        .titleLarge()
                                 }
                                 .padding()
-                                
-                                Divider()
-                                    .background(Color("LightGray"))
-                                    .padding(.horizontal)
+                                .background(Color("LightGray-Gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
                                 
                                 HStack {
                                     Text("평균")
-                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        .bodyLarge()
                                     
                                     Spacer()
                                 
                                     Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        .titleLarge()
                                 }
                                 .padding()
+                                .background(Color("LightGray-Gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
                                 
-                                Divider()
-                                    .background(Color("LightGray"))
-                                    .padding(.horizontal)
+                                HStack {
+                                    Text("최저")
+                                        .bodyLarge()
+                                    
+                                    Spacer()
+                                
+                                    Text(formatDuration(minDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                        .titleLarge()
+                                }
+                                .padding()
+                                .background(Color("LightGray-Gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
                                 
                                 HStack {
                                     Text("최고")
-                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        .bodyLarge()
                                     
                                     Spacer()
                                 
                                     Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-                                        .font(.custom("PyeongChangPeace-Bold", size: 20))
+                                        .titleLarge()
                                 }
                                 .padding()
+                                .background(Color("LightGray-Gray"))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Gray"))
+                        .background(Color("White-Black"))
                     }
                 }
             }
-            .background(Color("LightGray-Black"))
+            .background(Color("LightGray-Gray"))
             
             Divider()
                 .background(Color("LightGray"))
@@ -401,9 +383,9 @@ struct PeriodBasedView: View {
                                     .bodyMedium()
                                     .frame(maxWidth: .infinity)
                                     .padding(8)
-                                    .background(selectedPeriod == menuPeriod ? Color("Black-White") : Color("LightGray-DarkGray"))
+                                    .background(selectedPeriod == menuPeriod ? Color("Black-White") : Color("LightGray-Gray"))
                                     .foregroundColor(selectedPeriod == menuPeriod ? Color("White-Black") : Color("Black-White"))
-                                    .cornerRadius(8)
+                                    .clipShape(Capsule())
                             }
                         }
                     }
@@ -423,9 +405,9 @@ struct PeriodBasedView: View {
                             .bodyMedium()
                             .frame(maxWidth: .infinity)
                             .padding(8)
-                            .background(selectedTitle == TitleWithALL.ALL ? Color("Black-White") : Color("LightGray-DarkGray"))
+                            .background(selectedTitle == TitleWithALL.ALL ? Color("Black-White") : Color("LightGray-Gray"))
                             .foregroundColor(selectedTitle == TitleWithALL.ALL ? Color("White-Black") : Color("Black-White"))
-                            .cornerRadius(8)
+                            .clipShape(Capsule())
                     }
                     
                     LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
@@ -440,9 +422,9 @@ struct PeriodBasedView: View {
                                     .bodyMedium()
                                     .frame(maxWidth: .infinity)
                                     .padding(8)
-                                    .background(selectedTitle == menuTitle ? Color("Black-White") : Color("LightGray-DarkGray"))
+                                    .background(selectedTitle == menuTitle ? Color("Black-White") : Color("LightGray-Gray"))
                                     .foregroundColor(selectedTitle == menuTitle ? Color("White-Black") : Color("Black-White"))
-                                    .cornerRadius(8)
+                                    .clipShape(Capsule())
                             }
                         }
                     }
@@ -543,7 +525,7 @@ struct PeriodBasedView: View {
                 }
             }
             .padding()
-            .background(Color("White-Gray"))
+            .background(Color("White-Black"))
         }
         .tint(Color("Black-White"))
         .navigationBarHidden(true)
@@ -586,6 +568,7 @@ struct PeriodBasedView: View {
         totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
         averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
         maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
+        minDurationDictionary = getMinDurationDictionaryByTitle(wiDList: wiDList)
         
         // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
         seletedDictionary = totalDurationDictionary

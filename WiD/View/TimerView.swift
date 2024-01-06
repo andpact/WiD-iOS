@@ -66,7 +66,6 @@ struct TimerView: View {
 
                         Text("타이머")
                             .titleLarge()
-                            .foregroundColor(Color("Black-White"))
                         
     //                        if timerStarted {
     //                            Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
@@ -90,11 +89,9 @@ struct TimerView: View {
                             if selectedHour == hour {
                                 Text("\(hour)")
                                     .font(.custom("ChivoMono-BlackItalic", size: 35))
-                                    .foregroundColor(Color("Black-White"))
                             } else {
                                 Text("\(hour)")
                                     .font(.system(size: 20, weight: .medium))
-                                    .foregroundColor(Color("Black-White"))
                             }
                         }
                     }
@@ -108,11 +105,9 @@ struct TimerView: View {
                             if selectedMinute == minute {
                                 Text("\(minute)")
                                     .font(.custom("ChivoMono-BlackItalic", size: 35))
-                                    .foregroundColor(Color("Black-White"))
                             } else {
                                 Text("\(minute)")
                                     .font(.system(size: 20, weight: .medium))
-                                    .foregroundColor(Color("Black-White"))
                             }
                         }
                     }
@@ -126,11 +121,9 @@ struct TimerView: View {
                             if selectedSecond == second {
                                 Text("\(second)")
                                     .font(.custom("ChivoMono-BlackItalic", size: 35))
-                                    .foregroundColor(Color("Black-White"))
                             } else {
                                 Text("\(second)")
                                     .font(.system(size: 20, weight: .medium))
-                                    .foregroundColor(Color("Black-White"))
                             }
                         }
                     }
@@ -184,7 +177,6 @@ struct TimerView: View {
                     if titleMenuExpand {
                         Text("사용할 제목을 선택해 주세요.")
                             .bodyMedium()
-                            .foregroundColor(Color("Black"))
                         
                         LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
                             ForEach(Title.allCases) { menuTitle in
@@ -198,14 +190,15 @@ struct TimerView: View {
                                         .bodyMedium()
                                         .frame(maxWidth: .infinity)
                                         .padding(8)
-                                        .background(title == menuTitle ? Color("Black") : Color("White"))
-                                        .foregroundColor(title == menuTitle ? Color("White") : Color("Black"))
-                                        .cornerRadius(8)
+                                        .background(title == menuTitle ? Color("Black-White") : Color("White-Black"))
+                                        .foregroundColor(title == menuTitle ? Color("White-Black") : Color("Black-White"))
+                                        .clipShape(Capsule())
                                 }
                             }
                         }
                         
                         Divider()
+                            .background(Color("LightGray"))
                     }
 
                     HStack {
@@ -226,7 +219,6 @@ struct TimerView: View {
                                     .imageScale(.small)
                             }
                         }
-                        .foregroundColor(Color("Black"))
                         .disabled(!timerReset)
                         
                         Spacer()
@@ -257,19 +249,20 @@ struct TimerView: View {
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
-                        .background(timerStarted ? Color("OrangeRed") : (timerPaused ? Color("LimeGreen") : (remainingTime == 0 ? Color("Gray") : Color("Black"))))
-                        .foregroundColor(Color("White"))
+                        .background(timerStarted ? Color("OrangeRed") : (timerPaused ? Color("LimeGreen") : (remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
+                        .foregroundColor(timerReset ? Color("White-Black") : Color("White"))
                         .clipShape(Circle())
                         .disabled(remainingTime == 0)
                     }
                 }
                 .padding()
-                .background(Color("LightGray"))
+                .background(Color("LightGray-Gray"))
                 .cornerRadius(8)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
+        .navigationBarHidden(true)
         .tint(Color("Black-White"))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
@@ -284,8 +277,7 @@ struct TimerView: View {
                     timerTopBottomBarVisible.toggle()
                 }
             }
-        }
-        .navigationBarHidden(true)
+        } 
     }
     
     private func startTimer() {

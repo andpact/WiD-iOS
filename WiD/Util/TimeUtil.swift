@@ -23,30 +23,24 @@ func formatStopWatchTime(_ time: Int) -> some View {
         if 0 < hours {
             Text("\(hours)")
                 .frame(maxHeight: 90)
-                .font(.custom("ChivoMono-BlackItalic", size: 120))
             
             Text(String(format: "%02d", minutes))
                 .frame(maxHeight: 90)
-                .font(.custom("ChivoMono-BlackItalic", size: 120))
             
             Text(String(format: "%02d", seconds))
                 .frame(maxHeight: 90)
-                .font(.custom("ChivoMono-BlackItalic", size: 120))
         } else if 0 < minutes {
             Text("\(minutes)")
                 .frame(maxHeight: 90)
-                .font(.custom("ChivoMono-BlackItalic", size: 120))
             
             Text(String(format: "%02d", seconds))
                 .frame(maxHeight: 90)
-                .font(.custom("ChivoMono-BlackItalic", size: 120))
         } else {
             Text("\(seconds)")
                 .frame(maxHeight: 90)
-                .font(.custom("ChivoMono-BlackItalic", size: 120))
         }
     }
-    .foregroundColor(Color("Black-White"))
+    .font(.custom("ChivoMono-BlackItalic", size: 120))
 }
 
 func formatTimerTime(_ time: Int) -> some View {
@@ -57,6 +51,5 @@ func formatTimerTime(_ time: Int) -> some View {
     return HStack {
         Text("\(hours):\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))")
             .font(.custom("ChivoMono-BlackItalic", size: 70))
-            .foregroundColor(Color("Black-White"))
     }
 }
