@@ -12,124 +12,9 @@ struct ContentView: View {
     // 화면
 //    @State private var selectedPicker: ContentViewTapInfo = .HOME
     
+    @StateObject private var stopwatchPlayer = StopwatchPlayer()
+    
     var body: some View {
-        NavigationView { // 네비게이션 출발지는 무조건 네비게이션 뷰로 감싸야함.
-            VStack {
-                /**
-                 컨텐츠
-                 */
-                VStack {
-                    HStack(alignment: .top) {
-                        NavigationLink(destination: StopWatchView()) {
-                            VStack {
-                                Image(systemName: "stopwatch")
-                                    .frame(maxWidth: 40, maxHeight: 40)
-                                    .imageScale(.large)
-                                    .padding()
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(8)
-                                
-                                Text("스톱 워치")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                        
-                        NavigationLink(destination: TimerView()) {
-                            VStack {
-                                Image(systemName: "timer")
-                                    .frame(maxWidth: 40, maxHeight: 40)
-                                    .imageScale(.large)
-                                    .padding()
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(8)
-                                
-                                Text("타이머")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                        
-                        NavigationLink(destination: NewWiDView()) {
-                            VStack {
-                                Image(systemName: "plus.square")
-                                    .frame(maxWidth: 40, maxHeight: 40)
-                                    .imageScale(.large)
-                                    .padding()
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(8)
-                                
-                                Text("새로운 WiD")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    HStack {
-                        NavigationLink(destination: DateBasedView()) {
-                            VStack {
-                                Image(systemName: "scope")
-                                    .frame(maxWidth: 40, maxHeight: 40)
-                                    .imageScale(.large)
-                                    .padding()
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(8)
-                                
-                                Text("날짜 별 조회")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                        
-                        NavigationLink(destination: PeriodBasedView()) {
-                            VStack {
-                                Image(systemName: "calendar")
-                                    .frame(maxWidth: 40, maxHeight: 40)
-                                    .imageScale(.large)
-                                    .padding()
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(8)
-                                
-                                Text("기간 별 조회")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                        
-                        NavigationLink(destination: SearchView()) {
-                            VStack {
-                                Image(systemName: "doc.text.magnifyingglass")
-                                    .frame(maxWidth: 40, maxHeight: 40)
-                                    .imageScale(.large)
-                                    .padding()
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(8)
-                                
-                                Text("다이어리 검색")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                        
-                    }
-                    .padding(.horizontal)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .tint(Color("Black-White"))
-                
-                /**
-                 하단 바
-                 */
-                ZStack {
-                    Text("WiD")
-                        .font(.custom("Acme-Regular", size: 25))
-                }
-                .frame(maxWidth: .infinity, maxHeight: 44)
-            }
-        }
-        
         // 전체 화면
 //        NavigationView {
 //            VStack(spacing: 0) {
@@ -139,6 +24,10 @@ struct ContentView: View {
 //            }
 //            .tint(.black)
 //        }
+        
+        // 전체 화면
+        HomeView()
+            .environmentObject(stopwatchPlayer)
     }
     
 //    @ViewBuilder
