@@ -132,6 +132,7 @@ struct TimerView: View {
                 .padding()
             } else {
                 formatTimerTime(remainingTime)
+                    .font(.custom("ChivoMono-BlackItalic", size: 70))
                 
                 // 타이머 시간 추가
 //                HStack(spacing: 20) {
