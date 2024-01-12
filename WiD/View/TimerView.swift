@@ -17,32 +17,15 @@ struct TimerView: View {
     
     // 날짜
     private let calendar = Calendar.current
-    @State private var date: Date = Date()
     
     // 제목
-    @State private var title: Title = .STUDY
     @State private var titleMenuExpand: Bool = false
     
-    // 시작 시간
-    @State private var start: Date = Date()
-    
-    // 종료 시간
-    @State private var finish: Date = Date()
-    
-    // 소요 시간
-    @State private var duration: TimeInterval = 0
-    
     // 타이머
-    @State private var timer: Timer?
-    @State private var timerStarted: Bool = false
-    @State private var timerPaused: Bool = false
-    @State private var timerReset: Bool = true
-    @State private var remainingTime: Int = 0 // 초 단위
-    private let timerInterval = 1
-    @State private var finishTime: Date = Date()
     @State private var selectedHour: Int = 0
     @State private var selectedMinute: Int = 0
     @State private var selectedSecond: Int = 0
+    @EnvironmentObject var timerPlayer: TimerPlayer
     
     var body: some View {
         ZStack {
@@ -55,9 +38,9 @@ struct TimerView: View {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
                             
-                            if timerStarted {
-                                pauseTimer()
-                            }
+//                            if timerStarted {
+//                                pauseTimer()
+//                            }
                         }) {
                             Image(systemName: "arrow.backward")
                                 .imageScale(.large)
@@ -81,7 +64,7 @@ struct TimerView: View {
             /**
              컨텐츠
              */
-            if timerReset {
+            if timerPlayer.reset {
                 HStack(spacing: 0) {
                     // 시간(Hour) 선택
                     Picker("", selection: $selectedHour) {
@@ -131,7 +114,7 @@ struct TimerView: View {
                 }
                 .padding()
             } else {
-                formatTimerTime(remainingTime)
+                formatTimerTime(timerPlayer.remainingTime)
                     .font(.custom("ChivoMono-BlackItalic", size: 70))
                 
                 // 타이머 시간 추가
@@ -182,7 +165,7 @@ struct TimerView: View {
                         LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
                             ForEach(Title.allCases) { menuTitle in
                                 Button(action: {
-                                    title = menuTitle
+                                    timerPlayer.title = menuTitle
                                     withAnimation {
                                         titleMenuExpand.toggle()
                                     }
@@ -191,8 +174,8 @@ struct TimerView: View {
                                         .bodyMedium()
                                         .frame(maxWidth: .infinity)
                                         .padding(8)
-                                        .background(title == menuTitle ? Color("Black-White") : Color("White-Black"))
-                                        .foregroundColor(title == menuTitle ? Color("White-Black") : Color("Black-White"))
+                                        .background(timerPlayer.title == menuTitle ? Color("Black-White") : Color("White-Black"))
+                                        .foregroundColor(timerPlayer.title == menuTitle ? Color("White-Black") : Color("Black-White"))
                                         .clipShape(Capsule())
                                 }
                             }
@@ -210,21 +193,21 @@ struct TimerView: View {
                         }) {
                             Rectangle()
                                 .frame(maxWidth: 5, maxHeight: 20)
-                                .foregroundColor(Color(title.rawValue))
+                                .foregroundColor(Color(timerPlayer.title.rawValue))
                             
-                            Text(title.koreanValue)
+                            Text(timerPlayer.title.koreanValue)
                                 .bodyMedium()
                             
-                            if timerReset {
+                            if timerPlayer.reset {
                                 Image(systemName: "chevron.up.chevron.down")
                                     .imageScale(.small)
                             }
                         }
-                        .disabled(!timerReset)
+                        .disabled(!timerPlayer.reset)
                         
                         Spacer()
                         
-                        if timerPaused {
+                        if timerPlayer.paused {
                             Button(action: {
                                 resetTimer()
                             }) {
@@ -239,21 +222,21 @@ struct TimerView: View {
                         }
                         
                         Button(action: {
-                            if timerStarted {
+                            if timerPlayer.started {
                                 pauseTimer()
                             } else {
                                 startTimer()
                             }
                         }) {
-                            Image(systemName: timerStarted ? "pause.fill" : "play.fill")
+                            Image(systemName: timerPlayer.started ? "pause.fill" : "play.fill")
                                 .imageScale(.large)
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
-                        .background(timerStarted ? Color("OrangeRed") : (timerPaused ? Color("LimeGreen") : (remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
-                        .foregroundColor(timerReset ? Color("White-Black") : Color("White"))
+                        .background(timerPlayer.started ? Color("OrangeRed") : (timerPlayer.paused ? Color("LimeGreen") : (timerPlayer.remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
+                        .foregroundColor(timerPlayer.reset ? Color("White-Black") : Color("White"))
                         .clipShape(Circle())
-                        .disabled(remainingTime == 0)
+                        .disabled(timerPlayer.remainingTime == 0)
                     }
                 }
                 .padding()
@@ -268,53 +251,43 @@ struct TimerView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
         .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
-            remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
+            timerPlayer.remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
             
-            finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
+//            finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
         }
         .onTapGesture {
-            if timerStarted {
+            if timerPlayer.started {
                 withAnimation {
                     timerTopBottomBarVisible.toggle()
                 }
             }
-        } 
+        }
+        .onAppear {
+            withAnimation {
+                timerPlayer.inTimerView = true
+            }
+        }
+        .onDisappear {
+            withAnimation {
+                timerPlayer.inTimerView = false
+            }
+        }
     }
     
     private func startTimer() {
-        timerStarted = true
-        timerPaused = false
-        timerReset = false
-        
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timerInterval), repeats: true) { timer in
-            if remainingTime > 0 {
-                remainingTime -= timerInterval
-            } else {
-                pauseTimer()
-                resetTimer()
-            }
-        }
-        
-        date = Date()
-        start = Date()
+        timerPlayer.startIt()
     }
     
-//    private func restartTimer() {
-//
-//    }
-
     private func pauseTimer() {
-        timerStarted = false
-        timerPaused = true
+        timerPlayer.pauseIt()
         
-        timer?.invalidate()
-        timer = nil
+//        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
+        let now = Date()
         
-        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-        
-        finish = Date()
-        duration = finish.timeIntervalSince(start)
+        let title = timerPlayer.title.rawValue
+        let start = timerPlayer.start
+        let finish = now
+        let duration = finish.timeIntervalSince(start)
         
         let startComponents = calendar.dateComponents([.year, .month, .day], from: start)
         let finishComponents = calendar.dateComponents([.year, .month, .day], from: finish)
@@ -325,26 +298,45 @@ struct TimerView: View {
             // Check if the duration spans across multiple days
             if calendar.isDate(startDate, inSameDayAs: finishDate) {
                 // WiD duration is within the same day
-                let wiD = WiD(id: 0, date: startDate, title: title.rawValue, start: start, finish: finish, duration: duration)
+                let wiD = WiD(
+                    id: 0,
+                    date: startDate,
+                    title: title,
+                    start: start,
+                    finish: finish,
+                    duration: duration
+                )
                 wiDService.insertWiD(wid: wiD)
             } else {
                 // WiD duration spans across multiple days
                 let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
-                let firstDayWiD = WiD(id: 0, date: startDate, title: title.rawValue, start: start, finish: midnightEndDate, duration: midnightEndDate.timeIntervalSince(start))
+                let firstDayWiD = WiD(
+                    id: 0,
+                    date: startDate,
+                    title: title,
+                    start: start,
+                    finish: midnightEndDate,
+                    duration: midnightEndDate.timeIntervalSince(start)
+                )
                 wiDService.insertWiD(wid: firstDayWiD)
 
                 let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
                 let midnightEndDateNextDay = calendar.startOfDay(for: nextDayStartDate)
-                let secondDayWiD = WiD(id: 0, date: nextDayStartDate, title: title.rawValue, start: midnightEndDateNextDay, finish: finish, duration: finish.timeIntervalSince(midnightEndDateNextDay))
+                let secondDayWiD = WiD(
+                    id: 0,
+                    date: nextDayStartDate,
+                    title: title,
+                    start: midnightEndDateNextDay,
+                    finish: finish,
+                    duration: finish.timeIntervalSince(midnightEndDateNextDay)
+                )
                 wiDService.insertWiD(wid: secondDayWiD)
             }
         }
     }
 
     private func resetTimer() {
-        timerPaused = false
-        timerReset = true
-        remainingTime = 0
+        timerPlayer.resetIt()
     }
 }
 

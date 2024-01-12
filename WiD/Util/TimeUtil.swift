@@ -40,8 +40,12 @@ func formatStopWatchTime(_ time: Int) -> some View {
                 .frame(maxHeight: 90)
         }
     }
+    .font(.custom("ChivoMono-BlackItalic", size: 120))
 }
 
+/**
+ 폰트는 화면에서 각각 지정함.
+ */
 func formatTimerTime(_ time: Int) -> some View {
     let hours = time / 3600
     let minutes = (time % 3600) / 60
