@@ -72,7 +72,7 @@ struct WiDView: View {
                 Button(action: {
                     wiDService.updateWiD(withID: clickedWiDId, newTitle: title.rawValue, newStart: start, newFinish: finish, newDuration: duration)
                     
-                    wiDList = wiDService.selectWiDsByDate(date: date)
+                    wiDList = wiDService.selectWiDListByDate(date: date)
                     
                     presentationMode.wrappedValue.dismiss()
                 }) {
@@ -189,7 +189,7 @@ struct WiDView: View {
                                     Text("시작")
                                         .labelMedium()
                                     
-                                    Text(formatTime(start, format: "a hh:mm:ss"))
+                                    Text(formatTime(start))
                                         .bodyMedium()
                                 }
                                 
@@ -235,7 +235,7 @@ struct WiDView: View {
                                     Text("종료")
                                         .labelMedium()
                                     
-                                    Text(formatTime(finish, format: "a hh:mm:ss"))
+                                    Text(formatTime(finish))
                                         .bodyMedium()
                                 }
                                 
@@ -346,7 +346,7 @@ struct WiDView: View {
                                     .frame(maxWidth: 8)
                                 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("\(formatTime(startLimit, format: "a hh:mm:ss")) ~ \(formatTime(finishLimit, format: "a hh:mm:ss"))")
+                                    Text("\(formatTime(startLimit)) ~ \(formatTime(finishLimit))")
                                         .bodyMedium()
 
                                     Text(formatDuration(finishLimit.timeIntervalSince(startLimit), mode: 3))
@@ -383,7 +383,7 @@ struct WiDView: View {
         }
         .background(Color("White-Black"))
         .onAppear {
-            self.date = clickedWiD!.date // ?????????
+            self.date = clickedWiD!.date
             self.title = Title(rawValue: clickedWiD!.title) ?? .STUDY
             
             // date 날짜를 clickedWiD!.start와 clickedWiD!.finish에 적용시킴.
@@ -395,7 +395,7 @@ struct WiDView: View {
             
             self.duration = clickedWiD!.duration
             
-            self.wiDList = wiDService.selectWiDsByDate(date: date)
+            self.wiDList = wiDService.selectWiDListByDate(date: date)
             
             if let index = wiDList.firstIndex(where: { $0.id == clickedWiDId }) {
                 if 0 < index {

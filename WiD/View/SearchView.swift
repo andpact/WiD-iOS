@@ -64,7 +64,7 @@ struct SearchView: View {
                         ForEach(Array(diaryList), id: \.id) { diary in
                             NavigationLink(destination: DiaryView(date: diary.date)) {
                                 HStack(spacing: 16) {
-                                    let wiDList = wiDService.selectWiDsByDate(date: diary.date)
+                                    let wiDList = wiDService.selectWiDListByDate(date: diary.date)
                                     
                                     CalendarPieChartView(date: diary.date, wiDList: wiDList)
                                         .frame(maxWidth: 70)

@@ -559,7 +559,7 @@ struct PeriodBasedView: View {
     
     // startDate, finishDate 변경될 때 실행됨.
     func updateDataFromPeriod() {
-        wiDList = wiDService.selectWiDsBetweenDates(startDate: startDate, finishDate: finishDate)
+        wiDList = wiDService.selectWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
         
         filteredWiDListByTitle = wiDList.filter { wiD in
             return wiD.title == selectedTitle.rawValue

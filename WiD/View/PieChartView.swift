@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/*
+ 부모 뷰의 타이머에 의해 파이 차트가 계속 갱신되는 듯?
+ */
 struct CalendarPieChartView: View {
     private let date: Date
     private let wiDList: [WiD]
@@ -105,7 +108,7 @@ struct DayPieChartView: View {
 
         // 비어 있는 시간대에 대한 PieChartData 생성
         if wiDList.isEmpty {
-            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("DarkGray"))
+            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("Black-White"))
             array.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -115,7 +118,7 @@ struct DayPieChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("DarkGray"))
+                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("Black-White"))
                     array.append(emptyPieChartData)
                 }
 
@@ -131,7 +134,7 @@ struct DayPieChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("DarkGray"))
+                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("Black-White"))
                 array.append(emptyPieChartData)
             }
         }
@@ -164,7 +167,7 @@ struct DayPieChartView: View {
                 // 중앙에 원
                 Circle()
                     .frame(width: geo.size.width * 0.95, height: geo.size.width * 0.95)
-                    .foregroundColor(Color("White-Black"))
+                    .foregroundColor(Color("LightGray-Gray"))
                 
                 // 숫자 텍스트
                 ForEach(1...24, id: \.self) { number in
@@ -181,20 +184,21 @@ struct DayPieChartView: View {
                 }
                 
 //                Text("WiD")
-//                    .position(x: geo.size.width / 2, y: geo.size.width / 4)
+//                    .position(x: geo.size.width / 2, y: geo.size.width / 3)
 //                    .font(.custom("Acme-Regular", size: geo.size.width / 8))
                 
                 Text("\(totalDurationPercentage)%")
-                    .font(.system(size: geo.size.width / 5, weight: .heavy))
+//                    .font(.system(size: geo.size.width / 5, weight: .heavy))
+                    .font(.system(size: geo.size.width / 5, weight: .black))
                     .position(x: geo.size.width / 2, y: geo.size.width / 2)
                 
                 Text("\(formatDuration(getTotalDurationFromWiDList(wiDList: wiDList), mode: 1)) / 24시간")
                     .font(.system(size: geo.size.width / 15, weight: .medium))
                     .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
                 
-//                Text("오후 | 오전")
-//                    .font(.system(size: geo.size.width / 15, weight: .medium))
-//                    .position(x: geo.size.width / 2, y: geo.size.width / 1.3)
+                Text("오후 | 오전")
+                    .font(.system(size: geo.size.width / 15, weight: .medium))
+                    .position(x: geo.size.width / 2, y: geo.size.width / 3)
             }
         }
         .aspectRatio(contentMode: .fit)

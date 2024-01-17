@@ -114,7 +114,7 @@ struct TimerView: View {
                 }
                 .padding()
             } else {
-                formatTimerTime(timerPlayer.remainingTime)
+                formatTimeHorizontally(timerPlayer.remainingTime)
                     .font(.custom("ChivoMono-BlackItalic", size: 70))
                 
                 // 타이머 시간 추가

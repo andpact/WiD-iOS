@@ -158,11 +158,9 @@ class WiDService {
         return nil
     }
     
-    func selectWiDsByDate(date: Date) -> [WiD] {
+    func selectWiDListByDate(date: Date) -> [WiD] {
         let selectWiDsQuery = "SELECT id, date, title, start, finish, duration FROM WiD WHERE date = ? ORDER BY start ASC"
         
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from: date)
         
         var wiDList = [WiD]()
@@ -194,12 +192,43 @@ class WiDService {
             print("Success to select WiD list by ID.")
         }
         
-//        wiDList.sort { $0.start < $1.start }
-        
         return wiDList
     }
     
-    func selectWiDsBetweenDates(startDate: Date, finishDate: Date) -> [WiD] {
+    func selectWiDListByRandomDate() -> [WiD] {
+        let selectRandomDateQuery = "SELECT DISTINCT date FROM WiD"
+        
+        var dateList = [Date]()
+        var dateStatement: OpaquePointer?
+        
+        guard sqlite3_prepare_v2(db, selectRandomDateQuery, -1, &dateStatement, nil) == SQLITE_OK else {
+            print("Error preparing date query")
+            return []
+        }
+        
+        while sqlite3_step(dateStatement) == SQLITE_ROW {
+            let dateString = String(cString: sqlite3_column_text(dateStatement, 0))
+            if let date = dateFormatter.date(from: dateString) {
+                dateList.append(date)
+            }
+        }
+        
+        sqlite3_finalize(dateStatement)
+        
+        // Check if the date list is empty
+        guard !dateList.isEmpty else {
+            return []
+        }
+        
+        // Choose a random date from the list
+        let randomDate = dateList.randomElement()!
+        
+        // Use the selected date to fetch the WiDList
+        return selectWiDListByDate(date: randomDate)
+    }
+
+    
+    func selectWiDListBetweenDates(startDate: Date, finishDate: Date) -> [WiD] {
         let selectWiDsQuery = "SELECT id, date, title, start, finish, duration FROM WiD WHERE date BETWEEN ? AND ? ORDER BY date ASC, start ASC"
         
         let startDateString = dateFormatter.string(from: startDate)
@@ -237,8 +266,6 @@ class WiDService {
             sqlite3_finalize(statement)
             print("Success to select WiD list betwwen dates.")
         }
-        
-//        wiDList.sort { $0.date < $1.date || ($0.date == $1.date && $0.start < $1.start) }
         
         return wiDList
     }

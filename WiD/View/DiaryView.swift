@@ -25,7 +25,7 @@ struct DiaryView: View {
     @State private var contentPlaceHolder: String = "내용을 입력해 주세요."
     
     init(date: Date) {
-        self.wiDList = wiDService.selectWiDsByDate(date: date)
+        self.wiDList = wiDService.selectWiDListByDate(date: date)
         
         self.date = date
         self.diary = diaryService.selectDiaryByDate(date: date) ?? Diary(id: -1, date: Date(), title: "", content: "")

@@ -7,10 +7,11 @@
 
 import Foundation
 
+/**
+ Duration -> H시간 m분 s초 (ex. 10시간 30분 30초)
+ */
 func formatDuration(_ interval: TimeInterval, mode: Int) -> String {
-    // mode 0. HH:mm:ss (10:30:30)
     // mode 1. H시간 (10.5시간), m분 (30.5분)
-    // mode 2. H시간 m분 (10시간 30분)
     // mode 3. H시간 m분 s초 (10시간 30분 30초)
     
     let hours = Int(interval) / (60 * 60)
@@ -18,15 +19,6 @@ func formatDuration(_ interval: TimeInterval, mode: Int) -> String {
     let seconds = Int(interval) % 60
 
     switch mode {
-    case 0:
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-
-        
-    /*
-     모드 1 수정해야 한다!!!!!!!!!!!!!
-     모드 1 수정해야 한다!!!!!!!!!!!!!
-     모드 1 수정해야 한다!!!!!!!!!!!!!
-     */
     case 1:
         let totalHours = Double(hours) + (Double(minutes) / 60.0)
         let totalMinutes = Double(minutes) + (Double(seconds) / 60.0)
@@ -47,23 +39,6 @@ func formatDuration(_ interval: TimeInterval, mode: Int) -> String {
             return "\(minutes)분"
         } else {
             return "\(seconds)초"
-        }
-
-    case 2:
-        if hours > 0 && minutes == 0 && seconds == 0 {
-            return String(format: "%d시간", hours)
-        } else if hours > 0 && minutes > 0 && seconds == 0 {
-            return String(format: "%d시간 %d분", hours, minutes)
-        } else if hours > 0 && minutes == 0 && seconds > 0 {
-            return String(format: "%d시간 %d초", hours, seconds)
-        } else if hours > 0 {
-            return String(format: "%d시간 %d분", hours, minutes)
-        } else if minutes > 0 && seconds == 0 {
-            return String(format: "%d분", minutes)
-        } else if minutes > 0 {
-            return String(format: "%d분 %d초", minutes, seconds)
-        } else {
-            return String(format: "%d초", seconds)
         }
 
     case 3:
@@ -87,3 +62,19 @@ func formatDuration(_ interval: TimeInterval, mode: Int) -> String {
         fatalError("Invalid mode value")
     }
 }
+
+/**
+ 소수점 첫째 자리가 0일 때 자르기
+ */
+//    private let percentageFormatter: NumberFormatter = {
+//       let formatter = NumberFormatter()
+//       formatter.numberStyle = .percent
+//       formatter.minimumFractionDigits = 0
+//       formatter.maximumFractionDigits = 1
+//       return formatter
+//    }()
+
+//    if let formattedPercentage = percentageFormatter.string(from: NSNumber(value: Double(remainingPercentage) / 100.0)) {
+//        Text(formattedPercentage)
+//            .font(.system(size: 40, weight: .black, design: .monospaced))
+//    }

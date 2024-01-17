@@ -75,7 +75,7 @@ struct NewWiDView: View {
                         let newWiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration)
                         wiDService.insertWiD(wid: newWiD)
 
-                        wiDList = wiDService.selectWiDsByDate(date: date)
+                        wiDList = wiDService.selectWiDListByDate(date: date)
                         
                         emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
                         
@@ -221,7 +221,7 @@ struct NewWiDView: View {
                                         Text("시작")
                                             .labelMedium()
                                         
-                                        Text(formatTime(start, format: "a hh:mm:ss"))
+                                        Text(formatTime(start))
                                             .bodyMedium()
                                     }
                                     
@@ -268,7 +268,7 @@ struct NewWiDView: View {
                                         Text("종료")
                                             .labelMedium()
                                         
-                                        Text(formatTime(finish, format: "a hh:mm:ss"))
+                                        Text(formatTime(finish))
                                             .bodyMedium()
                                     }
                                     
@@ -377,7 +377,7 @@ struct NewWiDView: View {
                                                 .frame(maxWidth: 8)
 
                                             VStack(alignment: .leading, spacing: 4) {
-                                                Text("\(formatTime(emptyWiD.start, format: "a hh:mm:ss")) ~ \(formatTime(emptyWiD.finish, format: "a hh:mm:ss"))")
+                                                Text("\(formatTime(emptyWiD.start)) ~ \(formatTime(emptyWiD.finish))")
                                                     .bodyMedium()
 
                                                 Text(formatDuration(emptyWiD.duration, mode: 3))
@@ -417,12 +417,12 @@ struct NewWiDView: View {
         }
         .navigationBarHidden(true)
         .onAppear {
-            self.wiDList = wiDService.selectWiDsByDate(date: date)
+            self.wiDList = wiDService.selectWiDListByDate(date: date)
             self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
         }
         .onChange(of: date) { newDate in
-            wiDList = wiDService.selectWiDsByDate(date: newDate)
-            print("new Date : \(formatTime(newDate, format: "yyyy-MM-dd a h:mm:ss"))")
+            wiDList = wiDService.selectWiDListByDate(date: newDate)
+            print("new Date : \(formatTime(newDate))")
             
             emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
             

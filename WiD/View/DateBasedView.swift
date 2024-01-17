@@ -190,7 +190,7 @@ struct DateBasedView: View {
                                                 Text("\(titleDictionary[wiD.title] ?? "") • \(formatDuration(wiD.duration, mode: 3))")
                                                     .bodyMedium()
                                                 
-                                                Text("\(formatTime(wiD.start, format: "a hh:mm:ss")) ~ \(formatTime(wiD.finish, format: "a hh:mm:ss"))")
+                                                Text("\(formatTime(wiD.start)) ~ \(formatTime(wiD.finish))")
                                                     .labelMedium()
                                             }
                                             .padding(.vertical)
@@ -291,13 +291,13 @@ struct DateBasedView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onAppear {
-                self.wiDList = wiDService.selectWiDsByDate(date: currentDate)
+                self.wiDList = wiDService.selectWiDListByDate(date: currentDate)
                 self.totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
                 self.diary = diaryService.selectDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
             }
             .onChange(of: currentDate) { newDate in
                 withAnimation {
-                    wiDList = wiDService.selectWiDsByDate(date: newDate)
+                    wiDList = wiDService.selectWiDListByDate(date: newDate)
                     totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
                     diary = diaryService.selectDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
                 }

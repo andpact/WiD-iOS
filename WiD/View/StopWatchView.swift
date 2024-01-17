@@ -56,7 +56,7 @@ struct StopwatchView: View {
             /**
              컨텐츠
              */
-            formatStopWatchTime(stopwatchPlayer.elapsedTime)
+            formatTimeVertically(stopwatchPlayer.elapsedTime)
             
             /**
              하단 바

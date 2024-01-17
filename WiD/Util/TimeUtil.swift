@@ -8,13 +8,13 @@
 import SwiftUI
 import Foundation
 
-func formatTime(_ date: Date, format: String) -> String {
+func formatTime(_ date: Date) -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = format
+    dateFormatter.dateFormat = "a hh:mm:ss"
     return dateFormatter.string(from: date)
 }
 
-func formatStopWatchTime(_ time: Int) -> some View {
+func formatTimeVertically(_ time: Int) -> some View {
     let hours = time / 3600
     let minutes = (time % 3600) / 60
     let seconds = time % 60
@@ -46,7 +46,7 @@ func formatStopWatchTime(_ time: Int) -> some View {
 /**
  폰트는 화면에서 각각 지정함.
  */
-func formatTimerTime(_ time: Int) -> some View {
+func formatTimeHorizontally(_ time: Int) -> some View {
     let hours = time / 3600
     let minutes = (time % 3600) / 60
     let seconds = time % 60
