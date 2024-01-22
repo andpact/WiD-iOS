@@ -37,7 +37,6 @@ struct HomeView: View {
                         
                         formatTimeHorizontally(stopwatchPlayer.elapsedTime)
                             .font(.custom("ChivoMono-Regular", size: 18))
-//                            .font(.system(.body, design: .monospaced))
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .bodyMedium()
@@ -59,7 +58,6 @@ struct HomeView: View {
                         
                         formatTimeHorizontally(timerPlayer.remainingTime)
                             .font(.custom("ChivoMono-Regular", size: 18))
-//                            .font(.system(.body, design: .monospaced))
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .bodyMedium()
@@ -115,6 +113,7 @@ struct HomeView: View {
                                             .font(.system(size: 30))
                                             .background(Color("LightGray-Gray"))
                                             .cornerRadius(8)
+                                            
                                     }
                                     .disabled(!timerPlayer.reset)
                                     

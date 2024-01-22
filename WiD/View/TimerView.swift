@@ -19,7 +19,7 @@ struct TimerView: View {
     private let calendar = Calendar.current
     
     // 제목
-    @State private var titleMenuExpand: Bool = false
+    @State private var expandTitleMenu: Bool = false
     
     // 타이머
     @State private var selectedHour: Int = 0
@@ -158,51 +158,18 @@ struct TimerView: View {
                  하단 바
                  */
                 VStack {
-                    if titleMenuExpand {
-                        Text("사용할 제목을 선택해 주세요.")
-                            .bodyMedium()
-                        
-                        LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
-                            ForEach(Title.allCases) { menuTitle in
-                                Button(action: {
-                                    timerPlayer.title = menuTitle
-                                    withAnimation {
-                                        titleMenuExpand.toggle()
-                                    }
-                                }) {
-                                    Text(menuTitle.koreanValue)
-                                        .bodyMedium()
-                                        .frame(maxWidth: .infinity)
-                                        .padding(8)
-                                        .background(timerPlayer.title == menuTitle ? Color("Black-White") : Color("White-Black"))
-                                        .foregroundColor(timerPlayer.title == menuTitle ? Color("White-Black") : Color("Black-White"))
-                                        .clipShape(Capsule())
-                                }
-                            }
-                        }
-                        
-                        Divider()
-                            .background(Color("LightGray"))
-                    }
-
                     HStack {
                         Button(action: {
                             withAnimation {
-                                titleMenuExpand.toggle()
+                                expandTitleMenu.toggle()
                             }
                         }) {
-                            Rectangle()
-                                .frame(maxWidth: 5, maxHeight: 20)
-                                .foregroundColor(Color(timerPlayer.title.rawValue))
-                            
-                            Text(timerPlayer.title.koreanValue)
-                                .bodyMedium()
-                            
-                            if timerPlayer.reset {
-                                Image(systemName: "chevron.up.chevron.down")
-                                    .imageScale(.small)
-                            }
+                            Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
+                                .font(.system(size: 30))
                         }
+                        .frame(maxWidth: 25, maxHeight: 25)
+                        .padding()
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .disabled(!timerPlayer.reset)
                         
                         Spacer()
@@ -212,7 +179,7 @@ struct TimerView: View {
                                 resetTimer()
                             }) {
                                 Image(systemName: "arrow.clockwise")
-                                    .imageScale(.large)
+                                    .font(.system(size: 30))
                             }
                             .frame(maxWidth: 25, maxHeight: 25)
                             .padding()
@@ -229,7 +196,7 @@ struct TimerView: View {
                             }
                         }) {
                             Image(systemName: timerPlayer.started ? "pause.fill" : "play.fill")
-                                .imageScale(.large)
+                                .font(.system(size: 30))
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
@@ -240,10 +207,62 @@ struct TimerView: View {
                     }
                 }
                 .padding()
-                .background(Color("LightGray-Gray"))
-                .cornerRadius(8)
-                .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            }
+            
+            if expandTitleMenu {
+                ZStack(alignment: .bottom) {
+                    Color("Black").opacity(0.5)
+                        .onTapGesture {
+                            expandTitleMenu = false
+                        }
+                    
+                    VStack(spacing: 0) {
+                        ZStack {
+                            Text("제목 선택")
+                                .titleLarge()
+                            
+                            Button(action: {
+                                expandTitleMenu = false
+                            }) {
+                                Image(systemName: "xmark")
+                                    .imageScale(.large)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
+                        .padding()
+                        
+                        Divider()
+                        
+                        ScrollView {
+                            VStack(spacing: 0) {
+                                ForEach(Title.allCases) { menuTitle in
+                                    Button(action: {
+                                        timerPlayer.title = menuTitle
+                                        withAnimation {
+                                            expandTitleMenu = false
+                                        }
+                                    }) {
+                                        Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
+                                            .font(.system(size: 25))
+                                            .frame(maxWidth: 40, maxHeight: 40)
+                                        
+                                        Text(menuTitle.koreanValue)
+                                            .bodyMedium()
+                                        
+                                        Spacer()
+                                    }
+                                    .padding()
+                                }
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height / 3)
+                    .background(Color("LightGray-Gray"))
+                    .cornerRadius(8)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
             }
         }
         .navigationBarHidden(true)
@@ -344,9 +363,11 @@ struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             TimerView()
+                .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .light)
             
             TimerView()
+                .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .dark)
         }
     }

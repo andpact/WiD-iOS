@@ -104,7 +104,7 @@ struct NewWiDView: View {
                 ScrollView {
                     VStack(spacing: 8) {
                         VStack(spacing: 8) {
-                            Text("정보 입력")
+                            Text("WiD 정보 입력")
                                 .titleMedium()
                                 .padding(.horizontal)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -159,7 +159,7 @@ struct NewWiDView: View {
                             // 제목 선택
                             VStack(spacing: 0) { // 더미 스택
                                 HStack(spacing: 16) {
-                                    Image(systemName: "character.ko")
+                                    Image(systemName: titleImageDictionary[title.rawValue] ?? "")
                                         .imageScale(.large)
                                         .frame(width: 30, height: 30)
                                         .padding()
@@ -358,7 +358,7 @@ struct NewWiDView: View {
 //                        .background(.white)
                             
                         VStack(spacing: 8) {
-                            Text("선택 가능한 시간대")
+                            Text("등록 가능한 시간대")
                                 .titleMedium()
                                 .padding(.horizontal)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -378,10 +378,10 @@ struct NewWiDView: View {
 
                                             VStack(alignment: .leading, spacing: 4) {
                                                 Text("\(formatTime(emptyWiD.start)) ~ \(formatTime(emptyWiD.finish))")
-                                                    .bodyMedium()
+                                                    .font(.custom("ChivoMono-Regular", size: 18))
 
                                                 Text(formatDuration(emptyWiD.duration, mode: 3))
-                                                    .labelMedium()
+                                                    .font(.custom("ChivoMono-Regular", size: 18))
                                             }
                                             .padding(.vertical)
 
@@ -410,7 +410,6 @@ struct NewWiDView: View {
 //                HStack {
 //                    Text("WiD")
 //                        .font(.custom("Acme-Regular", size: 20))
-//
 //                }
 //                .frame(maxWidth: .infinity)
             }

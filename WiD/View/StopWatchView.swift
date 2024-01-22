@@ -62,72 +62,27 @@ struct StopwatchView: View {
              하단 바
              */
             if stopwatchTopBottomBarVisible {
-                VStack {
-                    if expandTitleMenu {
-                        Text(stopwatchPlayer.started ? "선택한 제목이 이어서 사용됩니다." : "사용할 제목을 선택해 주세요.")
-                            .bodyMedium()
-                        
-                        LazyVGrid(columns: Array(repeating: GridItem(), count: 5)) {
-                            ForEach(Title.allCases) { menuTitle in
-                                Button(action: {
-                                    if stopwatchPlayer.started && stopwatchPlayer.title != menuTitle { // 이어서 기록
-                                        restartStopwatchPlayer()
-                                    }
-                                    stopwatchPlayer.title = menuTitle
-                                    withAnimation {
-                                        expandTitleMenu.toggle()
-                                    }
-                                }) {
-                                    Text(menuTitle.koreanValue)
-                                        .bodyMedium()
-                                        .frame(maxWidth: .infinity)
-                                        .padding(8)
-                                        .background(stopwatchPlayer.title == menuTitle ? Color("Black-White") : Color("White-Black"))
-                                        .foregroundColor(stopwatchPlayer.title == menuTitle ? Color("White-Black") : Color("Black-White"))
-                                        .clipShape(Capsule())
-                                }
-                            }
+                VStack(spacing: 32) {
+                    if stopwatchPlayer.paused {
+                        Button(action: {
+                            resetStopwatchPlayer()
+                        }) {
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 30))
                         }
-                        
-                        Divider()
-                            .background(Color("LightGray"))
                     }
-
-                    HStack {
+                    
+                    HStack(spacing: 32) {
                         Button(action: {
                             withAnimation {
                                 expandTitleMenu.toggle()
                             }
                         }) {
-                            Rectangle()
-                                .frame(maxWidth: 5, maxHeight: 20)
-                                .foregroundColor(Color(stopwatchPlayer.title.rawValue))
-                            
-                            Text(stopwatchPlayer.title.koreanValue)
-                                .bodyMedium()
-                            
-                            if !stopwatchPlayer.paused {
-                                Image(systemName: "chevron.up.chevron.down")
-                                    .imageScale(.small)
-                            }
+                            Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
+                                .font(.system(size: 30))
                         }
-                        .disabled(stopwatchPlayer.paused)
-                        
-                        Spacer()
-                        
-                        if stopwatchPlayer.paused {
-                            Button(action: {
-                                resetStopwatchPlayer()
-                            }) {
-                                Image(systemName: "arrow.clockwise")
-                                    .imageScale(.large)
-                            }
-                            .frame(maxWidth: 25, maxHeight: 25)
-                            .padding()
-                            .background(Color("DeepSkyBlue"))
-                            .foregroundColor(Color("White"))
-                            .clipShape(Circle())
-                        }
+                        .frame(maxWidth: 40, maxHeight: 40)
+                        .disabled(!stopwatchPlayer.reset)
                         
                         Button(action: {
                             if stopwatchPlayer.started {
@@ -137,20 +92,97 @@ struct StopwatchView: View {
                             }
                         }) {
                             Image(systemName: stopwatchPlayer.started ? "pause.fill" : "play.fill")
-                                .imageScale(.large)
+                                .font(.system(size: 30))
                         }
-                        .frame(maxWidth: 25, maxHeight: 25)
+                        .frame(maxWidth: 40, maxHeight: 40)
                         .padding()
                         .background(stopwatchPlayer.started ? Color("OrangeRed") : (stopwatchPlayer.paused ? Color("LimeGreen") : Color("Black-White")))
                         .foregroundColor(stopwatchPlayer.reset ? Color("White-Black") : Color("White"))
                         .clipShape(Circle())
+                        
+                        Button(action: {
+                            withAnimation {
+                                expandTitleMenu.toggle()
+                            }
+                        }) {
+                            Image(systemName: "chevron.forward.2")
+                                .font(.system(size: 30))
+                        }
+                        .frame(maxWidth: 40, maxHeight: 40)
+                        .disabled(!stopwatchPlayer.started)
                     }
                 }
-                .padding()
-                .background(Color("LightGray-Gray"))
-                .cornerRadius(8)
-                .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .padding()
+            }
+            
+            if expandTitleMenu {
+                ZStack(alignment: .bottom) {
+                    Color("Black").opacity(0.5)
+                        .onTapGesture {
+                            expandTitleMenu = false
+                        }
+                    
+                    VStack(spacing: 0) {
+                        ZStack {
+                            Text(stopwatchPlayer.started ? "이어서 사용할 제목 선택" : "제목 선택")
+                                .titleLarge()
+                            
+                            Button(action: {
+                                expandTitleMenu = false
+                            }) {
+                                Image(systemName: "xmark")
+                                    .imageScale(.large)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
+                        .padding()
+                        
+                        Divider()
+                        
+                        ScrollView {
+                            VStack(spacing: 0) {
+                                ForEach(Title.allCases) { menuTitle in
+                                    Button(action: {
+                                        if stopwatchPlayer.started && stopwatchPlayer.title != menuTitle { // 이어서 기록
+                                            restartStopwatchPlayer()
+                                        }
+                                        
+                                        stopwatchPlayer.title = menuTitle
+                                        withAnimation {
+                                            expandTitleMenu = false
+                                        }
+                                    }) {
+                                        Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
+                                            .font(.system(size: 25))
+                                            .frame(maxWidth: 40, maxHeight: 40)
+                                        
+                                        Spacer()
+                                            .frame(maxWidth: 20)
+                                        
+                                        Text(menuTitle.koreanValue)
+                                            .bodyMedium()
+                                        
+                                        Spacer()
+                                        
+                                        if stopwatchPlayer.title == menuTitle {
+                                            Text("선택됨")
+                                        } else if stopwatchPlayer.title == menuTitle && stopwatchPlayer.started {
+                                            Text("사용 중")
+                                        }
+                                    }
+                                    .disabled(stopwatchPlayer.title == menuTitle && stopwatchPlayer.started)
+                                    .padding()
+                                }
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height / 3)
+                    .background(Color("LightGray-Gray"))
+                    .cornerRadius(8)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
             }
         }
         .navigationBarHidden(true)
