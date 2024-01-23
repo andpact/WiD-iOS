@@ -10,7 +10,7 @@ import SwiftUI
 /*
  부모 뷰의 타이머에 의해 파이 차트가 계속 갱신되는 듯?
  */
-struct CalendarPieChartView: View {
+struct PeriodPieChartView: View {
     private let date: Date
     private let wiDList: [WiD]
     
@@ -21,7 +21,7 @@ struct CalendarPieChartView: View {
 
         // 비어 있는 시간대에 대한 PieChartData 생성
         if wiDList.isEmpty {
-            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("DarkGray"))
+            let noPieChartData = PieChartData(value: .degrees(360.0), color: Color("Black-White"))
             array.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -31,7 +31,7 @@ struct CalendarPieChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("DarkGray"))
+                    let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("Black-White"))
                     array.append(emptyPieChartData)
                 }
 
@@ -47,7 +47,7 @@ struct CalendarPieChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("DarkGray"))
+                let emptyPieChartData = PieChartData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("Black-White"))
                 array.append(emptyPieChartData)
             }
         }
@@ -73,7 +73,7 @@ struct CalendarPieChartView: View {
                     .foregroundColor(Color("White-Black"))
                 
                 Text(formatDate(date, format: "d"))
-                    .font(.system(size: 14))
+                    .font(.system(size: geo.size.width / 3, weight: .medium))
                     .fontWeight(pieChartDataArray.count == 1 ? nil : .bold)
 //                    .foregroundColor(pieChartDataArray.count == 1 ? Color("LightGray-Gray") : Color("Black-White"))
             }
@@ -98,7 +98,7 @@ struct CalendarPieChartView: View {
     }
 }
 
-struct DayPieChartView: View {
+struct DatePieChartView: View {
     private let wiDList: [WiD]
     
     private var pieChartDataArray: [PieChartData] {
@@ -166,14 +166,15 @@ struct DayPieChartView: View {
 
                 // 중앙에 원
                 Circle()
-                    .frame(width: geo.size.width * 0.95, height: geo.size.width * 0.95)
-                    .foregroundColor(Color("LightGray-Gray"))
+                    .frame(width: geo.size.width * 0.8, height: geo.size.width * 0.8)
+//                    .frame(width: geo.size.width * 0.95, height: geo.size.width * 0.95)
+                    .foregroundColor(Color("White-Black"))
                 
                 // 숫자 텍스트
                 ForEach(1...24, id: \.self) { number in
                     let adjustedNumber = (number - 1) % 12 + 1
                     let numberTextangle = getAngle(for: number)
-                    let numberTextRadius = geo.size.width * 0.43 // 원의 반지름
+                    let numberTextRadius = geo.size.width * 0.45 // 텍스트가 표시되는 원의 반지름
 
                     let x = cos(numberTextangle.radians) * numberTextRadius
                     let y = sin(numberTextangle.radians) * numberTextRadius
@@ -181,28 +182,28 @@ struct DayPieChartView: View {
                     Text("\(adjustedNumber)")
                         .font(.system(size: geo.size.width / 15, weight: .medium))
                         .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 + y)
+                        .foregroundColor(Color("White-Black"))
                 }
                 
 //                Text("WiD")
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 3)
 //                    .font(.custom("Acme-Regular", size: geo.size.width / 8))
                 
+                Text("오후 | 오전")
+                    .font(.system(size: geo.size.width / 15, weight: .medium))
+                    .position(x: geo.size.width / 2, y: geo.size.width / 3)
+                
                 Text("\(totalDurationPercentage)%")
 //                    .font(.system(size: geo.size.width / 5, weight: .heavy))
                     .font(.system(size: geo.size.width / 5, weight: .black))
-                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
+//                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
                 
                 Text("\(formatDuration(getTotalDurationFromWiDList(wiDList: wiDList), mode: 1)) / 24시간")
                     .font(.system(size: geo.size.width / 15, weight: .medium))
                     .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
-                
-                Text("오후 | 오전")
-                    .font(.system(size: geo.size.width / 15, weight: .medium))
-                    .position(x: geo.size.width / 2, y: geo.size.width / 3)
             }
         }
         .aspectRatio(contentMode: .fit)
-        .padding()
     }
     
     func getStartAngle(for index: Int) -> Angle {
@@ -228,25 +229,25 @@ struct DayPieChartView: View {
     }
 }
 
-struct Line: Shape {
-    var start: CGPoint
-    var end: CGPoint
-    
-    init(start: CGPoint, end: CGPoint) {
-        self.start = start
-        self.end = end
-    }
-    
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        
-        // Use the provided start and end points
-        path.move(to: start)
-        path.addLine(to: end)
-        
-        return path
-    }
-}
+//struct Line: Shape {
+//    var start: CGPoint
+//    var end: CGPoint
+//
+//    init(start: CGPoint, end: CGPoint) {
+//        self.start = start
+//        self.end = end
+//    }
+//
+//    func path(in rect: CGRect) -> Path {
+//        var path = Path()
+//
+//        // Use the provided start and end points
+//        path.move(to: start)
+//        path.addLine(to: end)
+//
+//        return path
+//    }
+//}
 
 struct PieChartData {
     var value: Angle
@@ -328,12 +329,15 @@ struct PieSliceView: Shape {
 
 struct PieChartView_Previews: PreviewProvider {
     static var previews: some View {
-//        CalendarPieChartView(date: Date(), wiDList: [])
-        
         Group {
-            DayPieChartView(wiDList: [])
+            PeriodPieChartView(date: Date(), wiDList: [])
             
-            DayPieChartView(wiDList: [])
+            PeriodPieChartView(date: Date(), wiDList: [])
+                .environment(\.colorScheme, .dark)
+            
+            DatePieChartView(wiDList: [])
+            
+            DatePieChartView(wiDList: [])
                 .environment(\.colorScheme, .dark)
         }
     }

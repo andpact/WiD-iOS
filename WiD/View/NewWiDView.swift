@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct NewWiDView: View {
-//    private let screen = UIScreen.main.bounds.size
-    
     // 화면
     @Environment(\.presentationMode) var presentationMode
     
@@ -22,7 +20,8 @@ struct NewWiDView: View {
     private let calendar = Calendar.current
     private let today = Date()
     @State private var date = Date()
-    private let currentTime = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+//    private let currentTime = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+    private let currentTime = Date()
     @State private var expandDatePicker: Bool = false
 
     // 제목
@@ -30,15 +29,15 @@ struct NewWiDView: View {
     @State private var expandTitleMenu: Bool = false
     
     // 시작 시간
-    @State private var start = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
-//    private var startMinutes: Int { return Calendar.current.component(.hour, from: start) * 60 + Calendar.current.component(.minute, from: start) }
+//    @State private var start = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+    @State private var start = Date()
     @State private var isStartOverlap: Bool = false
     @State private var isStartOverCurrentTime: Bool = false
     @State private var expandStartPicker: Bool = false
     
     // 종료 시간
-    @State private var finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
-//    private var finishMinutes: Int { return Calendar.current.component(.hour, from: finish) * 60 + Calendar.current.component(.minute, from: finish) }
+//    @State private var finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+    @State private var finish = Date()
     @State private var isFinishOverlap: Bool = false
     @State private var isFinishOverCurrentTime: Bool = false
     @State private var expandFinishPicker: Bool = false
@@ -46,11 +45,6 @@ struct NewWiDView: View {
     // 소요 시간
     @State private var duration: TimeInterval = 0
     @State private var DurationExist: Bool = false
-    
-//    init() {
-//        self._wiDList = State(initialValue: wiDService.selectWiDsByDate(date: date))
-//        self.emptyWiDList = getEmptyWiDListFromWiDList(wiDList: wiDList)
-//    }
     
     var body: some View {
         NavigationView {
@@ -323,39 +317,11 @@ struct NewWiDView: View {
                             .padding(.horizontal)
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
                         
-//                        VStack(spacing: 0) {
-//                            HStack(spacing: 0) {
-//                                getDayString(date: date)
-//                                    .titleMedium()
-//
-//                                Text("의 타임 라인")
-//                                    .titleMedium()
-//                            }
-//                            .padding(.horizontal)
-//                            .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                            if wiDList.isEmpty {
-//                                getEmptyView(message: "표시할 타임라인이 없습니다.")
-//                            } else {
-//    //                            VStack {
-//                //                    ZStack {
-//                //                        Image(systemName: "arrowtriangle.down")
-//                //                            .foregroundColor(isStartOverlap || isStartOverCurrentTime || DurationExist ? .red : .none)
-//                //                            .offset(x: CGFloat(startMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
-//                //
-//                //                        Image(systemName: "arrowtriangle.down.fill")
-//                //                            .foregroundColor(isFinishOverlap || isFinishOverCurrentTime || DurationExist ? .red : .none)
-//                //                            .offset(x: CGFloat(finishMinutes) / (24 * 60) * screen.width * 0.8 - screen.width * 0.8 / 2)
-//                //                    }
-//
-//                                    StackedHorizontalBarChartView(wiDList: wiDList)
-//    //                            }
-//                            }
-//                        }
-//                        .padding(.vertical)
-//                        .background(.white)
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 8)
+                            .foregroundColor(Color("LightGray-Gray"))
                             
                         VStack(spacing: 8) {
                             Text("등록 가능한 시간대")
@@ -367,42 +333,44 @@ struct NewWiDView: View {
                                 getEmptyView(message: "표시할 시간대가 없습니다.")
                             } else {
                                 ForEach(Array(emptyWiDList), id: \.id) { emptyWiD in
-                                    Button(action: {
-                                        start = emptyWiD.start
-                                        finish = emptyWiD.finish
-                                    }) {
-                                        HStack(spacing: 16) {
-                                            Rectangle()
-                                                .fill(Color("DarkGray"))
-                                                .frame(maxWidth: 8)
-
+                                    // 버튼 안에 수평 스택을 명시적으로 삽입하면 프리뷰(시뮬레이터)가 동작 안할 수도 있다??
+                                    HStack(spacing: 8) {
+                                        Rectangle()
+                                            .fill(Color("Black-White"))
+                                            .frame(maxWidth: 8)
+                                        
+                                        Button(action: {
+                                            start = emptyWiD.start
+                                            finish = emptyWiD.finish
+                                        }) {
                                             VStack(alignment: .leading, spacing: 4) {
                                                 Text("\(formatTime(emptyWiD.start)) ~ \(formatTime(emptyWiD.finish))")
-                                                    .font(.custom("ChivoMono-Regular", size: 18))
+                                                    .bodyMedium()
 
                                                 Text(formatDuration(emptyWiD.duration, mode: 3))
-                                                    .font(.custom("ChivoMono-Regular", size: 18))
+                                                    .bodyMedium()
                                             }
-                                            .padding(.vertical)
+                                            .padding()
 
                                             Spacer()
 
                                             Image(systemName: "square.and.arrow.down")
-                                                .padding(.horizontal)
+                                                .padding()
                                         }
+                                        .tint(Color("Black-White"))
+                                        .background(Color("White-Black"))
+                                        .cornerRadius(8)
+                                        .shadow(color: Color("Black-White"), radius: 1)
                                     }
-                                    .tint(Color("Black-White"))
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(8)
                                     .padding(.horizontal)
                                 }
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
                     }
                 }
-                .background(Color("LightGray-Gray"))
+//                .background(Color("LightGray-Gray"))
                 
                 /**
                  하단 바

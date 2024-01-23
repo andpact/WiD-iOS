@@ -47,12 +47,12 @@ struct DateBasedView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .tint(Color("Black-White"))
 
-                    Text("날짜 별 조회")
+                    Text("날짜 조회")
                         .titleLarge()
                 }
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, maxHeight: 44)
-                .background(Color("White-Black"))
+//                .background(Color("White-Black"))
                 
                 Divider()
                     .background(Color("LightGray"))
@@ -61,7 +61,7 @@ struct DateBasedView: View {
                  컨텐츠
                  */
                 ScrollView {
-                    VStack(spacing: 8) {
+                    VStack(spacing: 0) {
                         // 다이어리 및 타임라인
                         VStack(spacing: 0) {
                             GeometryReader { geo in
@@ -74,59 +74,71 @@ struct DateBasedView: View {
                                         if wiDList.isEmpty {
                                             getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
                                         } else {
-                                            DayPieChartView(wiDList: wiDList)
+                                            DatePieChartView(wiDList: wiDList)
                                         }
                                     }
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
+                                .padding(.horizontal)
                             }
                             .aspectRatio(2 / 1, contentMode: .fit)
+                            
 
-                            Divider()
-                                .background(Color("LightGray"))
-                                .padding(.horizontal)
-                                
-
-                            VStack(spacing: 16) {
-                                Text((diary.id < 0 ? "제목을 입력해 주세요." : diary.title))
-                                    .bodyMedium()
-                                    .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
-                                    .onTapGesture {
-                                        if expandDiary == false {
-                                            expandDiary = true
-                                        }
+                            VStack(spacing: 0) {
+                                if diary.id < 0 {
+                                    VStack(spacing: 64) {
+                                        Text("당신이 이 날 무엇을 하고, 그 속에서 어떤 생각과 감정을 느꼈는지 주체적으로 기록해보세요.")
+                                            .labelSmall()
+                                            .multilineTextAlignment(.center)
+                                        
+                                        Image(systemName: "arrow.down")
                                     }
-
-                                Divider()
-                                    .background(Color("LightGray"))
-
-                                Text(diary.id < 0 ? "내용을 입력해 주세요." : diary.content)
-                                    .bodyMedium()
-                                    .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
-                                    .onTapGesture {
-                                        if expandDiary == false {
-                                            expandDiary = true
-                                        }
-                                    }
-                            }
-                            .padding()
-
-                            Button(action: {
-
-                            }) {
-                                NavigationLink(destination: DiaryView(date: currentDate)) {
-                                    Text("다이어리 수정")
+                                    .frame(maxWidth: .infinity, minHeight: 252) // 제목 높이(20) + 제목 패딩(16) + 내용 높이(200) + 내용 패딩(16)
+                                    .padding()
+                                } else {
+                                    Text(diary.title)
                                         .bodyMedium()
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
+                                        .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
                                         .padding()
+                                        .onTapGesture {
+                                            if expandDiary == false {
+                                                expandDiary = true
+                                            }
+                                        }
+
+                                    Text(diary.content)
+                                        .bodyMedium()
+                                        .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
+                                        .padding()
+                                        .onTapGesture {
+                                            if expandDiary == false {
+                                                expandDiary = true
+                                            }
+                                        }
                                 }
                             }
-                            .background(Color("DeepSkyBlue"))
+                            .background(Color("White-Black"))
+                            .cornerRadius(8)
+                            .shadow(color: Color("Black-White"), radius: 1)
+                            .padding(.horizontal)
+
+                            
+                            NavigationLink(destination: DiaryView(date: currentDate)) { // 네비게이션 링크안에 HStack(spacing: 8)이 포함되어 있음.
+                                Text("다이어리 수정")
+                                    .bodyMedium()
+                                    .foregroundColor(Color("AppIndigo"))
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            }
+                            .background(Color("AppYellow"))
                             .cornerRadius(8)
                             .padding()
                         }
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
+                        
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 8)
+                            .foregroundColor(Color("LightGray-Gray"))
                         
                         // 합계 기록
                         VStack(spacing: 8) {
@@ -159,15 +171,20 @@ struct DateBasedView: View {
                                         }
                                         .padding(.vertical)
                                         .frame(maxWidth: .infinity)
-                                        .background(Color("LightGray-Gray"))
+                                        .background(Color("White-Black"))
                                         .cornerRadius(8)
+                                        .shadow(color: Color("Black-White"), radius: 1)
                                     }
                                 }
                                 .padding(.horizontal)
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
+                        
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 8)
+                            .foregroundColor(Color("LightGray-Gray"))
                         
                         // WiD 리스트
                         VStack(spacing: 8) {
@@ -180,39 +197,40 @@ struct DateBasedView: View {
                                 getEmptyView(message: "표시할 WiD가 없습니다.")
                             } else {
                                 ForEach(Array(wiDList), id: \.id) { wiD in
-                                    NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                                        HStack(spacing: 16) {
-                                            Rectangle()
-                                                .fill(Color(wiD.title))
-                                                .frame(maxWidth: 8)
-                                            
+                                    HStack(spacing: 8) {
+                                        Rectangle()
+                                            .fill(Color(wiD.title))
+                                            .frame(maxWidth: 8)
+                                        
+                                        NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                                             VStack(alignment: .leading, spacing: 4) {
-                                                Text("\(titleDictionary[wiD.title] ?? "") • \(formatDuration(wiD.duration, mode: 3))")
+                                                Text("\(formatTime(wiD.start)) ~ \(formatTime(wiD.finish))")
                                                     .bodyMedium()
                                                 
-                                                Text("\(formatTime(wiD.start)) ~ \(formatTime(wiD.finish))")
-                                                    .labelMedium()
+                                                Text("\(titleDictionary[wiD.title] ?? "") • \(formatDuration(wiD.duration, mode: 3))")
+                                                    .bodyMedium()
                                             }
-                                            .padding(.vertical)
+                                            .padding()
                                             
                                             Spacer()
                                             
                                             Image(systemName: "chevron.forward")
-                                                .padding(.horizontal)
+                                                .padding()
                                         }
-                                        .background(Color("LightGray-Gray"))
                                         .tint(Color("Black-White")) // 네비게이션 링크 때문에 전경색이 바뀌어서, 틴트 색상 명시적으로 설명해줌.
+                                        .background(Color("White-Black"))
                                         .cornerRadius(8)
-                                        .padding(.horizontal)
+                                        .shadow(color: Color("Black-White"), radius: 1)
                                     }
+                                    .padding(.horizontal)
                                 }
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black")) // 부모 뷰에 배경을 지정했기 때문에, 기본 적용되는 "White-Black"을 명시적으로 적용함.
+//                        .background(Color("White-Black")) // 부모 뷰에 배경을 지정했기 때문에, 기본 적용되는 "White-Black"을 명시적으로 적용함.
                     }
                 }
-                .background(Color("LightGray-Gray"))
+//                .background(Color("LightGray-Gray"))
                 
                 Divider()
                     .background(Color("LightGray"))
@@ -243,6 +261,7 @@ struct DateBasedView: View {
                         }) {
                             Image(systemName: "calendar")
                                 .imageScale(.large)
+                                .frame(width: 30, height: 30)
                         }
                         .frame(maxWidth: .infinity)
                         .tint(Color("Black-White"))
@@ -257,6 +276,7 @@ struct DateBasedView: View {
                         }) {
                             Image(systemName: "arrow.clockwise")
                                 .imageScale(.large)
+                                .frame(width: 30, height: 30)
                         }
                         .frame(maxWidth: .infinity)
                         .tint(Color("Black-White"))
@@ -269,6 +289,7 @@ struct DateBasedView: View {
                         }) {
                             Image(systemName: "chevron.backward")
                                 .imageScale(.large)
+                                .frame(width: 30, height: 30)
                         }
                         .frame(maxWidth: .infinity)
                         .tint(Color("Black-White"))
@@ -280,6 +301,7 @@ struct DateBasedView: View {
                         }) {
                             Image(systemName: "chevron.forward")
                                 .imageScale(.large)
+                                .frame(width: 30, height: 30)
                         }
                         .frame(maxWidth: .infinity)
                         .tint(Color("Black-White"))
@@ -287,7 +309,7 @@ struct DateBasedView: View {
                     }
                 }
                 .padding()
-                .background(Color("White-Black"))
+//                .background(Color("White-Black"))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onAppear {
@@ -303,6 +325,7 @@ struct DateBasedView: View {
                 }
             }
         }
+//        .background(Color("White-Black")) // 전체 배경색을 지정하고, 필요하면 내용물에 개별 배경색을 지정함.
         .navigationBarHidden(true)
     }
 }

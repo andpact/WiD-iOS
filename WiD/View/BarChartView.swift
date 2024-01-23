@@ -247,7 +247,7 @@ struct VerticalBarChartView: UIViewRepresentable {
         dataSet.drawValuesEnabled = false
 //        dataSet.valueFormatter = VerticalBarChartDataValueFormatter()
 //        dataSet.valueFont = UIFont.systemFont(ofSize: 14) // 데이터 글자 크기
-        dataSet.setColor(NSUIColor(named: "DarkGray") ?? .gray) // 막대 색상
+        dataSet.setColor(NSUIColor(named: "AppYellow") ?? .gray) // 막대 색상
 //        dataSet.barBorderColor = .black // 막대 테두리 색상
 //        dataSet.barBorderWidth = 2 // 막대 테두리 굵기
         

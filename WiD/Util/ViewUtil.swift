@@ -15,6 +15,10 @@ func getEmptyView(message: String) -> some View {
     }
     .padding(.vertical, 48)
     .frame(maxWidth: .infinity)
+    .background(Color("White-Black"))
+    .cornerRadius(8)
+    .shadow(color: Color("Black-White"), radius: 1)
+    .padding(.horizontal)
 }
 
 func getEmptyViewWithMultipleLines(message: String) -> some View {

@@ -65,7 +65,7 @@ struct StopwatchView: View {
                 VStack(spacing: 32) {
                     if stopwatchPlayer.paused {
                         Button(action: {
-                            resetStopwatchPlayer()
+                            stopwatchPlayer.resetIt()
                         }) {
                             Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 30))
@@ -86,9 +86,13 @@ struct StopwatchView: View {
                         
                         Button(action: {
                             if stopwatchPlayer.started {
-                                pauseStopwatchPlayer()
+                                stopwatchPlayer.pauseIt()
+                                
+                                let now = Date()
+                                
+                                createWiD(now: now)
                             } else {
-                                startStopwatchPlayer()
+                                stopwatchPlayer.startIt()
                             }
                         }) {
                             Image(systemName: stopwatchPlayer.started ? "pause.fill" : "play.fill")
@@ -145,10 +149,17 @@ struct StopwatchView: View {
                                 ForEach(Title.allCases) { menuTitle in
                                     Button(action: {
                                         if stopwatchPlayer.started && stopwatchPlayer.title != menuTitle { // 이어서 기록
-                                            restartStopwatchPlayer()
+                                            stopwatchPlayer.restartIt()
                                         }
                                         
+                                        let now = Date()
+                                        
+                                        createWiD(now: now)
+                                        
+                                        stopwatchPlayer.date = now
                                         stopwatchPlayer.title = menuTitle
+                                        stopwatchPlayer.start = now
+                                        
                                         withAnimation {
                                             expandTitleMenu = false
                                         }
@@ -208,125 +219,48 @@ struct StopwatchView: View {
         }
     }
     
-    private func startStopwatchPlayer() {
-        stopwatchPlayer.startIt()
-    }
-    
-    private func restartStopwatchPlayer() {
-        stopwatchPlayer.restartIt()
-        
-        let now = Date()
-        
+    private func createWiD(now: Date) {
         let title = stopwatchPlayer.title.rawValue
-        let start = stopwatchPlayer.start
-        let finish = now
+        let start = calendar.date(bySetting: .nanosecond, value: 0, of: stopwatchPlayer.start)! // 밀리 세컨드 제거하여 초 단위만 사용
+        let finish = calendar.date(bySetting: .nanosecond, value: 0, of: now)!
         let duration = finish.timeIntervalSince(start)
 
-        let startComponents = calendar.dateComponents([.year, .month, .day], from: start)
-        let finishComponents = calendar.dateComponents([.year, .month, .day], from: finish)
-
-        if let startDate = calendar.date(from: startComponents), let finishDate = calendar.date(from: finishComponents) {
-            // Check if the duration spans across multiple days
-            if calendar.isDate(startDate, inSameDayAs: finishDate) {
-                // WiD duration is within the same day
-                let wiD = WiD(
-                    id: 0,
-                    date: startDate,
-                    title: title,
-                    start: start,
-                    finish: finish,
-                    duration: duration
-                )
-                wiDService.insertWiD(wid: wiD)
-            } else {
-                // WiD duration spans across multiple days
-                let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
-                let firstDayWiD = WiD(
-                    id: 0,
-                    date: startDate,
-                    title: title,
-                    start: start,
-                    finish: midnightEndDate,
-                    duration: midnightEndDate.timeIntervalSince(start)
-                )
-                wiDService.insertWiD(wid: firstDayWiD)
-
-                let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-                let midnightEndDateNextDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nextDayStartDate)!
-                let secondDayWiD = WiD(
-                    id: 0,
-                    date: nextDayStartDate,
-                    title: title,
-                    start: midnightEndDateNextDay,
-                    finish: finish,
-                    duration: finish.timeIntervalSince(midnightEndDateNextDay)
-                )
-                wiDService.insertWiD(wid: secondDayWiD)
-            }
+        // Check if the duration spans across multiple days
+        if calendar.isDate(start, inSameDayAs: finish) {
+            // WiD duration is within the same day
+            let wiD = WiD(
+                id: 0,
+                date: start,
+                title: title,
+                start: start,
+                finish: finish,
+                duration: duration
+            )
+            wiDService.insertWiD(wid: wiD)
+        } else {
+            // WiD duration spans across multiple days
+            let midnightOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
+            let firstDayWiD = WiD(
+                id: 0,
+                date: start,
+                title: title,
+                start: start,
+                finish: midnightOfStart,
+                duration: midnightOfStart.timeIntervalSince(start)
+            )
+            wiDService.insertWiD(wid: firstDayWiD)
+//
+            let startOfFinish = calendar.startOfDay(for: finish)
+            let secondDayWiD = WiD(
+                id: 0,
+                date: finish,
+                title: title,
+                start: startOfFinish,
+                finish: finish,
+                duration: finish.timeIntervalSince(startOfFinish)
+            )
+            wiDService.insertWiD(wid: secondDayWiD)
         }
-        
-        stopwatchPlayer.date = now
-        stopwatchPlayer.start = now
-    }
-
-    private func pauseStopwatchPlayer() {
-        stopwatchPlayer.pauseIt()
-        
-        let now = Date()
-        
-        let title = stopwatchPlayer.title.rawValue
-        let start = stopwatchPlayer.start
-        let finish = now
-        let duration = finish.timeIntervalSince(start)
-
-        let startComponents = calendar.dateComponents([.year, .month, .day], from: start)
-        let finishComponents = calendar.dateComponents([.year, .month, .day], from: finish)
-
-        if let startDate = calendar.date(from: startComponents),
-           let finishDate = calendar.date(from: finishComponents) {
-
-            // Check if the duration spans across multiple days
-            if calendar.isDate(startDate, inSameDayAs: finishDate) {
-                // WiD duration is within the same day
-                let wiD = WiD(
-                    id: 0,
-                    date: startDate,
-                    title: title,
-                    start: start,
-                    finish: finish,
-                    duration: duration
-                )
-                wiDService.insertWiD(wid: wiD)
-            } else {
-                // WiD duration spans across multiple days
-                let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
-                let firstDayWiD = WiD(
-                    id: 0,
-                    date: startDate,
-                    title: title,
-                    start: start,
-                    finish: midnightEndDate,
-                    duration: midnightEndDate.timeIntervalSince(start)
-                )
-                wiDService.insertWiD(wid: firstDayWiD)
-
-                let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-                let midnightEndDateNextDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nextDayStartDate)!
-                let secondDayWiD = WiD(
-                    id: 0,
-                    date: nextDayStartDate,
-                    title: title,
-                    start: midnightEndDateNextDay,
-                    finish: finish,
-                    duration: finish.timeIntervalSince(midnightEndDateNextDay)
-                )
-                wiDService.insertWiD(wid: secondDayWiD)
-            }
-        }
-    }
-    
-    private func resetStopwatchPlayer() {
-        stopwatchPlayer.resetIt()
     }
 }
 

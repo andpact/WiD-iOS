@@ -39,7 +39,6 @@
 		EA82C5032B240A2F00835DE4 /* PyeongChangPeace-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */; };
 		EA9D41742AB18B0D008D6DE2 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D41732AB18B0D008D6DE2 /* TimerView.swift */; };
 		EAA5E85C2B2FE6A8004DEA29 /* FontUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */; };
-		EAA7EC332B4EC3DD0058A813 /* TmpStopWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA7EC322B4EC3DD0058A813 /* TmpStopWatchView.swift */; };
 		EAA83AA52B3D2864008CE95F /* ChivoMono-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */; };
 		EAB438A62B5109A70029F640 /* TimerPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB438A52B5109A70029F640 /* TimerPlayer.swift */; };
 		EAC5D7212A56A76E00FA2499 /* StopWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7202A56A76E00FA2499 /* StopWatchView.swift */; };
@@ -110,7 +109,6 @@
 		EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PyeongChangPeace-Bold.otf"; sourceTree = "<group>"; };
 		EA9D41732AB18B0D008D6DE2 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontUtil.swift; sourceTree = "<group>"; };
-		EAA7EC322B4EC3DD0058A813 /* TmpStopWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TmpStopWatchView.swift; sourceTree = "<group>"; };
 		EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChivoMono-BlackItalic.ttf"; sourceTree = "<group>"; };
 		EAB438A52B5109A70029F640 /* TimerPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPlayer.swift; sourceTree = "<group>"; };
 		EAC5D7202A56A76E00FA2499 /* StopWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWatchView.swift; sourceTree = "<group>"; };
@@ -271,7 +269,6 @@
 				EA18DCB52AE8CC5B00B88F30 /* BarChartView.swift */,
 				EA0458202A625B840065B98E /* PieChartView.swift */,
 				EA4EACF32B1EAA2900BB4681 /* LineGraphView.swift */,
-				EAA7EC322B4EC3DD0058A813 /* TmpStopWatchView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -570,7 +567,6 @@
 				EA05E95C2B1CA6B800A0DF42 /* DiaryView.swift in Sources */,
 				EAC5D7212A56A76E00FA2499 /* StopWatchView.swift in Sources */,
 				EA60B8062A56991700B49641 /* WiDApp.swift in Sources */,
-				EAA7EC332B4EC3DD0058A813 /* TmpStopWatchView.swift in Sources */,
 				EA1B5BE02B22AF5800E1BC87 /* ViewUtil.swift in Sources */,
 				EA0C270C2B19AAB200AB2FBD /* DurationUtil.swift in Sources */,
 				EA0C270A2B19AA7D00AB2FBD /* DateUtil.swift in Sources */,

@@ -88,17 +88,14 @@ struct DiaryView: View {
                             if wiDList.isEmpty {
                                 getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
                             } else {
-                                DayPieChartView(wiDList: wiDList)
+                                DatePieChartView(wiDList: wiDList)
                             }
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
+                    .padding(.horizontal)
                 }
                 .aspectRatio(2 / 1, contentMode: .fit)
-                
-                Divider()
-                    .background(Color("LightGray"))
-                    .padding(.horizontal)
                 
                 ZStack {
                     // Place holder

@@ -111,7 +111,9 @@ struct HomeView: View {
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                                             .aspectRatio(1, contentMode: .fit)
                                             .font(.system(size: 30))
-                                            .background(Color("LightGray-Gray"))
+//                                            .background(Color("LightGray-Gray"))
+//                                            .background(Color("AppYellow"))
+                                            .background(Color("AppIndigo"))
                                             .cornerRadius(8)
                                             
                                     }
@@ -153,20 +155,18 @@ struct HomeView: View {
                             }
                             
                             VStack(spacing: 4) {
-                                ZStack {
+                                VStack(spacing: 0) {
                                     Text("오늘")
-                                        .frame(maxHeight: .infinity, alignment: .top)
+                                        .frame(maxHeight: .infinity)
                                         .titleLarge()
                                     
                                     Text("\(Int(remainingPercentage))%")
                                         .font(.system(size: 50, weight: .black))
                                     
                                     formatTimeHorizontally(remainingSeconds)
-                                        .frame(maxHeight: .infinity, alignment: .bottom)
+                                        .frame(maxHeight: .infinity)
                                         .font(.custom("ChivoMono-Regular", size: 20))
-//                                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                                 }
-                                .padding(.vertical)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .aspectRatio(1, contentMode: .fit)
                                 .background(Color("LightGray-Gray"))
@@ -183,16 +183,17 @@ struct HomeView: View {
                                 if wiDList.isEmpty {
                                     getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                        .aspectRatio(1, contentMode: .fit)
+                                        .aspectRatio(1 / 1, contentMode: .fit)
                                         .background(Color("LightGray-Gray"))
                                         .cornerRadius(8)
-                                    
+
                                     Text("타임라인")
                                         .bodySmall()
                                 } else {
-                                    DayPieChartView(wiDList: wiDList)
+                                    DatePieChartView(wiDList: wiDList)
+                                        .padding(8)
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                        .aspectRatio(1, contentMode: .fit)
+                                        .aspectRatio(1 / 1, contentMode: .fit)
                                         .background(Color("LightGray-Gray"))
                                         .cornerRadius(8)
                                     
@@ -255,7 +256,8 @@ struct HomeView: View {
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .tint(Color("Black-White"))
+//                .tint(Color("Black-White"))
+                .tint(Color("White"))
             }
         }
         .onAppear {

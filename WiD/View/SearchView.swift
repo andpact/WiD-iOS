@@ -19,9 +19,10 @@ struct SearchView: View {
     private let diaryService = DiaryService()
     @State private var diaryList: [Diary] = []
     @State private var searchText: String = ""
+    @State private var searchComplete: Bool = false
     
     // 날짜
-    private let calendar = Calendar.current
+//    private let calendar = Calendar.current
     
     var body: some View {
         VStack(spacing: 0) {
@@ -38,12 +39,15 @@ struct SearchView: View {
                 
                 TextField("제목 또는 내용으로 검색..", text: $searchText)
                     .padding(8)
-                    .background(Color("LightGray-Gray"))
+                    .background(Color("White-Black"))
                     .cornerRadius(8)
+                    .shadow(color: Color("Black-White"), radius: 1)
                 
                 Button(action: {
                     withAnimation {
                         diaryList = diaryService.selectDiaryByTitleOrContent(searchText: searchText)
+                        
+                        searchComplete = true
                     }
                 }) {
                     Image(systemName: "magnifyingglass")
@@ -59,26 +63,34 @@ struct SearchView: View {
             ScrollView {
                 VStack(spacing: 8) { // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
                     if diaryList.isEmpty {
-                        getEmptyView(message: "검색으로 다이어리를 찾아보세요.")
+                        if searchComplete {
+                            getEmptyView(message: "검색 결과가 없습니다.")
+                        } else {
+                            Text("과거의 다이어리를 통해\n당신의 성장과 여정을\n다시 살펴보세요.")
+                                .bodyLarge()
+                                .multilineTextAlignment(.center)
+                                .lineSpacing(10)
+                                .padding(.vertical, 96)
+                        }
                     } else {
                         ForEach(Array(diaryList), id: \.id) { diary in
                             NavigationLink(destination: DiaryView(date: diary.date)) {
                                 HStack(spacing: 16) {
                                     let wiDList = wiDService.selectWiDListByDate(date: diary.date)
                                     
-                                    CalendarPieChartView(date: diary.date, wiDList: wiDList)
+                                    PeriodPieChartView(date: diary.date, wiDList: wiDList)
                                         .frame(maxWidth: 70)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
                                         getDayString(date: diary.date)
-                                            .titleMedium()
+                                            .bodyMedium()
                                         
                                         Text(diary.title)
-                                            .bodyMedium()
+                                            .labelMedium()
                                             .lineLimit(1)
                                         
                                         Text(diary.content)
-                                            .bodyMedium()
+                                            .labelMedium()
                                             .lineLimit(1)
                                     }
                                     
@@ -86,8 +98,12 @@ struct SearchView: View {
                                     
                                     Image(systemName: "chevron.forward")
                                 }
-                                .padding(.horizontal)
                             }
+                            .padding(16)
+                            .background(Color("White-Black"))
+                            .cornerRadius(8)
+                            .shadow(color: Color("Black-White"), radius: 1)
+                            .padding(.horizontal)
                         }
                     }
                 }
@@ -95,7 +111,7 @@ struct SearchView: View {
             }
         }
         .tint(Color("Black-White"))
-        .background(Color("White-Black"))
+//        .background(Color("White-Black"))
         .navigationBarHidden(true)
     }
 }

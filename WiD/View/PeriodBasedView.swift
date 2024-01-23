@@ -60,7 +60,7 @@ struct PeriodBasedView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                Text("기간 별 조회")
+                Text("기간 조회")
                     .titleLarge()
                 
                 Text("\(selectedTitle.koreanValue) • \(selectedPeriod.koreanValue)")
@@ -69,7 +69,7 @@ struct PeriodBasedView: View {
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: 44)
-            .background(Color("White-Black"))
+//            .background(Color("White-Black"))
             
             Divider()
                 .background(Color("LightGray"))
@@ -78,7 +78,7 @@ struct PeriodBasedView: View {
              컨텐츠
              */
             ScrollView {
-                VStack(spacing: 8) {
+                VStack(spacing: 0) {
                     if selectedTitle == TitleWithALL.ALL { // 제목이 "전체" 일 때
                         // 타임라인
                         VStack(spacing: 8) {
@@ -97,68 +97,78 @@ struct PeriodBasedView: View {
                             if wiDList.isEmpty {
                                 getEmptyView(message: "표시할 타임라인이 없습니다.")
                             } else {
-                                HStack {
-                                    if selectedPeriod == Period.WEEK {
-                                        ForEach(0...6, id: \.self) { index in
-                                            let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black-White"))
-                                            
-                                            Text(formatWeekdayLetterFromMonday(index))
-                                                .bodySmall()
-                                                .frame(maxWidth: .infinity)
-                                                .foregroundColor(textColor)
-                                        }
-                                    } else if selectedPeriod == Period.MONTH {
-                                        ForEach(0...6, id: \.self) { index in
-                                            let textColor = index == 0 ? Color("OrangeRed") : (index == 6 ? Color("DeepSkyBlue") : Color("Black-White"))
-                                            
-                                            Text(formatWeekdayLetterFromSunday(index))
-                                                .bodySmall()
-                                                .frame(maxWidth: .infinity)
-                                                .foregroundColor(textColor)
-                                        }
-                                    }
-                                }
-                                .padding(.horizontal)
-                                
-                                // Weekday 1 - 일, 2 - 월...
-                                let weekday = calendar.component(.weekday, from: startDate)
-                                let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
-                                
-                                if selectedPeriod == Period.WEEK {
-                                    LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
-                                        ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
-                                            let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
-
-                                            let filteredWiDList = wiDList.filter { wiD in
-                                                return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                VStack(spacing: 0) {
+                                    HStack {
+                                        if selectedPeriod == Period.WEEK {
+                                            ForEach(0...6, id: \.self) { index in
+                                                let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black-White"))
+                                                
+                                                Text(formatWeekdayLetterFromMonday(index))
+                                                    .bodySmall()
+                                                    .frame(maxWidth: .infinity)
+                                                    .foregroundColor(textColor)
                                             }
-
-                                            CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                        } else if selectedPeriod == Period.MONTH {
+                                            ForEach(0...6, id: \.self) { index in
+                                                let textColor = index == 0 ? Color("OrangeRed") : (index == 6 ? Color("DeepSkyBlue") : Color("Black-White"))
+                                                
+                                                Text(formatWeekdayLetterFromSunday(index))
+                                                    .bodySmall()
+                                                    .frame(maxWidth: .infinity)
+                                                    .foregroundColor(textColor)
+                                            }
                                         }
                                     }
-                                    .padding(.horizontal)
-                                } else if selectedPeriod == Period.MONTH {
-                                    LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
-                                        ForEach(0..<(daysDifference + 1) + (weekday - 1), id: \.self) { gridIndex in
-                                            if gridIndex < weekday - 1 {
-                                                Text("")
-                                            } else {
-                                                let currentDate = calendar.date(byAdding: .day, value: gridIndex - (weekday - 1), to: startDate) ?? Date()
+                                    .padding(4)
+                                    
+                                    // Weekday 1 - 일, 2 - 월...
+                                    let weekday = calendar.component(.weekday, from: startDate)
+                                    let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
+                                    
+                                    if selectedPeriod == Period.WEEK {
+                                        LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+                                            ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
+                                                let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
 
                                                 let filteredWiDList = wiDList.filter { wiD in
                                                     return calendar.isDate(wiD.date, inSameDayAs: currentDate)
                                                 }
 
-                                                CalendarPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                                PeriodPieChartView(date: currentDate, wiDList: filteredWiDList)
                                             }
                                         }
+                                        .padding(4)
+                                    } else if selectedPeriod == Period.MONTH {
+                                        LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+                                            ForEach(0..<(daysDifference + 1) + (weekday - 1), id: \.self) { gridIndex in
+                                                if gridIndex < weekday - 1 {
+                                                    Text("")
+                                                } else {
+                                                    let currentDate = calendar.date(byAdding: .day, value: gridIndex - (weekday - 1), to: startDate) ?? Date()
+
+                                                    let filteredWiDList = wiDList.filter { wiD in
+                                                        return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                                    }
+
+                                                    PeriodPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                                }
+                                            }
+                                        }
+                                        .padding(4)
                                     }
-                                    .padding(.horizontal)
                                 }
+                                .background(Color("White-Black"))
+                                .cornerRadius(8)
+                                .shadow(color: Color("Black-White"), radius: 1)
+                                .padding(.horizontal)
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
+                        
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 8)
+                            .foregroundColor(Color("LightGray-Gray"))
                         
                         // 합계, 평균, 최고 기록
                         VStack(spacing: 8) {
@@ -233,15 +243,20 @@ struct PeriodBasedView: View {
                                         }
                                         .padding(.vertical)
                                         .frame(maxWidth: .infinity)
-                                        .background(Color("LightGray-Gray"))
+                                        .background(Color("White-Black"))
                                         .cornerRadius(8)
+                                        .shadow(color: Color("Black-White"), radius: 1)
                                     }
                                 }
                                 .padding(.horizontal)
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
+                        
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 8)
+                            .foregroundColor(Color("LightGray-Gray"))
                         
                         // 기록률
                         VStack(spacing: 8) {
@@ -254,12 +269,16 @@ struct PeriodBasedView: View {
                                 getEmptyView(message: "표시할 기록률이 없습니다.")
                             } else {
                                 VerticalBarChartView(wiDList: wiDList, startDate: startDate, finishDate: finishDate)
-                                    .padding()
                                     .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
+                                    .padding()
+                                    .background(Color("White-Black"))
+                                    .cornerRadius(8)
+                                    .shadow(color: Color("Black-White"), radius: 1)
+                                    .padding(.horizontal)
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
                     } else { // 제목이 "전체"가 아닐 떄
                         // 그래프
                         VStack(spacing: 8) {
@@ -279,12 +298,20 @@ struct PeriodBasedView: View {
                                 getEmptyView(message: "표시할 그래프가 없습니다.")
                             } else {
                                 LineGraphView(title: selectedTitle.rawValue, wiDList: filteredWiDListByTitle, startDate: startDate, finishDate: finishDate)
-                                    .padding()
                                     .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
+                                    .padding()
+                                    .background(Color("White-Black"))
+                                    .cornerRadius(8)
+                                    .shadow(color: Color("Black-White"), radius: 1)
+                                    .padding(.horizontal)
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
+                        
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 8)
+                            .foregroundColor(Color("LightGray-Gray"))
                         
                         // 시간 기록
                         VStack(spacing: 8) {
@@ -306,8 +333,9 @@ struct PeriodBasedView: View {
                                         .titleLarge()
                                 }
                                 .padding()
-                                .background(Color("LightGray-Gray"))
+                                .background(Color("White-Black"))
                                 .cornerRadius(8)
+                                .shadow(color: Color("Black-White"), radius: 1)
                                 .padding(.horizontal)
                                 
                                 HStack {
@@ -320,8 +348,9 @@ struct PeriodBasedView: View {
                                         .titleLarge()
                                 }
                                 .padding()
-                                .background(Color("LightGray-Gray"))
+                                .background(Color("White-Black"))
                                 .cornerRadius(8)
+                                .shadow(color: Color("Black-White"), radius: 1)
                                 .padding(.horizontal)
                                 
                                 HStack {
@@ -334,8 +363,9 @@ struct PeriodBasedView: View {
                                         .titleLarge()
                                 }
                                 .padding()
-                                .background(Color("LightGray-Gray"))
+                                .background(Color("White-Black"))
                                 .cornerRadius(8)
+                                .shadow(color: Color("Black-White"), radius: 1)
                                 .padding(.horizontal)
                                 
                                 HStack {
@@ -348,17 +378,18 @@ struct PeriodBasedView: View {
                                         .titleLarge()
                                 }
                                 .padding()
-                                .background(Color("LightGray-Gray"))
+                                .background(Color("White-Black"))
                                 .cornerRadius(8)
+                                .shadow(color: Color("Black-White"), radius: 1)
                                 .padding(.horizontal)
                             }
                         }
                         .padding(.vertical)
-                        .background(Color("White-Black"))
+//                        .background(Color("White-Black"))
                     }
                 }
             }
-            .background(Color("LightGray-Gray"))
+//            .background(Color("LightGray-Gray"))
             
             Divider()
                 .background(Color("LightGray"))
@@ -441,6 +472,7 @@ struct PeriodBasedView: View {
                     }) {
                         Image(systemName: "calendar")
                             .imageScale(.large)
+                            .frame(width: 30, height: 30)
                     }
                     .frame(maxWidth: .infinity)
                     
@@ -452,8 +484,9 @@ struct PeriodBasedView: View {
                             expandTitleMenu.toggle()
                         }
                     }) {
-                        Image(systemName: "textformat")
+                        Image(systemName: titleImageDictionary[selectedTitle.rawValue] ?? "")
                             .imageScale(.large)
+                            .frame(width: 30, height: 30)
                     }
                     .frame(maxWidth: .infinity)
                     
@@ -470,6 +503,7 @@ struct PeriodBasedView: View {
                     }) {
                         Image(systemName: "arrow.clockwise")
                             .imageScale(.large)
+                            .frame(width: 30, height: 30)
                     }
                     .frame(maxWidth: .infinity)
                     .disabled(
@@ -495,6 +529,7 @@ struct PeriodBasedView: View {
                     }) {
                         Image(systemName: "chevron.backward")
                             .imageScale(.large)
+                            .frame(width: 30, height: 30)
                     }
                     .frame(maxWidth: .infinity)
                     
@@ -511,6 +546,7 @@ struct PeriodBasedView: View {
                     }) {
                         Image(systemName: "chevron.forward")
                             .imageScale(.large)
+                            .frame(width: 30, height: 30)
                     }
                     .frame(maxWidth: .infinity)
                     .disabled(
@@ -525,7 +561,7 @@ struct PeriodBasedView: View {
                 }
             }
             .padding()
-            .background(Color("White-Black"))
+//            .background(Color("White-Black"))
         }
         .tint(Color("Black-White"))
         .navigationBarHidden(true)

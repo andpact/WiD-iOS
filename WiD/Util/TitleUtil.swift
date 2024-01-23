@@ -158,6 +158,7 @@ let titleDictionary: [String: String] = [
 
 // 제목 - 이미지
 let titleImageDictionary: [String: String] = [
+    "ALL" : "textformat",
     Title.STUDY.rawValue: Title.STUDY.imageName,
     Title.WORK.rawValue: Title.WORK.imageName,
     Title.EXERCISE.rawValue: Title.EXERCISE.imageName,

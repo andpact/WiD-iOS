@@ -251,6 +251,10 @@ struct TimerView: View {
                                             .bodyMedium()
                                         
                                         Spacer()
+                                        
+                                        if timerPlayer.title == menuTitle {
+                                            Text("선택됨")
+                                        }
                                     }
                                     .padding()
                                 }

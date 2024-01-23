@@ -99,7 +99,7 @@ struct WiDView: View {
             ScrollView {
                 VStack(spacing: 8) {
                     VStack(spacing: 8) {
-                        Text("정보")
+                        Text("WiD 정보")
                             .titleMedium()
                             .padding(.horizontal)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -328,7 +328,11 @@ struct WiDView: View {
                         .padding(.horizontal)
                     }
                     .padding(.vertical)
-                    .background(Color("White-Black"))
+//                    .background(Color("White-Black"))
+                    
+                    Rectangle()
+                        .frame(maxWidth: .infinity, maxHeight: 8)
+                        .foregroundColor(Color("LightGray-Gray"))
                     
                     VStack(spacing: 8) {
                         Text("선택 가능한 시간 범위")
@@ -336,40 +340,41 @@ struct WiDView: View {
                             .padding(.horizontal)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        Button(action: {
-                            start = startLimit
-                            finish = finishLimit
-                        }) {
-                            HStack(spacing: 16) {
-                                Rectangle()
-                                    .fill(Color("DarkGray"))
-                                    .frame(maxWidth: 8)
-                                
+                        HStack(spacing: 8) {
+                            Rectangle()
+                                .fill(Color("Black-White"))
+                                .frame(maxWidth: 8)
+                            
+                            Button(action: {
+                                start = startLimit
+                                finish = finishLimit
+                            }) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("\(formatTime(startLimit)) ~ \(formatTime(finishLimit))")
                                         .bodyMedium()
 
                                     Text(formatDuration(finishLimit.timeIntervalSince(startLimit), mode: 3))
-                                        .labelMedium()
+                                        .bodyMedium()
                                 }
-                                .padding(.vertical)
+                                .padding()
 
                                 Spacer()
 
                                 Image(systemName: "square.and.arrow.down")
-                                    .padding(.horizontal)
+                                    .padding()
                             }
+                            .tint(Color("Black-White"))
+                            .background(Color("White-Black"))
+                            .cornerRadius(8)
+                            .shadow(color: Color("Black-White"), radius: 1)
                         }
-                        .tint(Color("Black-White"))
-                        .background(Color("LightGray-Gray"))
-                        .cornerRadius(8)
                         .padding(.horizontal)
                     }
                     .padding(.vertical)
-                    .background(Color("White-Black"))
+//                    .background(Color("White-Black"))
                 }
             }
-            .background(Color("LightGray-Gray"))
+//            .background(Color("LightGray-Gray"))
             
             /**
              하단 바
@@ -381,7 +386,7 @@ struct WiDView: View {
 //                }
 //                .frame(maxWidth: .infinity)
         }
-        .background(Color("White-Black"))
+//        .background(Color("White-Black"))
         .onAppear {
             self.date = clickedWiD!.date
             self.title = Title(rawValue: clickedWiD!.title) ?? .STUDY
