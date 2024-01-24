@@ -13,9 +13,7 @@ class TimerPlayer: ObservableObject {
     private var timer: Timer?
     @Published var remainingTime = 0 // 화면에 시간만을 표시하기 위한 프로퍼티
     private let timerInterval = 1
-    @Published var started: Bool = false
-    @Published var paused: Bool = false
-    @Published var reset: Bool = true
+    @Published var timerState: PlayerState = PlayerState.STOPPED
     @Published var inTimerView = false // 현재 타이머 뷰 안에 있는지?
     
     // 날짜
@@ -27,20 +25,16 @@ class TimerPlayer: ObservableObject {
     // 시작 시간
     var start: Date = Date()
     
-    func startIt() {
-        self.started = true
-        self.paused = false
-        withAnimation {
-            self.reset = false
-        }
+    func startTimer() {
+        timerState = PlayerState.STARTED
         
         self.timer?.invalidate()
         self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timerInterval), repeats: true) { _ in
             if self.remainingTime > 0 {
                 self.remainingTime -= self.timerInterval
             } else {
-                self.pauseIt()
-                self.resetIt()
+                self.pauseTimer()
+                self.stopTimer()
             }
         }
         
@@ -50,19 +44,16 @@ class TimerPlayer: ObservableObject {
         self.start = now
     }
     
-    func pauseIt() {
-        self.started = false
-        self.paused = true
+    func pauseTimer() {
+        timerState = PlayerState.PAUSED
         
         self.timer?.invalidate()
         self.timer = nil
     }
     
-    func resetIt() {
-        self.paused = false
-        withAnimation {
-            self.reset = true
-        }
+    func stopTimer() {
+        timerState = PlayerState.STOPPED
+        
         self.remainingTime = 0
     }
 }

@@ -158,7 +158,7 @@ let titleDictionary: [String: String] = [
 
 // 제목 - 이미지
 let titleImageDictionary: [String: String] = [
-    "ALL" : "textformat",
+    TitleWithALL.ALL.rawValue : "textformat",
     Title.STUDY.rawValue: Title.STUDY.imageName,
     Title.WORK.rawValue: Title.WORK.imageName,
     Title.EXERCISE.rawValue: Title.EXERCISE.imageName,
@@ -171,9 +171,9 @@ let titleImageDictionary: [String: String] = [
     Title.ETC.rawValue: Title.ETC.imageName
 ]
 
-struct Year: Identifiable {
-    var id: String
-}
+//struct Year: Identifiable {
+//    var id: String
+//}
 
 enum Period: String, CaseIterable, Identifiable {
     case WEEK
@@ -189,4 +189,10 @@ enum Period: String, CaseIterable, Identifiable {
             return "한 달"
         }
     }
+}
+
+enum PlayerState {
+    case STARTED
+    case PAUSED
+    case STOPPED
 }

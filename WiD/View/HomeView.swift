@@ -26,7 +26,7 @@ struct HomeView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            if !stopwatchPlayer.reset && !stopwatchPlayer.inStopwatchView {
+            if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
                 ZStack {
                     Text("스톱 워치")
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -42,12 +42,12 @@ struct HomeView: View {
                     .bodyMedium()
                 }
                 .padding(.horizontal)
-                .background(Color(stopwatchPlayer.started ? "LimeGreen" : "OrangeRed"))
+                .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
                 .foregroundColor(Color("White"))
                 .frame(maxWidth: .infinity, maxHeight: 22)
             }
             
-            if !timerPlayer.reset && !timerPlayer.inTimerView {
+            if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
                 ZStack {
                     Text("타이머")
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -63,7 +63,7 @@ struct HomeView: View {
                     .bodyMedium()
                 }
                 .padding(.horizontal)
-                .background(Color(timerPlayer.started ? "LimeGreen" : "OrangeRed"))
+                .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
                 .foregroundColor(Color("White"))
                 .frame(maxWidth: .infinity, maxHeight: 22)
             }
@@ -85,7 +85,7 @@ struct HomeView: View {
 //                            .padding(8)
 //                            .multilineTextAlignment(.center)
 //                            .background(Color("DarkGray"))
-//                            .cornerRadius(8)
+//                            .cornerRadius(24)
 //
 //                        VStack {
 //                            Text("광고 제목")
@@ -97,7 +97,7 @@ struct HomeView: View {
 //                    }
 //                    .padding()
 //                    .background(Color("LightGray"))
-//                    .cornerRadius(8)
+//                    .cornerRadius(24)
 //                    .padding(.horizontal)
                     
                     Spacer()
@@ -111,13 +111,10 @@ struct HomeView: View {
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                                             .aspectRatio(1, contentMode: .fit)
                                             .font(.system(size: 30))
-//                                            .background(Color("LightGray-Gray"))
-//                                            .background(Color("AppYellow"))
-                                            .background(Color("AppIndigo"))
-                                            .cornerRadius(8)
-                                            
+                                            .background(Color("LightGray-Gray"))
+                                            .cornerRadius(24)
                                     }
-                                    .disabled(!timerPlayer.reset)
+                                    .disabled(timerPlayer.timerState != PlayerState.STOPPED)
                                     
                                     Text("스톱 워치")
                                         .bodySmall()
@@ -130,9 +127,9 @@ struct HomeView: View {
                                             .aspectRatio(1, contentMode: .fit)
                                             .font(.system(size: 30))
                                             .background(Color("LightGray-Gray"))
-                                            .cornerRadius(8)
+                                            .cornerRadius(24)
                                     }
-                                    .disabled(!stopwatchPlayer.reset)
+                                    .disabled(stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
 
                                     Text("타이머")
                                         .bodySmall()
@@ -146,9 +143,9 @@ struct HomeView: View {
                                         .aspectRatio(2.5 / 1, contentMode: .fit)
                                         .font(.system(size: 30))
                                         .background(Color("LightGray-Gray"))
-                                        .cornerRadius(8)
+                                        .cornerRadius(24)
                                 }
-                                .disabled(!timerPlayer.reset || !stopwatchPlayer.reset)
+                                .disabled(timerPlayer.timerState != PlayerState.STOPPED || stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
 
                                 Text("새로운 WiD")
                                     .bodySmall()
@@ -170,7 +167,7 @@ struct HomeView: View {
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .aspectRatio(1, contentMode: .fit)
                                 .background(Color("LightGray-Gray"))
-                                .cornerRadius(8)
+                                .cornerRadius(24)
                                 
                                 Text("남은 시간")
                                     .bodySmall()
@@ -183,9 +180,10 @@ struct HomeView: View {
                                 if wiDList.isEmpty {
                                     getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        .lineSpacing(10)
                                         .aspectRatio(1 / 1, contentMode: .fit)
                                         .background(Color("LightGray-Gray"))
-                                        .cornerRadius(8)
+                                        .cornerRadius(24)
 
                                     Text("타임라인")
                                         .bodySmall()
@@ -195,7 +193,7 @@ struct HomeView: View {
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                                         .aspectRatio(1 / 1, contentMode: .fit)
                                         .background(Color("LightGray-Gray"))
-                                        .cornerRadius(8)
+                                        .cornerRadius(24)
                                     
                                     let today = Date()
                                     let daysDifference = calendar.dateComponents([.day], from: wiDList.first?.date ?? today, to: today).day ?? 0
@@ -213,7 +211,7 @@ struct HomeView: View {
                                             .aspectRatio(1, contentMode: .fit)
                                             .font(.system(size: 30))
                                             .background(Color("LightGray-Gray"))
-                                            .cornerRadius(8)
+                                            .cornerRadius(24)
                                     }
                                     
                                     Text("날짜 조회")
@@ -227,7 +225,7 @@ struct HomeView: View {
                                             .aspectRatio(1, contentMode: .fit)
                                             .font(.system(size: 30))
                                             .background(Color("LightGray-Gray"))
-                                            .cornerRadius(8)
+                                            .cornerRadius(24)
                                     }
                                     
                                     Text("기간 조회")
@@ -242,7 +240,7 @@ struct HomeView: View {
                                         .aspectRatio(2.5 / 1, contentMode: .fit)
                                         .font(.system(size: 30))
                                         .background(Color("LightGray-Gray"))
-                                        .cornerRadius(8)
+                                        .cornerRadius(24)
                                 }
 
                                 Text("다이어리 검색")
@@ -256,8 +254,7 @@ struct HomeView: View {
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                .tint(Color("Black-White"))
-                .tint(Color("White"))
+                .tint(Color("Black-White"))
             }
         }
         .onAppear {
@@ -272,7 +269,15 @@ struct HomeView: View {
 
             remainingPercentage = (Float(remainingSeconds) / Float(totalSecondsInADay)) * 100
             
-            startTimer()
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                let today = Date()
+                let startOfToday = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: today)!
+                let elapsedSecondsUntilNow = today.timeIntervalSince(startOfToday)
+
+                remainingSeconds = totalSecondsInADay - Int(elapsedSecondsUntilNow)
+
+                remainingPercentage = (Float(remainingSeconds) / Float(totalSecondsInADay)) * 100
+            }
 //
 //            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
 //                let today = Date()
@@ -285,25 +290,9 @@ struct HomeView: View {
 //            }
         }
         .onDisappear {
-            stopTimer()
+            timer?.invalidate()
+            timer = nil
         }
-    }
-    
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            let today = Date()
-            let startOfToday = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: today)!
-            let elapsedSecondsUntilNow = today.timeIntervalSince(startOfToday)
-
-            remainingSeconds = totalSecondsInADay - Int(elapsedSecondsUntilNow)
-
-            remainingPercentage = (Float(remainingSeconds) / Float(totalSecondsInADay)) * 100
-        }
-    }
-
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
     }
 }
 

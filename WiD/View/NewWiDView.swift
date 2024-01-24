@@ -44,7 +44,7 @@ struct NewWiDView: View {
     
     // 소요 시간
     @State private var duration: TimeInterval = 0
-    @State private var DurationExist: Bool = false
+    @State private var durationExist: Bool = false
     
     var body: some View {
         NavigationView {
@@ -79,12 +79,12 @@ struct NewWiDView: View {
                             .bodyMedium()
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
-                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist ? Color("LightGray-Gray") : Color("DeepSkyBlue"))
+                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !durationExist ? Color("LightGray-Gray") : Color("DeepSkyBlue"))
                             .foregroundColor(Color("White"))
                             .cornerRadius(8)
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                    .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !DurationExist)
+                    .disabled(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !durationExist)
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
@@ -421,7 +421,7 @@ struct NewWiDView: View {
         duration = finish.timeIntervalSince(start)
         
         withAnimation {
-            DurationExist = 0 < duration
+            durationExist = 0 < duration
         }
         
         if calendar.isDate(date, inSameDayAs: today) {

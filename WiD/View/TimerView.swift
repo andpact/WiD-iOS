@@ -19,7 +19,7 @@ struct TimerView: View {
     private let calendar = Calendar.current
     
     // 제목
-    @State private var expandTitleMenu: Bool = false
+    @State private var isTitleMenuExpanded: Bool = false
     
     // 타이머
     @State private var selectedHour: Int = 0
@@ -64,7 +64,8 @@ struct TimerView: View {
             /**
              컨텐츠
              */
-            if timerPlayer.reset {
+//            if timerPlayer.reset {
+            if timerPlayer.timerState == PlayerState.STOPPED {
                 HStack(spacing: 0) {
                     // 시간(Hour) 선택
                     Picker("", selection: $selectedHour) {
@@ -161,7 +162,7 @@ struct TimerView: View {
                     HStack {
                         Button(action: {
                             withAnimation {
-                                expandTitleMenu.toggle()
+                                isTitleMenuExpanded.toggle()
                             }
                         }) {
                             Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
@@ -169,14 +170,16 @@ struct TimerView: View {
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
+                        .background(Color("AppIndigo"))
+                        .foregroundColor(Color("White"))
                         .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .disabled(!timerPlayer.reset)
+                        .disabled(timerPlayer.timerState != PlayerState.STOPPED)
                         
                         Spacer()
                         
-                        if timerPlayer.paused {
+                        if timerPlayer.timerState == PlayerState.PAUSED {
                             Button(action: {
-                                resetTimer()
+                                timerPlayer.stopTimer()
                             }) {
                                 Image(systemName: "arrow.clockwise")
                                     .font(.system(size: 30))
@@ -189,19 +192,21 @@ struct TimerView: View {
                         }
                         
                         Button(action: {
-                            if timerPlayer.started {
-                                pauseTimer()
+                            if timerPlayer.timerState == PlayerState.STARTED {
+                                timerPlayer.pauseTimer()
+                                
+                                createWiD()
                             } else {
-                                startTimer()
+                                timerPlayer.startTimer()
                             }
                         }) {
-                            Image(systemName: timerPlayer.started ? "pause.fill" : "play.fill")
+                            Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
                                 .font(.system(size: 30))
                         }
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding()
-                        .background(timerPlayer.started ? Color("OrangeRed") : (timerPlayer.paused ? Color("LimeGreen") : (timerPlayer.remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
-                        .foregroundColor(timerPlayer.reset ? Color("White-Black") : Color("White"))
+                        .background(timerPlayer.timerState == PlayerState.STARTED ? Color("OrangeRed") : (timerPlayer.timerState == PlayerState.PAUSED ? Color("LimeGreen") : (timerPlayer.remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
+                        .foregroundColor(timerPlayer.timerState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
                         .clipShape(Circle())
                         .disabled(timerPlayer.remainingTime == 0)
                     }
@@ -210,11 +215,11 @@ struct TimerView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
             
-            if expandTitleMenu {
+            if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
                     Color("Black").opacity(0.5)
                         .onTapGesture {
-                            expandTitleMenu = false
+                            isTitleMenuExpanded = false
                         }
                     
                     VStack(spacing: 0) {
@@ -223,7 +228,7 @@ struct TimerView: View {
                                 .titleLarge()
                             
                             Button(action: {
-                                expandTitleMenu = false
+                                isTitleMenuExpanded = false
                             }) {
                                 Image(systemName: "xmark")
                                     .imageScale(.large)
@@ -240,17 +245,20 @@ struct TimerView: View {
                                     Button(action: {
                                         timerPlayer.title = menuTitle
                                         withAnimation {
-                                            expandTitleMenu = false
+                                            isTitleMenuExpanded = false
                                         }
                                     }) {
                                         Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
                                             .font(.system(size: 25))
                                             .frame(maxWidth: 40, maxHeight: 40)
                                         
+                                        Spacer()
+                                            .frame(maxWidth: 20)
+                                        
                                         Text(menuTitle.koreanValue)
                                             .bodyMedium()
                                         
-                                        Spacer()
+                                        Spacer()    
                                         
                                         if timerPlayer.title == menuTitle {
                                             Text("선택됨")
@@ -278,8 +286,13 @@ struct TimerView: View {
             
 //            finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
         }
+        .onChange(of: timerPlayer.remainingTime) { newRemainingTime in
+            if timerPlayer.timerState == PlayerState.STARTED && newRemainingTime <= 0 {
+                createWiD()
+            }
+        }
         .onTapGesture {
-            if timerPlayer.started {
+            if timerPlayer.timerState == PlayerState.STARTED {
                 withAnimation {
                     timerTopBottomBarVisible.toggle()
                 }
@@ -297,69 +310,54 @@ struct TimerView: View {
         }
     }
     
-    private func startTimer() {
-        timerPlayer.startIt()
-    }
-    
-    private func pauseTimer() {
-        timerPlayer.pauseIt()
-        
-//        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
+    func createWiD() {
         let now = Date()
         
         let title = timerPlayer.title.rawValue
-        let start = timerPlayer.start
-        let finish = now
+        let start = calendar.date(bySetting: .nanosecond, value: 0, of: timerPlayer.start)! // 밀리 세컨드 제거하여 초 단위만 사용
+        let finish = calendar.date(bySetting: .nanosecond, value: 0, of: now)!
         let duration = finish.timeIntervalSince(start)
         
-        let startComponents = calendar.dateComponents([.year, .month, .day], from: start)
-        let finishComponents = calendar.dateComponents([.year, .month, .day], from: finish)
-
-        if let startDate = calendar.date(from: startComponents),
-           let finishDate = calendar.date(from: finishComponents) {
-
-            // Check if the duration spans across multiple days
-            if calendar.isDate(startDate, inSameDayAs: finishDate) {
-                // WiD duration is within the same day
-                let wiD = WiD(
-                    id: 0,
-                    date: startDate,
-                    title: title,
-                    start: start,
-                    finish: finish,
-                    duration: duration
-                )
-                wiDService.insertWiD(wid: wiD)
-            } else {
-                // WiD duration spans across multiple days
-                let midnightEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
-                let firstDayWiD = WiD(
-                    id: 0,
-                    date: startDate,
-                    title: title,
-                    start: start,
-                    finish: midnightEndDate,
-                    duration: midnightEndDate.timeIntervalSince(start)
-                )
-                wiDService.insertWiD(wid: firstDayWiD)
-
-                let nextDayStartDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-                let midnightEndDateNextDay = calendar.startOfDay(for: nextDayStartDate)
-                let secondDayWiD = WiD(
-                    id: 0,
-                    date: nextDayStartDate,
-                    title: title,
-                    start: midnightEndDateNextDay,
-                    finish: finish,
-                    duration: finish.timeIntervalSince(midnightEndDateNextDay)
-                )
-                wiDService.insertWiD(wid: secondDayWiD)
-            }
+        guard 0 <= duration else {
+            return
         }
-    }
 
-    private func resetTimer() {
-        timerPlayer.resetIt()
+        // Check if the duration spans across multiple days
+        if calendar.isDate(start, inSameDayAs: finish) {
+            // WiD duration is within the same day
+            let wiD = WiD(
+                id: 0,
+                date: start,
+                title: title,
+                start: start,
+                finish: finish,
+                duration: duration
+            )
+            wiDService.insertWiD(wid: wiD)
+        } else {
+            // WiD duration spans across multiple days
+            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
+            let firstDayWiD = WiD(
+                id: 0,
+                date: start,
+                title: title,
+                start: start,
+                finish: finishOfStart,
+                duration: finishOfStart.timeIntervalSince(start)
+            )
+            wiDService.insertWiD(wid: firstDayWiD)
+
+            let startOfFinish = calendar.startOfDay(for: finish)
+            let secondDayWiD = WiD(
+                id: 0,
+                date: finish,
+                title: title,
+                start: startOfFinish,
+                finish: finish,
+                duration: finish.timeIntervalSince(startOfFinish)
+            )
+            wiDService.insertWiD(wid: secondDayWiD)
+        }
     }
 }
 

@@ -23,7 +23,7 @@ struct StopwatchView: View {
     private let calendar = Calendar.current
     
     // 제목
-    @State private var expandTitleMenu: Bool = false
+    @State private var isTitleMenuExpanded: Bool = false
     
     // 스톱 워치
     @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
@@ -63,9 +63,9 @@ struct StopwatchView: View {
              */
             if stopwatchTopBottomBarVisible {
                 VStack(spacing: 32) {
-                    if stopwatchPlayer.paused {
+                    if stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
                         Button(action: {
-                            stopwatchPlayer.resetIt()
+                            stopwatchPlayer.stopStopwatch()
                         }) {
                             Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 30))
@@ -75,65 +75,66 @@ struct StopwatchView: View {
                     HStack(spacing: 32) {
                         Button(action: {
                             withAnimation {
-                                expandTitleMenu.toggle()
+                                isTitleMenuExpanded.toggle()
                             }
                         }) {
                             Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
                                 .font(.system(size: 30))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
-                        .disabled(!stopwatchPlayer.reset)
+//                        .disabled(!stopwatchPlayer.reset)
+                        .disabled(stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
                         
                         Button(action: {
-                            if stopwatchPlayer.started {
-                                stopwatchPlayer.pauseIt()
+                            if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
+                                stopwatchPlayer.pauseStopwatch()
                                 
                                 let now = Date()
                                 
                                 createWiD(now: now)
                             } else {
-                                stopwatchPlayer.startIt()
+                                stopwatchPlayer.startStopwatch()
                             }
                         }) {
-                            Image(systemName: stopwatchPlayer.started ? "pause.fill" : "play.fill")
+                            Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
                                 .font(.system(size: 30))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
                         .padding()
-                        .background(stopwatchPlayer.started ? Color("OrangeRed") : (stopwatchPlayer.paused ? Color("LimeGreen") : Color("Black-White")))
-                        .foregroundColor(stopwatchPlayer.reset ? Color("White-Black") : Color("White"))
+                        .background(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? Color("OrangeRed") : (stopwatchPlayer.stopwatchState == PlayerState.PAUSED ? Color("LimeGreen") : Color("Black-White")))
+                        .foregroundColor(stopwatchPlayer.stopwatchState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
                         .clipShape(Circle())
                         
                         Button(action: {
                             withAnimation {
-                                expandTitleMenu.toggle()
+                                isTitleMenuExpanded.toggle()
                             }
                         }) {
                             Image(systemName: "chevron.forward.2")
                                 .font(.system(size: 30))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
-                        .disabled(!stopwatchPlayer.started)
+                        .disabled(stopwatchPlayer.stopwatchState != PlayerState.STARTED)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .padding()
             }
             
-            if expandTitleMenu {
+            if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
                     Color("Black").opacity(0.5)
                         .onTapGesture {
-                            expandTitleMenu = false
+                            isTitleMenuExpanded = false
                         }
                     
                     VStack(spacing: 0) {
                         ZStack {
-                            Text(stopwatchPlayer.started ? "이어서 사용할 제목 선택" : "제목 선택")
+                            Text(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "이어서 사용할 제목 선택" : "제목 선택")
                                 .titleLarge()
                             
                             Button(action: {
-                                expandTitleMenu = false
+                                isTitleMenuExpanded = false
                             }) {
                                 Image(systemName: "xmark")
                                     .imageScale(.large)
@@ -148,20 +149,22 @@ struct StopwatchView: View {
                             VStack(spacing: 0) {
                                 ForEach(Title.allCases) { menuTitle in
                                     Button(action: {
-                                        if stopwatchPlayer.started && stopwatchPlayer.title != menuTitle { // 이어서 기록
-                                            stopwatchPlayer.restartIt()
+                                        if stopwatchPlayer.stopwatchState == PlayerState.STARTED && stopwatchPlayer.title != menuTitle { // 이어서 기록
+                                            stopwatchPlayer.restartStopwatch()
+                                        
+                                            let now = Date()
+                                            
+                                            createWiD(now: now)
+                                            
+                                            // 기존의 WiD를 저장하고, 새로운 WiD의 날짜와 시작 시간을 기록해줌.
+                                            stopwatchPlayer.date = now
+                                            stopwatchPlayer.start = now
                                         }
                                         
-                                        let now = Date()
-                                        
-                                        createWiD(now: now)
-                                        
-                                        stopwatchPlayer.date = now
                                         stopwatchPlayer.title = menuTitle
-                                        stopwatchPlayer.start = now
                                         
                                         withAnimation {
-                                            expandTitleMenu = false
+                                            isTitleMenuExpanded = false
                                         }
                                     }) {
                                         Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
@@ -178,11 +181,11 @@ struct StopwatchView: View {
                                         
                                         if stopwatchPlayer.title == menuTitle {
                                             Text("선택됨")
-                                        } else if stopwatchPlayer.title == menuTitle && stopwatchPlayer.started {
+                                        } else if stopwatchPlayer.title == menuTitle && stopwatchPlayer.stopwatchState == PlayerState.STARTED {
                                             Text("사용 중")
                                         }
                                     }
-                                    .disabled(stopwatchPlayer.title == menuTitle && stopwatchPlayer.started)
+                                    .disabled(stopwatchPlayer.title == menuTitle && stopwatchPlayer.stopwatchState == PlayerState.STARTED)
                                     .padding()
                                 }
                             }
@@ -201,7 +204,7 @@ struct StopwatchView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
         .onTapGesture {
-            if stopwatchPlayer.started {
+            if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
                 withAnimation {
                     stopwatchTopBottomBarVisible.toggle()
                 }
@@ -222,9 +225,13 @@ struct StopwatchView: View {
     private func createWiD(now: Date) {
         let title = stopwatchPlayer.title.rawValue
         let start = calendar.date(bySetting: .nanosecond, value: 0, of: stopwatchPlayer.start)! // 밀리 세컨드 제거하여 초 단위만 사용
-        let finish = calendar.date(bySetting: .nanosecond, value: 0, of: now)!
+        let finish = calendar.date(bySetting: .nanosecond, value: 0, of: now)! // 밀리 세컨드 제거하여 초 단위만 사용
         let duration = finish.timeIntervalSince(start)
 
+        guard 0 <= duration else {
+            return
+        }
+        
         // Check if the duration spans across multiple days
         if calendar.isDate(start, inSameDayAs: finish) {
             // WiD duration is within the same day
@@ -239,17 +246,17 @@ struct StopwatchView: View {
             wiDService.insertWiD(wid: wiD)
         } else {
             // WiD duration spans across multiple days
-            let midnightOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
+            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
             let firstDayWiD = WiD(
                 id: 0,
                 date: start,
                 title: title,
                 start: start,
-                finish: midnightOfStart,
-                duration: midnightOfStart.timeIntervalSince(start)
+                finish: finishOfStart,
+                duration: finishOfStart.timeIntervalSince(start)
             )
             wiDService.insertWiD(wid: firstDayWiD)
-//
+
             let startOfFinish = calendar.startOfDay(for: finish)
             let secondDayWiD = WiD(
                 id: 0,
@@ -264,7 +271,7 @@ struct StopwatchView: View {
     }
 }
 
-struct StopWatchView_Previews: PreviewProvider {
+struct StopwatchView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             StopwatchView()

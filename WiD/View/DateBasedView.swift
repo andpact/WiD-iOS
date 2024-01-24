@@ -90,6 +90,7 @@ struct DateBasedView: View {
                                         Text("당신이 이 날 무엇을 하고, 그 속에서 어떤 생각과 감정을 느꼈는지 주체적으로 기록해보세요.")
                                             .labelSmall()
                                             .multilineTextAlignment(.center)
+                                            .lineSpacing(10)
                                         
                                         Image(systemName: "arrow.down")
                                     }
