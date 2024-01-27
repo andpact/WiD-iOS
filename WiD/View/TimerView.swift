@@ -11,6 +11,7 @@ struct TimerView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
     @State private var timerTopBottomBarVisible: Bool = true
+    private let screenHeight = UIScreen.main.bounds.height
     
     // WiD
     private let wiDService = WiDService()
@@ -37,13 +38,9 @@ struct TimerView: View {
                     ZStack {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
-                            
-//                            if timerStarted {
-//                                pauseTimer()
-//                            }
                         }) {
                             Image(systemName: "arrow.backward")
-                                .imageScale(.large)
+                                .font(.system(size: 24))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -70,53 +67,44 @@ struct TimerView: View {
                     // 시간(Hour) 선택
                     Picker("", selection: $selectedHour) {
                         ForEach(0..<24, id: \.self) { hour in
-                            if selectedHour == hour {
-                                Text("\(hour)")
-                                    .font(.custom("ChivoMono-BlackItalic", size: 35))
-                            } else {
-                                Text("\(hour)")
-                                    .font(.system(size: 20, weight: .medium))
-                            }
+                            Text("\(hour)")
+                                .font(selectedHour == hour ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
                         }
                     }
                     .pickerStyle(.inline)
                     
                     Text(":")
+                        .bodyMedium()
 
                     // 분(Minute) 선택
                     Picker("", selection: $selectedMinute) {
                         ForEach(0..<60, id: \.self) { minute in
-                            if selectedMinute == minute {
-                                Text("\(minute)")
-                                    .font(.custom("ChivoMono-BlackItalic", size: 35))
-                            } else {
-                                Text("\(minute)")
-                                    .font(.system(size: 20, weight: .medium))
-                            }
+                            Text(String(format: "%02d", minute))
+                                .font(selectedMinute == minute ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
                         }
                     }
                     .pickerStyle(.inline)
 
                     Text(":")
+                        .bodyMedium()
                     
                     // 초(Second) 선택
                     Picker("", selection: $selectedSecond) {
                         ForEach(0..<60, id: \.self) { second in
-                            if selectedSecond == second {
-                                Text("\(second)")
-                                    .font(.custom("ChivoMono-BlackItalic", size: 35))
-                            } else {
-                                Text("\(second)")
-                                    .font(.system(size: 20, weight: .medium))
-                            }
+                            Text(String(format: "%02d", second))
+                                .font(selectedSecond == second ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
                         }
                     }
                     .pickerStyle(.inline)
                 }
-                .padding()
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .padding(.bottom, screenHeight / 2)
             } else {
                 formatTimeHorizontally(timerPlayer.remainingTime)
                     .font(.custom("ChivoMono-BlackItalic", size: 70))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                    .padding(.bottom, screenHeight / 2)
                 
                 // 타이머 시간 추가
 //                HStack(spacing: 20) {
@@ -161,14 +149,12 @@ struct TimerView: View {
                 VStack {
                     HStack {
                         Button(action: {
-                            withAnimation {
-                                isTitleMenuExpanded.toggle()
-                            }
+                            isTitleMenuExpanded.toggle()
                         }) {
                             Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 30))
+                                .font(.system(size: 32))
                         }
-                        .frame(maxWidth: 25, maxHeight: 25)
+                        .frame(maxWidth: 40, maxHeight: 40)
                         .padding()
                         .background(Color("AppIndigo"))
                         .foregroundColor(Color("White"))
@@ -182,9 +168,9 @@ struct TimerView: View {
                                 timerPlayer.stopTimer()
                             }) {
                                 Image(systemName: "arrow.clockwise")
-                                    .font(.system(size: 30))
+                                    .font(.system(size: 32))
                             }
-                            .frame(maxWidth: 25, maxHeight: 25)
+                            .frame(maxWidth: 40, maxHeight: 40)
                             .padding()
                             .background(Color("DeepSkyBlue"))
                             .foregroundColor(Color("White"))
@@ -201,9 +187,9 @@ struct TimerView: View {
                             }
                         }) {
                             Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                .font(.system(size: 30))
+                                .font(.system(size: 32))
                         }
-                        .frame(maxWidth: 25, maxHeight: 25)
+                        .frame(maxWidth: 40, maxHeight: 40)
                         .padding()
                         .background(timerPlayer.timerState == PlayerState.STARTED ? Color("OrangeRed") : (timerPlayer.timerState == PlayerState.PAUSED ? Color("LimeGreen") : (timerPlayer.remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
                         .foregroundColor(timerPlayer.timerState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
@@ -225,43 +211,43 @@ struct TimerView: View {
                     VStack(spacing: 0) {
                         ZStack {
                             Text("제목 선택")
-                                .titleLarge()
+                                .titleMedium()
                             
                             Button(action: {
                                 isTitleMenuExpanded = false
                             }) {
-                                Image(systemName: "xmark")
-                                    .imageScale(.large)
+                                Text("확인")
+                                    .bodyMedium()
                             }
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                         .padding()
                         
                         Divider()
+                            .background(Color("Black-White"))
                         
                         ScrollView {
                             VStack(spacing: 0) {
                                 ForEach(Title.allCases) { menuTitle in
                                     Button(action: {
                                         timerPlayer.title = menuTitle
-                                        withAnimation {
-                                            isTitleMenuExpanded = false
-                                        }
+                                        isTitleMenuExpanded = false
                                     }) {
                                         Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
-                                            .font(.system(size: 25))
+                                            .font(.system(size: 24))
                                             .frame(maxWidth: 40, maxHeight: 40)
                                         
                                         Spacer()
                                             .frame(maxWidth: 20)
                                         
                                         Text(menuTitle.koreanValue)
-                                            .bodyMedium()
+                                            .labelMedium()
                                         
                                         Spacer()    
                                         
                                         if timerPlayer.title == menuTitle {
                                             Text("선택됨")
+                                                .bodyMedium()
                                         }
                                     }
                                     .padding()
@@ -269,8 +255,8 @@ struct TimerView: View {
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height / 3)
-                    .background(Color("LightGray-Gray"))
+                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
+                    .background(Color("White-Black"))
                     .cornerRadius(8)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

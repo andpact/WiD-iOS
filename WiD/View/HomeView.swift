@@ -34,12 +34,12 @@ struct HomeView: View {
                     
                     HStack {
                         Text(stopwatchPlayer.title.koreanValue)
+                            .bodyMedium()
                         
                         formatTimeHorizontally(stopwatchPlayer.elapsedTime)
                             .font(.custom("ChivoMono-Regular", size: 18))
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                    .bodyMedium()
                 }
                 .padding(.horizontal)
                 .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
@@ -55,12 +55,12 @@ struct HomeView: View {
                     
                     HStack {
                         Text(timerPlayer.title.koreanValue)
+                            .bodyMedium()
                         
                         formatTimeHorizontally(timerPlayer.remainingTime)
                             .font(.custom("ChivoMono-Regular", size: 18))
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                    .bodyMedium()
                 }
                 .padding(.horizontal)
                 .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
@@ -73,12 +73,12 @@ struct HomeView: View {
                     /**
                      상단 바
                      */
-                    ZStack {
-                        Text("WiD")
-                            .titleLarge()
-                    }
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, maxHeight: 44)
+//                    ZStack {
+//                        Text("WiD")
+//                            .titleLarge()
+//                    }
+//                    .padding(.horizontal)
+//                    .frame(maxWidth: .infinity, maxHeight: 44)
                     
 //                    HStack(spacing: 16) {
 //                        Text("광고\n이미지")
@@ -110,14 +110,15 @@ struct HomeView: View {
                                         Image(systemName: "stopwatch")
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                                             .aspectRatio(1, contentMode: .fit)
-                                            .font(.system(size: 30))
+                                            .font(.system(size: 48))
                                             .background(Color("LightGray-Gray"))
                                             .cornerRadius(24)
+                                            .shadow(color: Color("Black-White"), radius: 1)
                                     }
                                     .disabled(timerPlayer.timerState != PlayerState.STOPPED)
                                     
                                     Text("스톱 워치")
-                                        .bodySmall()
+                                        .bodyMedium()
                                 }
                                 
                                 VStack(spacing: 4) {
@@ -125,14 +126,15 @@ struct HomeView: View {
                                         Image(systemName: "timer")
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                                             .aspectRatio(1, contentMode: .fit)
-                                            .font(.system(size: 30))
+                                            .font(.system(size: 48))
                                             .background(Color("LightGray-Gray"))
                                             .cornerRadius(24)
+                                            .shadow(color: Color("Black-White"), radius: 1)
                                     }
                                     .disabled(stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
 
                                     Text("타이머")
-                                        .bodySmall()
+                                        .bodyMedium()
                                 }
                             }
 
@@ -141,14 +143,15 @@ struct HomeView: View {
                                     Image(systemName: "plus.square")
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                                         .aspectRatio(2.5 / 1, contentMode: .fit)
-                                        .font(.system(size: 30))
+                                        .font(.system(size: 48))
                                         .background(Color("LightGray-Gray"))
                                         .cornerRadius(24)
+                                        .shadow(color: Color("Black-White"), radius: 1)
                                 }
                                 .disabled(timerPlayer.timerState != PlayerState.STOPPED || stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
 
                                 Text("새로운 WiD")
-                                    .bodySmall()
+                                    .bodyMedium()
                             }
                             
                             VStack(spacing: 4) {
@@ -168,9 +171,10 @@ struct HomeView: View {
                                 .aspectRatio(1, contentMode: .fit)
                                 .background(Color("LightGray-Gray"))
                                 .cornerRadius(24)
+                                .shadow(color: Color("Black-White"), radius: 1)
                                 
                                 Text("남은 시간")
-                                    .bodySmall()
+                                    .bodyMedium()
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -184,9 +188,10 @@ struct HomeView: View {
                                         .aspectRatio(1 / 1, contentMode: .fit)
                                         .background(Color("LightGray-Gray"))
                                         .cornerRadius(24)
+                                        .shadow(color: Color("Black-White"), radius: 1)
 
                                     Text("타임라인")
-                                        .bodySmall()
+                                        .bodyMedium()
                                 } else {
                                     DatePieChartView(wiDList: wiDList)
                                         .padding(8)
@@ -194,12 +199,13 @@ struct HomeView: View {
                                         .aspectRatio(1 / 1, contentMode: .fit)
                                         .background(Color("LightGray-Gray"))
                                         .cornerRadius(24)
+                                        .shadow(color: Color("Black-White"), radius: 1)
                                     
                                     let today = Date()
                                     let daysDifference = calendar.dateComponents([.day], from: wiDList.first?.date ?? today, to: today).day ?? 0
                                     
                                     Text(daysDifference == 0 ? "오늘" : daysDifference == 1 ? "어제" : "\(daysDifference)일 전")
-                                        .bodySmall()
+                                        .bodyMedium()
                                 }
                             }
                             
@@ -209,13 +215,14 @@ struct HomeView: View {
                                         Image(systemName: "scope")
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                                             .aspectRatio(1, contentMode: .fit)
-                                            .font(.system(size: 30))
+                                            .font(.system(size: 48))
                                             .background(Color("LightGray-Gray"))
                                             .cornerRadius(24)
+                                            .shadow(color: Color("Black-White"), radius: 1)
                                     }
                                     
                                     Text("날짜 조회")
-                                        .bodySmall()
+                                        .bodyMedium()
                                 }
                                 
                                 VStack(spacing: 4) {
@@ -223,13 +230,14 @@ struct HomeView: View {
                                         Image(systemName: "calendar")
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                                             .aspectRatio(1, contentMode: .fit)
-                                            .font(.system(size: 30))
+                                            .font(.system(size: 48))
                                             .background(Color("LightGray-Gray"))
                                             .cornerRadius(24)
+                                            .shadow(color: Color("Black-White"), radius: 1)
                                     }
                                     
                                     Text("기간 조회")
-                                        .bodySmall()
+                                        .bodyMedium()
                                 }
                             }
                             
@@ -238,13 +246,14 @@ struct HomeView: View {
                                     Image(systemName: "magnifyingglass")
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                                         .aspectRatio(2.5 / 1, contentMode: .fit)
-                                        .font(.system(size: 30))
+                                        .font(.system(size: 48))
                                         .background(Color("LightGray-Gray"))
                                         .cornerRadius(24)
+                                        .shadow(color: Color("Black-White"), radius: 1)
                                 }
 
                                 Text("다이어리 검색")
-                                    .bodySmall()
+                                    .bodyMedium()
                             }
                         }
                         .frame(maxWidth: .infinity)

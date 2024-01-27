@@ -42,7 +42,7 @@ struct DiaryView: View {
                         presentationMode.wrappedValue.dismiss()
                     }) {
                         Image(systemName: "arrow.backward")
-                            .imageScale(.large)
+                            .font(.system(size: 24))
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
@@ -76,7 +76,7 @@ struct DiaryView: View {
                 .padding(.horizontal)
                 
                 Divider()
-                    .background(Color("LightGray"))
+                    .background(Color("Black-White"))
                 
                 GeometryReader { geo in
                     HStack {
@@ -100,12 +100,14 @@ struct DiaryView: View {
                 ZStack {
                     // Place holder
                     TextEditor(text: $titlePlaceHolder)
+                        .bodyLarge()
                         .padding(.horizontal)
                         .disabled(true)
                         .frame(minHeight: 40)
                         .fixedSize(horizontal: false, vertical: true)
                     
                     TextEditor(text: $diaryTitle)
+                        .bodyLarge()
                         .padding(.horizontal)
                         .opacity(diaryTitle.isEmpty ? 0.75 : 1)
                         .frame(minHeight: 40)
@@ -119,10 +121,12 @@ struct DiaryView: View {
                 ZStack {
                     // Place holder
                     TextEditor(text: $contentPlaceHolder)
+                        .bodyMedium()
                         .padding(.horizontal)
                         .disabled(true)
                     
                     TextEditor(text: $diaryContent)
+                        .bodyMedium()
                         .padding(.horizontal)
                         .opacity(diaryContent.isEmpty ? 0.75 : 1)
                 }

@@ -26,7 +26,6 @@ struct SplashView: View {
 //            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("White-Black"))
     }
 }
 

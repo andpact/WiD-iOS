@@ -33,242 +33,232 @@ struct DateBasedView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) { // spacing: 0일 때, 상단 바에 그림자를 적용시키면 컨텐츠가 상단 바의 그림자를 덮어서 가림. (상단 바가 렌더링 된 후, 컨텐츠가 렌더링되기 때문)
-                /**
-                 상단 바
-                 */
-                ZStack {
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Image(systemName: "arrow.backward")
-                            .imageScale(.large)
+            ZStack {
+                VStack(spacing: 0) { // spacing: 0일 때, 상단 바에 그림자를 적용시키면 컨텐츠가 상단 바의 그림자를 덮어서 가림. (상단 바가 렌더링 된 후, 컨텐츠가 렌더링되기 때문)
+                    /**
+                     상단 바
+                     */
+                    ZStack {
+                        Button(action: {
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            Image(systemName: "arrow.backward")
+                                .font(.system(size: 24))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .tint(Color("Black-White"))
+
+                        Text("날짜 조회")
+                            .titleLarge()
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .tint(Color("Black-White"))
-
-                    Text("날짜 조회")
-                        .titleLarge()
-                }
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity, maxHeight: 44)
-//                .background(Color("White-Black"))
-                
-                Divider()
-                    .background(Color("LightGray"))
-                
-                /**
-                 컨텐츠
-                 */
-                ScrollView {
-                    VStack(spacing: 0) {
-                        // 다이어리 및 타임라인
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, maxHeight: 44)
+                    
+                    Divider()
+                        .background(Color("Black-White"))
+                    
+                    /**
+                     컨텐츠
+                     */
+                    ScrollView {
                         VStack(spacing: 0) {
-                            GeometryReader { geo in
-                                HStack {
-                                    getDayStringWith3Lines(date: currentDate)
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                        .font(.system(size: 22, weight: .bold))
-
-                                    ZStack {
-                                        if wiDList.isEmpty {
-                                            getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-                                        } else {
-                                            DatePieChartView(wiDList: wiDList)
-                                        }
-                                    }
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                }
-                                .padding(.horizontal)
-                            }
-                            .aspectRatio(2 / 1, contentMode: .fit)
-                            
-
+                            // 다이어리 및 타임라인
                             VStack(spacing: 0) {
-                                if diary.id < 0 {
-                                    VStack(spacing: 64) {
-                                        Text("당신이 이 날 무엇을 하고, 그 속에서 어떤 생각과 감정을 느꼈는지 주체적으로 기록해보세요.")
-                                            .labelSmall()
-                                            .multilineTextAlignment(.center)
-                                            .lineSpacing(10)
-                                        
-                                        Image(systemName: "arrow.down")
+                                GeometryReader { geo in
+                                    HStack {
+                                        getDayStringWith3Lines(date: currentDate)
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .font(.system(size: 22, weight: .bold))
+
+                                        ZStack {
+                                            if wiDList.isEmpty {
+                                                getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+                                            } else {
+                                                DatePieChartView(wiDList: wiDList)
+                                            }
+                                        }
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     }
-                                    .frame(maxWidth: .infinity, minHeight: 252) // 제목 높이(20) + 제목 패딩(16) + 내용 높이(200) + 내용 패딩(16)
-                                    .padding()
-                                } else {
-                                    Text(diary.title)
-                                        .bodyMedium()
-                                        .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
-                                        .padding()
-                                        .onTapGesture {
-                                            if expandDiary == false {
-                                                expandDiary = true
-                                            }
-                                        }
-
-                                    Text(diary.content)
-                                        .bodyMedium()
-                                        .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
-                                        .padding()
-                                        .onTapGesture {
-                                            if expandDiary == false {
-                                                expandDiary = true
-                                            }
-                                        }
+                                    .padding(.horizontal)
                                 }
-                            }
-                            .background(Color("White-Black"))
-                            .cornerRadius(8)
-                            .shadow(color: Color("Black-White"), radius: 1)
-                            .padding(.horizontal)
+                                .aspectRatio(2 / 1, contentMode: .fit)
+                                
 
-                            
-                            NavigationLink(destination: DiaryView(date: currentDate)) { // 네비게이션 링크안에 HStack(spacing: 8)이 포함되어 있음.
-                                Text("다이어리 수정")
-                                    .bodyMedium()
-                                    .foregroundColor(Color("AppIndigo"))
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                            }
-                            .background(Color("AppYellow"))
-                            .cornerRadius(8)
-                            .padding()
-                        }
-//                        .background(Color("White-Black"))
-                        
-                        Rectangle()
-                            .frame(maxWidth: .infinity, maxHeight: 8)
-                            .foregroundColor(Color("LightGray-Gray"))
-                        
-                        // 합계 기록
-                        VStack(spacing: 8) {
-                            Text("합계 기록")
-                                .titleMedium()
-                                .padding(.horizontal)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            if wiDList.isEmpty {
-                                getEmptyView(message: "표시할 기록이 없습니다.")
-                            } else {
-                                LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
-                                    ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
-                                        VStack(spacing: 16) {
-                                            HStack {
-                                                Image(systemName: titleImageDictionary[title] ?? "")
-                                                    .frame(maxWidth: 15, maxHeight: 15)
-                                                    .padding(8)
-                                                    .background(Color(title).overlay(.white.opacity(0.9)))
-                                                    .foregroundColor(Color(title))
-                                                    .clipShape(Circle())
-                                                
-                                                Text(titleDictionary[title] ?? "")
-                                                    .font(.system(size: 24, weight: .bold))
-                                            }
-                                            .frame(maxWidth: .infinity)
+                                VStack(spacing: 0) {
+                                    if diary.id < 0 {
+                                        VStack(spacing: 64) {
+                                            Text("당신이 이 날 무엇을 하고, 그 속에서 어떤 생각과 감정을 느꼈는지 주체적으로 기록해보세요.")
+                                                .labelSmall()
+                                                .multilineTextAlignment(.center)
+                                                .lineSpacing(10)
                                             
-                                            Text(formatDuration(duration, mode: 3))
-                                                .bodyMedium()
-                                                .frame(maxWidth: .infinity)
+                                            Image(systemName: "arrow.down")
+                                                .font(.system(size: 16))
                                         }
-                                        .padding(.vertical)
-                                        .frame(maxWidth: .infinity)
-                                        .background(Color("White-Black"))
-                                        .cornerRadius(8)
-                                        .shadow(color: Color("Black-White"), radius: 1)
-                                    }
-                                }
-                                .padding(.horizontal)
-                            }
-                        }
-                        .padding(.vertical)
-//                        .background(Color("White-Black"))
-                        
-                        Rectangle()
-                            .frame(maxWidth: .infinity, maxHeight: 8)
-                            .foregroundColor(Color("LightGray-Gray"))
-                        
-                        // WiD 리스트
-                        VStack(spacing: 8) {
-                            Text("WiD 리스트")
-                                .titleMedium()
-                                .padding(.horizontal)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            if wiDList.isEmpty {
-                                getEmptyView(message: "표시할 WiD가 없습니다.")
-                            } else {
-                                ForEach(Array(wiDList), id: \.id) { wiD in
-                                    HStack(spacing: 8) {
-                                        Rectangle()
-                                            .fill(Color(wiD.title))
-                                            .frame(maxWidth: 8)
-                                        
-                                        NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
-                                            VStack(alignment: .leading, spacing: 4) {
-                                                Text("\(formatTime(wiD.start)) ~ \(formatTime(wiD.finish))")
-                                                    .bodyMedium()
-                                                
-                                                Text("\(titleDictionary[wiD.title] ?? "") • \(formatDuration(wiD.duration, mode: 3))")
-                                                    .bodyMedium()
-                                            }
+                                        .frame(maxWidth: .infinity, minHeight: 252) // 제목 높이(20) + 제목 패딩(16) + 내용 높이(200) + 내용 패딩(16)
+                                        .padding()
+                                    } else {
+                                        Text(diary.title)
+                                            .bodyLarge()
+                                            .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
                                             .padding()
-                                            
-                                            Spacer()
-                                            
-                                            Image(systemName: "chevron.forward")
-                                                .padding()
+                                            .onTapGesture {
+                                                if expandDiary == false {
+                                                    expandDiary = true
+                                                }
+                                            }
+
+                                        Text(diary.content)
+                                            .bodyMedium()
+                                            .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
+                                            .padding()
+                                            .onTapGesture {
+                                                if expandDiary == false {
+                                                    expandDiary = true
+                                                }
+                                            }
+                                    }
+                                }
+                                .background(Color("White-Black"))
+                                .cornerRadius(8)
+                                .shadow(color: Color("Black-White"), radius: 1)
+                                .padding(.horizontal)
+
+                                
+                                NavigationLink(destination: DiaryView(date: currentDate)) { // 네비게이션 링크안에 HStack(spacing: 8)이 포함되어 있음.
+                                    Text("다이어리 수정")
+                                        .bodyMedium()
+                                        .foregroundColor(Color("AppIndigo"))
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                }
+                                .background(Color("AppYellow"))
+                                .cornerRadius(80)
+                                .padding()
+                            }
+                            
+                            Rectangle()
+                                .frame(maxWidth: .infinity, maxHeight: 8)
+                                .foregroundColor(Color("LightGray-Gray"))
+                            
+                            // 합계 기록
+                            VStack(spacing: 8) {
+                                Text("합계 기록")
+                                    .titleMedium()
+                                    .padding(.horizontal)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                if wiDList.isEmpty {
+                                    getEmptyView(message: "표시할 기록이 없습니다.")
+                                } else {
+                                    LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
+                                        ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
+                                            VStack(spacing: 16) {
+                                                HStack {
+                                                    Image(systemName: titleImageDictionary[title] ?? "")
+                                                        .font(.system(size: 16))
+                                                        .frame(maxWidth: 15, maxHeight: 15)
+                                                        .padding(8)
+                                                        .background(Color(title).overlay(.white.opacity(0.9)))
+                                                        .foregroundColor(Color(title))
+                                                        .clipShape(Circle())
+                                                    
+                                                    Text(titleDictionary[title] ?? "")
+                                                        .font(.system(size: 24, weight: .bold))
+                                                }
+                                                .frame(maxWidth: .infinity)
+                                                
+                                                Text(formatDuration(duration, mode: 3))
+                                                    .bodyMedium()
+                                                    .frame(maxWidth: .infinity)
+                                            }
+                                            .padding(.vertical)
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color("White-Black"))
+                                            .cornerRadius(8)
+                                            .shadow(color: Color("Black-White"), radius: 1)
                                         }
-                                        .tint(Color("Black-White")) // 네비게이션 링크 때문에 전경색이 바뀌어서, 틴트 색상 명시적으로 설명해줌.
-                                        .background(Color("White-Black"))
-                                        .cornerRadius(8)
-                                        .shadow(color: Color("Black-White"), radius: 1)
                                     }
                                     .padding(.horizontal)
                                 }
                             }
-                        }
-                        .padding(.vertical)
-//                        .background(Color("White-Black")) // 부모 뷰에 배경을 지정했기 때문에, 기본 적용되는 "White-Black"을 명시적으로 적용함.
-                    }
-                }
-//                .background(Color("LightGray-Gray"))
-                
-                Divider()
-                    .background(Color("LightGray"))
-                
-                /**
-                 하단 바
-                 */
-                VStack(spacing: 8) {
-                    if expandDatePicker {
-                        HStack {
-                            Text("날짜를 선택해 주세요.")
-                                .bodyMedium()
+                            .padding(.vertical)
                             
-                            Spacer()
+                            Rectangle()
+                                .frame(maxWidth: .infinity, maxHeight: 8)
+                                .foregroundColor(Color("LightGray-Gray"))
                             
-                            DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
-                                .labelsHidden()
-                                .tint(Color("Black"))
+                            // WiD 리스트
+                            VStack(spacing: 8) {
+                                Text("WiD 리스트")
+                                    .titleMedium()
+                                    .padding(.horizontal)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                if wiDList.isEmpty {
+                                    getEmptyView(message: "표시할 WiD가 없습니다.")
+                                } else {
+                                    ForEach(Array(wiDList), id: \.id) { wiD in
+                                        HStack(spacing: 8) {
+                                            Rectangle()
+                                                .fill(Color(wiD.title))
+                                                .frame(maxWidth: 8)
+                                            
+                                            NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
+                                                VStack(alignment: .leading, spacing: 4) {
+                                                    Text("\(formatTime(wiD.start)) ~ \(formatTime(wiD.finish))")
+                                                        .bodyMedium()
+                                                    
+                                                    Text("\(titleDictionary[wiD.title] ?? "") • \(formatDuration(wiD.duration, mode: 3))")
+                                                        .bodyMedium()
+                                                }
+                                                .padding()
+                                                
+                                                Spacer()
+                                                
+                                                Image(systemName: "chevron.forward")
+                                                    .font(.system(size: 16))
+                                                    .padding()
+                                            }
+                                            .tint(Color("Black-White")) // 네비게이션 링크 때문에 전경색이 바뀌어서, 틴트 색상 명시적으로 설명해줌.
+                                            .background(Color("White-Black"))
+                                            .cornerRadius(8)
+                                            .shadow(color: Color("Black-White"), radius: 1)
+                                        }
+                                        .padding(.horizontal)
+                                    }
+                                }
+                            }
+                            .padding(.vertical)
                         }
-                        .padding(8)
                     }
                     
-                    HStack {
+                    Divider()
+                        .background(Color("Black-White"))
+                    
+                    /**
+                     하단 바
+                     */
+                    HStack(spacing: 0) {
                         Button(action: {
                             withAnimation {
                                 expandDatePicker.toggle()
                             }
                         }) {
                             Image(systemName: "calendar")
-                                .imageScale(.large)
+                                .font(.system(size: 24))
                                 .frame(width: 30, height: 30)
                         }
                         .frame(maxWidth: .infinity)
                         .tint(Color("Black-White"))
                         
-                        Spacer()
-                            .frame(maxWidth: .infinity)
+                        Button(action: {
+                        }) {
+                            Image(systemName: titleImageDictionary[TitleWithALL.ALL.rawValue] ?? "")
+                                .font(.system(size: 24))
+                                .frame(width: 30, height: 30)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .disabled(true)
                         
                         Button(action: {
                             withAnimation {
@@ -276,7 +266,7 @@ struct DateBasedView: View {
                             }
                         }) {
                             Image(systemName: "arrow.clockwise")
-                                .imageScale(.large)
+                                .font(.system(size: 24))
                                 .frame(width: 30, height: 30)
                         }
                         .frame(maxWidth: .infinity)
@@ -289,7 +279,7 @@ struct DateBasedView: View {
                             }
                         }) {
                             Image(systemName: "chevron.backward")
-                                .imageScale(.large)
+                                .font(.system(size: 24))
                                 .frame(width: 30, height: 30)
                         }
                         .frame(maxWidth: .infinity)
@@ -301,33 +291,77 @@ struct DateBasedView: View {
                             }
                         }) {
                             Image(systemName: "chevron.forward")
-                                .imageScale(.large)
+                                .font(.system(size: 24))
                                 .frame(width: 30, height: 30)
                         }
                         .frame(maxWidth: .infinity)
                         .tint(Color("Black-White"))
                         .disabled(calendar.isDateInToday(currentDate))
                     }
+                    .padding()
                 }
-                .padding()
-//                .background(Color("White-Black"))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                /**
+                 대화 상자
+                 */
+                if expandDatePicker {
+                    ZStack {
+                        Color("Black").opacity(0.5)
+                            .onTapGesture {
+                                expandDatePicker = false
+                            }
+                        
+                        // 날짜 선택
+                        if expandDatePicker {
+                            VStack(spacing: 0) {
+                                ZStack {
+                                    Text("날짜 선택")
+                                        .titleMedium()
+                                    
+                                    Button(action: {
+                                        expandDatePicker = false
+                                    }) {
+                                        Text("확인")
+                                            .bodyMedium()
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .tint(Color("Black-White"))
+                                }
+                                .padding()
+                                
+                                Divider()
+                                    .background(Color("Black-White"))
+
+                                DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                                    .datePickerStyle(.graphical)
+                                    .padding()
+                            }
+                            .background(Color("White-Black"))
+                            .cornerRadius(8)
+                            .padding() // 바깥 패딩
+                            .shadow(color: Color("Black-White"), radius: 1)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .edgesIgnoringSafeArea(.all)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .onAppear {
-                self.wiDList = wiDService.selectWiDListByDate(date: currentDate)
-                self.totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-                self.diary = diaryService.selectDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
-            }
-            .onChange(of: currentDate) { newDate in
-                withAnimation {
-                    wiDList = wiDService.selectWiDListByDate(date: newDate)
-                    totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-                    diary = diaryService.selectDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
-                }
+        }
+        .navigationBarHidden(true)
+        .onAppear {
+            self.wiDList = wiDService.selectWiDListByDate(date: currentDate)
+            self.totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
+            self.diary = diaryService.selectDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
+        }
+        .onChange(of: currentDate) { newDate in
+            withAnimation {
+                wiDList = wiDService.selectWiDListByDate(date: newDate)
+                totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
+                diary = diaryService.selectDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
             }
         }
-//        .background(Color("White-Black")) // 전체 배경색을 지정하고, 필요하면 내용물에 개별 배경색을 지정함.
-        .navigationBarHidden(true)
     }
 }
 

@@ -34,13 +34,14 @@ struct SearchView: View {
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.backward")
-                        .imageScale(.large)
+                        .font(.system(size: 24)) // large - 22, medium(기본) - 17, small - 14(정확하지 않음)
                 }
                 
                 TextField("제목 또는 내용으로 검색..", text: $searchText)
+                    .bodyMedium()
                     .padding(8)
                     .background(Color("White-Black"))
-                    .cornerRadius(8)
+                    .cornerRadius(80)
                     .shadow(color: Color("Black-White"), radius: 1)
                 
                 Button(action: {
@@ -51,7 +52,7 @@ struct SearchView: View {
                     }
                 }) {
                     Image(systemName: "magnifyingglass")
-                        .imageScale(.large)
+                        .font(.system(size: 24))
                 }
             }
             .padding(.horizontal)
@@ -67,7 +68,7 @@ struct SearchView: View {
                             getEmptyView(message: "검색 결과가 없습니다.")
                         } else {
                             Text("과거의 다이어리를 통해\n당신의 성장과 여정을\n다시 살펴보세요.")
-                                .bodyLarge()
+                                .labelLarge()
                                 .multilineTextAlignment(.center)
                                 .lineSpacing(10)
                                 .padding(.vertical, 96)
@@ -97,9 +98,10 @@ struct SearchView: View {
                                     Spacer()
                                     
                                     Image(systemName: "chevron.forward")
+                                        .font(.system(size: 16))
                                 }
                             }
-                            .padding(16)
+                            .padding()
                             .background(Color("White-Black"))
                             .cornerRadius(8)
                             .shadow(color: Color("Black-White"), radius: 1)
@@ -111,7 +113,6 @@ struct SearchView: View {
             }
         }
         .tint(Color("Black-White"))
-//        .background(Color("White-Black"))
         .navigationBarHidden(true)
     }
 }

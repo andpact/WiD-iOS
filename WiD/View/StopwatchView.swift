@@ -15,6 +15,7 @@ struct StopwatchView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
     @State private var stopwatchTopBottomBarVisible: Bool = true
+    private let screenHeight = UIScreen.main.bounds.height
     
     // WiD
     private let wiDService = WiDService()
@@ -40,7 +41,7 @@ struct StopwatchView: View {
                             presentationMode.wrappedValue.dismiss()
                         }) {
                             Image(systemName: "arrow.backward")
-                                .imageScale(.large)
+                                .font(.system(size: 24))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -57,6 +58,8 @@ struct StopwatchView: View {
              컨텐츠
              */
             formatTimeVertically(stopwatchPlayer.elapsedTime)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .padding(.bottom, screenHeight / 2)
             
             /**
              하단 바
@@ -68,7 +71,7 @@ struct StopwatchView: View {
                             stopwatchPlayer.stopStopwatch()
                         }) {
                             Image(systemName: "arrow.clockwise")
-                                .font(.system(size: 30))
+                                .font(.system(size: 32))
                         }
                     }
                     
@@ -79,10 +82,9 @@ struct StopwatchView: View {
                             }
                         }) {
                             Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 30))
+                                .font(.system(size: 32))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
-//                        .disabled(!stopwatchPlayer.reset)
                         .disabled(stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
                         
                         Button(action: {
@@ -97,7 +99,7 @@ struct StopwatchView: View {
                             }
                         }) {
                             Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                .font(.system(size: 30))
+                                .font(.system(size: 32))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
                         .padding()
@@ -111,7 +113,7 @@ struct StopwatchView: View {
                             }
                         }) {
                             Image(systemName: "chevron.forward.2")
-                                .font(.system(size: 30))
+                                .font(.system(size: 32))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
                         .disabled(stopwatchPlayer.stopwatchState != PlayerState.STARTED)
@@ -121,6 +123,9 @@ struct StopwatchView: View {
                 .padding()
             }
             
+            /**
+             제목 바텀 시트
+             */
             if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
                     Color("Black").opacity(0.5)
@@ -131,19 +136,20 @@ struct StopwatchView: View {
                     VStack(spacing: 0) {
                         ZStack {
                             Text(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "이어서 사용할 제목 선택" : "제목 선택")
-                                .titleLarge()
+                                .titleMedium()
                             
                             Button(action: {
                                 isTitleMenuExpanded = false
                             }) {
-                                Image(systemName: "xmark")
-                                    .imageScale(.large)
+                                Text("확인")
+                                    .bodyMedium()
                             }
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                         .padding()
                         
                         Divider()
+                            .background(Color("Black-White"))
                         
                         ScrollView {
                             VStack(spacing: 0) {
@@ -168,21 +174,23 @@ struct StopwatchView: View {
                                         }
                                     }) {
                                         Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
-                                            .font(.system(size: 25))
+                                            .font(.system(size: 24))
                                             .frame(maxWidth: 40, maxHeight: 40)
                                         
                                         Spacer()
                                             .frame(maxWidth: 20)
                                         
                                         Text(menuTitle.koreanValue)
-                                            .bodyMedium()
+                                            .labelMedium()
                                         
                                         Spacer()
                                         
                                         if stopwatchPlayer.title == menuTitle {
                                             Text("선택됨")
+                                                .bodyMedium()
                                         } else if stopwatchPlayer.title == menuTitle && stopwatchPlayer.stopwatchState == PlayerState.STARTED {
                                             Text("사용 중")
+                                                .bodyMedium()
                                         }
                                     }
                                     .disabled(stopwatchPlayer.title == menuTitle && stopwatchPlayer.stopwatchState == PlayerState.STARTED)
@@ -191,8 +199,8 @@ struct StopwatchView: View {
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height / 3)
-                    .background(Color("LightGray-Gray"))
+                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
+                    .background(Color("White-Black"))
                     .cornerRadius(8)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
