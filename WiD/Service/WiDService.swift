@@ -33,7 +33,7 @@ class WiDService {
         
         // 데이터 베이스 열기
         if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
-            print("Unable to open database.")
+            print("WiDService : Unable to open database")
             return
         }
         
@@ -42,18 +42,20 @@ class WiDService {
         
         if sqlite3_exec(db, createWiDTableQuery, nil, nil, nil) != SQLITE_OK {
             let errmsg = String(cString: sqlite3_errmsg(db)!)
-            print("Unable to create WiD table: \(errmsg)")
+            print("WiDService : Unable to create WiD table: \(errmsg)")
         }
     }
     
     deinit {
         // 데이터 베이스 닫기
         if sqlite3_close(db) != SQLITE_OK {
-            print("Error closing database")
+            print("WiDService : Error closing database")
         }
     }
     
-    func insertWiD(wid: WiD) {
+    func createWiD(wid: WiD) {
+        print("WiDService : createWiD executed")
+        
         let insertWiDQuery = "INSERT INTO WiD (date, title, start, finish, duration) VALUES (?, ?, ?, ?, ?)"
         
         let dateString = dateFormatter.string(from: wid.date)
@@ -70,9 +72,9 @@ class WiDService {
             sqlite3_bind_double(statement, 5, wid.duration)
             
             if sqlite3_step(statement) != SQLITE_DONE {
-                print("Failed to insert WiD.")
+                print("WiDService : createWiD failed")
             } else {
-                print("Success to insert WiD.")
+                print("WiDService : createWiD success")
             }
             
             sqlite3_finalize(statement)
@@ -119,7 +121,9 @@ class WiDService {
 //        return years
 //    }
 
-    func selectWiDByID(id: Int) -> WiD? {
+    func readWiDByID(id: Int) -> WiD? {
+        print("WiDService : readWiDByID executed")
+        
         let selectWiDByIDQuery = "SELECT id, date, title, start, finish, duration FROM WiD WHERE id = ?"
         
         var statement: OpaquePointer?
@@ -146,8 +150,7 @@ class WiDService {
                 
                 sqlite3_finalize(statement)
                 
-                print("Success to select WiD by ID.")   
-                print("selectWiDByID - \(wid)")
+                print("WiDService : readWiDByID success")
                 
                 return wid
             }
@@ -158,7 +161,9 @@ class WiDService {
         return nil
     }
     
-    func selectWiDListByDate(date: Date) -> [WiD] {
+    func readWiDListByDate(date: Date) -> [WiD] {
+        print("WiDService : readWiDListByDate executed")
+        
         let selectWiDsQuery = "SELECT id, date, title, start, finish, duration FROM WiD WHERE date = ? ORDER BY start ASC"
         
         let dateString = dateFormatter.string(from: date)
@@ -189,20 +194,23 @@ class WiDService {
             }
             
             sqlite3_finalize(statement)
-            print("Success to select WiD list by ID.")
+            
+            print("WiDService : readWiDListByDate success")
         }
         
         return wiDList
     }
     
-    func selectWiDListByRandomDate() -> [WiD] {
+    func readWiDListByRandomDate() -> [WiD] {
+        print("WiDService : readWiDListByRandomDate executed")
+        
         let selectRandomDateQuery = "SELECT DISTINCT date FROM WiD"
         
         var dateList = [Date]()
         var dateStatement: OpaquePointer?
         
         guard sqlite3_prepare_v2(db, selectRandomDateQuery, -1, &dateStatement, nil) == SQLITE_OK else {
-            print("Error preparing date query")
+            print("WiDService : readWiDListByRandomDate error")
             return []
         }
         
@@ -224,11 +232,13 @@ class WiDService {
         let randomDate = dateList.randomElement()!
         
         // Use the selected date to fetch the WiDList
-        return selectWiDListByDate(date: randomDate)
+        return readWiDListByDate(date: randomDate)
     }
 
     
-    func selectWiDListBetweenDates(startDate: Date, finishDate: Date) -> [WiD] {
+    func readWiDListBetweenDates(startDate: Date, finishDate: Date) -> [WiD] {
+        print("WiDService : readWiDListBetweenDates executed")
+        
         let selectWiDsQuery = "SELECT id, date, title, start, finish, duration FROM WiD WHERE date BETWEEN ? AND ? ORDER BY date ASC, start ASC"
         
         let startDateString = dateFormatter.string(from: startDate)
@@ -264,7 +274,8 @@ class WiDService {
             }
             
             sqlite3_finalize(statement)
-            print("Success to select WiD list betwwen dates.")
+            
+            print("WiDService : readWiDListBetweenDates success")
         }
         
         return wiDList
@@ -487,6 +498,8 @@ class WiDService {
 //    }
     
     func updateWiD(withID id: Int, newTitle: String, newStart: Date, newFinish: Date, newDuration: TimeInterval) {
+        print("WiDService : updateWiD executed")
+        
         let updateWiDQuery = "UPDATE WiD SET title = ?, start = ?, finish = ?, duration = ? WHERE id = ?"
 
         var statement: OpaquePointer?
@@ -504,9 +517,9 @@ class WiDService {
             sqlite3_bind_int(statement, 5, Int32(id))
 
             if sqlite3_step(statement) != SQLITE_DONE {
-                print("Failed to update WiD.")
+                print("WiDService : updateWiD failed")
             } else {
-                print("Success to update WiD.")
+                print("WiDService : updateWiD success")
             }
 
             sqlite3_finalize(statement)
@@ -514,6 +527,8 @@ class WiDService {
     }
     
     func deleteWiD(withID id: Int) {
+        print("WiDService : deleteWiD executed")
+        
         let deleteWiDQuery = "DELETE FROM WiD WHERE id = ?"
         
         var statement: OpaquePointer?
@@ -521,9 +536,9 @@ class WiDService {
             sqlite3_bind_int(statement, 1, Int32(id))
             
             if sqlite3_step(statement) != SQLITE_DONE {
-                print("Failed to delete WiD.")
+                print("WiDService : deleteWiD failed")
             } else {
-                print("Success to delete WiD.")
+                print("WiDService : deleteWiD success")
             }
             
             sqlite3_finalize(statement)

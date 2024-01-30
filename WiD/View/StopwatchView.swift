@@ -57,7 +57,7 @@ struct StopwatchView: View {
             /**
              컨텐츠
              */
-            formatTimeVertically(stopwatchPlayer.elapsedTime)
+            getVerticalTimeView(stopwatchPlayer.elapsedTime)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .padding(.bottom, screenHeight / 2)
             
@@ -128,7 +128,8 @@ struct StopwatchView: View {
              */
             if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
-                    Color("Black").opacity(0.5)
+                    Color("Black-White")
+                        .opacity(0.3)
                         .onTapGesture {
                             isTitleMenuExpanded = false
                         }
@@ -201,7 +202,7 @@ struct StopwatchView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
                     .background(Color("White-Black"))
-                    .cornerRadius(8)
+                    .cornerRadius(16)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
@@ -251,7 +252,7 @@ struct StopwatchView: View {
                 finish: finish,
                 duration: duration
             )
-            wiDService.insertWiD(wid: wiD)
+            wiDService.createWiD(wid: wiD)
         } else {
             // WiD duration spans across multiple days
             let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
@@ -263,7 +264,7 @@ struct StopwatchView: View {
                 finish: finishOfStart,
                 duration: finishOfStart.timeIntervalSince(start)
             )
-            wiDService.insertWiD(wid: firstDayWiD)
+            wiDService.createWiD(wid: firstDayWiD)
 
             let startOfFinish = calendar.startOfDay(for: finish)
             let secondDayWiD = WiD(
@@ -274,7 +275,7 @@ struct StopwatchView: View {
                 finish: finish,
                 duration: finish.timeIntervalSince(startOfFinish)
             )
-            wiDService.insertWiD(wid: secondDayWiD)
+            wiDService.createWiD(wid: secondDayWiD)
         }
     }
 }

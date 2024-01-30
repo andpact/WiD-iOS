@@ -72,7 +72,7 @@ struct PeriodPieChartView: View {
                     .frame(width: geo.size.width * 0.8, height: geo.size.width * 0.8)
                     .foregroundColor(Color("White-Black"))
                 
-                Text(formatDate(date, format: "d"))
+                Text(getDateString(date, format: "d"))
                     .font(.system(size: geo.size.width / 3, weight: .medium))
                     .fontWeight(pieChartDataArray.count == 1 ? nil : .bold)
 //                    .foregroundColor(pieChartDataArray.count == 1 ? Color("LightGray-Gray") : Color("Black-White"))
@@ -198,7 +198,7 @@ struct DatePieChartView: View {
                     .font(.system(size: geo.size.width / 5, weight: .black))
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
                 
-                Text("\(formatDuration(getTotalDurationFromWiDList(wiDList: wiDList), mode: 1)) / 24시간")
+                Text("\(getDurationString(getTotalDurationFromWiDList(wiDList: wiDList), mode: 1)) / 24시간")
                     .font(.system(size: geo.size.width / 15, weight: .medium))
                     .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
             }

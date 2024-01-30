@@ -29,7 +29,7 @@ class DiaryService {
         
         // 데이터 베이스 열기
         if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
-            print("Unable to open database.")
+            print("DiaryService : Unable to open database")
             return
         }
         
@@ -38,18 +38,20 @@ class DiaryService {
         
         if sqlite3_exec(db, createDiaryTableQuery, nil, nil, nil) != SQLITE_OK {
             let errmsg = String(cString: sqlite3_errmsg(db)!)
-            print("Unable to create Diary table: \(errmsg)")
+            print("DiaryService : Unable to create Diary table: \(errmsg)")
         }
     }
     
     deinit {
         // 데이터 베이스 닫기
         if sqlite3_close(db) != SQLITE_OK {
-            print("Error closing database")
+            print("DiaryService : Error closing database")
         }
     }
     
-    func insertDiary(diary: Diary) {
+    func createDiary(diary: Diary) {
+        print("DiaryService : createDiary executed")
+        
         let insertDiaryQuery = "INSERT INTO Diary (date, title, content) VALUES (?, ?, ?)"
         
         let dateString = dateFormatter.string(from: diary.date)
@@ -61,18 +63,19 @@ class DiaryService {
             sqlite3_bind_text(statement, 3, (diary.content as NSString).utf8String, -1, nil)
             
             if sqlite3_step(statement) != SQLITE_DONE {
-                print("Failed to insert Diary.")
+                print("DiaryService : createDiary failed")
             } else {
-                print("Success to insert Diary.")
+                print("DiaryService : createDiary success")
             }
             
             sqlite3_finalize(statement)
         }
     }
     
-    func selectDiaryByDate(date: Date) -> Diary? {
+    func readDiaryByDate(date: Date) -> Diary? {
+        print("DiaryService : readDiaryByDate executed")
+        
         let selectDiaryQuery = "SELECT id, date, title, content FROM Diary WHERE date = ?"
-//        let selectDiaryQuery = "SELECT * FROM Diary WHERE date = ?"
 
         let dateString = dateFormatter.string(from: date)
 
@@ -92,8 +95,7 @@ class DiaryService {
                 let diary = Diary(id: id, date: date, title: title, content: content)
                 sqlite3_finalize(statement)
 
-                print("Success to select Diary by date.")
-                print("selectDiaryByDate - \(diary)")
+                print("DiaryService : readDiaryByDate success")
                 
                 return diary
             }
@@ -169,7 +171,9 @@ class DiaryService {
 //    }
 
     
-    func selectDiaryByTitleOrContent(searchText: String) -> [Diary] {
+    func readDiaryByTitleOrContent(searchText: String) -> [Diary] {
+        print("DiaryService : readDiaryByTitleOrContent executed")
+        
         guard !searchText.isEmpty else {
             return []
         }
@@ -205,6 +209,8 @@ class DiaryService {
 
     
     func updateDiary(withID id: Int, newTitle: String, newContent: String) {
+        print("DiaryService : updateDiary executed")
+        
         let updateDiaryQuery = "UPDATE Diary SET title = ?, content = ? WHERE id = ?"
         
         var statement: OpaquePointer?
@@ -214,9 +220,9 @@ class DiaryService {
             sqlite3_bind_int(statement, 3, Int32(id))
             
             if sqlite3_step(statement) != SQLITE_DONE {
-                print("Failed to update Diary.")
+                print("DiaryService : updateDiary failed")
             } else {
-                print("Success to update Diary.")
+                print("DiaryService : updateDiary success")
             }
             
             sqlite3_finalize(statement)

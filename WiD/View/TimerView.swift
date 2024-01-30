@@ -101,7 +101,7 @@ struct TimerView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .padding(.bottom, screenHeight / 2)
             } else {
-                formatTimeHorizontally(timerPlayer.remainingTime)
+                getHorizontalTimeView(timerPlayer.remainingTime)
                     .font(.custom("ChivoMono-BlackItalic", size: 70))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                     .padding(.bottom, screenHeight / 2)
@@ -149,7 +149,9 @@ struct TimerView: View {
                 VStack {
                     HStack {
                         Button(action: {
-                            isTitleMenuExpanded.toggle()
+                            withAnimation {
+                                isTitleMenuExpanded.toggle()
+                            }
                         }) {
                             Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
                                 .font(.system(size: 32))
@@ -203,9 +205,12 @@ struct TimerView: View {
             
             if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
-                    Color("Black").opacity(0.5)
+                    Color("Black-White")
+                        .opacity(0.3)
                         .onTapGesture {
-                            isTitleMenuExpanded = false
+                            withAnimation {
+                                isTitleMenuExpanded = false
+                            }
                         }
                     
                     VStack(spacing: 0) {
@@ -231,7 +236,9 @@ struct TimerView: View {
                                 ForEach(Title.allCases) { menuTitle in
                                     Button(action: {
                                         timerPlayer.title = menuTitle
-                                        isTitleMenuExpanded = false
+                                        withAnimation {
+                                            isTitleMenuExpanded = false
+                                        }
                                     }) {
                                         Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
                                             .font(.system(size: 24))
@@ -257,7 +264,7 @@ struct TimerView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
                     .background(Color("White-Black"))
-                    .cornerRadius(8)
+                    .cornerRadius(16)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
@@ -319,7 +326,7 @@ struct TimerView: View {
                 finish: finish,
                 duration: duration
             )
-            wiDService.insertWiD(wid: wiD)
+            wiDService.createWiD(wid: wiD)
         } else {
             // WiD duration spans across multiple days
             let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
@@ -331,7 +338,7 @@ struct TimerView: View {
                 finish: finishOfStart,
                 duration: finishOfStart.timeIntervalSince(start)
             )
-            wiDService.insertWiD(wid: firstDayWiD)
+            wiDService.createWiD(wid: firstDayWiD)
 
             let startOfFinish = calendar.startOfDay(for: finish)
             let secondDayWiD = WiD(
@@ -342,7 +349,7 @@ struct TimerView: View {
                 finish: finish,
                 duration: finish.timeIntervalSince(startOfFinish)
             )
-            wiDService.insertWiD(wid: secondDayWiD)
+            wiDService.createWiD(wid: secondDayWiD)
         }
     }
 }

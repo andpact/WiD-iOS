@@ -46,7 +46,7 @@ struct SearchView: View {
                 
                 Button(action: {
                     withAnimation {
-                        diaryList = diaryService.selectDiaryByTitleOrContent(searchText: searchText)
+                        diaryList = diaryService.readDiaryByTitleOrContent(searchText: searchText)
                         
                         searchComplete = true
                     }
@@ -77,13 +77,13 @@ struct SearchView: View {
                         ForEach(Array(diaryList), id: \.id) { diary in
                             NavigationLink(destination: DiaryView(date: diary.date)) {
                                 HStack(spacing: 16) {
-                                    let wiDList = wiDService.selectWiDListByDate(date: diary.date)
+                                    let wiDList = wiDService.readWiDListByDate(date: diary.date)
                                     
                                     PeriodPieChartView(date: diary.date, wiDList: wiDList)
                                         .frame(maxWidth: 70)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
-                                        getDayString(date: diary.date)
+                                        getDateStringView(date: diary.date)
                                             .bodyMedium()
                                         
                                         Text(diary.title)

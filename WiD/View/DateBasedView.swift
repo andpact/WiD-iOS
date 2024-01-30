@@ -66,7 +66,7 @@ struct DateBasedView: View {
                             VStack(spacing: 0) {
                                 GeometryReader { geo in
                                     HStack {
-                                        getDayStringWith3Lines(date: currentDate)
+                                        getDateStringViewWith3Lines(date: currentDate)
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                                             .font(.system(size: 22, weight: .bold))
 
@@ -167,7 +167,7 @@ struct DateBasedView: View {
                                                 }
                                                 .frame(maxWidth: .infinity)
                                                 
-                                                Text(formatDuration(duration, mode: 3))
+                                                Text(getDurationString(duration, mode: 3))
                                                     .bodyMedium()
                                                     .frame(maxWidth: .infinity)
                                             }
@@ -205,10 +205,10 @@ struct DateBasedView: View {
                                             
                                             NavigationLink(destination: WiDView(clickedWiDId: wiD.id)) {
                                                 VStack(alignment: .leading, spacing: 4) {
-                                                    Text("\(formatTime(wiD.start)) ~ \(formatTime(wiD.finish))")
+                                                    Text("\(getTimeString(wiD.start)) ~ \(getTimeString(wiD.finish))")
                                                         .bodyMedium()
                                                     
-                                                    Text("\(titleDictionary[wiD.title] ?? "") • \(formatDuration(wiD.duration, mode: 3))")
+                                                    Text("\(titleDictionary[wiD.title] ?? "") • \(getDurationString(wiD.duration, mode: 3))")
                                                         .bodyMedium()
                                                 }
                                                 .padding()
@@ -307,7 +307,8 @@ struct DateBasedView: View {
                  */
                 if expandDatePicker {
                     ZStack {
-                        Color("Black").opacity(0.5)
+                        Color("Black-White")
+                            .opacity(0.3)
                             .onTapGesture {
                                 expandDatePicker = false
                             }
@@ -351,15 +352,15 @@ struct DateBasedView: View {
         }
         .navigationBarHidden(true)
         .onAppear {
-            self.wiDList = wiDService.selectWiDListByDate(date: currentDate)
+            self.wiDList = wiDService.readWiDListByDate(date: currentDate)
             self.totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-            self.diary = diaryService.selectDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
+            self.diary = diaryService.readDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
         }
         .onChange(of: currentDate) { newDate in
             withAnimation {
-                wiDList = wiDService.selectWiDListByDate(date: newDate)
+                wiDList = wiDService.readWiDListByDate(date: newDate)
                 totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-                diary = diaryService.selectDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
+                diary = diaryService.readDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
             }
         }
     }

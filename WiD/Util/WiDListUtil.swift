@@ -8,6 +8,8 @@
 import SwiftUI
 
 func getEmptyWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) -> [WiD] {
+    print("WiDListUtil : getEmptyWiDListFromWiDList executed")
+    
     let calendar = Calendar.current
     let today = Date()
     var emptyWiDStart = calendar.startOfDay(for: date)
@@ -63,6 +65,8 @@ func getEmptyWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) -
 }
 
 func getRandomWiDList(days: Int) -> [WiD] {
+    print("WiDListUtil : getRandomWiDList executed")
+    
     var randomWiDList: [WiD] = []
 
     let calendar = Calendar.current
@@ -104,11 +108,15 @@ func getRandomWiDList(days: Int) -> [WiD] {
 }
 
 func getTotalDurationFromWiDList(wiDList: [WiD]) -> TimeInterval {
+    print("WiDListUtil : getTotalDurationFromWiDList executed")
+    
     let totalDuration = wiDList.reduce(0) { $0 + $1.duration }
     return totalDuration
 }
 
 func getTotalDurationPercentageFromWiDList(wiDList: [WiD]) -> Int {
+    print("WiDListUtil : getTotalDurationPercentageFromWiDList executed")
+    
     let totalDuration = getTotalDurationFromWiDList(wiDList: wiDList)
     let totalSecondsIn24Hours: TimeInterval = 24 * 60 * 60
     
@@ -121,6 +129,8 @@ func getTotalDurationPercentageFromWiDList(wiDList: [WiD]) -> Int {
 }
 
 func getTotalDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
+    print("WiDListUtil : getTotalDurationDictionaryByTitle executed")
+    
     var titleTotalDuration: [String: TimeInterval] = [:]
 
     for wiD in wiDList {
@@ -141,6 +151,8 @@ func getTotalDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval]
 }
 
 func getTotalDurationDictionaryByDate(wiDList: [WiD]) -> [Date: TimeInterval] {
+    print("WiDListUtil : getTotalDurationDictionaryByDate executed")
+    
     var dateTotalDuration: [Date: TimeInterval] = [:]
 
     for wiD in wiDList {
@@ -240,6 +252,8 @@ func getTotalDurationDictionaryByDate(wiDList: [WiD]) -> [Date: TimeInterval] {
 //}
 
 func getAverageDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
+    print("WiDListUtil : getAverageDurationDictionaryByTitle executed")
+    
     var titleTotalDuration: [String: [Date: TimeInterval]] = [:]
 
     for wiD in wiDList {
@@ -318,6 +332,8 @@ func getAverageDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterva
 //}
 
 func getMinDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
+    print("WiDListUtil : getMinDurationDictionaryByTitle executed")
+    
     var titleTotalDuration: [String: [Date: TimeInterval]] = [:]
 
     for wiD in wiDList {
@@ -350,6 +366,8 @@ func getMinDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
 }
 
 func getMaxDurationDictionaryByTitle(wiDList: [WiD]) -> [String: TimeInterval] {
+    print("WiDListUtil : getMaxDurationDictionaryByTitle executed")
+    
     var titleTotalDuration: [String: [Date: TimeInterval]] = [:]
 
     for wiD in wiDList {

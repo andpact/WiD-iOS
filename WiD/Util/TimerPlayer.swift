@@ -26,6 +26,8 @@ class TimerPlayer: ObservableObject {
     var start: Date = Date()
     
     func startTimer() {
+        print("TimerPlayer : startTimer executed")
+        
         timerState = PlayerState.STARTED
         
         self.timer?.invalidate()
@@ -45,6 +47,8 @@ class TimerPlayer: ObservableObject {
     }
     
     func pauseTimer() {
+        print("TimerPlayer : pauseTimer executed")
+        
         timerState = PlayerState.PAUSED
         
         self.timer?.invalidate()
@@ -52,6 +56,8 @@ class TimerPlayer: ObservableObject {
     }
     
     func stopTimer() {
+        print("TimerPlayer : stopTimer executed")
+        
         timerState = PlayerState.STOPPED
         
         self.remainingTime = 0

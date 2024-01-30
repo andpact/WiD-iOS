@@ -30,6 +30,8 @@ class StopwatchPlayer: ObservableObject {
 
     // 스톱 워치 플레이어 시작
     func startStopwatch() {
+        print("StopwatchPlayer : startStopwatch executed")
+        
         stopwatchState = PlayerState.STARTED
         
         let now = Date()
@@ -44,11 +46,15 @@ class StopwatchPlayer: ObservableObject {
     
     // 스톱 워치 플레이어 이어서 시작
     func restartStopwatch() {
+        print("StopwatchPlayer : restartStopwatch executed")
+        
         self.elapsedTime = 0
     }
 
     // 스톱 워치 플레이어 중지
     func pauseStopwatch() {
+        print("StopwatchPlayer : pauseStopwatch executed")
+        
         stopwatchState = PlayerState.PAUSED
         
         self.timer?.invalidate()
@@ -57,6 +63,8 @@ class StopwatchPlayer: ObservableObject {
     
     // 스톱 워치 플레이어 정지(초기화)
     func stopStopwatch() {
+        print("StopwatchPlayer : stopStopwatch executed")
+        
         stopwatchState = PlayerState.STOPPED
         
         self.elapsedTime = 0

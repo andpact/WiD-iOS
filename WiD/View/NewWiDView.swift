@@ -68,9 +68,9 @@ struct NewWiDView: View {
                     
                     Button(action: {
                         let newWiD = WiD(id: 0, date: date, title: title.rawValue, start: start, finish: finish, duration: duration)
-                        wiDService.insertWiD(wid: newWiD)
+                        wiDService.createWiD(wid: newWiD)
 
-                        wiDList = wiDService.selectWiDListByDate(date: date)
+                        wiDList = wiDService.readWiDListByDate(date: date)
                         
                         emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
                         
@@ -119,7 +119,7 @@ struct NewWiDView: View {
                                         Text("날짜")
                                             .labelMedium()
                                         
-                                        getDayString(date: date)
+                                        getDateStringView(date: date)
                                             .bodyMedium()
                                     }
                                     .padding(.horizontal)
@@ -190,7 +190,7 @@ struct NewWiDView: View {
                                         Text("시작")
                                             .labelMedium()
                                         
-                                        Text(formatTime(start))
+                                        Text(getTimeString(start))
                                             .bodyMedium()
                                     }
                                     .padding(.horizontal)
@@ -225,7 +225,7 @@ struct NewWiDView: View {
                                         Text("종료")
                                             .labelMedium()
                                         
-                                        Text(formatTime(finish))
+                                        Text(getTimeString(finish))
                                             .bodyMedium()
                                     }
                                     .padding(.horizontal)
@@ -260,7 +260,7 @@ struct NewWiDView: View {
                                         Text("소요")
                                             .labelMedium()
 
-                                        Text(formatDuration(duration, mode: 3))
+                                        Text(getDurationString(duration, mode: 3))
                                             .bodyMedium()
                                     }
                                     .padding(.horizontal)
@@ -331,10 +331,10 @@ struct NewWiDView: View {
                                             finish = emptyWiD.finish
                                         }) {
                                             VStack(alignment: .leading, spacing: 4) {
-                                                Text("\(formatTime(emptyWiD.start)) ~ \(formatTime(emptyWiD.finish))")
+                                                Text("\(getTimeString(emptyWiD.start)) ~ \(getTimeString(emptyWiD.finish))")
                                                     .bodyMedium()
 
-                                                Text(formatDuration(emptyWiD.duration, mode: 3))
+                                                Text(getDurationString(emptyWiD.duration, mode: 3))
                                                     .bodyMedium()
                                             }
                                             .padding()
@@ -342,7 +342,7 @@ struct NewWiDView: View {
                                             Spacer()
 
                                             Image(systemName: "square.and.arrow.down")
-                                                .font(.system(size: 24))
+                                                .font(.system(size: 16))
                                                 .padding()
                                         }
                                         .tint(Color("Black-White"))
@@ -373,7 +373,8 @@ struct NewWiDView: View {
              */
             if expandDatePicker || expandTitleMenu || expandStartPicker || expandFinishPicker {
                 ZStack {
-                    Color("Black").opacity(0.5)
+                    Color("Black-White")
+                        .opacity(0.3)
                         .onTapGesture {
                             expandDatePicker = false
                             expandTitleMenu = false
@@ -537,12 +538,12 @@ struct NewWiDView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .onAppear {
-            self.wiDList = wiDService.selectWiDListByDate(date: date)
+            self.wiDList = wiDService.readWiDListByDate(date: date)
             self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
         }
         .onChange(of: date) { newDate in
-            wiDList = wiDService.selectWiDListByDate(date: newDate)
-            print("new Date : \(formatTime(newDate))")
+            wiDList = wiDService.readWiDListByDate(date: newDate)
+            print("new Date : \(getTimeString(newDate))")
             
             emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
             

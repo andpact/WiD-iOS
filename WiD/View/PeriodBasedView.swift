@@ -84,12 +84,12 @@ struct PeriodBasedView: View {
                             // 타임라인
                             VStack(spacing: 8) {
                                 if selectedPeriod == Period.WEEK {
-                                    getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
+                                    getPeriodStringViewOfWeek(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
                                         .titleMedium()
                                         .padding(.horizontal)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 } else if selectedPeriod == Period.MONTH {
-                                    getMonthString(date: startDate)
+                                    getPeriodStringViewOfMonth(date: startDate)
                                         .titleMedium()
                                         .padding(.horizontal)
                                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -104,7 +104,7 @@ struct PeriodBasedView: View {
                                                 ForEach(0...6, id: \.self) { index in
                                                     let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black-White"))
                                                     
-                                                    Text(formatWeekdayLetterFromMonday(index))
+                                                    Text(getStringOfDayOfWeekFromMonday(index))
                                                         .bodySmall()
                                                         .frame(maxWidth: .infinity)
                                                         .foregroundColor(textColor)
@@ -113,7 +113,7 @@ struct PeriodBasedView: View {
                                                 ForEach(0...6, id: \.self) { index in
                                                     let textColor = index == 0 ? Color("OrangeRed") : (index == 6 ? Color("DeepSkyBlue") : Color("Black-White"))
                                                     
-                                                    Text(formatWeekdayLetterFromSunday(index))
+                                                    Text(getStringOfDayOfWeekFromSunday(index))
                                                         .bodySmall()
                                                         .frame(maxWidth: .infinity)
                                                         .foregroundColor(textColor)
@@ -238,7 +238,7 @@ struct PeriodBasedView: View {
                                                 }
                                                 .frame(maxWidth: .infinity)
                                                 
-                                                Text(formatDuration(duration, mode: 3))
+                                                Text(getDurationString(duration, mode: 3))
                                                     .bodyMedium()
                                                     .frame(maxWidth: .infinity)
                                             }
@@ -282,12 +282,12 @@ struct PeriodBasedView: View {
                             // 그래프
                             VStack(spacing: 8) {
                                 if selectedPeriod == Period.WEEK {
-                                    getWeekString(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
+                                    getPeriodStringViewOfWeek(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
                                         .titleMedium()
                                         .padding(.horizontal)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 } else if selectedPeriod == Period.MONTH {
-                                    getMonthString(date: startDate)
+                                    getPeriodStringViewOfMonth(date: startDate)
                                         .titleMedium()
                                         .padding(.horizontal)
                                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -327,7 +327,7 @@ struct PeriodBasedView: View {
                                         
                                         Spacer()
                                     
-                                        Text(formatDuration(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                        Text(getDurationString(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
                                             .titleLarge()
                                     }
                                     .padding()
@@ -342,7 +342,7 @@ struct PeriodBasedView: View {
                                         
                                         Spacer()
                                     
-                                        Text(formatDuration(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                        Text(getDurationString(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
                                             .titleLarge()
                                     }
                                     .padding()
@@ -357,7 +357,7 @@ struct PeriodBasedView: View {
                                         
                                         Spacer()
                                     
-                                        Text(formatDuration(minDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                        Text(getDurationString(minDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
                                             .titleLarge()
                                     }
                                     .padding()
@@ -372,7 +372,7 @@ struct PeriodBasedView: View {
                                         
                                         Spacer()
                                     
-                                        Text(formatDuration(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                        Text(getDurationString(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
                                             .titleLarge()
                                     }
                                     .padding()
@@ -424,11 +424,11 @@ struct PeriodBasedView: View {
                     
                     Button(action: {
                         if selectedPeriod == Period.WEEK {
-                            startDate = getFirstDayOfWeek(for: today)
-                            finishDate = getLastDayOfWeek(for: today)
+                            startDate = getFirstDateOfWeek(for: today)
+                            finishDate = getLastDateOfWeek(for: today)
                         } else if selectedPeriod == Period.MONTH {
-                            startDate = getFirstDayOfMonth(for: today)
-                            finishDate = getLastDayOfMonth(for: today)
+                            startDate = getFirstDateOfMonth(for: today)
+                            finishDate = getLastDateOfMonth(for: today)
                         }
 
                         updateDataFromPeriod()
@@ -440,12 +440,12 @@ struct PeriodBasedView: View {
                     .frame(maxWidth: .infinity)
                     .disabled(
                         selectedPeriod == Period.WEEK &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
-                        calendar.isDate(finishDate, inSameDayAs: getLastDayOfWeek(for: today)) ||
+                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
+                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
                         
                         selectedPeriod == Period.MONTH &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDayOfMonth(for: today)) &&
-                        calendar.isDate(finishDate, inSameDayAs: getLastDayOfMonth(for: today))
+                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
+                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))
                     )
                     
                     Button(action: {
@@ -453,8 +453,8 @@ struct PeriodBasedView: View {
                             startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
                             finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
                         } else if selectedPeriod == Period.MONTH {
-                            startDate = getFirstDayOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
-                            finishDate = getLastDayOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
+                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
+                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
                         }
                         
                         updateDataFromPeriod()
@@ -470,8 +470,8 @@ struct PeriodBasedView: View {
                             startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
                             finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
                         } else if selectedPeriod == Period.MONTH {
-                            startDate = getFirstDayOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
-                            finishDate = getLastDayOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
+                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
+                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
                         }
 
                         updateDataFromPeriod()
@@ -483,12 +483,12 @@ struct PeriodBasedView: View {
                     .frame(maxWidth: .infinity)
                     .disabled(
                         selectedPeriod == Period.WEEK &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDayOfWeek(for: today)) &&
-                        calendar.isDate(finishDate, inSameDayAs: getLastDayOfWeek(for: today)) ||
+                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
+                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
                         
                         selectedPeriod == Period.MONTH &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDayOfMonth(for: today)) &&
-                        calendar.isDate(finishDate, inSameDayAs: getLastDayOfMonth(for: today))
+                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
+                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))
                     )
                 }
                 .padding()
@@ -499,7 +499,8 @@ struct PeriodBasedView: View {
              */
             if expandDatePicker || expandTitleMenu {
                 ZStack {
-                    Color("Black").opacity(0.5)
+                    Color("Black-White")
+                        .opacity(0.3)
                         .onTapGesture {
                             expandDatePicker = false
                             expandTitleMenu = false
@@ -509,7 +510,7 @@ struct PeriodBasedView: View {
                     if expandDatePicker {
                         VStack(spacing: 0) {
                             ZStack {
-                                Text("날짜 선택")
+                                Text("기간 선택")
                                     .titleMedium()
                                 
                                 Button(action: {
@@ -627,8 +628,8 @@ struct PeriodBasedView: View {
         .navigationBarHidden(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            self.startDate = getFirstDayOfWeek(for: today)
-            self.finishDate = getLastDayOfWeek(for: today)
+            self.startDate = getFirstDateOfWeek(for: today)
+            self.finishDate = getLastDateOfWeek(for: today)
             
 //            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
 //            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
@@ -642,11 +643,11 @@ struct PeriodBasedView: View {
         }
         .onChange(of: selectedPeriod) { newPeriod in
             if (newPeriod == Period.WEEK) {
-                startDate = getFirstDayOfWeek(for: today)
-                finishDate = getLastDayOfWeek(for: today)
+                startDate = getFirstDateOfWeek(for: today)
+                finishDate = getLastDateOfWeek(for: today)
             } else if (newPeriod == Period.MONTH) {
-                startDate = getFirstDayOfMonth(for: today)
-                finishDate = getLastDayOfMonth(for: today)
+                startDate = getFirstDateOfMonth(for: today)
+                finishDate = getLastDateOfMonth(for: today)
             }
 
             updateDataFromPeriod()
@@ -655,7 +656,7 @@ struct PeriodBasedView: View {
     
     // startDate, finishDate 변경될 때 실행됨.
     func updateDataFromPeriod() {
-        wiDList = wiDService.selectWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
+        wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
         
         filteredWiDListByTitle = wiDList.filter { wiD in
             return wiD.title == selectedTitle.rawValue

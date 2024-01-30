@@ -36,7 +36,6 @@
 		EA663F0C2A5E74E200B51844 /* DataUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA663F0B2A5E74E200B51844 /* DataUtil.swift */; };
 		EA66D02A2B3D39190064483C /* ChivoMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA66D0292B3D39190064483C /* ChivoMono-Regular.ttf */; };
 		EA70DD742A59089D00B4B167 /* DateBasedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA70DD732A59089D00B4B167 /* DateBasedView.swift */; };
-		EA82C5032B240A2F00835DE4 /* PyeongChangPeace-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */; };
 		EA9D41742AB18B0D008D6DE2 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D41732AB18B0D008D6DE2 /* TimerView.swift */; };
 		EAA5E85C2B2FE6A8004DEA29 /* FontUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */; };
 		EAA83AA52B3D2864008CE95F /* ChivoMono-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */; };
@@ -106,7 +105,6 @@
 		EA663F0B2A5E74E200B51844 /* DataUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUtil.swift; sourceTree = "<group>"; };
 		EA66D0292B3D39190064483C /* ChivoMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChivoMono-Regular.ttf"; sourceTree = "<group>"; };
 		EA70DD732A59089D00B4B167 /* DateBasedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateBasedView.swift; sourceTree = "<group>"; };
-		EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PyeongChangPeace-Bold.otf"; sourceTree = "<group>"; };
 		EA9D41732AB18B0D008D6DE2 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontUtil.swift; sourceTree = "<group>"; };
 		EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChivoMono-BlackItalic.ttf"; sourceTree = "<group>"; };
@@ -286,7 +284,6 @@
 			isa = PBXGroup;
 			children = (
 				EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */,
-				EA82C5022B240A2F00835DE4 /* PyeongChangPeace-Bold.otf */,
 				EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */,
 				EA66D0292B3D39190064483C /* ChivoMono-Regular.ttf */,
 			);
@@ -412,7 +409,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA60B80D2A56991800B49641 /* Preview Assets.xcassets in Resources */,
-				EA82C5032B240A2F00835DE4 /* PyeongChangPeace-Bold.otf in Resources */,
 				EA66D02A2B3D39190064483C /* ChivoMono-Regular.ttf in Resources */,
 				EADCDC472A6DF98100D8AED2 /* Acme-Regular.ttf in Resources */,
 				EA60B80A2A56991800B49641 /* Assets.xcassets in Resources */,
@@ -732,7 +728,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"WiD/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6HAZ636CW5;
@@ -753,7 +749,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = andpact.project.WiD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -776,7 +772,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"WiD/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6HAZ636CW5;
@@ -797,7 +793,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = andpact.project.WiD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -10,7 +10,9 @@ import Foundation
 /**
  Duration -> H시간 m분 s초 (ex. 10시간 30분 30초)
  */
-func formatDuration(_ interval: TimeInterval, mode: Int) -> String {
+func getDurationString(_ interval: TimeInterval, mode: Int) -> String {
+    print("DurationUtil : getDurationString executed")
+    
     // mode 1. H시간 (10.5시간), m분 (30.5분)
     // mode 3. H시간 m분 s초 (10시간 30분 30초)
     

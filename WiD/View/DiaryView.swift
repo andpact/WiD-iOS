@@ -25,10 +25,10 @@ struct DiaryView: View {
     @State private var contentPlaceHolder: String = "내용을 입력해 주세요."
     
     init(date: Date) {
-        self.wiDList = wiDService.selectWiDListByDate(date: date)
+        self.wiDList = wiDService.readWiDListByDate(date: date)
         
         self.date = date
-        self.diary = diaryService.selectDiaryByDate(date: date) ?? Diary(id: -1, date: Date(), title: "", content: "")
+        self.diary = diaryService.readDiaryByDate(date: date) ?? Diary(id: -1, date: Date(), title: "", content: "")
     }
     
     var body: some View {
@@ -54,7 +54,7 @@ struct DiaryView: View {
                         
                         if diary.id == -1 { // 다이어리가 데이터베이스에 없을 때
 //                            print("insertDiary - \(newDiary)")
-                            diaryService.insertDiary(diary: newDiary)
+                            diaryService.createDiary(diary: newDiary)
                         } else {
                             diaryService.updateDiary(withID: diary.id, newTitle: diaryTitle, newContent: diaryContent)
                         }
@@ -80,7 +80,7 @@ struct DiaryView: View {
                 
                 GeometryReader { geo in
                     HStack {
-                        getDayStringWith3Lines(date: date)
+                        getDateStringViewWith3Lines(date: date)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .font(.system(size: 22, weight: .bold))
 

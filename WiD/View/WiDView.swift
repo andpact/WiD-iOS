@@ -49,7 +49,7 @@ struct WiDView: View {
 
     init(clickedWiDId: Int) {
         self.clickedWiDId = clickedWiDId
-        self.clickedWiD = wiDService.selectWiDByID(id: clickedWiDId)
+        self.clickedWiD = wiDService.readWiDByID(id: clickedWiDId)
     }
     
     var body: some View {
@@ -74,7 +74,7 @@ struct WiDView: View {
                     Button(action: {
                         wiDService.updateWiD(withID: clickedWiDId, newTitle: title.rawValue, newStart: start, newFinish: finish, newDuration: duration)
                         
-                        wiDList = wiDService.selectWiDListByDate(date: date)
+                        wiDList = wiDService.readWiDListByDate(date: date)
                         
                         presentationMode.wrappedValue.dismiss()
                     }) {
@@ -121,7 +121,7 @@ struct WiDView: View {
                                         Text("날짜")
                                             .labelMedium()
                                         
-                                        getDayString(date: date)
+                                        getDateStringView(date: date)
                                             .bodyMedium()
                                     }
                                     .padding(.horizontal)
@@ -181,7 +181,7 @@ struct WiDView: View {
                                         Text("시작")
                                             .labelMedium()
                                         
-                                        Text(formatTime(start))
+                                        Text(getTimeString(start))
                                             .bodyMedium()
                                     }
                                     .padding(.horizontal)
@@ -216,7 +216,7 @@ struct WiDView: View {
                                         Text("종료")
                                             .labelMedium()
                                         
-                                        Text(formatTime(finish))
+                                        Text(getTimeString(finish))
                                             .bodyMedium()
                                     }
                                     .padding(.horizontal)
@@ -251,7 +251,7 @@ struct WiDView: View {
                                         Text("소요")
                                             .labelMedium()
 
-                                        Text(formatDuration(duration, mode: 3))
+                                        Text(getDurationString(duration, mode: 3))
                                             .bodyMedium()
                                     }
                                     .padding(.horizontal)
@@ -325,10 +325,10 @@ struct WiDView: View {
                                     finish = finishLimit
                                 }) {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("\(formatTime(startLimit)) ~ \(formatTime(finishLimit))")
+                                        Text("\(getTimeString(startLimit)) ~ \(getTimeString(finishLimit))")
                                             .bodyMedium()
 
-                                        Text(formatDuration(finishLimit.timeIntervalSince(startLimit), mode: 3))
+                                        Text(getDurationString(finishLimit.timeIntervalSince(startLimit), mode: 3))
                                             .bodyMedium()
                                     }
                                     .padding()
@@ -336,7 +336,7 @@ struct WiDView: View {
                                     Spacer()
 
                                     Image(systemName: "square.and.arrow.down")
-                                        .font(.system(size: 24))
+                                        .font(.system(size: 16))
                                         .padding()
                                 }
                                 .tint(Color("Black-White"))
@@ -353,12 +353,11 @@ struct WiDView: View {
                 /**
                  하단 바
                  */
-    //                HStack {
-    //                    Text("WiD")
-    //                        .font(.custom("Acme-Regular", size: 20))
-    //
-    //                }
-    //                .frame(maxWidth: .infinity)
+//                HStack {
+//                    Text("WiD")
+//                        .font(.custom("Acme-Regular", size: 20))
+//                }
+//                .frame(maxWidth: .infinity)
             }
             
             /**
@@ -366,7 +365,8 @@ struct WiDView: View {
              */
             if expandTitleMenu || expandStartPicker || expandFinishPicker {
                 ZStack {
-                    Color("Black").opacity(0.5)
+                    Color("Black-White")
+                        .opacity(0.3)
                         .onTapGesture {
                             expandTitleMenu = false
                             expandStartPicker = false
@@ -509,7 +509,7 @@ struct WiDView: View {
             
             self.duration = clickedWiD!.duration
             
-            self.wiDList = wiDService.selectWiDListByDate(date: date)
+            self.wiDList = wiDService.readWiDListByDate(date: date)
             
             if let index = wiDList.firstIndex(where: { $0.id == clickedWiDId }) {
                 if 0 < index {
