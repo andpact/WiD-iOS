@@ -18,6 +18,7 @@ class StopwatchPlayer: ObservableObject {
     @Published var elapsedTime = 0 // 화면에 시간만을 표시하기 위한 프로퍼티
     @Published var stopwatchState: PlayerState = PlayerState.STOPPED
     @Published var inStopwatchView = false // 현재 스톱 워치 뷰 안에 있는지?
+    @Published var stopwatchTopBottomBarVisible: Bool = true
     
     // 날짜
     var date: Date = Date()
@@ -42,13 +43,6 @@ class StopwatchPlayer: ObservableObject {
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             self.elapsedTime += 1
         }
-    }
-    
-    // 스톱 워치 플레이어 이어서 시작
-    func restartStopwatch() {
-        print("StopwatchPlayer : restartStopwatch executed")
-        
-        self.elapsedTime = 0
     }
 
     // 스톱 워치 플레이어 중지

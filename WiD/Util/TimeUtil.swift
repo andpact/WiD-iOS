@@ -23,7 +23,8 @@ func getVerticalTimeView(_ time: Int) -> some View {
     let minutes = (time % 3600) / 60
     let seconds = time % 60
 
-    return VStack(alignment: .trailing, spacing: 0) {
+//    return VStack(alignment: .trailing, spacing: 0) {
+    return VStack(spacing: 0) {
         if 0 < hours {
             Text("\(hours)")
                 .frame(maxHeight: 90)
@@ -42,6 +43,7 @@ func getVerticalTimeView(_ time: Int) -> some View {
         } else {
             Text("\(seconds)")
                 .frame(maxHeight: 90)
+                .foregroundColor(seconds == 0 ? Color("DarkGray") : nil)
         }
     }
     .font(.custom("ChivoMono-BlackItalic", size: 120))

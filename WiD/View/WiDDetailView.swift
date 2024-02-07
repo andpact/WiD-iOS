@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WiDView: View {
+struct WiDDetailView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
     @State private var isDeleteButtonPressed: Bool = false
@@ -567,7 +567,7 @@ struct WiDView: View {
 
 struct WiDView_Previews: PreviewProvider {
     static var previews: some View {
-        WiDView(clickedWiDId: 0)
+        WiDDetailView(clickedWiDId: 0)
     }
 }
 

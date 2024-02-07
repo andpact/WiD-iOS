@@ -23,190 +23,82 @@ struct HomeView: View {
     @EnvironmentObject var timerPlayer: TimerPlayer
     
     var body: some View {
-        VStack(spacing: 0) {
-            if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
-                ZStack {
-                    Text("스톱 워치")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .bodyMedium()
-                    
-                    HStack {
-                        Text(stopwatchPlayer.title.koreanValue)
-                            .bodyMedium()
-                        
-                        getHorizontalTimeView(stopwatchPlayer.elapsedTime)
-                            .font(.custom("ChivoMono-Regular", size: 18))
-                    }
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                }
-                .padding(.horizontal)
-                .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-                .foregroundColor(Color("White"))
-                .frame(maxWidth: .infinity, maxHeight: 22)
-            }
-            
-            if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
-                ZStack {
-                    Text("타이머")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .bodyMedium()
-                    
-                    HStack {
-                        Text(timerPlayer.title.koreanValue)
-                            .bodyMedium()
-                        
-                        getHorizontalTimeView(timerPlayer.remainingTime)
-                            .font(.custom("ChivoMono-Regular", size: 18))
-                    }
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                }
-                .padding(.horizontal)
-                .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-                .foregroundColor(Color("White"))
-                .frame(maxWidth: .infinity, maxHeight: 22)
-            }
+        ZStack(alignment: .topTrailing) {
+            /**
+             상단 바
+             */
+//            ZStack {
+//                Text("WiD")
+//                    .titleLarge()
+//            }
+//            .padding(.horizontal)
+//            .frame(maxWidth: .infinity, maxHeight: 44)
             
             NavigationView { // 네비게이션 출발지는 무조건 네비게이션 뷰로 감싸야함.
                 VStack(spacing: 16) {
-                    /**
-                     상단 바
-                     */
-                    ZStack {
-                        Text("WiD")
-                            .titleLarge()
-                    }
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, maxHeight: 44)
-//
-//                    HStack(spacing: 16) {
-//                        Text("광고\n이미지")
-//                            .padding(8)
-//                            .multilineTextAlignment(.center)
-//                            .background(Color("DarkGray"))
-//                            .cornerRadius(24)
-//
-//                        VStack {
-//                            Text("광고 제목")
-//                            Text("광고 내용")
-//                        }
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                        Image(systemName: "chevron.forward")
-//                    }
-//                    .padding()
-//                    .background(Color("LightGray"))
-//                    .cornerRadius(24)
-//                    .padding(.horizontal)
-                    
-                    Spacer()
-                    
-                    HStack(alignment: .top, spacing: 32) {
-                        VStack(spacing: 4) {
-                            NavigationLink(destination: StopwatchView()) {
-                                Image(systemName: "stopwatch")
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .font(.system(size: 48))
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(24)
-                                    .shadow(color: Color("Black-White"), radius: 1)
-                            }
-                            .disabled(timerPlayer.timerState != PlayerState.STOPPED)
-                            
-                            Text("스톱 워치")
-                                .bodyMedium()
+                    HStack(spacing: 0) {
+                        NavigationLink(destination: WiDToolView()) {
+                            Image(systemName: "plus.app")
+                                .frame(maxWidth: .infinity)
+                                .font(.system(size: 36))
                         }
-                        
-                        VStack(spacing: 4) {
-                            NavigationLink(destination: TimerView()) {
-                                Image(systemName: "timer")
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .font(.system(size: 48))
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(24)
-                                    .shadow(color: Color("Black-White"), radius: 1)
-                            }
-                            .disabled(stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
 
-                            Text("타이머")
-                                .bodyMedium()
+                        NavigationLink(destination: WiDDisplayView()) {
+                            Image(systemName: "deskclock")
+                                .frame(maxWidth: .infinity)
+                                .font(.system(size: 36))
                         }
-                        
-                        VStack(spacing: 4) {
-                            NavigationLink(destination: NewWiDView()) {
-                                Image(systemName: "plus.square")
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .aspectRatio(1 / 1, contentMode: .fit)
-                                    .font(.system(size: 48))
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(24)
-                                    .shadow(color: Color("Black-White"), radius: 1)
-                            }
-                            .disabled(timerPlayer.timerState != PlayerState.STOPPED || stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
 
-                            Text("새로운 WiD")
-                                .bodyMedium()
-                                .multilineTextAlignment(.center)
+                        NavigationLink(destination: DiaryDisplayView()) {
+                            Image(systemName: "square.text.square")
+                                .frame(maxWidth: .infinity)
+                                .font(.system(size: 36))
                         }
-                    }
-                    .padding(.horizontal, 32)
-                    
-                    HStack(alignment: .top, spacing: 32) {
-                        VStack(spacing: 4) {
-                            NavigationLink(destination: DateBasedView()) {
-                                Image(systemName: "scope")
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .font(.system(size: 48))
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(24)
-                                    .shadow(color: Color("Black-White"), radius: 1)
-                            }
-                            
-                            Text("날짜 조회")
-                                .bodyMedium()
-                        }
-                        
-                        VStack(spacing: 4) {
-                            NavigationLink(destination: PeriodBasedView()) {
-                                Image(systemName: "calendar")
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .font(.system(size: 48))
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(24)
-                                    .shadow(color: Color("Black-White"), radius: 1)
-                            }
-                            
-                            Text("기간 조회")
-                                .bodyMedium()
-                        }
-                        
-                        VStack(spacing: 4) {
-                            NavigationLink(destination: SearchView()) {
-                                Image(systemName: "magnifyingglass")
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .aspectRatio(1 / 1, contentMode: .fit)
-                                    .font(.system(size: 48))
-                                    .background(Color("LightGray-Gray"))
-                                    .cornerRadius(24)
-                                    .shadow(color: Color("Black-White"), radius: 1)
-                            }
 
-                            Text("다이어리 검색")
-                                .bodyMedium()
-                                .multilineTextAlignment(.center)
-                        }
+                        Image(systemName: "gearshape")
+                            .frame(maxWidth: .infinity)
+                            .font(.system(size: 36))
                     }
-                    .padding(.horizontal, 32)
-                    
-                    Spacer()
+                    .padding()
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .tint(Color("Black-White"))
             }
+            
+            if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+                HStack {
+                    Text(stopwatchPlayer.title.koreanValue)
+                        .bodyMedium()
+                    
+                    getHorizontalTimeView(stopwatchPlayer.elapsedTime)
+                        .font(.custom("ChivoMono-Regular", size: 18))
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+                .foregroundColor(Color("White"))
+                .cornerRadius(8)
+                .frame(maxHeight: 44)
+                .padding(.horizontal)
+            }
+            
+            if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+                HStack {
+                    Text(timerPlayer.title.koreanValue)
+                        .bodyMedium()
+                    
+                    getHorizontalTimeView(timerPlayer.remainingTime)
+                        .font(.custom("ChivoMono-Regular", size: 18))
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+                .foregroundColor(Color("White"))
+                .cornerRadius(8)
+                .frame(maxHeight: 44)
+                .padding(.horizontal)
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

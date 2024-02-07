@@ -15,6 +15,7 @@ class TimerPlayer: ObservableObject {
     private let timerInterval = 1
     @Published var timerState: PlayerState = PlayerState.STOPPED
     @Published var inTimerView = false // 현재 타이머 뷰 안에 있는지?
+    @Published var timerTopBottomBarVisible: Bool = true
     
     // 날짜
     var date: Date = Date()

@@ -10,7 +10,7 @@ import SwiftUI
 struct TimerView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
-    @State private var timerTopBottomBarVisible: Bool = true
+//    @State private var timerTopBottomBarVisible: Bool = true
     private let screenHeight = UIScreen.main.bounds.height
     
     // WiD
@@ -31,37 +31,8 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             /**
-             상단 바
-             */
-            if timerTopBottomBarVisible {
-                ZStack {
-                    ZStack {
-                        Button(action: {
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            Image(systemName: "arrow.backward")
-                                .font(.system(size: 24))
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                        Text("타이머")
-                            .titleLarge()
-                        
-    //                        if timerStarted {
-    //                            Text("종료 시간 : \(formatTime(finishTime, format: "a H:mm:ss"))")
-    //                                .frame(maxWidth: .infinity, alignment: .trailing)
-    //                        }
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 44)
-                    .padding(.horizontal)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            }
-            
-            /**
              컨텐츠
              */
-//            if timerPlayer.reset {
             if timerPlayer.timerState == PlayerState.STOPPED {
                 HStack(spacing: 0) {
                     // 시간(Hour) 선택
@@ -141,11 +112,11 @@ struct TimerView: View {
 //                    }
 //                }
             }
-            
-            if timerTopBottomBarVisible {
-                /**
-                 하단 바
-                 */
+
+            /**
+             하단 바
+             */
+            if timerPlayer.timerTopBottomBarVisible {
                 VStack {
                     HStack {
                         Button(action: {
@@ -276,8 +247,6 @@ struct TimerView: View {
         .background(Color("White-Black"))
         .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
             timerPlayer.remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
-            
-//            finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
         }
         .onChange(of: timerPlayer.remainingTime) { newRemainingTime in
             if timerPlayer.timerState == PlayerState.STARTED && newRemainingTime <= 0 {
@@ -287,7 +256,7 @@ struct TimerView: View {
         .onTapGesture {
             if timerPlayer.timerState == PlayerState.STARTED {
                 withAnimation {
-                    timerTopBottomBarVisible.toggle()
+                    timerPlayer.timerTopBottomBarVisible.toggle()
                 }
             }
         }

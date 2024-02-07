@@ -330,10 +330,10 @@ struct PieSliceView: Shape {
 struct PieChartView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PeriodPieChartView(date: Date(), wiDList: [])
-            
-            PeriodPieChartView(date: Date(), wiDList: [])
-                .environment(\.colorScheme, .dark)
+//            PeriodPieChartView(date: Date(), wiDList: [])
+//
+//            PeriodPieChartView(date: Date(), wiDList: [])
+//                .environment(\.colorScheme, .dark)
             
             DatePieChartView(wiDList: [])
             

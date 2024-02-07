@@ -10,6 +10,7 @@ import DGCharts
 
 /*
  wiDList, startDate, finishDate 모두 오전 12:00:00 맞춰서 전달해야 한다.
+ DGCharts 라이브러리에 LineChartView, PieChartView 구조체가 있으니, LineGraphView, PieGraphView를 사용함.
  */
 struct LineGraphView: UIViewRepresentable {
     // WiD

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DiaryView: View {
+struct DiaryDetailView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
     
@@ -144,9 +144,9 @@ struct DiaryView: View {
 struct DiaryView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            DiaryView(date: Date())
+            DiaryDetailView(date: Date())
             
-            DiaryView(date: Date())
+            DiaryDetailView(date: Date())
                 .environment(\.colorScheme, .dark)
         }
     }

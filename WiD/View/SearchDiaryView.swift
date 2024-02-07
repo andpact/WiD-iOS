@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchView: View {
+struct SearchDiaryView: View {
     // 화면
     @Environment(\.presentationMode) var presentationMode
     
@@ -30,12 +30,12 @@ struct SearchView: View {
              검색 창
              */
             HStack(spacing: 16) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "arrow.backward")
-                        .font(.system(size: 24)) // large - 22, medium(기본) - 17, small - 14(정확하지 않음)
-                }
+//                Button(action: {
+//                    presentationMode.wrappedValue.dismiss()
+//                }) {
+//                    Image(systemName: "arrow.backward")
+//                        .font(.system(size: 24)) // large - 22, medium(기본) - 17, small - 14(정확하지 않음)
+//                }
                 
                 TextField("제목 또는 내용으로 검색..", text: $searchText)
                     .bodyMedium()
@@ -75,7 +75,7 @@ struct SearchView: View {
                         }
                     } else {
                         ForEach(Array(diaryList), id: \.id) { diary in
-                            NavigationLink(destination: DiaryView(date: diary.date)) {
+                            NavigationLink(destination: DiaryDetailView(date: diary.date)) {
                                 HStack(spacing: 16) {
                                     let wiDList = wiDService.readWiDListByDate(date: diary.date)
                                     
@@ -120,9 +120,9 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SearchView()
+            SearchDiaryView()
             
-            SearchView()
+            SearchDiaryView()
                 .environment(\.colorScheme, .dark)
         }
     }
