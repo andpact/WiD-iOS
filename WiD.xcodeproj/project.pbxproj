@@ -31,7 +31,6 @@
 		EA43E2762B7207A700C9D8E9 /* DiaryDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA43E2752B7207A700C9D8E9 /* DiaryDisplayView.swift */; };
 		EA43E2782B7207CA00C9D8E9 /* DayDiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA43E2772B7207CA00C9D8E9 /* DayDiaryView.swift */; };
 		EA43E27A2B72081800C9D8E9 /* RandomDiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA43E2792B72081800C9D8E9 /* RandomDiaryView.swift */; };
-		EA4774F82B1AF357009A59B0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4774F72B1AF357009A59B0 /* HomeView.swift */; };
 		EA4EACF42B1EAA2900BB4681 /* LineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EACF32B1EAA2900BB4681 /* LineGraphView.swift */; };
 		EA60B8062A56991700B49641 /* WiDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8052A56991700B49641 /* WiDApp.swift */; };
 		EA60B8082A56991700B49641 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA60B8072A56991700B49641 /* ContentView.swift */; };
@@ -54,6 +53,7 @@
 		EAC5E1582B19B35500AD8516 /* WeekWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5E1572B19B35500AD8516 /* WeekWiDView.swift */; };
 		EACB45152AB9CA8200DEF739 /* NewWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACB45142AB9CA8200DEF739 /* NewWiDView.swift */; };
 		EAD531ED2B1E862700E3C78B /* WiDDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD531EC2B1E862700E3C78B /* WiDDetailView.swift */; };
+		EAD98BB02B76501A004A1ECD /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98BAF2B76501A004A1ECD /* HomeView.swift */; };
 		EADCDC472A6DF98100D8AED2 /* Acme-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */; };
 		EADF79162A583C8E000753B2 /* WiDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADF79152A583C8E000753B2 /* WiDService.swift */; };
 		EAF1D54C2B1AAAB000E26B2A /* Diary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF1D54B2B1AAAB000E26B2A /* Diary.swift */; };
@@ -107,7 +107,6 @@
 		EA43E2752B7207A700C9D8E9 /* DiaryDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDisplayView.swift; sourceTree = "<group>"; };
 		EA43E2772B7207CA00C9D8E9 /* DayDiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayDiaryView.swift; sourceTree = "<group>"; };
 		EA43E2792B72081800C9D8E9 /* RandomDiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomDiaryView.swift; sourceTree = "<group>"; };
-		EA4774F72B1AF357009A59B0 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		EA4EACF32B1EAA2900BB4681 /* LineGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGraphView.swift; sourceTree = "<group>"; };
 		EA60B8022A56991700B49641 /* WiD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WiD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA60B8052A56991700B49641 /* WiDApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDApp.swift; sourceTree = "<group>"; };
@@ -133,6 +132,7 @@
 		EAC5E1572B19B35500AD8516 /* WeekWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekWiDView.swift; sourceTree = "<group>"; };
 		EACB45142AB9CA8200DEF739 /* NewWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWiDView.swift; sourceTree = "<group>"; };
 		EAD531EC2B1E862700E3C78B /* WiDDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDDetailView.swift; sourceTree = "<group>"; };
+		EAD98BAF2B76501A004A1ECD /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Acme-Regular.ttf"; sourceTree = "<group>"; };
 		EADCDC482A6DF9C100D8AED2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EADF79152A583C8E000753B2 /* WiDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDService.swift; sourceTree = "<group>"; };
@@ -273,15 +273,16 @@
 		EAC5D7272A56AAB000FA2499 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				EACB45142AB9CA8200DEF739 /* NewWiDView.swift */,
 				EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */,
 				EA60B8072A56991700B49641 /* ContentView.swift */,
-				EA4774F72B1AF357009A59B0 /* HomeView.swift */,
+				EAD98BAF2B76501A004A1ECD /* HomeView.swift */,
 				EA8CBDDB2B71A84D00798E9D /* WiDToolView.swift */,
 				EAC5D7202A56A76E00FA2499 /* StopwatchView.swift */,
 				EA9D41732AB18B0D008D6DE2 /* TimerView.swift */,
 				EA1F446C2B72048D0028B9EC /* PomodoroView.swift */,
 				EA35F2DC2B71CA430033253D /* WiDListView.swift */,
+				EACB45142AB9CA8200DEF739 /* NewWiDView.swift */,
+				EAD531EC2B1E862700E3C78B /* WiDDetailView.swift */,
 				EA35F2DE2B71CE050033253D /* WiDDisplayView.swift */,
 				EA70DD732A59089D00B4B167 /* DayWiDView.swift */,
 				EAC5E1572B19B35500AD8516 /* WeekWiDView.swift */,
@@ -291,7 +292,6 @@
 				EA43E2772B7207CA00C9D8E9 /* DayDiaryView.swift */,
 				EA43E2792B72081800C9D8E9 /* RandomDiaryView.swift */,
 				EA215CDD2A60F9AF005C5D30 /* SearchDiaryView.swift */,
-				EAD531EC2B1E862700E3C78B /* WiDDetailView.swift */,
 				EA05E95B2B1CA6B800A0DF42 /* DiaryDetailView.swift */,
 				EA18DCB52AE8CC5B00B88F30 /* BarChartView.swift */,
 				EA0458202A625B840065B98E /* PieChartView.swift */,
@@ -585,10 +585,10 @@
 				EA7B66B02B7322AB00A159CD /* PieGraphView.swift in Sources */,
 				EA1A39C12B500B4C00C0D5AC /* StopwatchPlayer.swift in Sources */,
 				EA1AF4AA2AB54EBD00BEBA93 /* AppOpenAdUtil.swift in Sources */,
+				EAD98BB02B76501A004A1ECD /* HomeView.swift in Sources */,
 				EA215CDE2A60F9AF005C5D30 /* SearchDiaryView.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
 				EA181F372A624F1F006EAF72 /* TimeUtil.swift in Sources */,
-				EA4774F82B1AF357009A59B0 /* HomeView.swift in Sources */,
 				EA70DD742A59089D00B4B167 /* DayWiDView.swift in Sources */,
 				EA43E2762B7207A700C9D8E9 /* DiaryDisplayView.swift in Sources */,
 				EA0458232A625C0C0065B98E /* WiD.swift in Sources */,

@@ -27,23 +27,28 @@ struct DayWiDView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) { // spacing: 0일 때, 상단 바에 그림자를 적용시키면 컨텐츠가 상단 바의 그림자를 덮어서 가림. (상단 바가 렌더링 된 후, 컨텐츠가 렌더링되기 때문)
-                getDateStringView(date: currentDate)
-                    .titleLarge()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
+                Button(action: {
+                    expandDatePicker = true
+                }) {
+                    getDateStringView(date: currentDate)
+                        .titleLarge()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                }
                 
                 /**
                  컨텐츠
                  */
-                ScrollView {
-                    VStack(spacing: 0) {
-                        DatePieChartView(wiDList: wiDList)
-                            .padding()
-                        
-                        // 합계 기록
-                        if wiDList.isEmpty {
-                            getEmptyView(message: "표시할 기록이 없습니다.")
-                        } else {
+                
+                VStack(spacing: 0) {
+                    // 합계 기록
+                    if wiDList.isEmpty {
+                        getEmptyView(message: "표시할 기록이 없습니다.")
+                    } else {
+                        ScrollView {
+                            DatePieChartView(wiDList: wiDList)
+                                .padding()
+                            
                             ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
                                 HStack {
                                     Image(systemName: titleImageDictionary[title] ?? "")
@@ -72,11 +77,12 @@ struct DayWiDView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 /**
                  하단 바
                  */
-                HStack(spacing: 16) {
+//                HStack(spacing: 16) {
 //                    Button(action: {
 //                        withAnimation {
 //                            expandDatePicker.toggle()
@@ -107,80 +113,80 @@ struct DayWiDView: View {
 //                    }
 //                    .disabled(calendar.isDateInToday(currentDate))
                     
-                    Button(action: {
-                        withAnimation {
-                            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
-                        }
-                    }) {
-                        Image(systemName: "chevron.backward")
-                            .font(.system(size: 24))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                            .background(Color("AppYellow-AppIndigo"))
-                            .cornerRadius(8)
-                    }
-                    
-                    Button(action: {
-                        withAnimation {
-                            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-                        }
-                    }) {
-                        Image(systemName: "chevron.forward")
-                            .font(.system(size: 24))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                            .background(calendar.isDateInToday(currentDate) ? Color("DarkGray") : Color("AppYellow-AppIndigo"))
-                            .cornerRadius(8)
-                    }
-                    .disabled(calendar.isDateInToday(currentDate))
-                }
-                .padding()
+//                    Button(action: {
+//                        withAnimation {
+//                            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+//                        }
+//                    }) {
+//                        Image(systemName: "chevron.backward")
+//                            .font(.system(size: 24))
+//                            .frame(maxWidth: .infinity)
+//                            .padding(.vertical, 8)
+//                            .background(Color("AppYellow-AppIndigo"))
+//                            .cornerRadius(8)
+//                    }
+//
+//                    Button(action: {
+//                        withAnimation {
+//                            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+//                        }
+//                    }) {
+//                        Image(systemName: "chevron.forward")
+//                            .font(.system(size: 24))
+//                            .frame(maxWidth: .infinity)
+//                            .padding(.vertical, 8)
+//                            .background(calendar.isDateInToday(currentDate) ? Color("DarkGray") : Color("AppYellow-AppIndigo"))
+//                            .cornerRadius(8)
+//                    }
+//                    .disabled(calendar.isDateInToday(currentDate))
+//                }
+//                .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             /**
              대화 상자
              */
-//            if expandDatePicker {
-//                ZStack {
-//                    Color("Black-White")
-//                        .opacity(0.3)
-//                        .onTapGesture {
-//                            expandDatePicker = false
-//                        }
-//
-//                    // 날짜 선택
-//                    VStack(spacing: 0) {
-//                        ZStack {
-//                            Text("날짜 선택")
-//                                .titleMedium()
-//
-//                            Button(action: {
-//                                expandDatePicker = false
-//                            }) {
-//                                Text("확인")
-//                                    .bodyMedium()
-//                            }
-//                            .frame(maxWidth: .infinity, alignment: .trailing)
-//                            .tint(Color("Black-White"))
-//                        }
-//                        .padding()
-//
-//                        Divider()
-//                            .background(Color("Black-White"))
-//
-//                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
-//                            .datePickerStyle(.graphical)
-//                            .padding()
-//                    }
-//                    .background(Color("White-Black"))
-//                    .cornerRadius(8)
-//                    .padding() // 바깥 패딩
-//                    .shadow(color: Color("Black-White"), radius: 1)
-//                }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                .edgesIgnoringSafeArea(.all)
-//            }
+            if expandDatePicker {
+                ZStack {
+                    Color("Black-White")
+                        .opacity(0.3)
+                        .onTapGesture {
+                            expandDatePicker = false
+                        }
+
+                    // 날짜 선택
+                    VStack(spacing: 0) {
+                        ZStack {
+                            Text("날짜 선택")
+                                .titleMedium()
+
+                            Button(action: {
+                                expandDatePicker = false
+                            }) {
+                                Text("확인")
+                                    .bodyMedium()
+                            }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .tint(Color("Black-White"))
+                        }
+                        .padding()
+
+                        Divider()
+                            .background(Color("Black-White"))
+
+                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                            .datePickerStyle(.graphical)
+                            .padding()
+                    }
+                    .background(Color("White-Black"))
+                    .cornerRadius(8)
+                    .padding() // 바깥 패딩
+                    .shadow(color: Color("Black-White"), radius: 1)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
@@ -195,6 +201,20 @@ struct DayWiDView: View {
                 totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
             }
         }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 100 {
+                        // Swipe right, decrease current date by one day
+                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+                    }
+                    
+                    if value.translation.width < -100 && !calendar.isDateInToday(currentDate) {
+                        // Swipe left, increase current date by one day
+                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+                    }
+                }
+        )
     }
 }
 

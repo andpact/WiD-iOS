@@ -191,6 +191,28 @@ enum Period: String, CaseIterable, Identifiable {
     }
 }
 
+enum DurationDictionary: String, CaseIterable, Identifiable {
+    case TOTAL
+    case AVERAGE
+    case MIN
+    case MAX
+    
+    var id: Self { self }
+    
+    var koreanValue: String {
+        switch self {
+        case .TOTAL:
+            return "합계"
+        case .AVERAGE:
+            return "평균"
+        case .MIN:
+            return "최소"
+        case .MAX:
+            return "최고"
+        }
+    }
+}
+
 enum PlayerState {
     case STARTED
     case PAUSED

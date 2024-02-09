@@ -35,7 +35,17 @@ struct HomeView: View {
 //            .frame(maxWidth: .infinity, maxHeight: 44)
             
             NavigationView { // 네비게이션 출발지는 무조건 네비게이션 뷰로 감싸야함.
-                VStack(spacing: 16) {
+                VStack(spacing: 0) {
+                    Spacer()
+                    
+                    Text("달력")
+                    
+                    Spacer()
+                    
+                    Text("총 WiD 갯수, 다이어리 수")
+                    
+                    Spacer()
+                    
                     HStack(spacing: 0) {
                         NavigationLink(destination: WiDToolView()) {
                             Image(systemName: "plus.app")

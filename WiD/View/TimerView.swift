@@ -233,7 +233,7 @@ struct TimerView: View {
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
+                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 3)
                     .background(Color("White-Black"))
                     .cornerRadius(16)
                 }
@@ -245,6 +245,16 @@ struct TimerView: View {
         .tint(Color("Black-White"))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
+        .onAppear {
+            withAnimation {
+                timerPlayer.inTimerView = true
+            }
+        }
+        .onDisappear {
+            withAnimation {
+                timerPlayer.inTimerView = false
+            }
+        }
         .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
             timerPlayer.remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
         }
@@ -258,16 +268,6 @@ struct TimerView: View {
                 withAnimation {
                     timerPlayer.timerTopBottomBarVisible.toggle()
                 }
-            }
-        }
-        .onAppear {
-            withAnimation {
-                timerPlayer.inTimerView = true
-            }
-        }
-        .onDisappear {
-            withAnimation {
-                timerPlayer.inTimerView = false
             }
         }
     }

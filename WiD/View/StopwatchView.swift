@@ -106,7 +106,7 @@ struct StopwatchView: View {
              */
             if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
-                    Color("White-Black")
+                    Color("Black-White")
                         .opacity(0.3)
                         .onTapGesture {
                             isTitleMenuExpanded = false

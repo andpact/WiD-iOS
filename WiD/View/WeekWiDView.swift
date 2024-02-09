@@ -44,7 +44,7 @@ struct WeekWiDView: View {
     
     // 딕셔너리
     @State private var seletedDictionary: [String: TimeInterval] = [:]
-    @State private var seletedDictionaryText: String = ""
+    @State private var seletedDictionaryType: DurationDictionary = .TOTAL
     
     var body: some View {
         ZStack {
@@ -54,119 +54,194 @@ struct WeekWiDView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                 
+                VStack(spacing: 0) {
+                    if wiDList.isEmpty {
+                        getEmptyView(message: "표시할 데이터가 없습니다.")
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 0) {
+                                HStack {
+                                    ForEach(0...6, id: \.self) { index in
+                                        let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black-White"))
+                                        
+                                        Text(getStringOfDayOfWeekFromMonday(index))
+                                            .bodySmall()
+                                            .frame(maxWidth: .infinity)
+                                            .foregroundColor(textColor)
+                                    }
+                                }
+                                .padding()
+                                
+                                let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
+                                
+                                LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+                                    ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
+                                        let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
+                                        
+                                        let filteredWiDList = wiDList.filter { wiD in
+                                            return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+                                        }
+                                        
+                                        PeriodPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                    }
+                                }
+                                .padding()
+                                
+                                Picker("", selection: $seletedDictionaryType) {
+                                    ForEach(DurationDictionary.allCases) { dictionary in
+                                        Text(dictionary.koreanValue)
+                                            .bodyMedium()
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                .padding()
+                                
+                                ForEach(Array(seletedDictionary), id: \.key) { title, duration in
+                                    HStack {
+                                        Image(systemName: titleImageDictionary[title] ?? "") // (?? "") 반드시 붙혀야 함.
+                                            .font(.system(size: 24))
+                                            .frame(maxWidth: 15, maxHeight: 15)
+                                            .padding()
+                                            .background(Color("White-Black"))
+                                            .clipShape(Circle())
+                                        
+                                        Text(titleDictionary[title] ?? "")
+                                            .titleLarge()
+                                        
+                                        Spacer()
+                                        
+                                        Text(getDurationString(duration, mode: 3))
+                                            .titleLarge()
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color(title))
+                                    .cornerRadius(8)
+                                    .padding(.horizontal)
+                                }
+                            }
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                
+                
                 /**
                  컨텐츠
                  */
-                ScrollView {
-                    VStack(spacing: 0) {
+//                ScrollView {
+//                    VStack(spacing: 0) {
                         // 타임라인
-                        if wiDList.isEmpty {
-                            getEmptyView(message: "표시할 타임라인이 없습니다.")
-                        } else {
-                            HStack {
-                                ForEach(0...6, id: \.self) { index in
-                                    let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black-White"))
-                                    
-                                    Text(getStringOfDayOfWeekFromMonday(index))
-                                        .bodySmall()
-                                        .frame(maxWidth: .infinity)
-                                        .foregroundColor(textColor)
-                                }
-                            }
-                            
-                            // Weekday 1 - 일, 2 - 월...
-//                                        let weekday = calendar.component(.weekday, from: startDate)
-                            let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
-                            
-                            LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
-                                ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
-                                    let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
-
-                                    let filteredWiDList = wiDList.filter { wiD in
-                                        return calendar.isDate(wiD.date, inSameDayAs: currentDate)
-                                    }
-
-                                    PeriodPieChartView(date: currentDate, wiDList: filteredWiDList)
-                                }
-                            }
-                        }
+//                        if wiDList.isEmpty {
+//                            getEmptyView(message: "표시할 타임라인이 없습니다.")
+//                        } else {
+//                            HStack {
+//                                ForEach(0...6, id: \.self) { index in
+//                                    let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black-White"))
+//
+//                                    Text(getStringOfDayOfWeekFromMonday(index))
+//                                        .bodySmall()
+//                                        .frame(maxWidth: .infinity)
+//                                        .foregroundColor(textColor)
+//                                }
+//                            }
+//
+//                            // Weekday 1 - 일, 2 - 월...
+////                                        let weekday = calendar.component(.weekday, from: startDate)
+//                            let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
+//
+//                            LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+//                                ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
+//                                    let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
+//
+//                                    let filteredWiDList = wiDList.filter { wiD in
+//                                        return calendar.isDate(wiD.date, inSameDayAs: currentDate)
+//                                    }
+//
+//                                    PeriodPieChartView(date: currentDate, wiDList: filteredWiDList)
+//                                }
+//                            }
+//                        }
                         
                         // 합계, 평균, 최고 기록
-                        HStack {
-                            Text("\(seletedDictionaryText) 기록")
-                                .titleMedium()
-                            
-                            Spacer()
-                            
-                            HStack {
-                                Button(action: {
-                                    seletedDictionary = totalDurationDictionary
-                                    seletedDictionaryText = "합계"
-                                }) {
-                                    Text("합계")
-                                        .bodyMedium()
-                                        .foregroundColor(seletedDictionaryText == "합계" ? Color("Black-White") : Color("DarkGray"))
-                                }
-                                
-                                Button(action: {
-                                    seletedDictionary = averageDurationDictionary
-                                    seletedDictionaryText = "평균"
-                                }) {
-                                    Text("평균")
-                                        .bodyMedium()
-                                        .foregroundColor(seletedDictionaryText == "평균" ? Color("Black-White") : Color("DarkGray"))
-                                }
-                                
-                                Button(action: {
-                                    seletedDictionary = minDurationDictionary
-                                    seletedDictionaryText = "최저"
-                                }) {
-                                    Text("최저")
-                                        .bodyMedium()
-                                        .foregroundColor(seletedDictionaryText == "최저" ? Color("Black-White") : Color("DarkGray"))
-                                }
-                                
-                                Button(action: {
-                                    seletedDictionary = maxDurationDictionary
-                                    seletedDictionaryText = "최고"
-                                }) {
-                                    Text("최고")
-                                        .bodyMedium()
-                                        .foregroundColor(seletedDictionaryText == "최고" ? Color("Black-White") : Color("DarkGray"))
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
+//                        HStack {
+//                            Text("\(seletedDictionaryText) 기록")
+//                                .titleMedium()
+//
+//                            Spacer()
+//
+//                            HStack {
+//                                Button(action: {
+//                                    seletedDictionary = totalDurationDictionary
+//                                    seletedDictionaryText = "합계"
+//                                }) {
+//                                    Text("합계")
+//                                        .bodyMedium()
+//                                        .foregroundColor(seletedDictionaryText == "합계" ? Color("Black-White") : Color("DarkGray"))
+//                                }
+//
+//                                Button(action: {
+//                                    seletedDictionary = averageDurationDictionary
+//                                    seletedDictionaryText = "평균"
+//                                }) {
+//                                    Text("평균")
+//                                        .bodyMedium()
+//                                        .foregroundColor(seletedDictionaryText == "평균" ? Color("Black-White") : Color("DarkGray"))
+//                                }
+//
+//                                Button(action: {
+//                                    seletedDictionary = minDurationDictionary
+//                                    seletedDictionaryText = "최저"
+//                                }) {
+//                                    Text("최저")
+//                                        .bodyMedium()
+//                                        .foregroundColor(seletedDictionaryText == "최저" ? Color("Black-White") : Color("DarkGray"))
+//                                }
+//
+//                                Button(action: {
+//                                    seletedDictionary = maxDurationDictionary
+//                                    seletedDictionaryText = "최고"
+//                                }) {
+//                                    Text("최고")
+//                                        .bodyMedium()
+//                                        .foregroundColor(seletedDictionaryText == "최고" ? Color("Black-White") : Color("DarkGray"))
+//                                }
+//                            }
+//                        }
+//                        .padding(.horizontal)
                         
-                        if wiDList.isEmpty {
-                            getEmptyView(message: "표시할 \(seletedDictionaryText) 기록이 없습니다.")
-                        } else {
-                            ForEach(Array(seletedDictionary), id: \.key) { title, duration in
-                                HStack {
-                                    Image(systemName: titleImageDictionary[title] ?? "") // (?? "") 반드시 붙혀야 함.
-                                        .font(.system(size: 24))
-                                        .frame(maxWidth: 15, maxHeight: 15)
-                                        .padding()
-                                        .background(Color("White-Black"))
-                                        .clipShape(Circle())
-
-                                    Text(titleDictionary[title] ?? "")
-                                        .titleLarge()
-                                    
-                                    Spacer()
-                                    
-                                    Text(getDurationString(duration, mode: 3))
-                                        .titleLarge()
-                                        .lineLimit(1)
-                                        .truncationMode(.tail)
-                                }
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color(title))
-                                .cornerRadius(8)
-                                .padding(.horizontal)
-                            }
-                        }
+//                        if wiDList.isEmpty {
+//                            getEmptyView(message: "표시할 \(seletedDictionaryText) 기록이 없습니다.")
+//                        } else {
+//                            ForEach(Array(seletedDictionary), id: \.key) { title, duration in
+//                                HStack {
+//                                    Image(systemName: titleImageDictionary[title] ?? "") // (?? "") 반드시 붙혀야 함.
+//                                        .font(.system(size: 24))
+//                                        .frame(maxWidth: 15, maxHeight: 15)
+//                                        .padding()
+//                                        .background(Color("White-Black"))
+//                                        .clipShape(Circle())
+//
+//                                    Text(titleDictionary[title] ?? "")
+//                                        .titleLarge()
+//
+//                                    Spacer()
+//
+//                                    Text(getDurationString(duration, mode: 3))
+//                                        .titleLarge()
+//                                        .lineLimit(1)
+//                                        .truncationMode(.tail)
+//                                }
+//                                .padding()
+//                                .frame(maxWidth: .infinity)
+//                                .background(Color(title))
+//                                .cornerRadius(8)
+//                                .padding(.horizontal)
+//                            }
+//                        }
 
                         // 기록률
 //                        VStack(spacing: 8) {
@@ -188,13 +263,13 @@ struct WeekWiDView: View {
 //                            }
 //                        }
 //                        .padding(.vertical)
-                    }
-                }
+//                    }
+//                }
                 
                 /**
                  하단 바
                  */
-                HStack(spacing: 16) {
+//                HStack(spacing: 16) {
 //                    Button(action: {
 //                        withAnimation {
 ////                            if expandTitleMenu {
@@ -257,68 +332,50 @@ struct WeekWiDView: View {
 ////                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))
 //                    )
                     
-                    Button(action: {
-//                        if selectedPeriod == Period.WEEK {
-                            startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
-                            finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
-//                        } else if selectedPeriod == Period.MONTH {
-//                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
-//                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
-//                        }
-                        
-                        updateDataFromPeriod()
-                    }) {
-                        Image(systemName: "chevron.backward")
-                            .font(.system(size: 24))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                            .background(Color("AppYellow-AppIndigo"))
-                            .cornerRadius(8)
-                    }
-                    
-                    Button(action: {
-//                        if selectedPeriod == Period.WEEK {
-                            startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
-                            finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
-//                        } else if selectedPeriod == Period.MONTH {
-//                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
-//                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
-//                        }
-
-                        updateDataFromPeriod()
-                    }) {
-                        Image(systemName: "chevron.forward")
-                            .font(.system(size: 24))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                            .background(calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) && calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ? Color("DarkGray") : Color("AppYellow-AppIndigo"))
-                            .cornerRadius(8)
-                    }
-                    .disabled(
-//                        selectedPeriod == Period.WEEK &&
-                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
-//                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
-                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today))
-                        
-//                        selectedPeriod == Period.MONTH &&
-//                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-//                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))
-                    )
-                }
-                .padding()
+//                    Button(action: {
+//                        startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
+//                        finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
+//
+//                        updateDataFromPeriod()
+//                    }) {
+//                        Image(systemName: "chevron.backward")
+//                            .font(.system(size: 24))
+//                            .frame(maxWidth: .infinity)
+//                            .padding(.vertical, 8)
+//                            .background(Color("AppYellow-AppIndigo"))
+//                            .cornerRadius(8)
+//                    }
+//
+//                    Button(action: {
+//                        startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
+//                        finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
+//
+//                        updateDataFromPeriod()
+//                    }) {
+//                        Image(systemName: "chevron.forward")
+//                            .font(.system(size: 24))
+//                            .frame(maxWidth: .infinity)
+//                            .padding(.vertical, 8)
+//                            .background(calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) && calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ? Color("DarkGray") : Color("AppYellow-AppIndigo"))
+//                            .cornerRadius(8)
+//                    }
+//                    .disabled(
+//                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
+//                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today))
+//                    )
+//                }
+//                .padding()
             }
             
             /**
              대화 상자
              */
-//            if expandDatePicker || expandTitleMenu {
 //            if expandDatePicker {
 //                ZStack {
 //                    Color("Black-White")
 //                        .opacity(0.3)
 //                        .onTapGesture {
 //                            expandDatePicker = false
-////                            expandTitleMenu = false
 //                        }
 //                    
 //                    // 날짜 선택
@@ -378,63 +435,6 @@ struct WeekWiDView: View {
 //                        .padding() // 바깥 패딩
 //                        .shadow(color: Color("Black-White"), radius: 1)
 //                    }
-//                    
-////                    if expandTitleMenu {
-////                        VStack(spacing: 0) {
-////                            ZStack {
-////                                Text("제목 선택")
-////                                    .titleLarge()
-////
-////                                Button(action: {
-////                                    expandTitleMenu = false
-////                                }) {
-////                                    Text("확인")
-////                                        .bodyMedium()
-////                                }
-////                                .frame(maxWidth: .infinity, alignment: .trailing)
-////                            }
-////                            .padding()
-////
-////                            Divider()
-////                                .background(Color("Black-White"))
-////
-////                            ScrollView {
-////                                VStack(spacing: 0) {
-////                                    ForEach(TitleWithALL.allCases) { menuTitle in
-////                                        Button(action: {
-////                                            selectedTitle = menuTitle
-////                                            withAnimation {
-////                                                expandTitleMenu.toggle()
-////                                            }
-////                                        }) {
-////                                            Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
-////                                                .font(.system(size: 24))
-////                                                .frame(maxWidth: 40, maxHeight: 40)
-////
-////                                            Spacer()
-////                                                .frame(maxWidth: 20)
-////
-////                                            Text(menuTitle.koreanValue)
-////                                                .labelMedium()
-////
-////                                            Spacer()
-////
-////                                            if selectedTitle == menuTitle {
-////                                                Text("선택됨")
-////                                                    .bodyMedium()
-////                                            }
-////                                        }
-////                                        .padding()
-////                                    }
-////                                }
-////                            }
-////                        }
-////                        .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
-////                        .background(Color("White-Black"))
-////                        .cornerRadius(8)
-////                        .padding()
-////                        .shadow(color: Color("Black-White"), radius: 1)
-////                    }
 //                }
 //                .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                .edgesIgnoringSafeArea(.all)
@@ -452,6 +452,19 @@ struct WeekWiDView: View {
             
             updateDataFromPeriod()
         }
+        .onChange(of: seletedDictionaryType) { newDictionaryType in
+            // 선택된 딕셔너리 유형에 따라 적절한 딕셔너리 업데이트
+            switch newDictionaryType {
+            case .TOTAL:
+                seletedDictionary = totalDurationDictionary
+            case .AVERAGE:
+                seletedDictionary = averageDurationDictionary
+            case .MIN:
+                seletedDictionary = minDurationDictionary
+            case .MAX:
+                seletedDictionary = maxDurationDictionary
+            }
+        }
 //        .onChange(of: selectedTitle) { newTitle in
 //            filteredWiDListByTitle = wiDList.filter { wiD in
 //                return wiD.title == newTitle.rawValue
@@ -468,6 +481,29 @@ struct WeekWiDView: View {
 //
 //            updateDataFromPeriod()
 //        }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    // 오른쪽 스와이프
+                    if value.translation.width > 100 {
+                        startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
+                        finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
+
+                        updateDataFromPeriod()
+                    }
+                    
+                    // 왼쪽 스와이프
+                    if value.translation.width < -100 &&
+                        !(calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
+                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today))
+                    ) {
+                        startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
+                        finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
+                        
+                        updateDataFromPeriod()
+                    }
+                }
+        )
     }
     
     // startDate, finishDate 변경될 때 실행됨.
@@ -485,7 +521,7 @@ struct WeekWiDView: View {
         
         // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
         seletedDictionary = totalDurationDictionary
-        seletedDictionaryText = "합계"
+//        seletedDictionaryText = "합계"
     }
 }
 

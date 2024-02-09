@@ -107,7 +107,7 @@ struct DayDiaryView: View {
                 /**
                  하단 바
                  */
-                HStack(spacing: 16) {
+//                HStack(spacing: 16) {
 //                    Button(action: {
 //                        withAnimation {
 //                            expandDatePicker.toggle()
@@ -138,36 +138,36 @@ struct DayDiaryView: View {
 //                    }
 //                    .disabled(calendar.isDateInToday(currentDate))
                     
-                    Button(action: {
-                        withAnimation {
-                            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
-                        }
-                    }) {
-                        Image(systemName: "chevron.backward")
-                            .font(.system(size: 24))
-                            .frame(width: 24, height: 24)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(Color("AppYellow-AppIndigo"))
-                    .cornerRadius(8)
-                    
-                    Button(action: {
-                        withAnimation {
-                            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-                        }
-                    }) {
-                        Image(systemName: "chevron.forward")
-                            .font(.system(size: 24))
-                            .frame(width: 24, height: 24)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .disabled(calendar.isDateInToday(currentDate))
-                    .padding(.vertical, 8)
-                    .background(Color("AppYellow-AppIndigo"))
-                    .cornerRadius(8)
-                }
-                .padding()
+//                    Button(action: {
+//                        withAnimation {
+//                            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+//                        }
+//                    }) {
+//                        Image(systemName: "chevron.backward")
+//                            .font(.system(size: 24))
+//                            .frame(width: 24, height: 24)
+//                    }
+//                    .frame(maxWidth: .infinity)
+//                    .padding(.vertical, 8)
+//                    .background(Color("AppYellow-AppIndigo"))
+//                    .cornerRadius(8)
+//
+//                    Button(action: {
+//                        withAnimation {
+//                            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+//                        }
+//                    }) {
+//                        Image(systemName: "chevron.forward")
+//                            .font(.system(size: 24))
+//                            .frame(width: 24, height: 24)
+//                    }
+//                    .frame(maxWidth: .infinity)
+//                    .disabled(calendar.isDateInToday(currentDate))
+//                    .padding(.vertical, 8)
+//                    .background(Color("AppYellow-AppIndigo"))
+//                    .cornerRadius(8)
+//                }
+//                .padding()
             }
     
             /**
@@ -219,6 +219,20 @@ struct DayDiaryView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 100 {
+                        // Swipe right, decrease current date by one day
+                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+                    }
+                    
+                    if value.translation.width < -100 && !calendar.isDateInToday(currentDate) {
+                        // Swipe left, increase current date by one day
+                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+                    }
+                }
+        )
     }
 }
 

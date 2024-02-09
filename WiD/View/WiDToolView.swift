@@ -19,7 +19,7 @@ struct WiDToolView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedTab: WiDToolViewTapItem = .STOPWATCH
     @Namespace private var animation
-    @GestureState private var translation: CGFloat = 0
+//    @GestureState private var translation: CGFloat = 0
     
     // 도구
     @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
@@ -73,40 +73,43 @@ struct WiDToolView: View {
             .padding(.horizontal)
             .disabled(!(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED))
             .opacity(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? 1 : 0)
+            .background(Color("White-Black"))
+            .cornerRadius(radius: 16, corners: [.topLeft, .topRight])
          
             // 컨텐츠
             WiDToolHolderView(tabItem: selectedTab)
-                .gesture(
-                    DragGesture().updating($translation) { value, state, _ in
-                        state = value.translation.width
-                    }
-                    .onEnded { value in
-                        if stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED {
-                            let offset = value.translation.width
-                            if offset > 50 {
-                                // 스와이프 우측으로 이동하면 이전 탭으로 변경
-                                withAnimation {
-                                    changeTab(by: -1)
-                                }
-                            } else if offset < -50 {
-                                // 스와이프 좌측으로 이동하면 다음 탭으로 변경
-                                withAnimation {
-                                    changeTab(by: 1)
-                                }
-                            }
-                        }
-                    }
-                )
+//                .gesture(
+//                    DragGesture().updating($translation) { value, state, _ in
+//                        state = value.translation.width
+//                    }
+//                    .onEnded { value in
+//                        if stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED {
+//                            let offset = value.translation.width
+//                            if offset > 50 {
+//                                // 스와이프 우측으로 이동하면 이전 탭으로 변경
+//                                withAnimation {
+//                                    changeTab(by: -1)
+//                                }
+//                            } else if offset < -50 {
+//                                // 스와이프 좌측으로 이동하면 다음 탭으로 변경
+//                                withAnimation {
+//                                    changeTab(by: 1)
+//                                }
+//                            }
+//                        }
+//                    }
+//                )
         }
+        .background(Color("OrangeRed"))
     }
     
-    private func changeTab(by offset: Int) {
-        guard let currentIndex = WiDToolViewTapItem.allCases.firstIndex(of: selectedTab) else {
-            return
-        }
-        let newIndex = (currentIndex + offset + WiDToolViewTapItem.allCases.count) % WiDToolViewTapItem.allCases.count
-        selectedTab = WiDToolViewTapItem.allCases[newIndex]
-    }
+//    private func changeTab(by offset: Int) {
+//        guard let currentIndex = WiDToolViewTapItem.allCases.firstIndex(of: selectedTab) else {
+//            return
+//        }
+//        let newIndex = (currentIndex + offset + WiDToolViewTapItem.allCases.count) % WiDToolViewTapItem.allCases.count
+//        selectedTab = WiDToolViewTapItem.allCases[newIndex]
+//    }
 }
 
 struct WiDToolHolderView : View {
@@ -141,5 +144,31 @@ struct WiDToolView_Previews: PreviewProvider {
                 .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .dark)
         }
+    }
+}
+
+//step 1 -- Create a shape view which can give shape
+struct CornerRadiusShape: Shape {
+    var radius = CGFloat.infinity
+    var corners = UIRectCorner.allCorners
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+//step 2 - embed shape in viewModifier to help use with ease
+struct CornerRadiusStyle: ViewModifier {
+    var radius: CGFloat
+    var corners: UIRectCorner
+    func body(content: Content) -> some View {
+        content
+            .clipShape(CornerRadiusShape(radius: radius, corners: corners))
+    }
+}
+//step 3 - crate a polymorphic view with same name as swiftUI's cornerRadius
+extension View {
+    func cornerRadius(radius: CGFloat, corners: UIRectCorner) -> some View {
+        ModifiedContent(content: self, modifier: CornerRadiusStyle(radius: radius, corners: corners))
     }
 }

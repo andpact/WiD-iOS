@@ -21,7 +21,7 @@ func getDateStringView(date: Date) -> some View {
     
     let calendar = Calendar.current
     
-    return HStack {
+    return HStack(spacing: 0) {
         Text(getDateString(date, format: "yyyy년 M월 d일"))
         
         HStack(spacing: 0) {
@@ -80,7 +80,7 @@ func getPeriodStringViewOfWeek(firstDayOfWeek: Date, lastDayOfWeek: Date) -> som
     
     let calendar = Calendar.current
     
-    return HStack {
+    return HStack(spacing: 0) {
         Text(getDateString(firstDayOfWeek, format: "yyyy년 M월 d일"))
         
         HStack(spacing: 0) {
@@ -89,10 +89,10 @@ func getPeriodStringViewOfWeek(firstDayOfWeek: Date, lastDayOfWeek: Date) -> som
             Text(getStringOfDayOfWeek(firstDayOfWeek))
                 .foregroundColor(calendar.component(.weekday, from: firstDayOfWeek) == 1 ? Color("OrangeRed") : (calendar.component(.weekday, from: firstDayOfWeek) == 7 ? Color("DeepSkyBlue") : Color("Black-White")))
 
-            Text(")")
+            Text(") ~ ")
         }
         
-        Text("~")
+//        Text("~")
         
         if !calendar.isDate(lastDayOfWeek, equalTo: firstDayOfWeek, toGranularity: .year) {
             Text(getDateString(lastDayOfWeek, format: "yyyy년 M월 d일"))

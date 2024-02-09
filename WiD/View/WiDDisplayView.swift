@@ -19,7 +19,7 @@ struct WiDDisplayView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedTab: WiDDisplayViewTapItem = .DAY
     @Namespace private var animation
-    @GestureState private var translation: CGFloat = 0
+//    @GestureState private var translation: CGFloat = 0
     
     var body: some View {
         VStack(spacing: 0) {
@@ -66,35 +66,35 @@ struct WiDDisplayView: View {
             .padding(.horizontal)
          
             WiDDisplayHolderView(tabItem: selectedTab)
-                .gesture(
-                    DragGesture().updating($translation) { value, state, _ in
-                        state = value.translation.width
-                    }
-                    .onEnded { value in
-                        let offset = value.translation.width
-                        if offset > 50 {
-                            // 스와이프 우측으로 이동하면 이전 탭으로 변경
-                            withAnimation {
-                                changeTab(by: -1)
-                            }
-                        } else if offset < -50 {
-                            // 스와이프 좌측으로 이동하면 다음 탭으로 변경
-                            withAnimation {
-                                changeTab(by: 1)
-                            }
-                        }
-                    }
-                )
+//                .gesture(
+//                    DragGesture().updating($translation) { value, state, _ in
+//                        state = value.translation.width
+//                    }
+//                    .onEnded { value in
+//                        let offset = value.translation.width
+//                        if offset > 50 {
+//                            // 스와이프 우측으로 이동하면 이전 탭으로 변경
+//                            withAnimation {
+//                                changeTab(by: -1)
+//                            }
+//                        } else if offset < -50 {
+//                            // 스와이프 좌측으로 이동하면 다음 탭으로 변경
+//                            withAnimation {
+//                                changeTab(by: 1)
+//                            }
+//                        }
+//                    }
+//                )
         }
     }
     
-    private func changeTab(by offset: Int) {
-        guard let currentIndex = WiDDisplayViewTapItem.allCases.firstIndex(of: selectedTab) else {
-            return
-        }
-        let newIndex = (currentIndex + offset + WiDDisplayViewTapItem.allCases.count) % WiDDisplayViewTapItem.allCases.count
-        selectedTab = WiDDisplayViewTapItem.allCases[newIndex]
-    }
+//    private func changeTab(by offset: Int) {
+//        guard let currentIndex = WiDDisplayViewTapItem.allCases.firstIndex(of: selectedTab) else {
+//            return
+//        }
+//        let newIndex = (currentIndex + offset + WiDDisplayViewTapItem.allCases.count) % WiDDisplayViewTapItem.allCases.count
+//        selectedTab = WiDDisplayViewTapItem.allCases[newIndex]
+//    }
 }
 
 struct WiDDisplayHolderView : View {

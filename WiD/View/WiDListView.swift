@@ -19,12 +19,16 @@ struct WiDListView: View {
     @State private var expandDatePicker: Bool = false
     
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack {
             VStack(spacing: 0) {
-                getDateStringView(date: currentDate)
-                    .titleLarge()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
+                Button(action: {
+                    expandDatePicker = true
+                }) {
+                    getDateStringView(date: currentDate)
+                        .titleLarge()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                }
             
                 if wiDList.isEmpty {
                     VStack {
@@ -33,11 +37,13 @@ struct WiDListView: View {
                         Button(action: {
                             // WiDDetailView로 이동
                         }) {
-                            Text("WiD 새로 만들기")
-                                .bodyMedium()
-                            
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 16))
+                            NavigationLink(destination: NewWiDView()) {
+                                Text("새로운 WiD 만들기")
+                                    .bodyMedium()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 16))
+                            }
                         }
                         .padding(.horizontal)
                         .padding(.vertical, 8)
@@ -90,7 +96,7 @@ struct WiDListView: View {
             /**
              하단 바
              */
-            HStack(spacing: 16) {
+//            HStack(spacing: 16) {
 //                Button(action: {
 //                    withAnimation {
 //                        expandDatePicker.toggle()
@@ -121,76 +127,74 @@ struct WiDListView: View {
 //                }
 //                .disabled(calendar.isDateInToday(currentDate))
                 
-                Button(action: {
-                    withAnimation {
-                        currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
-                    }
-                }) {
-                    Image(systemName: "chevron.backward")
-                        .font(.system(size: 24))
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
-                        .background(Color("AppYellow-AppIndigo")) // 클릭 용 배경
-                        .cornerRadius(8)
-//                        .padding()
-                }
-                
-                Button(action: {
-                    withAnimation {
-                        currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-                    }
-                }) {
-                    Image(systemName: "chevron.forward")
-                        .font(.system(size: 24))
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
-                        .background(calendar.isDateInToday(currentDate) ? Color("DarkGray") : Color("AppYellow-AppIndigo")) // 클릭 용 배경
-                        .cornerRadius(8)
-//                        .padding()
-                }
-                .disabled(calendar.isDateInToday(currentDate))
-            }
-            .tint(Color("Black-White"))
-            .padding()
-            
-//            if expandDatePicker {
-//                ZStack {
-//                    Color("Black-White")
-//                        .opacity(0.3)
-//                        .onTapGesture {
-//                            expandDatePicker = false
-//                        }
-//
-//                    VStack(spacing: 0) {
-//                        ZStack {
-//                            Button(action: {
-//                                expandDatePicker = false
-//                            }) {
-//                                Text("확인")
-//                                    .bodyMedium()
-//                            }
-//                            .frame(maxWidth: .infinity, alignment: .trailing)
-//                            .tint(Color("Black-White"))
-//
-//                            Text("날짜 선택")
-//                                .titleMedium()
-//                        }
-//                        .padding()
-//
-//                        Divider()
-//                            .background(Color("Black-White"))
-//
-//                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
-//                            .datePickerStyle(.graphical)
-//                            .padding()
+//                Button(action: {
+//                    withAnimation {
+//                        currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
 //                    }
-//                    .background(Color("White-Black"))
-//                    .cornerRadius(8)
-//                    .padding() // 바깥 패딩
-//                    .shadow(color: Color("Black-White"), radius: 1)
+//                }) {
+//                    Image(systemName: "chevron.backward")
+//                        .font(.system(size: 24))
+//                        .padding(.vertical, 8)
+//                        .frame(maxWidth: .infinity)
+//                        .background(Color("AppYellow-AppIndigo")) // 클릭 용 배경
+//                        .cornerRadius(8)
 //                }
-//                .edgesIgnoringSafeArea(.all)
+//
+//                Button(action: {
+//                    withAnimation {
+//                        currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+//                    }
+//                }) {
+//                    Image(systemName: "chevron.forward")
+//                        .font(.system(size: 24))
+//                        .padding(.vertical, 8)
+//                        .frame(maxWidth: .infinity)
+//                        .background(calendar.isDateInToday(currentDate) ? Color("DarkGray") : Color("AppYellow-AppIndigo")) // 클릭 용 배경
+//                        .cornerRadius(8)
+//                }
+//                .disabled(calendar.isDateInToday(currentDate))
 //            }
+//            .tint(Color("Black-White"))
+//            .padding()
+            
+            if expandDatePicker {
+                ZStack {
+                    Color("Black-White")
+                        .opacity(0.3)
+                        .onTapGesture {
+                            expandDatePicker = false
+                        }
+
+                    VStack(spacing: 0) {
+                        ZStack {
+                            Button(action: {
+                                expandDatePicker = false
+                            }) {
+                                Text("확인")
+                                    .bodyMedium()
+                            }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .tint(Color("Black-White"))
+
+                            Text("날짜 선택")
+                                .titleMedium()
+                        }
+                        .padding()
+
+                        Divider()
+                            .background(Color("Black-White"))
+
+                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                            .datePickerStyle(.graphical)
+                            .padding()
+                    }
+                    .background(Color("White-Black"))
+                    .cornerRadius(8)
+                    .padding() // 바깥 패딩
+                    .shadow(color: Color("Black-White"), radius: 1)
+                }
+                .edgesIgnoringSafeArea(.all)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
@@ -202,6 +206,20 @@ struct WiDListView: View {
                 wiDList = wiDService.readWiDListByDate(date: newDate)
             }
         }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 100 {
+                        // Swipe right, decrease current date by one day
+                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+                    }
+                    
+                    if value.translation.width < -100 && !calendar.isDateInToday(currentDate) {
+                        // Swipe left, increase current date by one day
+                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+                    }
+                }
+        )
     }
 }
 
