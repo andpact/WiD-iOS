@@ -18,7 +18,6 @@ struct DiaryDisplayView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedTab: DiaryDisplayViewTapItem = .DAY
     @Namespace private var animation
-//    @GestureState private var translation: CGFloat = 0
     
     var body: some View {
         NavigationView {
@@ -62,41 +61,42 @@ struct DiaryDisplayView: View {
                         }
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: 44, alignment: .leading)
+                .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
                 
                 DiaryDisplayHolderView(tabItem: selectedTab)
-    //                .gesture(
-    //                    DragGesture().updating($translation) { value, state, _ in
-    //                        state = value.translation.width
-    //                    }
-    //                    .onEnded { value in
-    //                        let offset = value.translation.width
-    //                        if offset > 50 {
-    //                            // 스와이프 우측으로 이동하면 이전 탭으로 변경
-    //                            withAnimation {
-    //                                changeTab(by: -1)
-    //                            }
-    //                        } else if offset < -50 {
-    //                            // 스와이프 좌측으로 이동하면 다음 탭으로 변경
-    //                            withAnimation {
-    //                                changeTab(by: 1)
-    //                            }
-    //                        }
-    //                    }
-    //                )
+                    .gesture(
+                        DragGesture()
+                            .onEnded { value in
+                                if value.translation.width > 100 {
+                                    if selectedTab == .RANDOM {
+                                        withAnimation {
+                                            selectedTab = .DAY
+                                        }
+                                    } else if selectedTab == .SEARCH {
+                                        withAnimation {
+                                            selectedTab = .RANDOM
+                                        }
+                                    }
+                                }
+                                
+                                if value.translation.width < -100 {
+                                    if selectedTab == .DAY {
+                                        withAnimation {
+                                            selectedTab = .RANDOM
+                                        }
+                                    } else if selectedTab == .RANDOM {
+                                        withAnimation {
+                                            selectedTab = .SEARCH
+                                        }
+                                    }
+                                }
+                            }
+                    )
             }
         }
         .navigationBarHidden(true)
     }
-    
-//    private func changeTab(by offset: Int) {
-//        guard let currentIndex = DiaryDisplayViewTapItem.allCases.firstIndex(of: selectedTab) else {
-//            return
-//        }
-//        let newIndex = (currentIndex + offset + DiaryDisplayViewTapItem.allCases.count) % DiaryDisplayViewTapItem.allCases.count
-//        selectedTab = DiaryDisplayViewTapItem.allCases[newIndex]
-//    }
 }
 
 struct DiaryDisplayHolderView : View {

@@ -30,150 +30,117 @@ struct TimerView: View {
     
     var body: some View {
         ZStack {
-            /**
-             컨텐츠
-             */
-            if timerPlayer.timerState == PlayerState.STOPPED {
-                HStack(spacing: 0) {
-                    // 시간(Hour) 선택
-                    Picker("", selection: $selectedHour) {
-                        ForEach(0..<24, id: \.self) { hour in
-                            Text("\(hour)")
-                                .font(selectedHour == hour ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
+            VStack(spacing: 0) {
+                /**
+                 컨텐츠
+                 */
+                if timerPlayer.timerState == PlayerState.STOPPED {
+                    HStack(spacing: 0) {
+                        // 시간(Hour) 선택
+                        Picker("", selection: $selectedHour) {
+                            ForEach(0..<24, id: \.self) { hour in
+                                Text("\(hour)")
+                                    .font(selectedHour == hour ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
+                            }
                         }
-                    }
-                    .pickerStyle(.inline)
-                    
-                    Text(":")
-                        .bodyMedium()
+                        .pickerStyle(.inline)
+                        
+                        Text(":")
+                            .bodyMedium()
 
-                    // 분(Minute) 선택
-                    Picker("", selection: $selectedMinute) {
-                        ForEach(0..<60, id: \.self) { minute in
-                            Text(String(format: "%02d", minute))
-                                .font(selectedMinute == minute ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
+                        // 분(Minute) 선택
+                        Picker("", selection: $selectedMinute) {
+                            ForEach(0..<60, id: \.self) { minute in
+                                Text(String(format: "%02d", minute))
+                                    .font(selectedMinute == minute ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
+                            }
                         }
-                    }
-                    .pickerStyle(.inline)
+                        .pickerStyle(.inline)
 
-                    Text(":")
-                        .bodyMedium()
-                    
-                    // 초(Second) 선택
-                    Picker("", selection: $selectedSecond) {
-                        ForEach(0..<60, id: \.self) { second in
-                            Text(String(format: "%02d", second))
-                                .font(selectedSecond == second ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
+                        Text(":")
+                            .bodyMedium()
+                        
+                        // 초(Second) 선택
+                        Picker("", selection: $selectedSecond) {
+                            ForEach(0..<60, id: \.self) { second in
+                                Text(String(format: "%02d", second))
+                                    .font(selectedSecond == second ? .custom("ChivoMono-BlackItalic", size: 35) : .system(size: 20, weight: .medium))
+                            }
                         }
+                        .pickerStyle(.inline)
                     }
-                    .pickerStyle(.inline)
+                    .padding(.horizontal)
+                    .padding(.top, screenHeight / 5)
+                } else {
+                    getHorizontalTimeView(timerPlayer.remainingTime)
+                        .font(.custom("ChivoMono-BlackItalic", size: 70))
+                        .padding(.top, screenHeight / 5)
                 }
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .padding(.bottom, screenHeight / 2)
-            } else {
-                getHorizontalTimeView(timerPlayer.remainingTime)
-                    .font(.custom("ChivoMono-BlackItalic", size: 70))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                    .padding(.bottom, screenHeight / 2)
                 
-                // 타이머 시간 추가
-//                HStack(spacing: 20) {
-//                    Button(action: {
-//                        remainingTime += 5 * 60
-//
-//                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-//                    }) {
-//                        Text("+ 5m")
-//                    }
-//
-//                    Button(action: {
-//                        remainingTime += 15 * 60
-//
-//                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-//                    }) {
-//                        Text("+ 15m")
-//                    }
-//
-//                    Button(action: {
-//                        remainingTime += 30 * 60
-//
-//                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-//                    }) {
-//                        Text("+ 30m")
-//                    }
-//
-//                    Button(action: {
-//                        remainingTime += 60 * 60
-//
-//                        finishTime = calendar.date(byAdding: .second, value: remainingTime, to: Date()) ?? Date()
-//                    }) {
-//                        Text("+ 60m")
-//                    }
-//                }
-            }
-
-            /**
-             하단 바
-             */
-            if timerPlayer.timerTopBottomBarVisible {
-                VStack {
-                    HStack {
-                        Button(action: {
-                            withAnimation {
-                                isTitleMenuExpanded.toggle()
-                            }
-                        }) {
-                            Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 32))
+                Spacer()
+                
+                /**
+                 하단 바
+                 */
+                HStack {
+                    Button(action: {
+                        withAnimation {
+                            isTitleMenuExpanded.toggle()
                         }
-                        .frame(maxWidth: 40, maxHeight: 40)
-                        .padding()
-                        .background(Color("AppIndigo"))
-                        .foregroundColor(Color("White"))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .disabled(timerPlayer.timerState != PlayerState.STOPPED)
-                        
-                        Spacer()
-                        
-                        if timerPlayer.timerState == PlayerState.PAUSED {
-                            Button(action: {
-                                timerPlayer.stopTimer()
-                            }) {
-                                Image(systemName: "arrow.clockwise")
-                                    .font(.system(size: 32))
-                            }
-                            .frame(maxWidth: 40, maxHeight: 40)
-                            .padding()
-                            .background(Color("DeepSkyBlue"))
-                            .foregroundColor(Color("White"))
-                            .clipShape(Circle())
-                        }
-                        
-                        Button(action: {
-                            if timerPlayer.timerState == PlayerState.STARTED {
-                                timerPlayer.pauseTimer()
-                                
-                                createWiD()
-                            } else {
-                                timerPlayer.startTimer()
-                            }
-                        }) {
-                            Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                .font(.system(size: 32))
-                        }
-                        .frame(maxWidth: 40, maxHeight: 40)
-                        .padding()
-                        .background(timerPlayer.timerState == PlayerState.STARTED ? Color("OrangeRed") : (timerPlayer.timerState == PlayerState.PAUSED ? Color("LimeGreen") : (timerPlayer.remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
-                        .foregroundColor(timerPlayer.timerState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
-                        .clipShape(Circle())
-                        .disabled(timerPlayer.remainingTime == 0)
+                    }) {
+                        Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
+                            .font(.system(size: 32))
                     }
+                    .frame(maxWidth: 40, maxHeight: 40)
+                    .padding()
+                    .background(timerPlayer.timerState == PlayerState.STOPPED ? Color("AppIndigo") : Color("DarkGray"))
+                    .foregroundColor(Color("White"))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .disabled(timerPlayer.timerState != PlayerState.STOPPED)
+                    
+                    Spacer()
+                    
+                    if timerPlayer.timerState == PlayerState.PAUSED {
+                        Button(action: {
+                            timerPlayer.stopTimer()
+                        }) {
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 32))
+                        }
+                        .frame(maxWidth: 40, maxHeight: 40)
+                        .padding()
+                        .background(Color("DeepSkyBlue"))
+                        .foregroundColor(Color("White"))
+                        .clipShape(Circle())
+                    }
+                    
+                    Button(action: {
+                        if timerPlayer.timerState == PlayerState.STARTED {
+                            timerPlayer.pauseTimer()
+                            
+//                                createWiD()
+                        } else {
+                            timerPlayer.startTimer()
+                        }
+                    }) {
+                        Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+                            .font(.system(size: 32))
+                    }
+                    .frame(maxWidth: 40, maxHeight: 40)
+                    .padding()
+                    .background(timerPlayer.timerState == PlayerState.STARTED ? Color("OrangeRed") : (timerPlayer.timerState == PlayerState.PAUSED ? Color("LimeGreen") : (timerPlayer.remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
+                    .foregroundColor(timerPlayer.timerState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
+                    .clipShape(Circle())
+                    .disabled(timerPlayer.remainingTime == 0)
                 }
                 .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .opacity(timerPlayer.timerTopBottomBarVisible ? 1 : 0)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             
+            /**
+             대화상자
+             */
             if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
                     Color("Black-White")
@@ -221,7 +188,7 @@ struct TimerView: View {
                                         Text(menuTitle.koreanValue)
                                             .labelMedium()
                                         
-                                        Spacer()    
+                                        Spacer()
                                         
                                         if timerPlayer.title == menuTitle {
                                             Text("선택됨")
@@ -237,13 +204,13 @@ struct TimerView: View {
                     .background(Color("White-Black"))
                     .cornerRadius(16)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
             }
         }
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
         .onAppear {
             withAnimation {

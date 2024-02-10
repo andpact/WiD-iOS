@@ -15,30 +15,31 @@ struct NewWiDView: View {
     // WiD
     private let wiDService = WiDService()
     @State private var wiDList: [WiD] = []
-    @State private var emptyWiDList: [WiD] = []
+//    @State private var emptyWiDList: [WiD] = []
     
     // 날짜
     private let calendar = Calendar.current
     private let today = Date()
-    @State private var date = Date()
-//    private let currentTime = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
-    private let currentTime = Date()
-    @State private var expandDatePicker: Bool = false
+//    @State private var date = Date()
+    private let date: Date
+    private let currentTime = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+//    private let currentTime = Date()
+//    @State private var expandDatePicker: Bool = false
 
     // 제목
     @State private var title: Title = .STUDY
     @State private var expandTitleMenu: Bool = false
     
     // 시작 시간
-//    @State private var start = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
-    @State private var start = Date()
+    @State private var start = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+//    @State private var start = Date()
     @State private var isStartOverlap: Bool = false
     @State private var isStartOverCurrentTime: Bool = false
     @State private var expandStartPicker: Bool = false
     
     // 종료 시간
-//    @State private var finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
-    @State private var finish = Date()
+    @State private var finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+//    @State private var finish = Date()
     @State private var isFinishOverlap: Bool = false
     @State private var isFinishOverCurrentTime: Bool = false
     @State private var expandFinishPicker: Bool = false
@@ -46,6 +47,10 @@ struct NewWiDView: View {
     // 소요 시간
     @State private var duration: TimeInterval = 0
     @State private var durationExist: Bool = false
+    
+    init(date: Date) {
+        self.date = date
+    }
     
     var body: some View {
         ZStack {
@@ -94,17 +99,16 @@ struct NewWiDView: View {
                         
                         Spacer()
                         
-                        Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
-                            .font(.system(size: 16))
-                            .padding(.horizontal)
-                            
+//                        Image(systemName: expandDatePicker ? "chevron.up" : "chevron.down")
+//                            .font(.system(size: 16))
+//                            .padding(.horizontal)
                     }
                     .background(Color("White-Black"))
-                    .onTapGesture {
-                        withAnimation {
-                            expandDatePicker.toggle()
-                        }
-                    }
+//                    .onTapGesture {
+//                        withAnimation {
+//                            expandDatePicker.toggle()
+//                        }
+//                    }
 
                     Divider()
                         .background(Color("Black-White"))
@@ -248,7 +252,7 @@ struct NewWiDView: View {
 
                     wiDList = wiDService.readWiDListByDate(date: date)
 
-                    emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
+//                    emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
 
                     checkWiDAvailableByStartAndFinish()
                 }) {
@@ -270,47 +274,48 @@ struct NewWiDView: View {
             /**
              대화 상자
              */
-            if expandDatePicker || expandTitleMenu || expandStartPicker || expandFinishPicker {
+//            if expandDatePicker || expandTitleMenu || expandStartPicker || expandFinishPicker {
+            if expandTitleMenu || expandStartPicker || expandFinishPicker {
                 ZStack {
                     Color("Black-White")
                         .opacity(0.3)
                         .onTapGesture {
-                            expandDatePicker = false
+//                            expandDatePicker = false
                             expandTitleMenu = false
                             expandStartPicker = false
                             expandFinishPicker = false
                         }
                     
                     // 날짜 선택
-                    if expandDatePicker {
-                        VStack(spacing: 0) {
-                            ZStack {
-                                Button(action: {
-                                    expandDatePicker = false
-                                }) {
-                                    Text("확인")
-                                        .bodyMedium()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .tint(Color("Black-White"))
-                                
-                                Text("날짜 선택")
-                                    .titleMedium()
-                            }
-                            .padding()
-                            
-                            Divider()
-                                .background(Color("Black-White"))
-
-                            DatePicker("", selection: $date, in: ...today, displayedComponents: .date)
-                                .datePickerStyle(.graphical)
-                                .padding()
-                        }
-                        .background(Color("White-Black"))
-                        .cornerRadius(8)
-                        .padding() // 바깥 패딩
-                        .shadow(color: Color("Black-White"), radius: 1)
-                    }
+//                    if expandDatePicker {
+//                        VStack(spacing: 0) {
+//                            ZStack {
+//                                Button(action: {
+//                                    expandDatePicker = false
+//                                }) {
+//                                    Text("확인")
+//                                        .bodyMedium()
+//                                }
+//                                .frame(maxWidth: .infinity, alignment: .trailing)
+//                                .tint(Color("Black-White"))
+//
+//                                Text("날짜 선택")
+//                                    .titleMedium()
+//                            }
+//                            .padding()
+//
+//                            Divider()
+//                                .background(Color("Black-White"))
+//
+//                            DatePicker("", selection: $date, in: ...today, displayedComponents: .date)
+//                                .datePickerStyle(.graphical)
+//                                .padding()
+//                        }
+//                        .background(Color("White-Black"))
+//                        .cornerRadius(8)
+//                        .padding() // 바깥 패딩
+//                        .shadow(color: Color("Black-White"), radius: 1)
+//                    }
                     
                     // 제목 선택
                     if expandTitleMenu {
@@ -438,13 +443,13 @@ struct NewWiDView: View {
         .navigationBarHidden(true)
         .onAppear {
             self.wiDList = wiDService.readWiDListByDate(date: date)
-            self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
+//            self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
         }
         .onChange(of: date) { newDate in
             wiDList = wiDService.readWiDListByDate(date: newDate)
             print("new Date : \(getTimeString(newDate))")
             
-            emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
+//            emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
             
             // date를 수정해도 start의 날짜는 그대로이므로 start의 날짜를 date에서 가져옴.
             let newStartComponents = calendar.dateComponents([.hour, .minute, .second], from: start)
@@ -557,10 +562,12 @@ struct NewWiDView: View {
 
 struct NewWiDView_Previews: PreviewProvider {
     static var previews: some View {
+        let today = Date()
+        
         Group {
-            NewWiDView()
+            NewWiDView(date: today)
             
-            NewWiDView()
+            NewWiDView(date: today)
                 .environment(\.colorScheme, .dark)
         }
     }

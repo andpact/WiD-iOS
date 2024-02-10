@@ -19,7 +19,6 @@ struct WiDToolView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedTab: WiDToolViewTapItem = .STOPWATCH
     @Namespace private var animation
-//    @GestureState private var translation: CGFloat = 0
     
     // 도구
     @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
@@ -69,7 +68,7 @@ struct WiDToolView: View {
                     }
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: 44, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
             .disabled(!(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED))
             .opacity(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? 1 : 0)
@@ -78,38 +77,53 @@ struct WiDToolView: View {
          
             // 컨텐츠
             WiDToolHolderView(tabItem: selectedTab)
-//                .gesture(
-//                    DragGesture().updating($translation) { value, state, _ in
-//                        state = value.translation.width
-//                    }
-//                    .onEnded { value in
-//                        if stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED {
-//                            let offset = value.translation.width
-//                            if offset > 50 {
-//                                // 스와이프 우측으로 이동하면 이전 탭으로 변경
-//                                withAnimation {
-//                                    changeTab(by: -1)
-//                                }
-//                            } else if offset < -50 {
-//                                // 스와이프 좌측으로 이동하면 다음 탭으로 변경
-//                                withAnimation {
-//                                    changeTab(by: 1)
-//                                }
-//                            }
-//                        }
-//                    }
-//                )
+                .gesture(
+                    DragGesture()
+                        .onEnded { value in
+                            if value.translation.width > 100 {
+                                if selectedTab == .TIMER {
+                                    withAnimation {
+                                        selectedTab = .STOPWATCH
+                                    }
+                                } else if selectedTab == .POMODORO {
+                                    withAnimation {
+                                        selectedTab = .TIMER
+                                    }
+                                } else if selectedTab == .WiDLIST {
+                                    withAnimation {
+                                        selectedTab = .POMODORO
+                                    }
+                                }
+                            }
+                            
+                            if value.translation.width < -100 {
+                                if selectedTab == .STOPWATCH {
+                                    withAnimation {
+                                        selectedTab = .TIMER
+                                    }
+                                } else if selectedTab == .TIMER {
+                                    withAnimation {
+                                        selectedTab = .POMODORO
+                                    }
+                                } else if selectedTab == .POMODORO {
+                                    withAnimation {
+                                        selectedTab = .WiDLIST
+                                    }
+                                }
+                            }
+                        }
+                )
         }
-        .background(Color("OrangeRed"))
+        .background(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? Color("LimeGreen") : Color("White-Black"))
+        .onAppear {
+            // 스톱 워치나 타이머를 실행후, 이전 화면으로 전환 후 다시 돌아왔을 때 
+            if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
+                selectedTab = .STOPWATCH
+            } else if timerPlayer.timerState == PlayerState.STARTED {
+                selectedTab = .TIMER
+            }
+        }
     }
-    
-//    private func changeTab(by offset: Int) {
-//        guard let currentIndex = WiDToolViewTapItem.allCases.firstIndex(of: selectedTab) else {
-//            return
-//        }
-//        let newIndex = (currentIndex + offset + WiDToolViewTapItem.allCases.count) % WiDToolViewTapItem.allCases.count
-//        selectedTab = WiDToolViewTapItem.allCases[newIndex]
-//    }
 }
 
 struct WiDToolHolderView : View {

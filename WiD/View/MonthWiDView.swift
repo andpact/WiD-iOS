@@ -39,10 +39,41 @@ struct MonthWiDView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                getPeriodStringViewOfMonth(date: startDate)
-                    .titleLarge()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
+                HStack(spacing: 32) {
+                    Button(action: {
+//                        expandDatePicker = true
+                    }) {
+                        getPeriodStringViewOfMonth(date: startDate)
+                            .titleLarge()
+                            .lineLimit(1)
+                            .truncationMode(.head)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    
+                    Button(action: {
+                        startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
+                        finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
+                        
+                        updateDataFromPeriod()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 24))
+                    }
+
+                    Button(action: {
+                        startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
+                        finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
+                        
+                        updateDataFromPeriod()
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 24))
+                    }
+                    .disabled(calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
+                              calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
+                }
+                .tint(Color("Black-White"))
+                .padding()
                 
                 VStack(spacing: 0) {
                     if wiDList.isEmpty {
@@ -122,91 +153,6 @@ struct MonthWiDView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
-                Spacer()
-                
-                /**
-                 하단 바
-                 */
-//                HStack(spacing: 16) {
-//                    Button(action: {
-//                        withAnimation {
-//                            expandDatePicker.toggle()
-//                        }
-//                    }) {
-//                        Image(systemName: "calendar")
-//                            .font(.system(size: 20))
-//
-//                        Text("월 선택")
-//                            .bodyMedium()
-//                    }
-//                    .padding(.horizontal)
-//                    .padding(.vertical, 8)
-//                    .background(Color("AppIndigo"))
-//                    .foregroundColor(Color("White"))
-//                    .cornerRadius(8)
-//
-//                    Spacer()
-                    
-    //                Button(action: {
-    //                    withAnimation {
-    //                        if expandDatePicker {
-    //                            expandDatePicker = false
-    //                        }
-    //                        expandTitleMenu.toggle()
-    //                    }
-    //                }) {
-    //                    Image(systemName: titleImageDictionary[selectedTitle.rawValue] ?? "")
-    //                        .font(.system(size: 24))
-    //                        .frame(width: 30, height: 30)
-    //                }
-    //                .frame(maxWidth: .infinity)
-                    
-//                    Button(action: {
-//                        startDate = getFirstDateOfMonth(for: today)
-//                        finishDate = getLastDateOfMonth(for: today)
-//
-//                        updateDataFromPeriod()
-//                    }) {
-//                        Image(systemName: "arrow.clockwise")
-//                            .font(.system(size: 24))
-//                            .frame(width: 30, height: 30)
-//                    }
-//                    .disabled(calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) && calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
-//
-//                    Button(action: {
-//                        startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
-//                        finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
-//
-//                        updateDataFromPeriod()
-//                    }) {
-//                        Image(systemName: "chevron.backward")
-//                            .font(.system(size: 24))
-//                            .frame(maxWidth: .infinity)
-//                            .padding(.vertical, 8)
-//                            .background(Color("AppYellow-AppIndigo"))
-//                            .cornerRadius(8)
-//                    }
-//
-//                    Button(action: {
-//                        startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
-//                        finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
-//
-//                        updateDataFromPeriod()
-//                    }) {
-//                        Image(systemName: "chevron.forward")
-//                            .font(.system(size: 24))
-//                            .frame(maxWidth: .infinity)
-//                            .padding(.vertical, 8)
-//                            .background(calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) && calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)) ? Color("DarkGray") : Color("AppYellow-AppIndigo"))
-//                            .cornerRadius(8)
-//                    }
-//                    .disabled(
-//                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-//                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))
-//                    )
-//                }
-//                .padding()
             }
             
 //            if expandDatePicker {
@@ -303,38 +249,11 @@ struct MonthWiDView: View {
                 seletedDictionary = maxDurationDictionary
             }
         }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    // 오른쪽 스와이프
-                    if value.translation.width > 100 {
-                        startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
-                        finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
-                        
-                        updateDataFromPeriod()
-                    }
-                    
-                    // 왼쪽 스와이프
-                    if value.translation.width < -100 &&
-                        !(calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-                          calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))
-                    ) {
-                        startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
-                        finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
-                        
-                        updateDataFromPeriod()
-                    }
-                }
-        )
     }
     
     // startDate, finishDate 변경될 때 실행됨.
     func updateDataFromPeriod() {
         wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
-        
-//        filteredWiDListByTitle = wiDList.filter { wiD in
-//            return wiD.title == selectedTitle.rawValue
-//        }
 
         totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
         averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)

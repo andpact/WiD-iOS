@@ -45,21 +45,64 @@ struct TitleWiDView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                Button(action: {
-                    expandDatePicker = true
-                }) {
-                    if selectedPeriod == Period.WEEK {
-                        getPeriodStringViewOfWeek(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
-                            .titleLarge()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                    } else if selectedPeriod == Period.MONTH {
-                        getPeriodStringViewOfMonth(date: startDate)
-                            .titleLarge()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
+                HStack(spacing: 32) {
+                    Button(action: {
+//                        expandDatePicker = true
+                    }) {
+                        if selectedPeriod == Period.WEEK {
+                            getPeriodStringViewOfWeek(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
+                                .titleLarge()
+                                .lineLimit(1)
+                                .truncationMode(.head)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        } else if selectedPeriod == Period.MONTH {
+                            getPeriodStringViewOfMonth(date: startDate)
+                                .titleLarge()
+                                .lineLimit(1)
+                                .truncationMode(.head)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
+                    
+                    Button(action: {
+                        if selectedPeriod == Period.WEEK {
+                            startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
+                            finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
+                        } else {
+                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
+                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
+                        }
+                        
+                        updateDataFromPeriod()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 24))
+                    }
+
+                    Button(action: {
+                        if selectedPeriod == Period.WEEK {
+                            startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
+                            finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
+                        } else {
+                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
+                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
+                        }
+                        
+                        updateDataFromPeriod()
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 24))
+                    }
+                    .disabled(selectedPeriod == Period.WEEK &&
+                              calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
+                              calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
+
+                              selectedPeriod == Period.MONTH &&
+                              calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
+                              calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
                 }
+                .tint(Color("Black-White"))
+                .padding()
                 
                 ScrollView {
                     VStack(spacing: 0) {
@@ -151,127 +194,6 @@ struct TitleWiDView: View {
                         }
                     }
                 }
-                
-                Spacer()
-                
-                /**
-                 하단 바
-                 */
-//                HStack(spacing: 16) {
-//                    Button(action: {
-//                        withAnimation {
-//                            if expandTitleMenu {
-//                                expandTitleMenu = false
-//                            }
-//                            expandDatePicker.toggle()
-//                        }
-//                    }) {
-//                        Image(systemName: "calendar")
-//                            .font(.system(size: 24))
-//                            .frame(maxWidth: 30, maxHeight: 30)
-//                            
-//                        Text("기간")
-//                            .bodyMedium()
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    
-//                    Button(action: {
-//                        withAnimation {
-//                            if expandDatePicker {
-//                                expandDatePicker = false
-//                            }
-//                            expandTitleMenu.toggle()
-//                        }
-//                    }) {
-//                        Image(systemName: titleImageDictionary[selectedTitle.rawValue] ?? "")
-//                            .font(.system(size: 24))
-//                            .frame(maxWidth: 30, maxHeight: 30)
-//                            
-//                        Text("제목")
-//                            .bodyMedium()
-//                    }
-//                    .frame(maxWidth: .infinity)
-                    
-    //                Button(action: {
-    //                    if selectedPeriod == Period.WEEK {
-    //                        startDate = getFirstDateOfWeek(for: today)
-    //                        finishDate = getLastDateOfWeek(for: today)
-    //                    } else if selectedPeriod == Period.MONTH {
-    //                        startDate = getFirstDateOfMonth(for: today)
-    //                        finishDate = getLastDateOfMonth(for: today)
-    //                    }
-    //
-    //                    updateDataFromPeriod()
-    //                }) {
-    //                    Image(systemName: "arrow.clockwise")
-    //                        .font(.system(size: 24))
-    //                        .frame(width: 30, height: 30)
-    //                }
-    //                .disabled(
-    //                    selectedPeriod == Period.WEEK &&
-    //                    calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
-    //                    calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
-    //
-    //                    selectedPeriod == Period.MONTH &&
-    //                    calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-    //                    calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))
-    //                )
-                    
-//                    Button(action: {
-//                        if selectedPeriod == Period.WEEK {
-//                            startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
-//                            finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
-//                        } else if selectedPeriod == Period.MONTH {
-//                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
-//                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
-//                        }
-//
-//                        updateDataFromPeriod()
-//                    }) {
-//                        Image(systemName: "chevron.backward")
-//                            .font(.system(size: 24))
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    .padding(.vertical, 8)
-//                    .background(Color("AppYellow-AppIndigo"))
-//                    .cornerRadius(8)
-//
-//                    Button(action: {
-//                        if selectedPeriod == Period.WEEK {
-//                            startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
-//                            finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
-//                        } else if selectedPeriod == Period.MONTH {
-//                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
-//                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
-//                        }
-//
-//                        updateDataFromPeriod()
-//                    }) {
-//                        Image(systemName: "chevron.forward")
-//                            .font(.system(size: 24))
-//                    }
-//                    .frame(maxWidth: .infinity)
-//                    .padding(.vertical, 8)
-//                    .background(
-//                        selectedPeriod == Period.WEEK &&
-//                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
-//                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
-//
-//                        selectedPeriod == Period.MONTH &&
-//                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-//                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)) ? Color("DarkGray") : Color("AppYellow-AppIndigo"))
-//                    .cornerRadius(8)
-//                    .disabled(
-//                        selectedPeriod == Period.WEEK &&
-//                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
-//                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
-//
-//                        selectedPeriod == Period.MONTH &&
-//                        calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-//                        calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))
-//                    )
-//                }
-//                .padding()
             }
             
             if expandDatePicker || expandTitleMenu {
@@ -427,44 +349,44 @@ struct TitleWiDView: View {
 
             updateDataFromPeriod()
         }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    // 오른쪽 스와이프
-                    if value.translation.width > 100 {
-                        if selectedPeriod == Period.WEEK {
-                            startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
-                            finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
-                        } else {
-                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
-                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
-                        }
-
-                        updateDataFromPeriod()
-                    }
-                    
-                    // 왼쪽 스와이프
-                    if value.translation.width < -100 &&
-                        !(selectedPeriod == Period.WEEK &&
-                            calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
-                            calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
-
-                            selectedPeriod == Period.MONTH &&
-                            calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-                            calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
-                    {
-                        if selectedPeriod == Period.WEEK {
-                            startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
-                            finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
-                        } else {
-                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
-                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
-                        }
-                        
-                        updateDataFromPeriod()
-                    }
-                }
-        )
+//        .gesture(
+//            DragGesture()
+//                .onEnded { value in
+//                    // 오른쪽 스와이프
+//                    if value.translation.width > 100 {
+//                        if selectedPeriod == Period.WEEK {
+//                            startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
+//                            finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
+//                        } else {
+//                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
+//                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
+//                        }
+//
+//                        updateDataFromPeriod()
+//                    }
+//
+//                    // 왼쪽 스와이프
+//                    if value.translation.width < -100 &&
+//                        !(selectedPeriod == Period.WEEK &&
+//                            calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
+//                            calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
+//
+//                            selectedPeriod == Period.MONTH &&
+//                            calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
+//                            calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
+//                    {
+//                        if selectedPeriod == Period.WEEK {
+//                            startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
+//                            finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
+//                        } else {
+//                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
+//                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
+//                        }
+//
+//                        updateDataFromPeriod()
+//                    }
+//                }
+//        )
     }
     
     // startDate, finishDate 변경될 때 실행됨.

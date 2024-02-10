@@ -689,6 +689,7 @@ struct WiDDetailView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationBarHidden(true)
         .onAppear {
             self.date = clickedWiD!.date
             self.title = Title(rawValue: clickedWiD!.title) ?? .STUDY
@@ -724,7 +725,6 @@ struct WiDDetailView: View {
                 }
             }
         }
-        .navigationBarHidden(true)
         .onChange(of: start) { newStart in
             duration = finish.timeIntervalSince(newStart)
             // DB의 newStart는 date가 아니라 2000-01-01 날짜를 가진다.

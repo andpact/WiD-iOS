@@ -27,14 +27,32 @@ struct DayWiDView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) { // spacing: 0일 때, 상단 바에 그림자를 적용시키면 컨텐츠가 상단 바의 그림자를 덮어서 가림. (상단 바가 렌더링 된 후, 컨텐츠가 렌더링되기 때문)
-                Button(action: {
-                    expandDatePicker = true
-                }) {
-                    getDateStringView(date: currentDate)
-                        .titleLarge()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
+                HStack(spacing: 32) {
+                    Button(action: {
+                        expandDatePicker = true
+                    }) {
+                        getDateStringView(date: currentDate)
+                            .titleLarge()
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 24))
+                    }
+
+                    Button(action: {
+                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 24))
+                    }
+                    .disabled(calendar.isDateInToday(currentDate))
                 }
+                .padding()
                 
                 /**
                  컨텐츠
@@ -50,7 +68,7 @@ struct DayWiDView: View {
                                 .padding()
                             
                             ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
-                                HStack {
+                                HStack(spacing: 8) {
                                     Image(systemName: titleImageDictionary[title] ?? "")
                                         .font(.system(size: 24))
                                         .frame(maxWidth: 15, maxHeight: 15)
@@ -78,69 +96,6 @@ struct DayWiDView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
-                /**
-                 하단 바
-                 */
-//                HStack(spacing: 16) {
-//                    Button(action: {
-//                        withAnimation {
-//                            expandDatePicker.toggle()
-//                        }
-//                    }) {
-//                        Image(systemName: "calendar")
-//                            .font(.system(size: 20))
-//
-//                        Text("날짜 선택")
-//                            .bodyMedium()
-//                    }
-//                    .padding(.horizontal)
-//                    .padding(.vertical, 8)
-//                    .background(Color("AppIndigo"))
-//                    .foregroundColor(Color("White"))
-//                    .cornerRadius(8)
-//
-//                    Spacer()
-//
-//                    Button(action: {
-//                        withAnimation {
-//                            currentDate = Date()
-//                        }
-//                    }) {
-//                        Image(systemName: "arrow.clockwise")
-//                            .font(.system(size: 24))
-//                            .frame(width: 24, height: 24)
-//                    }
-//                    .disabled(calendar.isDateInToday(currentDate))
-                    
-//                    Button(action: {
-//                        withAnimation {
-//                            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
-//                        }
-//                    }) {
-//                        Image(systemName: "chevron.backward")
-//                            .font(.system(size: 24))
-//                            .frame(maxWidth: .infinity)
-//                            .padding(.vertical, 8)
-//                            .background(Color("AppYellow-AppIndigo"))
-//                            .cornerRadius(8)
-//                    }
-//
-//                    Button(action: {
-//                        withAnimation {
-//                            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-//                        }
-//                    }) {
-//                        Image(systemName: "chevron.forward")
-//                            .font(.system(size: 24))
-//                            .frame(maxWidth: .infinity)
-//                            .padding(.vertical, 8)
-//                            .background(calendar.isDateInToday(currentDate) ? Color("DarkGray") : Color("AppYellow-AppIndigo"))
-//                            .cornerRadius(8)
-//                    }
-//                    .disabled(calendar.isDateInToday(currentDate))
-//                }
-//                .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
@@ -201,20 +156,6 @@ struct DayWiDView: View {
                 totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
             }
         }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    if value.translation.width > 100 {
-                        // Swipe right, decrease current date by one day
-                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
-                    }
-                    
-                    if value.translation.width < -100 && !calendar.isDateInToday(currentDate) {
-                        // Swipe left, increase current date by one day
-                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
-                    }
-                }
-        )
     }
 }
 

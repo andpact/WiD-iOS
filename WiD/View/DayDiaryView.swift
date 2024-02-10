@@ -28,6 +28,26 @@ struct DayDiaryView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
+                HStack(spacing: 32) {
+                    Spacer()
+                    
+                    Button(action: {
+                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 24))
+                    }
+
+                    Button(action: {
+                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 24))
+                    }
+                    .disabled(calendar.isDateInToday(currentDate))
+                }
+                .padding()
+                
                 ScrollView {
                     VStack(spacing: 0) {
                         GeometryReader { geo in
@@ -219,20 +239,6 @@ struct DayDiaryView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    if value.translation.width > 100 {
-                        // Swipe right, decrease current date by one day
-                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
-                    }
-                    
-                    if value.translation.width < -100 && !calendar.isDateInToday(currentDate) {
-                        // Swipe left, increase current date by one day
-                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
-                    }
-                }
-        )
     }
 }
 

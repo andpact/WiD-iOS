@@ -31,74 +31,78 @@ struct StopwatchView: View {
     
     var body: some View {
         ZStack {
-            /**
-             컨텐츠
-             */
-            getVerticalTimeView(stopwatchPlayer.elapsedTime)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.bottom, screenHeight / 3)
-            
-            /**
-             하단 바
-             */
-            if stopwatchPlayer.stopwatchTopBottomBarVisible {
-                HStack(spacing: 16) {
-                    // 제목 선택 버튼
-                    Button(action: {
-                        withAnimation {
-                            isTitleMenuExpanded.toggle()
-                        }
-                    }) {
-                        Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
-                            .font(.system(size: 32))
-                    }
-                    .frame(maxWidth: 40, maxHeight: 40)
-                    .padding()
-                    .background(stopwatchPlayer.stopwatchState == PlayerState.STOPPED ? Color("AppIndigo") : Color("DarkGray"))
-                    .foregroundColor(Color("White"))
-                    .cornerRadius(8)
-                    .disabled(stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
-                    
-                    Spacer()
-                    
-                    if stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
-                        // 정지 버튼
+            VStack(spacing: 0) {
+                /**
+                 컨텐츠
+                 */
+                getVerticalTimeView(stopwatchPlayer.elapsedTime)
+                    .padding(.top, screenHeight / 5)
+                
+                Spacer()
+                
+                /**
+                 하단 바
+                 */
+//                if stopwatchPlayer.stopwatchTopBottomBarVisible {
+                    HStack(spacing: 16) {
+                        // 제목 선택 버튼
                         Button(action: {
-                            stopwatchPlayer.stopStopwatch()
+                            withAnimation {
+                                isTitleMenuExpanded.toggle()
+                            }
                         }) {
-                            Image(systemName: "arrow.clockwise")
+                            Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
                                 .font(.system(size: 32))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
                         .padding()
-                        .background(Color("DeepSkyBlue"))
+                        .background(stopwatchPlayer.stopwatchState == PlayerState.STOPPED ? Color("AppIndigo") : Color("DarkGray"))
                         .foregroundColor(Color("White"))
+                        .cornerRadius(8)
+                        .disabled(stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
+                        
+                        Spacer()
+                        
+                        if stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
+                            // 정지 버튼
+                            Button(action: {
+                                stopwatchPlayer.stopStopwatch()
+                            }) {
+                                Image(systemName: "arrow.clockwise")
+                                    .font(.system(size: 32))
+                            }
+                            .frame(maxWidth: 40, maxHeight: 40)
+                            .padding()
+                            .background(Color("DeepSkyBlue"))
+                            .foregroundColor(Color("White"))
+                            .clipShape(Circle())
+                        }
+                        
+                        // 시작, 중지 선택 버튼
+                        Button(action: {
+                            if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
+                                stopwatchPlayer.pauseStopwatch()
+                                
+                                let now = Date()
+                                
+    //                            createWiD(now: now)
+                            } else {
+                                stopwatchPlayer.startStopwatch()
+                            }
+                        }) {
+                            Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+                                .font(.system(size: 32))
+                        }
+                        .frame(maxWidth: 40, maxHeight: 40)
+                        .padding()
+                        .background(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? Color("OrangeRed") : (stopwatchPlayer.stopwatchState == PlayerState.PAUSED ? Color("LimeGreen") : Color("Black-White")))
+                        .foregroundColor(stopwatchPlayer.stopwatchState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
                         .clipShape(Circle())
                     }
-                    
-                    // 시작, 중지 선택 버튼
-                    Button(action: {
-                        if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
-                            stopwatchPlayer.pauseStopwatch()
-                            
-                            let now = Date()
-                            
-                            createWiD(now: now)
-                        } else {
-                            stopwatchPlayer.startStopwatch()
-                        }
-                    }) {
-                        Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                            .font(.system(size: 32))
-                    }
-                    .frame(maxWidth: 40, maxHeight: 40)
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                     .padding()
-                    .background(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? Color("OrangeRed") : (stopwatchPlayer.stopwatchState == PlayerState.PAUSED ? Color("LimeGreen") : Color("Black-White")))
-                    .foregroundColor(stopwatchPlayer.stopwatchState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
-                    .clipShape(Circle())
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .padding()
+                    .opacity(stopwatchPlayer.stopwatchTopBottomBarVisible ? 1 : 0)
+//                }
             }
             
             /**

@@ -64,6 +64,66 @@ func getEmptyWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) -
     return emptyWiDList
 }
 
+func getFullWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) -> [WiD] {
+    print("WiDListUtil : getFullWiDListFromWiDList executed")
+    
+    let calendar = Calendar.current
+    let today = Date()
+    var emptyWiDStart = calendar.startOfDay(for: date)
+
+    var fullWiDList: [WiD] = []
+
+    for index in 0..<wiDList.count {
+        let currentWiD = wiDList[index]
+
+//        fullWiDList.append(currentWiD)
+        
+        let currentWIDStartComponents = calendar.dateComponents([.hour, .minute, .second], from: currentWiD.start)
+        
+        let emptyWiDFinish = calendar.date(bySettingHour: currentWIDStartComponents.hour!, minute: currentWIDStartComponents.minute!, second: currentWIDStartComponents.second!, of: date)
+        
+        // 빈 WiD의 시작 시간과 종료 시간이 같으면 소요 시간 0의 빈 WiD가 나오므로 걸러줌.
+        if emptyWiDStart == emptyWiDFinish {
+            let currentWIDFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: currentWiD.finish)
+            
+            emptyWiDStart = calendar.date(bySettingHour: currentWIDFinishComponents.hour!, minute: currentWIDFinishComponents.minute!, second: currentWIDFinishComponents.second!, of: date)!
+            
+            // 빈 WiD를 마지막으로 추가함.
+            if index == wiDList.count - 1 {
+                let endOfDay = calendar.isDate(date, inSameDayAs: today) ? currentTime : calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
+                let lastEmptyWiD = WiD(id: -(index + 1), date: date, title: "기록 없음", start: emptyWiDStart, finish: endOfDay, duration: endOfDay.timeIntervalSince(emptyWiDStart))
+                
+                fullWiDList.append(lastEmptyWiD)
+                
+                break
+            }
+            
+            continue
+        }
+        
+        // id에 0을 넣지 말고, 각각 다르게 설정해줘야 정상 동작함.
+        let emptyWiD = WiD(id: -index, date: date, title: "기록 없음", start: emptyWiDStart, finish: emptyWiDFinish!, duration: emptyWiDFinish!.timeIntervalSince(emptyWiDStart))
+        fullWiDList.append(emptyWiD)
+        fullWiDList.append(currentWiD) // 왜 여기 추가해야 되지???
+        
+        let currentWIDFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: currentWiD.finish)
+        
+        emptyWiDStart = calendar.date(bySettingHour: currentWIDFinishComponents.hour!, minute: currentWIDFinishComponents.minute!, second: currentWIDFinishComponents.second!, of: date)!
+        
+        // 빈 WiD를 마지막으로 추가함.
+        if index == wiDList.count - 1 {
+            let endOfDay = calendar.isDate(date, inSameDayAs: today) ? currentTime : calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
+            let lastEmptyWiD = WiD(id: -(index + 1), date: date, title: "기록 없음", start: emptyWiDStart, finish: endOfDay, duration: endOfDay.timeIntervalSince(emptyWiDStart))
+            
+            fullWiDList.append(lastEmptyWiD)
+            
+            break
+        }
+    }
+
+    return fullWiDList
+}
+
 func getRandomWiDList(days: Int) -> [WiD] {
     print("WiDListUtil : getRandomWiDList executed")
     
