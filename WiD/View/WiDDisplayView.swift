@@ -37,20 +37,21 @@ struct WiDDisplayView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
-            .tint(Color("Black"))
+            .background(Color("LightGray-Black"))
+            .tint(Color("Black-White"))
 
             HStack(alignment: .top, spacing: 16) {
                 ForEach(WiDDisplayViewTapItem.allCases, id: \.self) { item in
                     VStack(spacing: 8) {
                         Text(item.rawValue)
                             .bodyMedium()
-                            .foregroundColor(selectedTab == item ? Color("Black") : Color("DarkGray"))
+                            .foregroundColor(selectedTab == item ? Color("Black-White") : Color("DarkGray"))
 
                         if selectedTab == item {
                             Rectangle()
-                                .foregroundColor(Color("Black"))
+                                .foregroundColor(Color("Black-White"))
                                 .frame(maxWidth: 50, maxHeight: 3)
-                                .matchedGeometryEffect(id: "STOPWATCH", in: animation)
+                                .matchedGeometryEffect(id: "", in: animation)
                         }
                             
                     }
@@ -63,6 +64,9 @@ struct WiDDisplayView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
+            .background(Color("White-Gray"))
+            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
+            .background(Color("LightGray-Black"))
          
             WiDDisplayHolderView(tabItem: selectedTab)
                 .gesture(
@@ -102,6 +106,7 @@ struct WiDDisplayView: View {
                         }
                 )
         }
+        .tint(Color("Black-White"))
     }
 }
 

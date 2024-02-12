@@ -99,6 +99,7 @@ struct WiDDetailView: View {
                         
                         Spacer()
                     }
+                    .background(Color("White-Black"))
                     
                     Divider()
                         .background(Color("Black-White"))
@@ -229,13 +230,16 @@ struct WiDDetailView: View {
                         
                         Spacer()
                     }
+                    .background(Color("White-Black"))
                 }
                 .fixedSize(horizontal: false, vertical: true)
-                .background(Color("White-Black"))
-                .cornerRadius(8)
-                .shadow(color: Color("Black-White"), radius: 1)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color("Black-White"), lineWidth: 0.5)
+                )
                 .padding(.horizontal)
-                
+
                 HStack(spacing: 16) {
                     // 삭제 버튼
                     Button(action: {

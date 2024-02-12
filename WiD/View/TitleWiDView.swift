@@ -108,7 +108,12 @@ struct TitleWiDView: View {
                     VStack(spacing: 0) {
                         // 그래프
                         if filteredWiDListByTitle.isEmpty {
-                            getEmptyView(message: "표시할 그래프가 없습니다.")
+//                            getEmptyView(message: "표시할 그래프가 없습니다.")
+                            
+                            Text("표시할\n기록이\n없습니다.")
+                                .bodyLarge()
+                                .lineSpacing(10)
+                                .multilineTextAlignment(.center)
                         } else {
                             LineGraphView(title: selectedTitle.rawValue, wiDList: filteredWiDListByTitle, startDate: startDate, finishDate: finishDate)
                                 .aspectRatio(1.5 / 1.0, contentMode: .fit) // 가로 1.5, 세로 1 비율
@@ -130,7 +135,12 @@ struct TitleWiDView: View {
                         
                         // 시간 기록
                         if filteredWiDListByTitle.isEmpty {
-                            getEmptyView(message: "표시할 기록이 없습니다.")
+//                            getEmptyView(message: "표시할 기록이 없습니다.")
+                            
+                            Text("표시할\n기록이\n없습니다.")
+                                .bodyLarge()
+                                .lineSpacing(10)
+                                .multilineTextAlignment(.center)
                         } else {
                             HStack {
                                 Text("합계")
@@ -327,6 +337,7 @@ struct TitleWiDView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
+        .background(Color("White-Gray"))
         .onAppear {
             self.startDate = getFirstDateOfWeek(for: today)
             self.finishDate = getLastDateOfWeek(for: today)

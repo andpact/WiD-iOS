@@ -77,7 +77,12 @@ struct MonthWiDView: View {
                 
                 VStack(spacing: 0) {
                     if wiDList.isEmpty {
-                        getEmptyView(message: "표시할 타임라인이 없습니다.")
+//                        getEmptyView(message: "표시할 타임라인이 없습니다.")
+                        
+                        Text("표시할\n기록이\n없습니다.")
+                            .bodyLarge()
+                            .lineSpacing(10)
+                            .multilineTextAlignment(.center)
                     } else {
                         ScrollView {
                             VStack(spacing: 0) {
@@ -224,8 +229,9 @@ struct MonthWiDView: View {
 //                .edgesIgnoringSafeArea(.all)
 //            }
         }
-        .tint(Color("Black-White"))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .tint(Color("Black-White"))
+        .background(Color("White-Gray"))
         .navigationBarHidden(true)
         .onAppear {
             self.startDate = getFirstDateOfMonth(for: today)

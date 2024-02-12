@@ -55,65 +55,81 @@ struct SearchDiaryView: View {
                         .font(.system(size: 24))
                 }
             }
-            .padding(.horizontal)
-            .frame(maxWidth: .infinity, maxHeight: 44)
+            .padding()
             
             /**
              검색 결과
              */
-            ScrollView {
-                VStack(spacing: 8) { // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
-                    if diaryList.isEmpty {
-                        if searchComplete {
-                            getEmptyView(message: "검색 결과가 없습니다.")
-                        } else {
-                            Text("과거의 다이어리를 통해\n당신의 성장과 여정을\n다시 살펴보세요.")
-                                .labelLarge()
-                                .multilineTextAlignment(.center)
-                                .lineSpacing(10)
-                                .padding(.vertical, 96)
-                        }
+            if diaryList.isEmpty {
+                VStack {
+                    if searchComplete {
+                        getEmptyView(message: "검색 결과가 없습니다.")
                     } else {
-                        ForEach(Array(diaryList), id: \.id) { diary in
-                            NavigationLink(destination: DiaryDetailView(date: diary.date)) {
-                                HStack(spacing: 16) {
-                                    let wiDList = wiDService.readWiDListByDate(date: diary.date)
+                        Text("과거의 다이어리를 통해\n당신의 성장과 여정을\n다시 살펴보세요.")
+                            .bodyLarge()
+                            .multilineTextAlignment(.center)
+                            .lineSpacing(10)
+//                            .padding(.vertical, 96)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            } else {
+                ScrollView {
+                    VStack(spacing: 8) { // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
+                        if diaryList.isEmpty {
+                            if searchComplete {
+                                getEmptyView(message: "검색 결과가 없습니다.")
+                            } else {
+                                Text("과거의 다이어리를 통해\n당신의 성장과 여정을\n다시 살펴보세요.")
+                                    .labelLarge()
+                                    .multilineTextAlignment(.center)
+                                    .lineSpacing(10)
+                                    .padding(.vertical, 96)
+                            }
+                        } else {
+                            ForEach(Array(diaryList), id: \.id) { diary in
+                                VStack(spacing: 0) {
+                                    getDateStringView(date: diary.date)
+                                        .labelMedium()
                                     
-                                    PeriodPieChartView(date: diary.date, wiDList: wiDList)
-                                        .frame(maxWidth: 70)
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        getDateStringView(date: diary.date)
-                                            .bodyMedium()
-                                        
-                                        Text(diary.title)
-                                            .labelMedium()
-                                            .lineLimit(1)
-                                        
-                                        Text(diary.content)
-                                            .labelMedium()
-                                            .lineLimit(1)
+                                    NavigationLink(destination: DiaryDetailView(date: diary.date)) {
+                                        HStack(spacing: 16) {
+                                            let wiDList = wiDService.readWiDListByDate(date: diary.date)
+                                            
+                                            PeriodPieChartView(date: diary.date, wiDList: wiDList)
+                                                .frame(maxWidth: 50)
+                                            
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text(diary.title)
+                                                    .bodyMedium()
+                                                    .lineLimit(1)
+                                                
+                                                Text(diary.content)
+                                                    .bodyMedium()
+                                                    .lineLimit(1)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            Image(systemName: "chevron.forward")
+                                                .font(.system(size: 16))
+                                        }
+                                        .padding()
+                                        .background(Color("White-Black"))
+                                        .cornerRadius(8)
+                                        .shadow(color: Color("Black-White"), radius: 1)
+                                        .padding(.horizontal)
                                     }
-                                    
-                                    Spacer()
-                                    
-                                    Image(systemName: "chevron.forward")
-                                        .font(.system(size: 16))
                                 }
                             }
-                            .padding()
-                            .background(Color("White-Black"))
-                            .cornerRadius(8)
-                            .shadow(color: Color("Black-White"), radius: 1)
-                            .padding(.horizontal)
                         }
                     }
                 }
-                .padding(.vertical)
             }
         }
         .tint(Color("Black-White"))
         .navigationBarHidden(true)
+        .background(Color("White-Gray"))
     }
 }
 

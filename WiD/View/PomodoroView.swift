@@ -14,6 +14,7 @@ struct PomodoroView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
+        .background(Color("White-Gray"))
     }
 }
 

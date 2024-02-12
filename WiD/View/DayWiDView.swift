@@ -60,12 +60,48 @@ struct DayWiDView: View {
                 
                 VStack(spacing: 0) {
                     // 합계 기록
-                    if wiDList.isEmpty {
-                        getEmptyView(message: "표시할 기록이 없습니다.")
-                    } else {
+//                    if wiDList.isEmpty {
+////                        getEmptyView(message: "표시할 기록이 없습니다.")
+//
+//                        Text("표시할\n기록이\n없습니다.")
+//                            .bodyLarge()
+//                            .lineSpacing(10)
+//                            .multilineTextAlignment(.center)
+//                    } else {
                         ScrollView {
-                            DatePieChartView(wiDList: wiDList)
-                                .padding()
+//                            DatePieChartView(wiDList: wiDList)
+//                                .padding()
+                            
+                            GeometryReader { geo in
+//                                DatePieGraphView(wiDList: wiDList)
+                                DatePieGraphView(wiDList: getRandomWiDList(days: 1))
+                                
+                                ForEach(1...24, id: \.self) { number in
+                                    let adjustedNumber = (number - 1) % 12 + 1
+                                    let numberTextangle = getAngle(for: number)
+                                    let numberTextRadius = geo.size.width * 0.41 // 텍스트가 표시되는 원의 반지름
+
+                                    let x = cos(numberTextangle.radians) * numberTextRadius
+                                    let y = sin(numberTextangle.radians) * numberTextRadius
+
+                                    Text("\(adjustedNumber)")
+                                        .font(.system(size: geo.size.width / 15, weight: .medium))
+                                        .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 + y)
+//                                        .foregroundColor(Color("Black-White"))
+                                }
+                                
+                                Circle()
+                                    .stroke(Color("Black-White"), lineWidth: 1.5) // 원의 테두리 색상과 두께 설정
+                                    .frame(width: geo.size.width * 0.91, height: geo.size.width * 0.91) // 원의 크기 설정
+                                    .position(x: geo.size.width / 2, y: geo.size.height / 2) // 원의 위치 설정
+                                
+                                Circle()
+                                    .stroke(Color("Black-White"), lineWidth: 1.5) // 원의 테두리 색상과 두께 설정
+                                    .frame(width: geo.size.width * 0.73, height: geo.size.width * 0.73) // 원의 크기 설정
+                                    .position(x: geo.size.width / 2, y: geo.size.height / 2) // 원의 위치 설정
+                            }
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.horizontal, 32)
                             
                             ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
                                 HStack(spacing: 8) {
@@ -93,7 +129,7 @@ struct DayWiDView: View {
                                 .padding(.horizontal)
                             }
                         }
-                    }
+//                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -145,6 +181,7 @@ struct DayWiDView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
+        .background(Color("White-Gray"))
         .navigationBarHidden(true)
         .onAppear {
             self.wiDList = wiDService.readWiDListByDate(date: currentDate)

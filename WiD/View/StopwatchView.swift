@@ -167,7 +167,7 @@ struct StopwatchView: View {
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("White-Black"))
+        .background(Color("White-Gray"))
         .onTapGesture {
             if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
                 withAnimation {

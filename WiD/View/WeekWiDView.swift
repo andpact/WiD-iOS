@@ -87,7 +87,12 @@ struct WeekWiDView: View {
                 
                 VStack(spacing: 0) {
                     if wiDList.isEmpty {
-                        getEmptyView(message: "표시할 데이터가 없습니다.")
+//                        getEmptyView(message: "표시할 데이터가 없습니다.")
+                        
+                        Text("표시할\n기록이\n없습니다.")
+                            .bodyLarge()
+                            .lineSpacing(10)
+                            .multilineTextAlignment(.center)
                     } else {
                         ScrollView {
                             VStack(spacing: 0) {
@@ -373,6 +378,7 @@ struct WeekWiDView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
+        .background(Color("White-Gray"))
         .navigationBarHidden(true)
         .onAppear {
             self.startDate = getFirstDateOfWeek(for: today)

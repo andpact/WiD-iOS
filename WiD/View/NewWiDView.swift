@@ -31,25 +31,38 @@ struct NewWiDView: View {
     @State private var expandTitleMenu: Bool = false
     
     // 시작 시간
-    @State private var start = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
-//    @State private var start = Date()
+//    @State private var start = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+    @State private var start: Date
     @State private var isStartOverlap: Bool = false
     @State private var isStartOverCurrentTime: Bool = false
     @State private var expandStartPicker: Bool = false
     
     // 종료 시간
-    @State private var finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
-//    @State private var finish = Date()
+//    @State private var finish = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+    @State private var finish: Date
     @State private var isFinishOverlap: Bool = false
     @State private var isFinishOverCurrentTime: Bool = false
     @State private var expandFinishPicker: Bool = false
     
     // 소요 시간
-    @State private var duration: TimeInterval = 0
+//    @State private var duration: TimeInterval = 0
+    @State private var duration: TimeInterval
     @State private var durationExist: Bool = false
     
+    // 시작, 종료 시간이 안 정해진 WiD
     init(date: Date) {
         self.date = date
+        self._start = State(initialValue: calendar.date(bySetting: .second, value: 0, of: Date()) ?? Date())
+        self._finish = State(initialValue: calendar.date(bySetting: .second, value: 0, of: Date()) ?? Date())
+        self._duration = State(initialValue: 0)
+    }
+    
+    // 시작, 종료 시간이 정해진 WiD
+    init(date: Date, start: Date, finish: Date, duration: TimeInterval) {
+        self.date = date
+        self._start = State(initialValue: start)
+        self._finish = State(initialValue: finish)
+        self._duration = State(initialValue: duration)
     }
     
     var body: some View {
@@ -239,11 +252,14 @@ struct NewWiDView: View {
                         
                         Spacer()
                     }
+                    .background(Color("White-Black"))
                 }
                 .fixedSize(horizontal: false, vertical: true)
-                .background(Color("White-Black"))
-                .cornerRadius(8)
-                .shadow(color: Color("Black-White"), radius: 1)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color("Black-White"), lineWidth: 0.5)
+                )
                 .padding(.horizontal)
                 
                 Button(action: {
@@ -445,22 +461,22 @@ struct NewWiDView: View {
             self.wiDList = wiDService.readWiDListByDate(date: date)
 //            self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)
         }
-        .onChange(of: date) { newDate in
-            wiDList = wiDService.readWiDListByDate(date: newDate)
-            print("new Date : \(getTimeString(newDate))")
-            
-//            emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
-            
-            // date를 수정해도 start의 날짜는 그대로이므로 start의 날짜를 date에서 가져옴.
-            let newStartComponents = calendar.dateComponents([.hour, .minute, .second], from: start)
-            start = calendar.date(bySettingHour: newStartComponents.hour!, minute: newStartComponents.minute!, second: newStartComponents.second!, of: newDate)!
-            
-            // date를 수정해도 finish의 날짜는 그대로이므로 finish의 날짜를 date에서 가져옴.
-            let newFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: finish)
-            finish = calendar.date(bySettingHour: newFinishComponents.hour!, minute: newFinishComponents.minute!, second: newFinishComponents.second!, of: newDate)!
-            
-            checkWiDAvailableByStartAndFinish()
-        }
+//        .onChange(of: date) { newDate in
+//            wiDList = wiDService.readWiDListByDate(date: newDate)
+//            print("new Date : \(getTimeString(newDate))")
+//
+////            emptyWiDList = getEmptyWiDListFromWiDList(date: newDate, currentTime: currentTime, wiDList: wiDList)
+//
+//            // date를 수정해도 start의 날짜는 그대로이므로 start의 날짜를 date에서 가져옴.
+//            let newStartComponents = calendar.dateComponents([.hour, .minute, .second], from: start)
+//            start = calendar.date(bySettingHour: newStartComponents.hour!, minute: newStartComponents.minute!, second: newStartComponents.second!, of: newDate)!
+//
+//            // date를 수정해도 finish의 날짜는 그대로이므로 finish의 날짜를 date에서 가져옴.
+//            let newFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: finish)
+//            finish = calendar.date(bySettingHour: newFinishComponents.hour!, minute: newFinishComponents.minute!, second: newFinishComponents.second!, of: newDate)!
+//
+//            checkWiDAvailableByStartAndFinish()
+//        }
         .onChange(of: start) { newStart in
 //            print("new Start : \(formatTime(start, format: "yyyy-MM-dd a h:mm:ss"))")
 //            print("new Finish : \(formatTime(finish, format: "yyyy-MM-dd a h:mm:ss"))")

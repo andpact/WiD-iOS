@@ -42,6 +42,7 @@ struct WiDToolView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
+            .background(Color("LightGray-Black"))
             .tint(Color("Black-White"))
             .opacity(stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? 1 : 0)
             
@@ -72,8 +73,10 @@ struct WiDToolView: View {
             .padding(.horizontal)
             .disabled(!(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED))
             .opacity(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? 1 : 0)
-            .background(Color("White-Black"))
-            .cornerRadius(radius: 16, corners: [.topLeft, .topRight])
+            .background(Color("White-Gray"))
+            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
+            .background(Color("LightGray-Black"))
+            
          
             // 컨텐츠
             WiDToolHolderView(tabItem: selectedTab)
@@ -114,7 +117,6 @@ struct WiDToolView: View {
                         }
                 )
         }
-        .background(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? Color("LimeGreen") : Color("White-Black"))
         .onAppear {
             // 스톱 워치나 타이머를 실행후, 이전 화면으로 전환 후 다시 돌아왔을 때 
             if stopwatchPlayer.stopwatchState == PlayerState.STARTED {

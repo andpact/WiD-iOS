@@ -51,8 +51,11 @@ struct WiDListView: View {
                 .padding()
             
                 if wiDList.isEmpty {
-                    VStack(spacing: 8) {
-                        Text("표시할 WiD가 없습니다.")
+                    VStack(spacing: 16) {
+                        Text("표시할\nWiD가\n없습니다.")
+                            .bodyLarge()
+                            .lineSpacing(10)
+                            .multilineTextAlignment(.center)
                         
                         NavigationLink(destination: NewWiDView(date: currentDate)) {
                             Text("새로운 WiD 만들기")
@@ -61,6 +64,7 @@ struct WiDListView: View {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 16))
                         }
+                        .foregroundColor(Color("DeepSkyBlue"))
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
@@ -95,7 +99,7 @@ struct WiDListView: View {
                                                     Text(getDurationString(wiD.duration, mode: 3))
                                                         .bodyMedium()
                                                 }
-                                                .frame(maxWidth: .infinity, alignment: .leading) // 프레임이 앞쪽 정렬됨.
+                                                .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
                                                 
                                                 Image(systemName: "chevron.forward")
                                                     .font(.system(size: 16))
@@ -115,8 +119,8 @@ struct WiDListView: View {
                                                 .foregroundColor(Color("Black-White"))
                                         }
                                         .padding(.horizontal)
-                                    } else {
-                                        NavigationLink(destination: NewWiDView(date: currentDate)) {
+                                    } else { // Empty WiD
+                                        NavigationLink(destination: NewWiDView(date: currentDate, start: wiD.start, finish: wiD.finish, duration: wiD.finish.timeIntervalSince(wiD.start))) {
                                             HStack(spacing: 8) {
                                                 Image(systemName: "textformat")
                                                     .font(.system(size: 24))
@@ -124,7 +128,7 @@ struct WiDListView: View {
                                                     .padding()
                                                     .background(
                                                         Circle()
-                                                            .stroke(Color("Black-White"), lineWidth: 1)
+                                                            .stroke(Color("Black-White"), lineWidth: 0.5)
                                                     )
                                                 
                                                 VStack(alignment: .leading, spacing: 4) {
@@ -142,7 +146,7 @@ struct WiDListView: View {
                                             .padding()
                                             .background(
                                                 RoundedRectangle(cornerRadius: 8)
-                                                    .stroke(Color("Black-White"), lineWidth: 1)
+                                                    .stroke(Color("Black-White"), lineWidth: 0.5)
                                             )
                                             .padding(.horizontal)
                                         }
@@ -203,7 +207,7 @@ struct WiDListView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("White-Black"))
+        .background(Color("White-Gray"))
         .tint(Color("Black-White"))
         .navigationBarHidden(true)
         .onAppear {

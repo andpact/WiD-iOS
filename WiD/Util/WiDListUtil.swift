@@ -137,25 +137,45 @@ func getRandomWiDList(days: Int) -> [WiD] {
     var currentDate = calendar.startOfDay(for: startDate)
 
     while currentDate <= finishDate {
-        let wiD = WiD(id: 0,
-                      date: currentDate,
-                      title: "STUDY",
-                      start: Date(),
-                      finish: Date(),
-                      duration: 3 * 60 * 60
-        )
+//        // Start 시간 설정
+//        let startComponents = DateComponents(hour: 0, minute: 0, second: 0)
+//        let start = calendar.date(bySettingHour: startComponents.hour!, minute: startComponents.minute!, second: startComponents.second!, of: currentDate)!
+//
+//        // Finish 시간 설정
+//        let finishComponents = DateComponents(hour: 2, minute: 0, second: 0)
+//        let finish = calendar.date(bySettingHour: finishComponents.hour!, minute: finishComponents.minute!, second: finishComponents.second!, of: currentDate)!
+//
+//        let duration = finishDate.timeIntervalSince(startDate)
+//
+//        let wiD = WiD(id: 0,
+//                      date: currentDate,
+//                      title: "STUDY",
+//                      start: start,
+//                      finish: finish,
+//                      duration: duration
+//        )
+//
+//        randomWiDList.append(wiD)
+        
+        // Start 시간 설정 (랜덤)
+        let randomStartHour = Int.random(in: 0..<12)
+        let randomStartMinute = Int.random(in: 0..<60)
+        let randomStartSecond = Int.random(in: 0..<60)
+        let randomStart = calendar.date(bySettingHour: randomStartHour, minute: randomStartMinute, second: randomStartSecond, of: currentDate)!
 
-        randomWiDList.append(wiD)
+        // Finish 시간 설정 (랜덤)
+        let randomFinishHour = Int.random(in: randomStartHour..<12)
+        let randomFinishMinute = Int.random(in: randomStartMinute..<60)
+        let randomFinishSecond = Int.random(in: randomStartSecond..<60)
+        let randomFinish = calendar.date(bySettingHour: randomFinishHour, minute: randomFinishMinute, second: randomFinishSecond, of: currentDate)!
 
-        let randomMinutes = Int(arc4random_uniform(60))
-        let randomSeconds = Int(arc4random_uniform(60))
+        let randomDuration = randomFinish.timeIntervalSince(randomStart)
 
-        let randomDuration = TimeInterval((randomMinutes * 60) + randomSeconds)
         let wiD2 = WiD(id: 0,
                       date: currentDate,
-                      title: "STUDY",
-                      start: Date(),
-                      finish: Date(),
+                      title: "WORK",
+                      start: randomStart,
+                      finish: randomFinish,
                       duration: randomDuration
         )
 

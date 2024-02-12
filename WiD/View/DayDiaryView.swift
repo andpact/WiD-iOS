@@ -29,6 +29,15 @@ struct DayDiaryView: View {
         ZStack {
             VStack(spacing: 0) {
                 HStack(spacing: 32) {
+                    NavigationLink(destination: DiaryDetailView(date: currentDate)) { // 네비게이션 링크안에 HStack(spacing: 8)이 포함되어 있음.
+                        Text("다이어리 수정")
+                            .bodyMedium()
+                            .foregroundColor(Color("Black"))
+                            .padding(8)
+                    }
+                    .background(Color("AppYellow"))
+                    .cornerRadius(8)
+                    
                     Spacer()
                     
                     Button(action: {
@@ -55,6 +64,9 @@ struct DayDiaryView: View {
                                 getDateStringViewWith3Lines(date: currentDate)
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     .font(.system(size: 22, weight: .bold))
+                                    .onTapGesture {
+                                        expandDatePicker = true
+                                    }
 
                                 ZStack {
                                     if wiDList.isEmpty {
@@ -77,8 +89,8 @@ struct DayDiaryView: View {
                                         .multilineTextAlignment(.center)
                                         .lineSpacing(10)
                                     
-                                    Image(systemName: "arrow.down")
-                                        .font(.system(size: 16))
+//                                    Image(systemName: "arrow.down")
+//                                        .font(.system(size: 16))
                                 }
                                 .frame(maxWidth: .infinity, minHeight: 252) // 제목 높이(20) + 제목 패딩(16) + 내용 높이(200) + 내용 패딩(16)
                                 .padding()
@@ -108,17 +120,6 @@ struct DayDiaryView: View {
                         .cornerRadius(8)
                         .shadow(color: Color("Black-White"), radius: 1)
                         .padding(.horizontal)
-                        
-                        NavigationLink(destination: DiaryDetailView(date: currentDate)) { // 네비게이션 링크안에 HStack(spacing: 8)이 포함되어 있음.
-                            Text("다이어리 수정")
-                                .bodyMedium()
-                                .foregroundColor(Color("Black"))
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                        }
-                        .background(Color("AppYellow"))
-                        .cornerRadius(80)
-                        .padding()
                     }
                 }
                 
@@ -193,52 +194,58 @@ struct DayDiaryView: View {
             /**
              대화 상자
              */
-//            if expandDatePicker {
-//                ZStack {
-//                    Color("Black-White")
-//                        .opacity(0.3)
-//                        .onTapGesture {
-//                            expandDatePicker = false
-//                        }
-//
-//                    // 날짜 선택
-//                    if expandDatePicker {
-//                        VStack(spacing: 0) {
-//                            ZStack {
-//                                Text("날짜 선택")
-//                                    .titleMedium()
-//
-//                                Button(action: {
-//                                    expandDatePicker = false
-//                                }) {
-//                                    Text("확인")
-//                                        .bodyMedium()
-//                                }
-//                                .frame(maxWidth: .infinity, alignment: .trailing)
-//                                .tint(Color("Black-White"))
-//                            }
-//                            .padding()
-//
-//                            Divider()
-//                                .background(Color("Black-White"))
-//
-//                            DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
-//                                .datePickerStyle(.graphical)
-//                                .padding()
-//                        }
-//                        .background(Color("White-Black"))
-//                        .cornerRadius(8)
-//                        .padding() // 바깥 패딩
-//                        .shadow(color: Color("Black-White"), radius: 1)
-//                    }
-//                }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                .edgesIgnoringSafeArea(.all)
-//            }
+            if expandDatePicker {
+                ZStack {
+                    Color("Black-White")
+                        .opacity(0.3)
+                        .onTapGesture {
+                            expandDatePicker = false
+                        }
+
+                    // 날짜 선택
+                    if expandDatePicker {
+                        VStack(spacing: 0) {
+                            ZStack {
+                                Text("날짜 선택")
+                                    .titleMedium()
+
+                                Button(action: {
+                                    expandDatePicker = false
+                                }) {
+                                    Text("확인")
+                                        .bodyMedium()
+                                }
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .tint(Color("Black-White"))
+                            }
+                            .padding()
+
+                            Divider()
+                                .background(Color("Black-White"))
+
+                            DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                                .datePickerStyle(.graphical)
+                                .padding()
+                        }
+                        .background(Color("White-Black"))
+                        .cornerRadius(8)
+                        .padding() // 바깥 패딩
+                        .shadow(color: Color("Black-White"), radius: 1)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
+        .background(Color("White-Gray"))
+        .onChange(of: currentDate) { newDate in
+            withAnimation {
+                wiDList = wiDService.readWiDListByDate(date: newDate)
+            }
+        }
     }
 }
 
