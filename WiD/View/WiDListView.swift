@@ -23,7 +23,7 @@ struct WiDListView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack(spacing: 32) {
+                HStack(spacing: 16) {
                     Button(action: {
                         expandDatePicker = true
                     }) {
@@ -82,7 +82,7 @@ struct WiDListView: View {
                             
                             ForEach(Array(fullWiDList), id: \.id) { wiD in
                                 VStack(alignment: .leading, spacing: 8) {
-                                    if 0 < wiD.id {
+                                    if 0 < wiD.id { // WiD
                                         NavigationLink(destination: WiDDetailView(clickedWiDId: wiD.id)) {
                                             HStack(spacing: 8) {
                                                 Image(systemName: titleImageDictionary[wiD.title] ?? "")
@@ -126,10 +126,12 @@ struct WiDListView: View {
                                                     .font(.system(size: 24))
                                                     .frame(maxWidth: 15, maxHeight: 15)
                                                     .padding()
-                                                    .background(
-                                                        Circle()
-                                                            .stroke(Color("Black-White"), lineWidth: 0.5)
-                                                    )
+                                                    .background(Color("White-Gray"))
+                                                    .clipShape(Circle())
+//                                                    .background(
+//                                                        Circle()
+//                                                            .stroke(Color("Black-White"), lineWidth: 0.5)
+//                                                    )
                                                 
                                                 VStack(alignment: .leading, spacing: 4) {
                                                     Text(titleDictionary[wiD.title] ?? "기록 없음")
@@ -144,10 +146,12 @@ struct WiDListView: View {
                                                     .font(.system(size: 16))
                                             }
                                             .padding()
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 8)
-                                                    .stroke(Color("Black-White"), lineWidth: 0.5)
-                                            )
+                                            .background(Color("LightGray-Black"))
+                                            .cornerRadius(8)
+//                                            .background(
+//                                                RoundedRectangle(cornerRadius: 8)
+//                                                    .stroke(Color("Black-White"), lineWidth: 0.5)
+//                                            )
                                             .padding(.horizontal)
                                         }
                                         
@@ -212,13 +216,11 @@ struct WiDListView: View {
         .navigationBarHidden(true)
         .onAppear {
             self.wiDList = wiDService.readWiDListByDate(date: currentDate)
-            
             self.fullWiDList = getFullWiDListFromWiDList(date: currentDate, currentTime: now, wiDList: wiDList)
         }
         .onChange(of: currentDate) { newDate in
             withAnimation {
                 self.wiDList = wiDService.readWiDListByDate(date: newDate)
-                
                 self.fullWiDList = getFullWiDListFromWiDList(date: newDate, currentTime: now, wiDList: wiDList)
             }
         }

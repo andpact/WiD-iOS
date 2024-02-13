@@ -99,7 +99,7 @@ struct WiDDetailView: View {
                         
                         Spacer()
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                     
                     Divider()
                         .background(Color("Black-White"))
@@ -129,7 +129,7 @@ struct WiDDetailView: View {
                             .padding(.horizontal)
                             .font(.system(size: 16))
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                     .onTapGesture {
                         withAnimation {
                             expandTitleMenu.toggle()
@@ -164,7 +164,7 @@ struct WiDDetailView: View {
                             .padding(.horizontal)
                             .font(.system(size: 16))
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                     .onTapGesture {
                         withAnimation {
                             expandStartPicker.toggle()
@@ -199,7 +199,7 @@ struct WiDDetailView: View {
                             .padding(.horizontal)
                             .font(.system(size: 16))
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                     .onTapGesture {
                         withAnimation {
                             expandFinishPicker.toggle()
@@ -230,7 +230,7 @@ struct WiDDetailView: View {
                         
                         Spacer()
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -291,7 +291,7 @@ struct WiDDetailView: View {
                             .bodyMedium()
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !durationExist ? Color("LightGray-Gray") : Color("LimeGreen"))
+                            .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !durationExist ? Color("DarkGray") : Color("LimeGreen"))
                             .foregroundColor(Color("White"))
                             .cornerRadius(8)
                     }
@@ -694,6 +694,7 @@ struct WiDDetailView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
+        .background(Color("LightGray-Black"))
         .onAppear {
             self.date = clickedWiD!.date
             self.title = Title(rawValue: clickedWiD!.title) ?? .STUDY

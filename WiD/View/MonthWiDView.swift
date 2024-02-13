@@ -39,7 +39,7 @@ struct MonthWiDView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack(spacing: 32) {
+                HStack(spacing: 16) {
                     Button(action: {
 //                        expandDatePicker = true
                     }) {
@@ -85,7 +85,7 @@ struct MonthWiDView: View {
                             .multilineTextAlignment(.center)
                     } else {
                         ScrollView {
-                            VStack(spacing: 0) {
+                            VStack(spacing: 8) {
                                 HStack {
                                     ForEach(0...6, id: \.self) { index in
                                         let textColor = index == 0 ? Color("OrangeRed") : (index == 6 ? Color("DeepSkyBlue") : Color("Black-White"))
@@ -96,7 +96,7 @@ struct MonthWiDView: View {
                                             .foregroundColor(textColor)
                                     }
                                 }
-                                .padding()
+                                .padding(.horizontal)
                                 
                                 // Weekday 1 - 일, 2 - 월...
                                 let weekday = calendar.component(.weekday, from: startDate)
@@ -117,7 +117,7 @@ struct MonthWiDView: View {
                                         }
                                     }
                                 }
-                                .padding()
+                                .padding(.horizontal)
                                 
                                 Picker("", selection: $seletedDictionaryType) {
                                     ForEach(DurationDictionary.allCases) { dictionary in
@@ -126,7 +126,7 @@ struct MonthWiDView: View {
                                     }
                                 }
                                 .pickerStyle(.segmented)
-                                .padding()
+                                .padding(.horizontal)
                                 
                                 ForEach(Array(seletedDictionary), id: \.key) { title, duration in
                                     HStack {

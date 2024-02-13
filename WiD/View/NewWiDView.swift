@@ -116,7 +116,7 @@ struct NewWiDView: View {
 //                            .font(.system(size: 16))
 //                            .padding(.horizontal)
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
 //                    .onTapGesture {
 //                        withAnimation {
 //                            expandDatePicker.toggle()
@@ -151,7 +151,7 @@ struct NewWiDView: View {
                             .font(.system(size: 16))
                             .padding(.horizontal)
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                     .onTapGesture {
                         withAnimation {
                             expandTitleMenu.toggle()
@@ -186,7 +186,7 @@ struct NewWiDView: View {
                             .font(.system(size: 16))
                             .padding(.horizontal)
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                     .onTapGesture {
                         withAnimation {
                             expandStartPicker.toggle()
@@ -221,7 +221,7 @@ struct NewWiDView: View {
                             .font(.system(size: 16))
                             .padding(.horizontal)
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                     .onTapGesture {
                         withAnimation {
                             expandFinishPicker.toggle()
@@ -252,7 +252,7 @@ struct NewWiDView: View {
                         
                         Spacer()
                     }
-                    .background(Color("White-Black"))
+                    .background(Color("White-Gray"))
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -278,7 +278,7 @@ struct NewWiDView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !durationExist ? Color("LightGray-Gray") : Color("DeepSkyBlue"))
+                .background(isStartOverlap || isStartOverCurrentTime || isFinishOverlap || isFinishOverCurrentTime || !durationExist ? Color("DarkGray") : Color("DeepSkyBlue"))
                 .foregroundColor(Color("White"))
                 .cornerRadius(8)
                 .padding(.horizontal)
@@ -457,6 +457,7 @@ struct NewWiDView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
+        .background(Color("LightGray-Black"))
         .onAppear {
             self.wiDList = wiDService.readWiDListByDate(date: date)
 //            self.emptyWiDList = getEmptyWiDListFromWiDList(date: date, currentTime: currentTime, wiDList: wiDList)

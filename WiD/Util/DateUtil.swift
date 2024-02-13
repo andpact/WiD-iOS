@@ -22,7 +22,11 @@ func getDateStringView(date: Date) -> some View {
     let calendar = Calendar.current
     
     return HStack(spacing: 0) {
-        Text(getDateString(date, format: "yyyy년 M월 d일"))
+        if !calendar.isDate(date, equalTo: Date(), toGranularity: .year) {
+            Text(getDateString(date, format: "yyyy년 "))
+        }
+        
+        Text(getDateString(date, format: "M월 d일"))
         
         HStack(spacing: 0) {
             Text("(")
@@ -62,7 +66,9 @@ func getDateStringViewWith3Lines(date: Date) -> some View {
     let calendar = Calendar.current
     
     return VStack {
-        Text(getDateString(date, format: "yyyy년"))
+        if !calendar.isDate(date, equalTo: Date(), toGranularity: .year) {
+            Text(getDateString(date, format: "yyyy년"))
+        }
         
         Text(getDateString(date, format: "M월 d일"))
         
@@ -75,13 +81,53 @@ func getDateStringViewWith3Lines(date: Date) -> some View {
     }
 }
 
+//func getPeriodStringViewOfWeek(firstDayOfWeek: Date, lastDayOfWeek: Date) -> some View {
+//    print("DateUtil : getPeriodStringViewOfWeek executed")
+//
+//    let calendar = Calendar.current
+//
+//    return HStack(spacing: 0) {
+//        Text(getDateString(firstDayOfWeek, format: "yyyy년 M월 d일"))
+//
+//        HStack(spacing: 0) {
+//            Text("(")
+//
+//            Text(getStringOfDayOfWeek(firstDayOfWeek))
+//                .foregroundColor(calendar.component(.weekday, from: firstDayOfWeek) == 1 ? Color("OrangeRed") : (calendar.component(.weekday, from: firstDayOfWeek) == 7 ? Color("DeepSkyBlue") : Color("Black-White")))
+//
+//            Text(") ~ ")
+//        }
+//
+//        if !calendar.isDate(lastDayOfWeek, equalTo: firstDayOfWeek, toGranularity: .year) {
+//            Text(getDateString(lastDayOfWeek, format: "yyyy년 M월 d일"))
+//        } else if !calendar.isDate(firstDayOfWeek, equalTo: lastDayOfWeek, toGranularity: .month) {
+//            Text(getDateString(lastDayOfWeek, format: "M월 d일"))
+//        } else {
+//            Text(getDateString(lastDayOfWeek, format: "d일"))
+//        }
+//
+//        HStack(spacing: 0) {
+//            Text("(")
+//
+//            Text(getStringOfDayOfWeek(lastDayOfWeek))
+//                .foregroundColor(calendar.component(.weekday, from: lastDayOfWeek) == 1 ? Color("OrangeRed") : (calendar.component(.weekday, from: lastDayOfWeek) == 7 ? Color("DeepSkyBlue") : Color("Black-White")))
+//
+//            Text(")")
+//        }
+//    }
+//}
+
 func getPeriodStringViewOfWeek(firstDayOfWeek: Date, lastDayOfWeek: Date) -> some View {
     print("DateUtil : getPeriodStringViewOfWeek executed")
     
     let calendar = Calendar.current
     
     return HStack(spacing: 0) {
-        Text(getDateString(firstDayOfWeek, format: "yyyy년 M월 d일"))
+        if !calendar.isDate(firstDayOfWeek, equalTo: Date(), toGranularity: .year) {
+            Text(getDateString(firstDayOfWeek, format: "yyyy년 "))
+        }
+        
+        Text(getDateString(firstDayOfWeek, format: "M월 d일"))
         
         HStack(spacing: 0) {
             Text("(")
@@ -92,11 +138,7 @@ func getPeriodStringViewOfWeek(firstDayOfWeek: Date, lastDayOfWeek: Date) -> som
             Text(") ~ ")
         }
         
-//        Text("~")
-        
-        if !calendar.isDate(lastDayOfWeek, equalTo: firstDayOfWeek, toGranularity: .year) {
-            Text(getDateString(lastDayOfWeek, format: "yyyy년 M월 d일"))
-        } else if !calendar.isDate(firstDayOfWeek, equalTo: lastDayOfWeek, toGranularity: .month) {
+        if !calendar.isDate(firstDayOfWeek, equalTo: lastDayOfWeek, toGranularity: .month) {
             Text(getDateString(lastDayOfWeek, format: "M월 d일"))
         } else {
             Text(getDateString(lastDayOfWeek, format: "d일"))
@@ -116,7 +158,13 @@ func getPeriodStringViewOfWeek(firstDayOfWeek: Date, lastDayOfWeek: Date) -> som
 func getPeriodStringViewOfMonth(date: Date) -> some View {
     print("DateUtil : getPeriodStringViewOfMonth executed")
     
-    return Text(getDateString(date, format: "yyyy년 M월"))
+    let calendar = Calendar.current
+       
+    if !calendar.isDate(date, equalTo: Date(), toGranularity: .year) {
+        return Text(getDateString(date, format: "yyyy년 M월"))
+    } else {
+        return Text(getDateString(date, format: "M월"))
+    }
 }
 
 // 해당 날짜의 요일 반환 (한국어)

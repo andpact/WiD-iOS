@@ -15,9 +15,9 @@ struct DayDiaryView: View {
     // 다이어리
     private let diaryService = DiaryService()
     @State private var diary: Diary = Diary(id: -1, date: Date(), title: "", content: "")
-    @State private var expandDiary: Bool = false
-    @State private var diaryTitleOverflow: Bool = false
-    @State private var diaryContentOverflow: Bool = false
+//    @State private var expandDiary: Bool = false
+//    @State private var diaryTitleOverflow: Bool = false
+//    @State private var diaryContentOverflow: Bool = false
     
     // 날짜
     private let today = Date()
@@ -28,14 +28,20 @@ struct DayDiaryView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack(spacing: 32) {
+                HStack(spacing: 16) {
                     NavigationLink(destination: DiaryDetailView(date: currentDate)) { // 네비게이션 링크안에 HStack(spacing: 8)이 포함되어 있음.
-                        Text("다이어리 수정")
-                            .bodyMedium()
-                            .foregroundColor(Color("Black"))
-                            .padding(8)
+                        HStack {
+                            Image(systemName: "square.and.pencil")
+                                .font(.system(size: 20))
+                                .frame(maxWidth: 20, maxHeight: 20)
+                            
+                            Text("다이어리 수정")
+                                .bodyMedium()
+                        }
+                        .foregroundColor(Color("White-Black"))
+                        .padding(8)
                     }
-                    .background(Color("AppYellow"))
+                    .background(Color("AppIndigo-AppYellow"))
                     .cornerRadius(8)
                     
                     Spacer()
@@ -45,6 +51,7 @@ struct DayDiaryView: View {
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
+                            .frame(maxWidth: 24, maxHeight: 24)
                     }
 
                     Button(action: {
@@ -52,13 +59,14 @@ struct DayDiaryView: View {
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
+                            .frame(maxWidth: 24, maxHeight: 24)
                     }
                     .disabled(calendar.isDateInToday(currentDate))
                 }
                 .padding()
                 
                 ScrollView {
-                    VStack(spacing: 0) {
+                    VStack(spacing: 16) {
                         GeometryReader { geo in
                             HStack {
                                 getDateStringViewWith3Lines(date: currentDate)
@@ -79,51 +87,61 @@ struct DayDiaryView: View {
                             }
                             .padding(.horizontal)
                         }
-                        .aspectRatio(2 / 1, contentMode: .fit)
+                        .aspectRatio(2.5 / 1, contentMode: .fit)
+                        
+//                        Rectangle()
+//                            .frame(maxHeight: 1)
+//                            .foregroundColor(Color("Black-White"))
+//                            .padding(.horizontal)
 
-                        VStack(spacing: 0) {
-                            if diary.id < 0 {
-                                VStack(spacing: 64) {
-                                    Text("당신이 이 날 무엇을 하고, 그 속에서 어떤 생각과 감정을 느꼈는지 주체적으로 기록해보세요.")
-                                        .labelSmall()
+                        VStack(spacing: 16) {
+                            if diary.id < 0 { // 다이어리가 없을 때
+//                                VStack(spacing: 0) {
+                                    Text("당신이 이 날 무엇을 하고,\n그 속에서 어떤 생각과 감정을 느꼈는지\n주체적으로 기록해보세요.")
+                                        .bodyMedium()
                                         .multilineTextAlignment(.center)
                                         .lineSpacing(10)
+                                        .padding(.vertical, 80)
                                     
 //                                    Image(systemName: "arrow.down")
 //                                        .font(.system(size: 16))
-                                }
-                                .frame(maxWidth: .infinity, minHeight: 252) // 제목 높이(20) + 제목 패딩(16) + 내용 높이(200) + 내용 패딩(16)
-                                .padding()
+//                                }
+//                                .frame(maxWidth: .infinity, minHeight: 252) // 제목 높이(20) + 제목 패딩(16) + 내용 높이(200) + 내용 패딩(16)
+//                                .frame(maxWidth: .infinity, minHeight: .infinity)
+//                                .padding()
                             } else {
                                 Text(diary.title)
                                     .bodyLarge()
-                                    .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
-                                    .padding()
-                                    .onTapGesture {
-                                        if expandDiary == false {
-                                            expandDiary = true
-                                        }
-                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+//                                    .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
+//                                    .padding(.horizontal)
+//                                    .onTapGesture {
+//                                        if expandDiary == false {
+//                                            expandDiary = true
+//                                        }
+//                                    }
 
                                 Text(diary.content)
                                     .bodyMedium()
-                                    .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
-                                    .padding()
-                                    .onTapGesture {
-                                        if expandDiary == false {
-                                            expandDiary = true
-                                        }
-                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+//                                    .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
+//                                    .padding(.horizontal)
+//                                    .onTapGesture {
+//                                        if expandDiary == false {
+//                                            expandDiary = true
+//                                        }
+//                                    }
                             }
                         }
-                        .background(Color("White-Black"))
-                        .cornerRadius(8)
-                        .shadow(color: Color("Black-White"), radius: 1)
+//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                        .background(Color("White-Gray"))
+//                        .cornerRadius(8)
+//                        .shadow(color: Color("Black-White"), radius: 1)
                         .padding(.horizontal)
                     }
                 }
                 
-                Spacer()
+//                Spacer()
                 
                 /**
                  하단 바
@@ -241,9 +259,14 @@ struct DayDiaryView: View {
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
         .background(Color("White-Gray"))
+        .onAppear {
+            self.wiDList = wiDService.readWiDListByDate(date: currentDate)
+            self.diary = diaryService.readDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
+        }
         .onChange(of: currentDate) { newDate in
             withAnimation {
-                wiDList = wiDService.readWiDListByDate(date: newDate)
+                self.wiDList = wiDService.readWiDListByDate(date: newDate)
+                self.diary = diaryService.readDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
             }
         }
     }

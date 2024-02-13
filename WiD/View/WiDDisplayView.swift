@@ -61,6 +61,8 @@ struct WiDDisplayView: View {
                         }
                     }
                 }
+                
+                Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)

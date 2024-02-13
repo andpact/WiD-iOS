@@ -12,7 +12,7 @@ import SwiftUI
  */
 struct DatePieChartView: View {
     private let wiDList: [WiD]
-    
+
     private var pieChartDataArray: [PieData] {
         let totalMinutes: TimeInterval = 60.0 * 24.0 // 24시간(1440분)으로 표현함. 원래 TimeInterval 단위는 초(second)
         var startMinutes: Int = 0
@@ -20,7 +20,7 @@ struct DatePieChartView: View {
 
         // 비어 있는 시간대에 대한 PieChartData 생성
         if wiDList.isEmpty {
-            let noPieChartData = PieData(value: .degrees(360.0), color: Color("Black-White"))
+            let noPieChartData = PieData(value: .degrees(360.0), color: Color("LightGray-Black"))
             array.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -30,7 +30,7 @@ struct DatePieChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = PieData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("Black-White"))
+                    let emptyPieChartData = PieData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("LightGray-Black"))
                     array.append(emptyPieChartData)
                 }
 
@@ -46,13 +46,13 @@ struct DatePieChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = PieData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("Black-White"))
+                let emptyPieChartData = PieData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("LightGray-Black"))
                 array.append(emptyPieChartData)
             }
         }
         return array
     }
-    
+
     var totalDurationPercentage: Int {
         let totalMinutesInDay = 60 * 24
         var totalDurationMinutes: Int = 0
@@ -67,7 +67,7 @@ struct DatePieChartView: View {
     init(wiDList: [WiD]) {
         self.wiDList = wiDList
     }
-    
+
     var body: some View {
         GeometryReader { geo in
             ZStack {
@@ -80,8 +80,8 @@ struct DatePieChartView: View {
                 Circle()
                     .frame(width: geo.size.width * 0.8, height: geo.size.width * 0.8)
 //                    .frame(width: geo.size.width * 0.95, height: geo.size.width * 0.95)
-                    .foregroundColor(Color("White-Black"))
-                
+                    .foregroundColor(Color("White-Gray"))
+
                 // 숫자 텍스트
                 ForEach(1...24, id: \.self) { number in
                     let adjustedNumber = (number - 1) % 12 + 1
@@ -94,22 +94,22 @@ struct DatePieChartView: View {
                     Text("\(adjustedNumber)")
                         .font(.system(size: geo.size.width / 15, weight: .medium))
                         .position(x: geo.size.width / 2 + x, y: geo.size.width / 2 + y)
-                        .foregroundColor(Color("White-Black"))
+//                        .foregroundColor(Color("Black-White"))
                 }
-                
+
 //                Text("WiD")
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 3)
 //                    .font(.custom("Acme-Regular", size: geo.size.width / 8))
-                
+
                 Text("오후 | 오전")
                     .font(.system(size: geo.size.width / 15, weight: .medium))
                     .position(x: geo.size.width / 2, y: geo.size.width / 3)
-                
+
                 Text("\(totalDurationPercentage)%")
 //                    .font(.system(size: geo.size.width / 5, weight: .heavy))
                     .font(.system(size: geo.size.width / 5, weight: .black))
 //                    .position(x: geo.size.width / 2, y: geo.size.width / 2)
-                
+
                 Text("\(getDurationString(getTotalDurationFromWiDList(wiDList: wiDList), mode: 1)) / 24시간")
                     .font(.system(size: geo.size.width / 15, weight: .medium))
                     .position(x: geo.size.width / 2, y: geo.size.width / 1.5)
@@ -117,7 +117,7 @@ struct DatePieChartView: View {
         }
         .aspectRatio(contentMode: .fit)
     }
-    
+
     func getStartAngle(for index: Int) -> Angle {
         var startAngle: Angle = .degrees(-90)
         for i in 0..<index {
@@ -152,7 +152,7 @@ struct PeriodPieChartView: View {
 
         // 비어 있는 시간대에 대한 PieChartData 생성
         if wiDList.isEmpty {
-            let noPieChartData = PieData(value: .degrees(360.0), color: Color("Black-White"))
+            let noPieChartData = PieData(value: .degrees(360.0), color: Color("LightGray-Black"))
             array.append(noPieChartData)
         } else {
             for wid in wiDList {
@@ -162,7 +162,7 @@ struct PeriodPieChartView: View {
                 // 비어 있는 시간대의 엔트리 추가
                 if startMinutesValue > startMinutes {
                     let emptyMinutes = startMinutesValue - startMinutes
-                    let emptyPieChartData = PieData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("Black-White"))
+                    let emptyPieChartData = PieData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("LightGray-Black"))
                     array.append(emptyPieChartData)
                 }
 
@@ -178,7 +178,7 @@ struct PeriodPieChartView: View {
             // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
             if startMinutes < 24 * 60 {
                 let emptyMinutes = 24 * 60 - startMinutes
-                let emptyPieChartData = PieData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("Black-White"))
+                let emptyPieChartData = PieData(value: .degrees(Double(emptyMinutes) / totalMinutes * 360.0), color: Color("LightGray-Black"))
                 array.append(emptyPieChartData)
             }
         }
@@ -201,12 +201,12 @@ struct PeriodPieChartView: View {
                 // 중앙에 원
                 Circle()
                     .frame(width: geo.size.width * 0.8, height: geo.size.width * 0.8)
-                    .foregroundColor(Color("White-Black"))
+                    .foregroundColor(Color("White-Gray"))
                 
                 Text(getDateString(date, format: "d"))
                     .font(.system(size: geo.size.width / 3, weight: .medium))
-                    .fontWeight(pieChartDataArray.count == 1 ? nil : .bold)
-//                    .foregroundColor(pieChartDataArray.count == 1 ? Color("LightGray-Gray") : Color("Black-White"))
+//                    .fontWeight(pieChartDataArray.count == 1 ? nil : .bold)
+                    .foregroundColor(pieChartDataArray.count == 1 ? Color("DarkGray") : Color("Black-White"))
             }
         }
         .aspectRatio(contentMode: .fit)
@@ -335,10 +335,10 @@ struct PieChartView_Previews: PreviewProvider {
 //            PeriodPieChartView(date: Date(), wiDList: [])
 //                .environment(\.colorScheme, .dark)
             
-            DatePieChartView(wiDList: [])
+//            DatePieChartView(wiDList: [])
             
-            DatePieChartView(wiDList: [])
-                .environment(\.colorScheme, .dark)
+//            DatePieChartView(wiDList: [])
+//                .environment(\.colorScheme, .dark)
         }
     }
 }

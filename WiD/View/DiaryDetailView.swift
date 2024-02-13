@@ -25,6 +25,8 @@ struct DiaryDetailView: View {
     @State private var contentPlaceHolder: String = "내용을 입력해 주세요."
     
     init(date: Date) {
+        UITextView.appearance().backgroundColor = .clear
+        
         self.wiDList = wiDService.readWiDListByDate(date: date)
         
         self.date = date
@@ -33,7 +35,7 @@ struct DiaryDetailView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            VStack(spacing: 16) {
                 /**
                  상단 바
                  */
@@ -65,7 +67,7 @@ struct DiaryDetailView: View {
                             .bodyMedium()
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
-                            .background(diaryTitle.isEmpty || diaryContent.isEmpty ? Color("LightGray-Gray") : Color("DeepSkyBlue"))
+                            .background(diaryTitle.isEmpty || diaryContent.isEmpty ? Color("DarkGray") : Color("DeepSkyBlue"))
                             .foregroundColor(Color("White"))
                             .cornerRadius(8)
                     }
@@ -74,9 +76,7 @@ struct DiaryDetailView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-                
-                Divider()
-                    .background(Color("Black-White"))
+                .background(Color("LightGray-Black"))
                 
                 GeometryReader { geo in
                     HStack {
@@ -98,9 +98,11 @@ struct DiaryDetailView: View {
                 .aspectRatio(2 / 1, contentMode: .fit)
                 
                 ZStack {
-                    // Place holder
+                    // Title Place holder
                     TextEditor(text: $titlePlaceHolder)
                         .bodyLarge()
+                        .cornerRadius(8)
+//                        .cornerRadius(radius: 16, corners: [.topLeft, .topRight])
                         .padding(.horizontal)
                         .disabled(true)
                         .frame(minHeight: 40)
@@ -108,30 +110,34 @@ struct DiaryDetailView: View {
                     
                     TextEditor(text: $diaryTitle)
                         .bodyLarge()
+                        .cornerRadius(8)
+//                        .cornerRadius(radius: 16, corners: [.topLeft, .topRight])
                         .padding(.horizontal)
-                        .opacity(diaryTitle.isEmpty ? 0.75 : 1)
+                        .opacity(diaryTitle.isEmpty ? 0.5 : 1)
                         .frame(minHeight: 40)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                Divider()
-                    .background(Color("LightGray"))
-                    .padding(.horizontal)
-                
                 ZStack {
-                    // Place holder
+                    // Content Place holder
                     TextEditor(text: $contentPlaceHolder)
                         .bodyMedium()
+                        .cornerRadius(8)
+//                        .cornerRadius(radius: 16, corners: [.bottomLeft, .bottomRight])
                         .padding(.horizontal)
                         .disabled(true)
+                        
                     
                     TextEditor(text: $diaryContent)
                         .bodyMedium()
+                        .cornerRadius(8)
+//                        .cornerRadius(radius: 16, corners: [.bottomLeft, .bottomRight])
                         .padding(.horizontal)
-                        .opacity(diaryContent.isEmpty ? 0.75 : 1)
+                        .opacity(diaryContent.isEmpty ? 0.5 : 1)
                 }
             }
             .tint(Color("Black-White"))
+            .background(Color("White-Gray"))
             .onAppear {
                 self.diaryTitle = diary.title
                 self.diaryContent = diary.content

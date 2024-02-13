@@ -69,57 +69,75 @@ struct SearchDiaryView: View {
                             .bodyLarge()
                             .multilineTextAlignment(.center)
                             .lineSpacing(10)
-//                            .padding(.vertical, 96)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+                
+//                HStack(spacing: 8) {
+//                    PeriodPieChartView(date: Date(), wiDList: getRandomWiDList(days: 1))
+//                        .frame(maxWidth: 60)
+//
+//                    VStack(alignment: .leading, spacing: 4) {
+//                        Text("제목")
+//                            .bodyMedium()
+//                            .lineLimit(1)
+//
+//                        Text("내용")
+//                            .bodyMedium()
+//                            .lineLimit(1)
+//                    }
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+//
+//                    Image(systemName: "chevron.forward")
+//                        .font(.system(size: 16))
+//                        .padding(.horizontal, 8)
+//                }
+//                .padding(8)
+//                .background(Color("White-Gray"))
+//                .cornerRadius(8)
+//                .background(
+//                    RoundedRectangle(cornerRadius: 8)
+//                        .stroke(Color("Black-White"), lineWidth: 0.5)
+//                )
+//                .padding(.horizontal)
             } else {
                 ScrollView {
                     VStack(spacing: 8) { // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
-                        if diaryList.isEmpty {
-                            if searchComplete {
-                                getEmptyView(message: "검색 결과가 없습니다.")
-                            } else {
-                                Text("과거의 다이어리를 통해\n당신의 성장과 여정을\n다시 살펴보세요.")
-                                    .labelLarge()
-                                    .multilineTextAlignment(.center)
-                                    .lineSpacing(10)
-                                    .padding(.vertical, 96)
-                            }
-                        } else {
-                            ForEach(Array(diaryList), id: \.id) { diary in
-                                VStack(spacing: 0) {
-                                    getDateStringView(date: diary.date)
-                                        .labelMedium()
-                                    
-                                    NavigationLink(destination: DiaryDetailView(date: diary.date)) {
-                                        HStack(spacing: 16) {
-                                            let wiDList = wiDService.readWiDListByDate(date: diary.date)
+                        ForEach(Array(diaryList), id: \.id) { diary in
+                            VStack(spacing: 0) {
+                                getDateStringView(date: diary.date)
+                                    .titleMedium()
+                                
+                                NavigationLink(destination: DiaryDetailView(date: diary.date)) {
+                                    HStack(spacing: 8) {
+                                        let wiDList = wiDService.readWiDListByDate(date: diary.date)
+                                        
+                                        PeriodPieChartView(date: diary.date, wiDList: wiDList)
+                                            .frame(maxWidth: 60)
+                                        
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(diary.title)
+                                                .bodyMedium()
+                                                .lineLimit(1)
                                             
-                                            PeriodPieChartView(date: diary.date, wiDList: wiDList)
-                                                .frame(maxWidth: 50)
-                                            
-                                            VStack(alignment: .leading, spacing: 4) {
-                                                Text(diary.title)
-                                                    .bodyMedium()
-                                                    .lineLimit(1)
-                                                
-                                                Text(diary.content)
-                                                    .bodyMedium()
-                                                    .lineLimit(1)
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            
-                                            Image(systemName: "chevron.forward")
-                                                .font(.system(size: 16))
+                                            Text(diary.content)
+                                                .bodyMedium()
+                                                .lineLimit(1)
                                         }
-                                        .padding()
-                                        .background(Color("White-Black"))
-                                        .cornerRadius(8)
-                                        .shadow(color: Color("Black-White"), radius: 1)
-                                        .padding(.horizontal)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        
+                                        Image(systemName: "chevron.forward")
+                                            .font(.system(size: 16))
+                                            .padding(.horizontal, 8)
                                     }
+                                    .padding(8)
+                                    .background(Color("White-Gray"))
+                                    .cornerRadius(8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(Color("Black-White"), lineWidth: 0.5)
+                                    )
+                                    .padding(.horizontal)
                                 }
                             }
                         }

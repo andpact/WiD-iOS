@@ -10,7 +10,7 @@ import SwiftUI
 enum WiDToolViewTapItem : String, CaseIterable {
     case STOPWATCH = "스톱 워치"
     case TIMER = "타이머"
-    case POMODORO = "포모 도로"
+//    case POMODORO = "포모 도로"
     case WiDLIST = "WiD 리스트"
 }
 
@@ -68,6 +68,8 @@ struct WiDToolView: View {
                         }
                     }
                 }
+                
+                Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
@@ -88,15 +90,25 @@ struct WiDToolView: View {
                                     withAnimation {
                                         selectedTab = .STOPWATCH
                                     }
-                                } else if selectedTab == .POMODORO {
+                                } else if selectedTab == .WiDLIST {
                                     withAnimation {
                                         selectedTab = .TIMER
                                     }
-                                } else if selectedTab == .WiDLIST {
-                                    withAnimation {
-                                        selectedTab = .POMODORO
-                                    }
                                 }
+                                
+//                                if selectedTab == .TIMER {
+//                                    withAnimation {
+//                                        selectedTab = .STOPWATCH
+//                                    }
+//                                } else if selectedTab == .POMODORO {
+//                                    withAnimation {
+//                                        selectedTab = .TIMER
+//                                    }
+//                                } else if selectedTab == .WiDLIST {
+//                                    withAnimation {
+//                                        selectedTab = .POMODORO
+//                                    }
+//                                }
                             }
                             
                             if value.translation.width < -100 {
@@ -106,13 +118,23 @@ struct WiDToolView: View {
                                     }
                                 } else if selectedTab == .TIMER {
                                     withAnimation {
-                                        selectedTab = .POMODORO
-                                    }
-                                } else if selectedTab == .POMODORO {
-                                    withAnimation {
                                         selectedTab = .WiDLIST
                                     }
                                 }
+                                
+//                                if selectedTab == .STOPWATCH {
+//                                    withAnimation {
+//                                        selectedTab = .TIMER
+//                                    }
+//                                } else if selectedTab == .TIMER {
+//                                    withAnimation {
+//                                        selectedTab = .POMODORO
+//                                    }
+//                                } else if selectedTab == .POMODORO {
+//                                    withAnimation {
+//                                        selectedTab = .WiDLIST
+//                                    }
+//                                }
                             }
                         }
                 )
@@ -138,8 +160,8 @@ struct WiDToolHolderView : View {
                 StopwatchView()
             case .TIMER:
                 TimerView()
-            case .POMODORO:
-                PomodoroView()
+//            case .POMODORO:
+//                PomodoroView()
             case .WiDLIST:
                 WiDListView()
             }

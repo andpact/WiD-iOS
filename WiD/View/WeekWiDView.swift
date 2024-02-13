@@ -49,7 +49,7 @@ struct WeekWiDView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack(spacing: 32) {
+                HStack(spacing: 16) {
                     Button(action: {
 //                        expandDatePicker = true
                     }) {
@@ -88,14 +88,14 @@ struct WeekWiDView: View {
                 VStack(spacing: 0) {
                     if wiDList.isEmpty {
 //                        getEmptyView(message: "표시할 데이터가 없습니다.")
-                        
+
                         Text("표시할\n기록이\n없습니다.")
                             .bodyLarge()
                             .lineSpacing(10)
                             .multilineTextAlignment(.center)
                     } else {
                         ScrollView {
-                            VStack(spacing: 0) {
+                            VStack(spacing: 8) {
                                 HStack {
                                     ForEach(0...6, id: \.self) { index in
                                         let textColor = index == 5 ? Color("DeepSkyBlue") : (index == 6 ? Color("OrangeRed") : Color("Black-White"))
@@ -106,7 +106,7 @@ struct WeekWiDView: View {
                                             .foregroundColor(textColor)
                                     }
                                 }
-                                .padding()
+                                .padding(.horizontal)
                                 
                                 let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
                                 
@@ -121,7 +121,7 @@ struct WeekWiDView: View {
                                         PeriodPieChartView(date: currentDate, wiDList: filteredWiDList)
                                     }
                                 }
-                                .padding()
+                                .padding(.horizontal)
                                 
                                 Picker("", selection: $seletedDictionaryType) {
                                     ForEach(DurationDictionary.allCases) { dictionary in
@@ -130,7 +130,7 @@ struct WeekWiDView: View {
                                     }
                                 }
                                 .pickerStyle(.segmented)
-                                .padding()
+                                .padding(.horizontal)
                                 
                                 ForEach(Array(seletedDictionary), id: \.key) { title, duration in
                                     HStack {

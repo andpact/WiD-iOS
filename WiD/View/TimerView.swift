@@ -213,9 +213,7 @@ struct TimerView: View {
 //        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Gray"))
         .onAppear {
-            withAnimation {
-                timerPlayer.inTimerView = true
-            }
+            timerPlayer.inTimerView = true
         }
         .onDisappear {
             withAnimation {

@@ -27,6 +27,7 @@
 		EA35F2DD2B71CA430033253D /* WiDListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA35F2DC2B71CA430033253D /* WiDListView.swift */; };
 		EA35F2DF2B71CE050033253D /* WiDDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA35F2DE2B71CE050033253D /* WiDDisplayView.swift */; };
 		EA3BC0642B1AB9F1009467CA /* DiaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3BC0632B1AB9F1009467CA /* DiaryService.swift */; };
+		EA40A95D2B7B436600DA9827 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA40A95C2B7B436600DA9827 /* SettingView.swift */; };
 		EA43E2742B72077B00C9D8E9 /* TitleWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA43E2732B72077B00C9D8E9 /* TitleWiDView.swift */; };
 		EA43E2762B7207A700C9D8E9 /* DiaryDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA43E2752B7207A700C9D8E9 /* DiaryDisplayView.swift */; };
 		EA43E2782B7207CA00C9D8E9 /* DayDiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA43E2772B7207CA00C9D8E9 /* DayDiaryView.swift */; };
@@ -103,6 +104,7 @@
 		EA35F2DC2B71CA430033253D /* WiDListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDListView.swift; sourceTree = "<group>"; };
 		EA35F2DE2B71CE050033253D /* WiDDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDDisplayView.swift; sourceTree = "<group>"; };
 		EA3BC0632B1AB9F1009467CA /* DiaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryService.swift; sourceTree = "<group>"; };
+		EA40A95C2B7B436600DA9827 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		EA43E2732B72077B00C9D8E9 /* TitleWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleWiDView.swift; sourceTree = "<group>"; };
 		EA43E2752B7207A700C9D8E9 /* DiaryDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDisplayView.swift; sourceTree = "<group>"; };
 		EA43E2772B7207CA00C9D8E9 /* DayDiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayDiaryView.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 				EA0458202A625B840065B98E /* PieChartView.swift */,
 				EA7B66AF2B7322AB00A159CD /* PieGraphView.swift */,
 				EA4EACF32B1EAA2900BB4681 /* LineGraphView.swift */,
+				EA40A95C2B7B436600DA9827 /* SettingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -591,6 +594,7 @@
 				EA181F372A624F1F006EAF72 /* TimeUtil.swift in Sources */,
 				EA70DD742A59089D00B4B167 /* DayWiDView.swift in Sources */,
 				EA43E2762B7207A700C9D8E9 /* DiaryDisplayView.swift in Sources */,
+				EA40A95D2B7B436600DA9827 /* SettingView.swift in Sources */,
 				EA0458232A625C0C0065B98E /* WiD.swift in Sources */,
 				EA35F2DD2B71CA430033253D /* WiDListView.swift in Sources */,
 				EA3BC0642B1AB9F1009467CA /* DiaryService.swift in Sources */,

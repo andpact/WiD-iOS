@@ -65,12 +65,18 @@ struct HomeView: View {
                                 .font(.system(size: 36))
                         }
 
-                        Image(systemName: "gearshape")
-                            .frame(maxWidth: .infinity)
-                            .font(.system(size: 36))
+                        NavigationLink(destination: SettingView()) {
+                            Image(systemName: "gearshape")
+                                .frame(maxWidth: .infinity)
+                                .font(.system(size: 36))
+                        }
                     }
                     .padding()
+                    .background(Color("White-Gray"))
+                    .cornerRadius(8)
+                    .padding()
                 }
+                .background(Color("LightGray-Black")) // 배경 색을 여기 지정해야 적용됨.
                 .tint(Color("Black-White"))
             }
             

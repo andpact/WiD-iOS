@@ -9,7 +9,7 @@ import SwiftUI
 
 enum DiaryDisplayViewTapItem : String, CaseIterable {
     case DAY = "일별 조회"
-    case RANDOM = "랜덤 조회"
+//    case RANDOM = "랜덤 조회"
     case SEARCH = "검색 조회"
 }
 
@@ -61,6 +61,8 @@ struct DiaryDisplayView: View {
                             }
                         }
                     }
+                    
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
@@ -73,27 +75,39 @@ struct DiaryDisplayView: View {
                         DragGesture()
                             .onEnded { value in
                                 if value.translation.width > 100 {
-                                    if selectedTab == .RANDOM {
+                                    if selectedTab == .SEARCH {
                                         withAnimation {
                                             selectedTab = .DAY
                                         }
-                                    } else if selectedTab == .SEARCH {
-                                        withAnimation {
-                                            selectedTab = .RANDOM
-                                        }
                                     }
+                                    
+//                                    if selectedTab == .RANDOM {
+//                                        withAnimation {
+//                                            selectedTab = .DAY
+//                                        }
+//                                    } else if selectedTab == .SEARCH {
+//                                        withAnimation {
+//                                            selectedTab = .RANDOM
+//                                        }
+//                                    }
                                 }
                                 
                                 if value.translation.width < -100 {
                                     if selectedTab == .DAY {
                                         withAnimation {
-                                            selectedTab = .RANDOM
-                                        }
-                                    } else if selectedTab == .RANDOM {
-                                        withAnimation {
                                             selectedTab = .SEARCH
                                         }
                                     }
+                                    
+//                                    if selectedTab == .DAY {
+//                                        withAnimation {
+//                                            selectedTab = .RANDOM
+//                                        }
+//                                    } else if selectedTab == .RANDOM {
+//                                        withAnimation {
+//                                            selectedTab = .SEARCH
+//                                        }
+//                                    }
                                 }
                             }
                     )
@@ -112,8 +126,8 @@ struct DiaryDisplayHolderView : View {
             switch tabItem {
             case .DAY:
                 DayDiaryView()
-            case .RANDOM:
-                RandomDiaryView()
+//            case .RANDOM:
+//                RandomDiaryView()
             case .SEARCH:
                 SearchDiaryView()
             }

@@ -176,9 +176,7 @@ struct StopwatchView: View {
             }
         }
         .onAppear {
-            withAnimation {
-                stopwatchPlayer.inStopwatchView = true
-            }
+            stopwatchPlayer.inStopwatchView = true // onAppear에 애니메이션을 적용하면 스톰 워치 뷰로 화면 전환 시 화면이 상하로 움직임.
         }
         .onDisappear {
             withAnimation {
