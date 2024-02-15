@@ -63,6 +63,7 @@ struct DayDiaryView: View {
                     }
                     .disabled(calendar.isDateInToday(currentDate))
                 }
+                .frame(maxHeight: 44)
                 .padding()
                 
                 ScrollView {

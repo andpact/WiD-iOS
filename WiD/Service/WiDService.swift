@@ -120,6 +120,26 @@ class WiDService {
 //
 //        return years
 //    }
+    
+    func readTotalWiDCount() -> Int {
+        print("WiDService: getTotalWiDCount executed")
+        
+        let query = "SELECT COUNT(*) FROM WiD"
+        var statement: OpaquePointer?
+        var totalWiDCount = 0
+        
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            if sqlite3_step(statement) == SQLITE_ROW {
+                totalWiDCount = Int(sqlite3_column_int(statement, 0))
+            }
+            sqlite3_finalize(statement)
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("WiDService: Error preparing total WiD count query: \(errmsg)")
+        }
+        
+        return totalWiDCount
+    }
 
     func readWiDByID(id: Int) -> WiD? {
         print("WiDService : readWiDByID executed")

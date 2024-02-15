@@ -295,11 +295,11 @@
 				EA43E2792B72081800C9D8E9 /* RandomDiaryView.swift */,
 				EA215CDD2A60F9AF005C5D30 /* SearchDiaryView.swift */,
 				EA05E95B2B1CA6B800A0DF42 /* DiaryDetailView.swift */,
+				EA40A95C2B7B436600DA9827 /* SettingView.swift */,
 				EA18DCB52AE8CC5B00B88F30 /* BarChartView.swift */,
 				EA0458202A625B840065B98E /* PieChartView.swift */,
 				EA7B66AF2B7322AB00A159CD /* PieGraphView.swift */,
 				EA4EACF32B1EAA2900BB4681 /* LineGraphView.swift */,
-				EA40A95C2B7B436600DA9827 /* SettingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

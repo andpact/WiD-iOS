@@ -53,8 +53,10 @@ struct SearchDiaryView: View {
                 }) {
                     Image(systemName: "magnifyingglass")
                         .font(.system(size: 24))
+                        .frame(maxWidth: 24, maxHeight: 24)
                 }
             }
+            .frame(maxHeight: 44)
             .padding()
             
             /**
@@ -63,7 +65,9 @@ struct SearchDiaryView: View {
             if diaryList.isEmpty {
                 VStack {
                     if searchComplete {
-                        getEmptyView(message: "검색 결과가 없습니다.")
+//                        getEmptyView(message: "검색 결과가 없습니다.")
+                        
+                        Text("검색 결과가 없습니다.")
                     } else {
                         Text("과거의 다이어리를 통해\n당신의 성장과 여정을\n다시 살펴보세요.")
                             .bodyLarge()

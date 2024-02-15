@@ -74,10 +74,10 @@ struct WiDToolView: View {
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
             .disabled(!(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED))
-            .opacity(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? 1 : 0)
             .background(Color("White-Gray"))
             .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
             .background(Color("LightGray-Black"))
+            .opacity(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? 1 : 0)
             
          
             // 컨텐츠
@@ -85,7 +85,7 @@ struct WiDToolView: View {
                 .gesture(
                     DragGesture()
                         .onEnded { value in
-                            if value.translation.width > 100 {
+                            if value.translation.width > 100 && (stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED) {
                                 if selectedTab == .TIMER {
                                     withAnimation {
                                         selectedTab = .STOPWATCH
@@ -111,7 +111,7 @@ struct WiDToolView: View {
 //                                }
                             }
                             
-                            if value.translation.width < -100 {
+                            if value.translation.width < -100 && (stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED) {
                                 if selectedTab == .STOPWATCH {
                                     withAnimation {
                                         selectedTab = .TIMER
@@ -141,9 +141,9 @@ struct WiDToolView: View {
         }
         .onAppear {
             // 스톱 워치나 타이머를 실행후, 이전 화면으로 전환 후 다시 돌아왔을 때 
-            if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
+            if stopwatchPlayer.stopwatchState == PlayerState.STARTED || stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
                 selectedTab = .STOPWATCH
-            } else if timerPlayer.timerState == PlayerState.STARTED {
+            } else if timerPlayer.timerState == PlayerState.STARTED || timerPlayer.timerState == PlayerState.PAUSED {
                 selectedTab = .TIMER
             }
         }

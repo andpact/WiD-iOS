@@ -17,6 +17,10 @@ struct NewWiDView: View {
     @State private var wiDList: [WiD] = []
 //    @State private var emptyWiDList: [WiD] = []
     
+    // 도구 NewWiD 뷰에서 시간 볼 일이 없잖아.
+//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
+//    @EnvironmentObject var timerPlayer: TimerPlayer
+    
     // 날짜
     private let calendar = Calendar.current
     private let today = Date()
@@ -71,7 +75,7 @@ struct NewWiDView: View {
                 /**
                  상단 바
                  */
-                HStack {
+                ZStack {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }) {
@@ -79,11 +83,38 @@ struct NewWiDView: View {
                             .font(.system(size: 24))
                     }
                     .tint(Color("Black-White"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Text("새로운 WiD")
-                        .titleLarge()
-                    
-                    Spacer()
+//                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+//                        HStack {
+//                            Text(stopwatchPlayer.title.koreanValue)
+//                                .bodyMedium()
+//
+//                            getHorizontalTimeView(stopwatchPlayer.elapsedTime)
+//                                .font(.custom("ChivoMono-Regular", size: 18))
+//                        }
+//                        .padding(.horizontal, 8)
+//                        .padding(.vertical, 4)
+//                        .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+//                        .foregroundColor(Color("White"))
+//                        .cornerRadius(8)
+//                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+//                        HStack {
+//                            Text(timerPlayer.title.koreanValue)
+//                                .bodyMedium()
+//
+//                            getHorizontalTimeView(timerPlayer.remainingTime)
+//                                .font(.custom("ChivoMono-Regular", size: 18))
+//                        }
+//                        .padding(.horizontal, 8)
+//                        .padding(.vertical, 4)
+//                        .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+//                        .foregroundColor(Color("White"))
+//                        .cornerRadius(8)
+//                    } else {
+                        Text("새로운 WiD")
+                            .titleLarge()
+//                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
@@ -274,7 +305,6 @@ struct NewWiDView: View {
                 }) {
                     Text("등록")
                         .bodyMedium()
-
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -583,8 +613,13 @@ struct NewWiDView_Previews: PreviewProvider {
         
         Group {
             NewWiDView(date: today)
+//                .environmentObject(StopwatchPlayer())
+//                .environmentObject(TimerPlayer())
+                .environment(\.colorScheme, .light)
             
             NewWiDView(date: today)
+//                .environmentObject(StopwatchPlayer())
+//                .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .dark)
         }
     }

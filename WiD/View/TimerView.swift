@@ -14,15 +14,15 @@ struct TimerView: View {
     private let screenHeight = UIScreen.main.bounds.height
     
     // WiD
-    private let wiDService = WiDService()
+//    private let wiDService = WiDService()
     
     // 날짜
-    private let calendar = Calendar.current
+//    private let calendar = Calendar.current
     
     // 제목
     @State private var isTitleMenuExpanded: Bool = false
     
-    // 타이머
+    // 타이머 Int 타입으로 선언해야 Picker에서 사용할 수 있다.
     @State private var selectedHour: Int = 0
     @State private var selectedMinute: Int = 0
     @State private var selectedSecond: Int = 0
@@ -70,9 +70,9 @@ struct TimerView: View {
                         .pickerStyle(.inline)
                     }
                     .padding(.horizontal)
-                    .padding(.top, screenHeight / 5)
+                    .padding(.top, screenHeight / 10)
                 } else {
-                    getHorizontalTimeView(timerPlayer.remainingTime)
+                    getHorizontalTimeView(Int(timerPlayer.remainingTime))
                         .font(.custom("ChivoMono-BlackItalic", size: 70))
                         .padding(.top, screenHeight / 5)
                 }
@@ -117,8 +117,6 @@ struct TimerView: View {
                     Button(action: {
                         if timerPlayer.timerState == PlayerState.STARTED {
                             timerPlayer.pauseTimer()
-                            
-//                                createWiD()
                         } else {
                             timerPlayer.startTimer()
                         }
@@ -128,10 +126,10 @@ struct TimerView: View {
                     }
                     .frame(maxWidth: 40, maxHeight: 40)
                     .padding()
-                    .background(timerPlayer.timerState == PlayerState.STARTED ? Color("OrangeRed") : (timerPlayer.timerState == PlayerState.PAUSED ? Color("LimeGreen") : (timerPlayer.remainingTime == 0 ? Color("DarkGray") : Color("Black-White"))))
+                    .background(timerPlayer.timerState == PlayerState.STARTED ? Color("OrangeRed") : (timerPlayer.timerState == PlayerState.PAUSED ? Color("LimeGreen") : (timerPlayer.selectedTime == 0 ? Color("DarkGray") : Color("Black-White"))))
                     .foregroundColor(timerPlayer.timerState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
                     .clipShape(Circle())
-                    .disabled(timerPlayer.remainingTime == 0)
+                    .disabled(timerPlayer.selectedTime == 0)
                 }
                 .padding()
                 .opacity(timerPlayer.timerTopBottomBarVisible ? 1 : 0)
@@ -221,12 +219,8 @@ struct TimerView: View {
             }
         }
         .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
-            timerPlayer.remainingTime = selectedHour * 3600 + selectedMinute * 60 + selectedSecond
-        }
-        .onChange(of: timerPlayer.remainingTime) { newRemainingTime in
-            if timerPlayer.timerState == PlayerState.STARTED && newRemainingTime <= 0 {
-                createWiD()
-            }
+            timerPlayer.selectedTime = TimeInterval(selectedHour * 3600 + selectedMinute * 60 + selectedSecond)
+            timerPlayer.remainingTime = TimeInterval(selectedHour * 3600 + selectedMinute * 60 + selectedSecond) // 시간을 선택할 때, 남은 시간을 최초 1회 할당해줌.
         }
         .onTapGesture {
             if timerPlayer.timerState == PlayerState.STARTED {
@@ -234,56 +228,6 @@ struct TimerView: View {
                     timerPlayer.timerTopBottomBarVisible.toggle()
                 }
             }
-        }
-    }
-    
-    func createWiD() {
-        let now = Date()
-        
-        let title = timerPlayer.title.rawValue
-        let start = calendar.date(bySetting: .nanosecond, value: 0, of: timerPlayer.start)! // 밀리 세컨드 제거하여 초 단위만 사용
-        let finish = calendar.date(bySetting: .nanosecond, value: 0, of: now)!
-        let duration = finish.timeIntervalSince(start)
-        
-        guard 0 <= duration else {
-            return
-        }
-
-        // Check if the duration spans across multiple days
-        if calendar.isDate(start, inSameDayAs: finish) {
-            // WiD duration is within the same day
-            let wiD = WiD(
-                id: 0,
-                date: start,
-                title: title,
-                start: start,
-                finish: finish,
-                duration: duration
-            )
-            wiDService.createWiD(wid: wiD)
-        } else {
-            // WiD duration spans across multiple days
-            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
-            let firstDayWiD = WiD(
-                id: 0,
-                date: start,
-                title: title,
-                start: start,
-                finish: finishOfStart,
-                duration: finishOfStart.timeIntervalSince(start)
-            )
-            wiDService.createWiD(wid: firstDayWiD)
-
-            let startOfFinish = calendar.startOfDay(for: finish)
-            let secondDayWiD = WiD(
-                id: 0,
-                date: finish,
-                title: title,
-                start: startOfFinish,
-                finish: finish,
-                duration: finish.timeIntervalSince(startOfFinish)
-            )
-            wiDService.createWiD(wid: secondDayWiD)
         }
     }
 }

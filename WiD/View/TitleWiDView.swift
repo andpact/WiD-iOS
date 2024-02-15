@@ -115,6 +115,7 @@ struct TitleWiDView: View {
                               calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
                               calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
                 }
+                .frame(maxHeight: 44)
                 .tint(Color("Black-White"))
                 .padding()
                 

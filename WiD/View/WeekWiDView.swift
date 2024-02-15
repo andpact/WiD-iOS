@@ -68,6 +68,7 @@ struct WeekWiDView: View {
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
+                            .frame(width: 24, height: 24)
                     }
 
                     Button(action: {
@@ -78,10 +79,12 @@ struct WeekWiDView: View {
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
+                            .frame(width: 24, height: 24)
                     }
                     .disabled(calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
                               calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)))
                 }
+                .frame(maxHeight: 44)
                 .tint(Color("Black-White"))
                 .padding()
                 
@@ -118,7 +121,22 @@ struct WeekWiDView: View {
                                             return calendar.isDate(wiD.date, inSameDayAs: currentDate)
                                         }
                                         
-                                        PeriodPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                        var totalDurationPercentage: Int {
+                                            let totalMinutesInDay = 60 * 24
+                                            var totalDurationMinutes: Int = 0
+
+                                            for wid in filteredWiDList {
+                                                totalDurationMinutes += Int(wid.duration / 60) // Convert duration to minutes
+                                            }
+
+                                            return Int(Double(totalDurationMinutes) / Double(totalMinutesInDay) * 100)
+                                        }
+                                        
+                                        VStack(spacing: 0) {
+                                            PeriodPieChartView(date: currentDate, wiDList: filteredWiDList)
+                                            
+                                            Text("\(totalDurationPercentage)%")
+                                        }
                                     }
                                 }
                                 .padding(.horizontal)

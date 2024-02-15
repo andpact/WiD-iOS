@@ -19,6 +19,10 @@ struct WiDDetailView: View {
     private let clickedWiDId: Int
     private let clickedWiD: WiD?
     
+    // 도구
+//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
+//    @EnvironmentObject var timerPlayer: TimerPlayer
+    
     // 날짜
     private let calendar = Calendar.current
     private let today = Date()
@@ -58,7 +62,7 @@ struct WiDDetailView: View {
                 /**
                  상단 바
                  */
-                HStack {
+                ZStack {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }) {
@@ -66,11 +70,38 @@ struct WiDDetailView: View {
                             .font(.system(size: 24))
                     }
                     .tint(Color("Black-White"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Text("WiD")
-                        .titleLarge()
-                    
-                    Spacer()
+//                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+//                        HStack {
+//                            Text(stopwatchPlayer.title.koreanValue)
+//                                .bodyMedium()
+//
+//                            getHorizontalTimeView(stopwatchPlayer.elapsedTime)
+//                                .font(.custom("ChivoMono-Regular", size: 18))
+//                        }
+//                        .padding(.horizontal, 8)
+//                        .padding(.vertical, 4)
+//                        .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+//                        .foregroundColor(Color("White"))
+//                        .cornerRadius(8)
+//                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+//                        HStack {
+//                            Text(timerPlayer.title.koreanValue)
+//                                .bodyMedium()
+//
+//                            getHorizontalTimeView(timerPlayer.remainingTime)
+//                                .font(.custom("ChivoMono-Regular", size: 18))
+//                        }
+//                        .padding(.horizontal, 8)
+//                        .padding(.vertical, 4)
+//                        .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+//                        .foregroundColor(Color("White"))
+//                        .cornerRadius(8)
+//                    } else {
+                        Text("WiD")
+                            .titleLarge()
+//                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)

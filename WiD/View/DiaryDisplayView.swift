@@ -19,21 +19,52 @@ struct DiaryDisplayView: View {
     @State private var selectedTab: DiaryDisplayViewTapItem = .DAY
     @Namespace private var animation
     
+    // 도구
+    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
+    @EnvironmentObject var timerPlayer: TimerPlayer
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                HStack {
+                ZStack {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }) {
                         Image(systemName: "arrow.backward")
                             .font(.system(size: 24))
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Text("다이어리 조회")
-                        .titleLarge()
-                    
-                    Spacer()
+                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+                        HStack {
+                            Text(stopwatchPlayer.title.koreanValue)
+                                .bodyMedium()
+                            
+                            getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
+                                .font(.custom("ChivoMono-Regular", size: 18))
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+                        .foregroundColor(Color("White"))
+                        .cornerRadius(8)
+                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+                        HStack {
+                            Text(timerPlayer.title.koreanValue)
+                                .bodyMedium()
+                            
+                            getHorizontalTimeView(Int(timerPlayer.remainingTime))
+                                .font(.custom("ChivoMono-Regular", size: 18))
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+                        .foregroundColor(Color("White"))
+                        .cornerRadius(8)
+                    } else {
+                        Text("다이어리 조회")
+                            .titleLarge()
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
@@ -139,9 +170,13 @@ struct DiaryDisplayView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             DiaryDisplayView()
+                .environmentObject(StopwatchPlayer())
+                .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .light)
             
             DiaryDisplayView()
+                .environmentObject(StopwatchPlayer())
+                .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .dark)
         }
     }

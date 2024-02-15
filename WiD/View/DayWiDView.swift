@@ -42,6 +42,7 @@ struct DayWiDView: View {
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
+                            .frame(width: 24, height: 24)
                     }
 
                     Button(action: {
@@ -49,9 +50,11 @@ struct DayWiDView: View {
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
+                            .frame(width: 24, height: 24)
                     }
                     .disabled(calendar.isDateInToday(currentDate))
                 }
+                .frame(maxHeight: 44)
                 .padding()
                 
                 /**

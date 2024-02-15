@@ -72,6 +72,26 @@ class DiaryService {
         }
     }
     
+    func readTotalDiaryCount() -> Int {
+        print("DiaryService: getTotalDiaryCount executed")
+        
+        let query = "SELECT COUNT(*) FROM Diary"
+        var statement: OpaquePointer?
+        var totalDiaryCount = 0
+        
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            if sqlite3_step(statement) == SQLITE_ROW {
+                totalDiaryCount = Int(sqlite3_column_int(statement, 0))
+            }
+            sqlite3_finalize(statement)
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("DiaryService: Error preparing total Diary count query: \(errmsg)")
+        }
+        
+        return totalDiaryCount
+    }
+    
     func readDiaryByDate(date: Date) -> Diary? {
         print("DiaryService : readDiaryByDate executed")
         

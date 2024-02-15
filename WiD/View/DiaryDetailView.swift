@@ -15,6 +15,10 @@ struct DiaryDetailView: View {
     private let wiDService = WiDService()
     private let wiDList: [WiD]
     
+    // 도구
+    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
+    @EnvironmentObject var timerPlayer: TimerPlayer
+    
     // 다이어리
     private let date: Date
     private let diaryService = DiaryService()
@@ -48,8 +52,36 @@ struct DiaryDetailView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Text("다이어리")
-                        .titleLarge()
+                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+                        HStack {
+                            Text(stopwatchPlayer.title.koreanValue)
+                                .bodyMedium()
+                            
+                            getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
+                                .font(.custom("ChivoMono-Regular", size: 18))
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+                        .foregroundColor(Color("White"))
+                        .cornerRadius(8)
+                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+                        HStack {
+                            Text(timerPlayer.title.koreanValue)
+                                .bodyMedium()
+                            
+                            getHorizontalTimeView(Int(timerPlayer.remainingTime))
+                                .font(.custom("ChivoMono-Regular", size: 18))
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+                        .foregroundColor(Color("White"))
+                        .cornerRadius(8)
+                    } else {
+                        Text("다이어리")
+                            .titleLarge()
+                    }
                     
                     Button(action: {
                         let newDiary = Diary(id: 0, date: date, title: diaryTitle, content: diaryContent)
@@ -151,8 +183,13 @@ struct DiaryView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             DiaryDetailView(date: Date())
+                .environmentObject(StopwatchPlayer())
+                .environmentObject(TimerPlayer())
+                .environment(\.colorScheme, .light)
             
             DiaryDetailView(date: Date())
+                .environmentObject(StopwatchPlayer())
+                .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .dark)
         }
     }
