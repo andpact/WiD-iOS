@@ -75,15 +75,14 @@ func getFullWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) ->
 
     for index in 0..<wiDList.count {
         let currentWiD = wiDList[index]
-
-//        fullWiDList.append(currentWiD)
+        let currentWiDStartComponents = calendar.dateComponents([.hour, .minute, .second], from: currentWiD.start)
         
-        let currentWIDStartComponents = calendar.dateComponents([.hour, .minute, .second], from: currentWiD.start)
-        
-        let emptyWiDFinish = calendar.date(bySettingHour: currentWIDStartComponents.hour!, minute: currentWIDStartComponents.minute!, second: currentWIDStartComponents.second!, of: date)
+        let emptyWiDFinish = calendar.date(bySettingHour: currentWiDStartComponents.hour!, minute: currentWiDStartComponents.minute!, second: currentWiDStartComponents.second!, of: date)
         
         // 빈 WiD의 시작 시간과 종료 시간이 같으면 소요 시간 0의 빈 WiD가 나오므로 걸러줌.
         if emptyWiDStart == emptyWiDFinish {
+            fullWiDList.append(currentWiD)
+            
             let currentWIDFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: currentWiD.finish)
             
             emptyWiDStart = calendar.date(bySettingHour: currentWIDFinishComponents.hour!, minute: currentWIDFinishComponents.minute!, second: currentWIDFinishComponents.second!, of: date)!
@@ -104,7 +103,7 @@ func getFullWiDListFromWiDList(date: Date, currentTime: Date, wiDList: [WiD]) ->
         // id에 0을 넣지 말고, 각각 다르게 설정해줘야 정상 동작함.
         let emptyWiD = WiD(id: -index, date: date, title: "기록 없음", start: emptyWiDStart, finish: emptyWiDFinish!, duration: emptyWiDFinish!.timeIntervalSince(emptyWiDStart))
         fullWiDList.append(emptyWiD)
-        fullWiDList.append(currentWiD) // 왜 여기 추가해야 되지???
+        fullWiDList.append(currentWiD)
         
         let currentWIDFinishComponents = calendar.dateComponents([.hour, .minute, .second], from: currentWiD.finish)
         

@@ -14,7 +14,7 @@ struct RandomDiaryView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
-        .background(Color("White-Gray"))
+        .background(Color("White-Black"))
     }
 }
 

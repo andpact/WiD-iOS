@@ -108,7 +108,7 @@ struct DiaryDetailView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-                .background(Color("LightGray-Black"))
+//                .background(Color("LightGray-Black"))
                 
                 GeometryReader { geo in
                     HStack {
@@ -169,7 +169,7 @@ struct DiaryDetailView: View {
                 }
             }
             .tint(Color("Black-White"))
-            .background(Color("White-Gray"))
+            .background(Color("White-Black"))
             .onAppear {
                 self.diaryTitle = diary.title
                 self.diaryContent = diary.content

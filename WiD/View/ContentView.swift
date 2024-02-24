@@ -26,7 +26,7 @@ struct ContentView: View {
 //            .tint(.black)
 //        }
             
-        HomeView()
+        MainView()
             .environmentObject(stopwatch)
             .environmentObject(timer)
     }

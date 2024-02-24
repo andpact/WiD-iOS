@@ -50,6 +50,7 @@ struct WiDListView: View {
                     }
                     .disabled(calendar.isDateInToday(currentDate))
                 }
+                .frame(maxHeight: 44)
                 .padding()
             
                 if wiDList.isEmpty {
@@ -128,7 +129,7 @@ struct WiDListView: View {
                                                     .font(.system(size: 24))
                                                     .frame(maxWidth: 15, maxHeight: 15)
                                                     .padding()
-                                                    .background(Color("White-Gray"))
+                                                    .background(Color("White-Black"))
                                                     .clipShape(Circle())
 //                                                    .background(
 //                                                        Circle()
@@ -148,7 +149,7 @@ struct WiDListView: View {
                                                     .font(.system(size: 16))
                                             }
                                             .padding()
-                                            .background(Color("LightGray-Black"))
+                                            .background(Color("LightGray-Gray"))
                                             .cornerRadius(8)
 //                                            .background(
 //                                                RoundedRectangle(cornerRadius: 8)
@@ -213,7 +214,7 @@ struct WiDListView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("White-Gray"))
+        .background(Color("White-Black"))
         .tint(Color("Black-White"))
         .navigationBarHidden(true)
         .onAppear {

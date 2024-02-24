@@ -135,7 +135,7 @@ struct SearchDiaryView: View {
                                             .padding(.horizontal, 8)
                                     }
                                     .padding(8)
-                                    .background(Color("White-Gray"))
+//                                    .background(Color("White-Gray"))
                                     .cornerRadius(8)
                                     .background(
                                         RoundedRectangle(cornerRadius: 8)
@@ -151,7 +151,7 @@ struct SearchDiaryView: View {
         }
         .tint(Color("Black-White"))
         .navigationBarHidden(true)
-        .background(Color("White-Gray"))
+        .background(Color("White-Black"))
     }
 }
 

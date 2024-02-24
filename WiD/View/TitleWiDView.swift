@@ -119,15 +119,15 @@ struct TitleWiDView: View {
                 .tint(Color("Black-White"))
                 .padding()
                 
-//                if filteredWiDListByTitle.isEmpty {
-//                    VStack {
-//                        Text("표시할\n기록이\n없습니다.")
-//                            .bodyLarge()
-//                            .lineSpacing(10)
-//                            .multilineTextAlignment(.center)
-//                    }
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                } else {
+                if filteredWiDListByTitle.isEmpty {
+                    VStack {
+                        Text("표시할\n기록이\n없습니다.")
+                            .bodyLarge()
+                            .lineSpacing(10)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
                     ScrollView {
                         VStack(spacing: 8) {
                             LineGraphView(title: selectedTitle.rawValue, wiDList: filteredWiDListByTitle, startDate: startDate, finishDate: finishDate)
@@ -372,7 +372,7 @@ struct TitleWiDView: View {
 ////                            .padding(.horizontal)
 ////                        }
 //                    }
-//                }
+                }
             }
             
             if expandDatePicker || expandTitleMenu {
@@ -506,7 +506,7 @@ struct TitleWiDView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
-        .background(Color("White-Gray"))
+//        .background(Color("White-Gray"))
         .onAppear {
             self.startDate = getFirstDateOfWeek(for: today)
             self.finishDate = getLastDateOfWeek(for: today)

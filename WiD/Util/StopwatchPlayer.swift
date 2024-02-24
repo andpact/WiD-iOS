@@ -68,14 +68,12 @@ class StopwatchPlayer: ObservableObject {
         stopwatchState = PlayerState.PAUSED
         
         let currentDuration = self.finish.timeIntervalSince(self.start)
-        
-        // Check if the duration spans across multiple days
+
         if calendar.isDate(start, inSameDayAs: finish) {
             guard 0 <= currentDuration else {
                 return
             }
-            
-            // WiD duration is within the same day
+
             let wiD = WiD(
                 id: 0,
                 date: start,
@@ -85,8 +83,7 @@ class StopwatchPlayer: ObservableObject {
                 duration: currentDuration
             )
             wiDService.createWiD(wid: wiD)
-        } else {
-            // WiD duration spans across multiple days
+        } else { // 자정 넘어가는 경우
             let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
             let firstDayWiD = WiD(
                 id: 0,

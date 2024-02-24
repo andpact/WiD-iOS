@@ -81,7 +81,7 @@ struct DayDiaryView: View {
                                     if wiDList.isEmpty {
                                         getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
                                     } else {
-                                        DatePieChartView(wiDList: wiDList)
+                                        DiaryPieChartView(wiDList: wiDList)
                                     }
                                 }
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -259,7 +259,7 @@ struct DayDiaryView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
-        .background(Color("White-Gray"))
+        .background(Color("White-Black"))
         .onAppear {
             self.wiDList = wiDService.readWiDListByDate(date: currentDate)
             self.diary = diaryService.readDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")

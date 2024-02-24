@@ -209,7 +209,7 @@ struct TimerView: View {
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
 //        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("White-Gray"))
+        .background(Color("White-Black"))
         .onAppear {
             timerPlayer.inTimerView = true
         }

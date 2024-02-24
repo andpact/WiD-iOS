@@ -57,6 +57,7 @@
 		EAD98BB02B76501A004A1ECD /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98BAF2B76501A004A1ECD /* HomeView.swift */; };
 		EADCDC472A6DF98100D8AED2 /* Acme-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */; };
 		EADF79162A583C8E000753B2 /* WiDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADF79152A583C8E000753B2 /* WiDService.swift */; };
+		EAE85ED92B88B99D000DA267 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE85ED82B88B99D000DA267 /* MainView.swift */; };
 		EAF1D54C2B1AAAB000E26B2A /* Diary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF1D54B2B1AAAB000E26B2A /* Diary.swift */; };
 /* End PBXBuildFile section */
 
@@ -138,6 +139,7 @@
 		EADCDC462A6DF98100D8AED2 /* Acme-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Acme-Regular.ttf"; sourceTree = "<group>"; };
 		EADCDC482A6DF9C100D8AED2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EADF79152A583C8E000753B2 /* WiDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDService.swift; sourceTree = "<group>"; };
+		EAE85ED82B88B99D000DA267 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		EAF1D54B2B1AAAB000E26B2A /* Diary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -277,6 +279,7 @@
 			children = (
 				EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */,
 				EA60B8072A56991700B49641 /* ContentView.swift */,
+				EAE85ED82B88B99D000DA267 /* MainView.swift */,
 				EAD98BAF2B76501A004A1ECD /* HomeView.swift */,
 				EA8CBDDB2B71A84D00798E9D /* WiDToolView.swift */,
 				EAC5D7202A56A76E00FA2499 /* StopwatchView.swift */,
@@ -590,6 +593,7 @@
 				EA1AF4AA2AB54EBD00BEBA93 /* AppOpenAdUtil.swift in Sources */,
 				EAD98BB02B76501A004A1ECD /* HomeView.swift in Sources */,
 				EA215CDE2A60F9AF005C5D30 /* SearchDiaryView.swift in Sources */,
+				EAE85ED92B88B99D000DA267 /* MainView.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
 				EA181F372A624F1F006EAF72 /* TimeUtil.swift in Sources */,
 				EA70DD742A59089D00B4B167 /* DayWiDView.swift in Sources */,

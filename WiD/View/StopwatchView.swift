@@ -153,7 +153,7 @@ struct StopwatchView: View {
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("White-Gray"))
+        .background(Color("White-Black")) // 배경 색 없으면 탭 제스처 동작 안함.!!
         .onTapGesture {
             if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
                 withAnimation {

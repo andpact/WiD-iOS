@@ -28,12 +28,12 @@ struct WiDToolView: View {
         VStack(spacing: 0) {
             // 상단 바
             HStack {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "arrow.backward")
-                        .font(.system(size: 24))
-                }
+//                Button(action: {
+//                    presentationMode.wrappedValue.dismiss()
+//                }) {
+//                    Image(systemName: "arrow.backward")
+//                        .font(.system(size: 24))
+//                }
                 
                 Text("WiD 도구")
                     .titleLarge()
@@ -42,7 +42,7 @@ struct WiDToolView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
-            .background(Color("LightGray-Black"))
+//            .background(Color("LightGray-Black"))
             .tint(Color("Black-White"))
             .opacity(stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? 1 : 0)
             
@@ -74,9 +74,9 @@ struct WiDToolView: View {
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
             .disabled(!(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED))
-            .background(Color("White-Gray"))
-            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
-            .background(Color("LightGray-Black"))
+//            .background(Color("White-Gray"))
+//            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
+//            .background(Color("LightGray-Black"))
             .opacity(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? 1 : 0)
             
          

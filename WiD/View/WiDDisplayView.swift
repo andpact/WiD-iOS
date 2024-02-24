@@ -21,54 +21,56 @@ struct WiDDisplayView: View {
     @Namespace private var animation
     
     // 도구
-    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-    @EnvironmentObject var timerPlayer: TimerPlayer
+//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
+//    @EnvironmentObject var timerPlayer: TimerPlayer
     
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "arrow.backward")
-                        .font(.system(size: 24))
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
-                    HStack {
-                        Text(stopwatchPlayer.title.koreanValue)
-                            .bodyMedium()
-                        
-                        getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
-                            .font(.custom("ChivoMono-Regular", size: 18))
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-                    .foregroundColor(Color("White"))
-                    .cornerRadius(8)
-                } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
-                    HStack {
-                        Text(timerPlayer.title.koreanValue)
-                            .bodyMedium()
-                        
-                        getHorizontalTimeView(Int(timerPlayer.remainingTime))
-                            .font(.custom("ChivoMono-Regular", size: 18))
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-                    .foregroundColor(Color("White"))
-                    .cornerRadius(8)
-                } else {
+            HStack {
+//                Button(action: {
+//                    presentationMode.wrappedValue.dismiss()
+//                }) {
+//                    Image(systemName: "arrow.backward")
+//                        .font(.system(size: 24))
+//                }
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//
+//                if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+//                    HStack {
+//                        Text(stopwatchPlayer.title.koreanValue)
+//                            .bodyMedium()
+//
+//                        getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
+//                            .font(.custom("ChivoMono-Regular", size: 18))
+//                    }
+//                    .padding(.horizontal, 8)
+//                    .padding(.vertical, 4)
+//                    .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+//                    .foregroundColor(Color("White"))
+//                    .cornerRadius(8)
+//                } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+//                    HStack {
+//                        Text(timerPlayer.title.koreanValue)
+//                            .bodyMedium()
+//
+//                        getHorizontalTimeView(Int(timerPlayer.remainingTime))
+//                            .font(.custom("ChivoMono-Regular", size: 18))
+//                    }
+//                    .padding(.horizontal, 8)
+//                    .padding(.vertical, 4)
+//                    .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+//                    .foregroundColor(Color("White"))
+//                    .cornerRadius(8)
+//                } else {
                     Text("WiD 조회")
                         .titleLarge()
-                }
+//                }
+                
+                Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
-            .background(Color("LightGray-Black"))
+//            .background(Color("LightGray-Black"))
             .tint(Color("Black-White"))
 
             HStack(alignment: .top, spacing: 16) {
@@ -97,9 +99,9 @@ struct WiDDisplayView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
-            .background(Color("White-Gray"))
-            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
-            .background(Color("LightGray-Black"))
+//            .background(Color("White-Gray"))
+//            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
+//            .background(Color("LightGray-Black"))
          
             WiDDisplayHolderView(tabItem: selectedTab)
                 .gesture(

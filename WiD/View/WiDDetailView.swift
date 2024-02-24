@@ -130,7 +130,7 @@ struct WiDDetailView: View {
                         
                         Spacer()
                     }
-                    .background(Color("White-Gray"))
+                    .background(Color("White-Black"))
                     
                     Divider()
                         .background(Color("Black-White"))
@@ -160,7 +160,7 @@ struct WiDDetailView: View {
                             .padding(.horizontal)
                             .font(.system(size: 16))
                     }
-                    .background(Color("White-Gray"))
+                    .background(Color("White-Black"))
                     .onTapGesture {
                         withAnimation {
                             expandTitleMenu.toggle()
@@ -195,7 +195,7 @@ struct WiDDetailView: View {
                             .padding(.horizontal)
                             .font(.system(size: 16))
                     }
-                    .background(Color("White-Gray"))
+                    .background(Color("White-Black"))
                     .onTapGesture {
                         withAnimation {
                             expandStartPicker.toggle()
@@ -230,7 +230,7 @@ struct WiDDetailView: View {
                             .padding(.horizontal)
                             .font(.system(size: 16))
                     }
-                    .background(Color("White-Gray"))
+                    .background(Color("White-Black"))
                     .onTapGesture {
                         withAnimation {
                             expandFinishPicker.toggle()
@@ -261,7 +261,7 @@ struct WiDDetailView: View {
                         
                         Spacer()
                     }
-                    .background(Color("White-Gray"))
+                    .background(Color("White-Black"))
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -725,7 +725,7 @@ struct WiDDetailView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
-        .background(Color("LightGray-Black"))
+        .background(Color("White-Black"))
         .onAppear {
             self.date = clickedWiD!.date
             self.title = Title(rawValue: clickedWiD!.title) ?? .STUDY

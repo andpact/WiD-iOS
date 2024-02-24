@@ -11,50 +11,52 @@ struct SettingView: View {
     @Environment(\.presentationMode) var presentationMode
     
     // 도구
-    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-    @EnvironmentObject var timerPlayer: TimerPlayer
+//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
+//    @EnvironmentObject var timerPlayer: TimerPlayer
     
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "arrow.backward")
-                        .font(.system(size: 24))
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
-                    HStack {
-                        Text(stopwatchPlayer.title.koreanValue)
-                            .bodyMedium()
-                        
-                        getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
-                            .font(.custom("ChivoMono-Regular", size: 18))
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-                    .foregroundColor(Color("White"))
-                    .cornerRadius(8)
-                } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
-                    HStack {
-                        Text(timerPlayer.title.koreanValue)
-                            .bodyMedium()
-                        
-                        getHorizontalTimeView(Int(timerPlayer.remainingTime))
-                            .font(.custom("ChivoMono-Regular", size: 18))
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-                    .foregroundColor(Color("White"))
-                    .cornerRadius(8)
-                } else {
+            HStack {
+//                Button(action: {
+//                    presentationMode.wrappedValue.dismiss()
+//                }) {
+//                    Image(systemName: "arrow.backward")
+//                        .font(.system(size: 24))
+//                }
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//
+//                if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+//                    HStack {
+//                        Text(stopwatchPlayer.title.koreanValue)
+//                            .bodyMedium()
+//
+//                        getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
+//                            .font(.custom("ChivoMono-Regular", size: 18))
+//                    }
+//                    .padding(.horizontal, 8)
+//                    .padding(.vertical, 4)
+//                    .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+//                    .foregroundColor(Color("White"))
+//                    .cornerRadius(8)
+//                } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+//                    HStack {
+//                        Text(timerPlayer.title.koreanValue)
+//                            .bodyMedium()
+//
+//                        getHorizontalTimeView(Int(timerPlayer.remainingTime))
+//                            .font(.custom("ChivoMono-Regular", size: 18))
+//                    }
+//                    .padding(.horizontal, 8)
+//                    .padding(.vertical, 4)
+//                    .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
+//                    .foregroundColor(Color("White"))
+//                    .cornerRadius(8)
+//                } else {
                     Text("환경설정")
                         .titleLarge()
-                }
+//                }
+                
+                Spacer()
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: 44)
@@ -92,8 +94,10 @@ struct SettingView: View {
                             }
                         }
                         .padding()
-                        .background(Color("White-Gray"))
-                        .cornerRadius(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color("Black-White"), lineWidth: 0.5)
+                        )
                     }
                     .padding(.horizontal)
                     
@@ -159,8 +163,10 @@ struct SettingView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color("White-Gray"))
-                        .cornerRadius(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color("Black-White"), lineWidth: 0.5)
+                        )
                     }
                     .padding(.horizontal)
                     
@@ -186,8 +192,10 @@ struct SettingView: View {
                             }
                         }
                         .padding()
-                        .background(Color("White-Gray"))
-                        .cornerRadius(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color("Black-White"), lineWidth: 0.5)
+                        )
                     }
                     .padding(.horizontal)
 
@@ -211,8 +219,10 @@ struct SettingView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color("White-Gray"))
-                        .cornerRadius(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color("Black-White"), lineWidth: 0.5)
+                        )
                     }
                     .padding(.horizontal)
                     
@@ -251,8 +261,10 @@ struct SettingView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color("White-Gray"))
-                        .cornerRadius(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color("Black-White"), lineWidth: 0.5)
+                        )
                     }
                     .padding(.horizontal)
                 }
@@ -260,7 +272,7 @@ struct SettingView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
-        .background(Color("LightGray-Black")) // 배경 색을 여기 지정해야 적용됨.
+        .background(Color("White-Black"))
         .tint(Color("Black-White"))
     }
 }

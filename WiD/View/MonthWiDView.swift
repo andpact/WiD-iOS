@@ -249,7 +249,7 @@ struct MonthWiDView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
-        .background(Color("White-Gray"))
+//        .background(Color("White-Gray"))
         .navigationBarHidden(true)
         .onAppear {
             self.startDate = getFirstDateOfMonth(for: today)
