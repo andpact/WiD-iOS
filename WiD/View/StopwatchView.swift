@@ -20,7 +20,7 @@ struct StopwatchView: View {
     @State private var isTitleMenuExpanded: Bool = false
     
     // 스톱 워치
-    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
+    @EnvironmentObject var stopwatchViewModel: StopwatchViewModel
     
     var body: some View {
         ZStack {
@@ -28,7 +28,7 @@ struct StopwatchView: View {
                 /**
                  컨텐츠
                  */
-                getVerticalTimeView(Int(stopwatchPlayer.totalDuration))
+                getVerticalTimeView(Int(stopwatchViewModel.totalDuration))
                     .padding(.top, screenHeight / 5)
                 
                 Spacer()
@@ -43,22 +43,22 @@ struct StopwatchView: View {
                             isTitleMenuExpanded.toggle()
                         }
                     }) {
-                        Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
+                        Image(systemName: titleImageDictionary[stopwatchViewModel.title.rawValue] ?? "")
                             .font(.system(size: 32))
                     }
                     .frame(maxWidth: 40, maxHeight: 40)
                     .padding()
-                    .background(stopwatchPlayer.stopwatchState == PlayerState.STOPPED ? Color("AppIndigo") : Color("DarkGray"))
+                    .background(stopwatchViewModel.stopwatchState == PlayerState.STOPPED ? Color("AppIndigo") : Color("DarkGray"))
                     .foregroundColor(Color("White"))
                     .cornerRadius(8)
-                    .disabled(stopwatchPlayer.stopwatchState != PlayerState.STOPPED)
+                    .disabled(stopwatchViewModel.stopwatchState != PlayerState.STOPPED)
                     
                     Spacer()
                     
-                    if stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
+                    if stopwatchViewModel.stopwatchState == PlayerState.PAUSED {
                         // 정지 버튼
                         Button(action: {
-                            stopwatchPlayer.stopStopwatch()
+                            stopwatchViewModel.stopStopwatch()
                         }) {
                             Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 32))
@@ -72,23 +72,23 @@ struct StopwatchView: View {
                     
                     // 시작, 중지 선택 버튼
                     Button(action: {
-                        if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
-                            stopwatchPlayer.pauseStopwatch()
+                        if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
+                            stopwatchViewModel.pauseStopwatch()
                         } else {
-                            stopwatchPlayer.startStopwatch()
+                            stopwatchViewModel.startStopwatch()
                         }
                     }) {
-                        Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+                        Image(systemName: stopwatchViewModel.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
                             .font(.system(size: 32))
                     }
                     .frame(maxWidth: 40, maxHeight: 40)
                     .padding()
-                    .background(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? Color("OrangeRed") : (stopwatchPlayer.stopwatchState == PlayerState.PAUSED ? Color("LimeGreen") : Color("Black-White")))
-                    .foregroundColor(stopwatchPlayer.stopwatchState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
+                    .background(stopwatchViewModel.stopwatchState == PlayerState.STARTED ? Color("OrangeRed") : (stopwatchViewModel.stopwatchState == PlayerState.PAUSED ? Color("LimeGreen") : Color("Black-White")))
+                    .foregroundColor(stopwatchViewModel.stopwatchState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
                     .clipShape(Circle())
                 }
                 .padding()
-                .opacity(stopwatchPlayer.stopwatchTopBottomBarVisible ? 1 : 0)
+                .opacity(stopwatchViewModel.stopwatchTopBottomBarVisible ? 1 : 0)
             }
             
             /**
@@ -114,7 +114,7 @@ struct StopwatchView: View {
                             VStack(spacing: 0) {
                                 ForEach(Title.allCases) { menuTitle in
                                     Button(action: {
-                                        stopwatchPlayer.title = menuTitle
+                                        stopwatchViewModel.title = menuTitle
                                         
                                         withAnimation {
                                             isTitleMenuExpanded = false
@@ -132,7 +132,7 @@ struct StopwatchView: View {
                                         
                                         Spacer()
                                         
-                                        if stopwatchPlayer.title == menuTitle {
+                                        if stopwatchViewModel.title == menuTitle {
                                             Text("선택됨")
                                                 .bodyMedium()
                                         }
@@ -142,11 +142,12 @@ struct StopwatchView: View {
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 3)
-                    .background(Color("White-Black"))
-                    .cornerRadius(16)
+                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
+                    .background(Color("LightGray-Gray"))
+                    .cornerRadius(8)
+                    .padding()
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .edgesIgnoringSafeArea(.all)
             }
         }
@@ -155,18 +156,18 @@ struct StopwatchView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black")) // 배경 색 없으면 탭 제스처 동작 안함.!!
         .onTapGesture {
-            if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
+            if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
                 withAnimation {
-                    stopwatchPlayer.stopwatchTopBottomBarVisible.toggle()
+                    stopwatchViewModel.stopwatchTopBottomBarVisible.toggle()
                 }
             }
         }
         .onAppear {
-            stopwatchPlayer.inStopwatchView = true // onAppear에 애니메이션을 적용하면 스톰 워치 뷰로 화면 전환 시 화면이 상하로 움직임.
+            stopwatchViewModel.inStopwatchView = true // onAppear에 애니메이션을 적용하면 스톰 워치 뷰로 화면 전환 시 화면이 상하로 움직임.
         }
         .onDisappear {
             withAnimation {
-                stopwatchPlayer.inStopwatchView = false
+                stopwatchViewModel.inStopwatchView = false
             }
         }
     }
@@ -176,11 +177,11 @@ struct StopwatchView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             StopwatchView()
-                .environmentObject(StopwatchPlayer())
+                .environmentObject(StopwatchViewModel())
                 .environment(\.colorScheme, .light)
             
             StopwatchView()
-                .environmentObject(StopwatchPlayer())
+                .environmentObject(StopwatchViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

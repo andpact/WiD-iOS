@@ -12,7 +12,7 @@ import SwiftUI
  렌더링이 필요한 프로퍼티(제목, 소요 시간)만 @Published 사용함.
  값만 사용하는 프로퍼티는 @Published 사용 안 함.
  */
-class StopwatchPlayer: ObservableObject {
+class StopwatchViewModel: ObservableObject {
     // WiD
     private let wiDService = WiDService()
     
@@ -39,7 +39,7 @@ class StopwatchPlayer: ObservableObject {
 
     // 스톱 워치 플레이어 시작
     func startStopwatch() {
-        print("StopwatchPlayer : startStopwatch executed")
+        print("StopwatchViewModel : startStopwatch executed")
         
         stopwatchState = PlayerState.STARTED
         
@@ -63,49 +63,49 @@ class StopwatchPlayer: ObservableObject {
 
     // 스톱 워치 플레이어 중지
     func pauseStopwatch() {
-        print("StopwatchPlayer : pauseStopwatch executed")
+        print("StopwatchViewModel : pauseStopwatch executed")
         
         stopwatchState = PlayerState.PAUSED
         
         let currentDuration = self.finish.timeIntervalSince(self.start)
 
-        if calendar.isDate(start, inSameDayAs: finish) {
-            guard 0 <= currentDuration else {
-                return
-            }
-
-            let wiD = WiD(
-                id: 0,
-                date: start,
-                title: title.rawValue,
-                start: start,
-                finish: finish,
-                duration: currentDuration
-            )
-            wiDService.createWiD(wid: wiD)
-        } else { // 자정 넘어가는 경우
-            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
-            let firstDayWiD = WiD(
-                id: 0,
-                date: start,
-                title: title.rawValue,
-                start: start,
-                finish: finishOfStart,
-                duration: finishOfStart.timeIntervalSince(start)
-            )
-            wiDService.createWiD(wid: firstDayWiD)
-
-            let startOfFinish = calendar.startOfDay(for: finish)
-            let secondDayWiD = WiD(
-                id: 0,
-                date: finish,
-                title: title.rawValue,
-                start: startOfFinish,
-                finish: finish,
-                duration: finish.timeIntervalSince(startOfFinish)
-            )
-            wiDService.createWiD(wid: secondDayWiD)
-        }
+//        if calendar.isDate(start, inSameDayAs: finish) {
+//            guard 0 <= currentDuration else {
+//                return
+//            }
+//
+//            let wiD = WiD(
+//                id: 0,
+//                date: start,
+//                title: title.rawValue,
+//                start: start,
+//                finish: finish,
+//                duration: currentDuration
+//            )
+//            wiDService.createWiD(wid: wiD)
+//        } else { // 자정 넘어가는 경우
+//            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
+//            let firstDayWiD = WiD(
+//                id: 0,
+//                date: start,
+//                title: title.rawValue,
+//                start: start,
+//                finish: finishOfStart,
+//                duration: finishOfStart.timeIntervalSince(start)
+//            )
+//            wiDService.createWiD(wid: firstDayWiD)
+//
+//            let startOfFinish = calendar.startOfDay(for: finish)
+//            let secondDayWiD = WiD(
+//                id: 0,
+//                date: finish,
+//                title: title.rawValue,
+//                start: startOfFinish,
+//                finish: finish,
+//                duration: finish.timeIntervalSince(startOfFinish)
+//            )
+//            wiDService.createWiD(wid: secondDayWiD)
+//        }
         
         prevDuration = totalDuration
         
@@ -115,7 +115,7 @@ class StopwatchPlayer: ObservableObject {
     
     // 스톱 워치 플레이어 정지(초기화)
     func stopStopwatch() {
-        print("StopwatchPlayer : stopStopwatch executed")
+        print("StopwatchViewModel : stopStopwatch executed")
         
         stopwatchState = PlayerState.STOPPED
         

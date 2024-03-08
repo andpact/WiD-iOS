@@ -64,11 +64,11 @@ struct DayDiaryView: View {
                     .disabled(calendar.isDateInToday(currentDate))
                 }
                 .frame(maxHeight: 44)
-                .padding()
+                .padding(.horizontal)
                 
                 ScrollView {
                     VStack(spacing: 16) {
-                        GeometryReader { geo in
+//                        GeometryReader { geo in
                             HStack {
                                 getDateStringViewWith3Lines(date: currentDate)
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -87,8 +87,9 @@ struct DayDiaryView: View {
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                             .padding(.horizontal)
-                        }
-                        .aspectRatio(2.5 / 1, contentMode: .fit)
+                            .aspectRatio(2.5 / 1, contentMode: .fit)
+//                        }
+                        
                         
 //                        Rectangle()
 //                            .frame(maxHeight: 1)

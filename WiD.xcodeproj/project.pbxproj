@@ -17,7 +17,7 @@
 		EA0C270C2B19AAB200AB2FBD /* DurationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0C270B2B19AAB200AB2FBD /* DurationUtil.swift */; };
 		EA181F372A624F1F006EAF72 /* TimeUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181F362A624F1F006EAF72 /* TimeUtil.swift */; };
 		EA18DCB62AE8CC5B00B88F30 /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA18DCB52AE8CC5B00B88F30 /* BarChartView.swift */; };
-		EA1A39C12B500B4C00C0D5AC /* StopwatchPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1A39C02B500B4C00C0D5AC /* StopwatchPlayer.swift */; };
+		EA1A39C12B500B4C00C0D5AC /* StopwatchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1A39C02B500B4C00C0D5AC /* StopwatchViewModel.swift */; };
 		EA1AF4AA2AB54EBD00BEBA93 /* AppOpenAdUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1AF4A92AB54EBD00BEBA93 /* AppOpenAdUtil.swift */; };
 		EA1AF4AC2AB55C5500BEBA93 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */; };
 		EA1B5BE02B22AF5800E1BC87 /* ViewUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1B5BDF2B22AF5800E1BC87 /* ViewUtil.swift */; };
@@ -49,7 +49,7 @@
 		EA9D41742AB18B0D008D6DE2 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D41732AB18B0D008D6DE2 /* TimerView.swift */; };
 		EAA5E85C2B2FE6A8004DEA29 /* FontUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */; };
 		EAA83AA52B3D2864008CE95F /* ChivoMono-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */; };
-		EAB438A62B5109A70029F640 /* TimerPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB438A52B5109A70029F640 /* TimerPlayer.swift */; };
+		EAB438A62B5109A70029F640 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB438A52B5109A70029F640 /* TimerViewModel.swift */; };
 		EAC5D7212A56A76E00FA2499 /* StopwatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7202A56A76E00FA2499 /* StopwatchView.swift */; };
 		EAC5E1582B19B35500AD8516 /* WeekWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5E1572B19B35500AD8516 /* WeekWiDView.swift */; };
 		EACB45152AB9CA8200DEF739 /* NewWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACB45142AB9CA8200DEF739 /* NewWiDView.swift */; };
@@ -95,7 +95,7 @@
 		EA0C270B2B19AAB200AB2FBD /* DurationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationUtil.swift; sourceTree = "<group>"; };
 		EA181F362A624F1F006EAF72 /* TimeUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeUtil.swift; sourceTree = "<group>"; };
 		EA18DCB52AE8CC5B00B88F30 /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
-		EA1A39C02B500B4C00C0D5AC /* StopwatchPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchPlayer.swift; sourceTree = "<group>"; };
+		EA1A39C02B500B4C00C0D5AC /* StopwatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchViewModel.swift; sourceTree = "<group>"; };
 		EA1AF4A92AB54EBD00BEBA93 /* AppOpenAdUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOpenAdUtil.swift; sourceTree = "<group>"; };
 		EA1AF4AB2AB55C5500BEBA93 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		EA1B5BDF2B22AF5800E1BC87 /* ViewUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewUtil.swift; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		EA9D41732AB18B0D008D6DE2 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontUtil.swift; sourceTree = "<group>"; };
 		EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChivoMono-BlackItalic.ttf"; sourceTree = "<group>"; };
-		EAB438A52B5109A70029F640 /* TimerPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPlayer.swift; sourceTree = "<group>"; };
+		EAB438A52B5109A70029F640 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		EAC5D7202A56A76E00FA2499 /* StopwatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchView.swift; sourceTree = "<group>"; };
 		EAC5E1572B19B35500AD8516 /* WeekWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekWiDView.swift; sourceTree = "<group>"; };
 		EACB45142AB9CA8200DEF739 /* NewWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWiDView.swift; sourceTree = "<group>"; };
@@ -205,8 +205,6 @@
 				EA1AF4A92AB54EBD00BEBA93 /* AppOpenAdUtil.swift */,
 				EA1B5BDF2B22AF5800E1BC87 /* ViewUtil.swift */,
 				EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */,
-				EA1A39C02B500B4C00C0D5AC /* StopwatchPlayer.swift */,
-				EAB438A52B5109A70029F640 /* TimerPlayer.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -242,6 +240,7 @@
 				EA0458242A625CB00065B98E /* Util */,
 				EADF79172A583CCE000753B2 /* Service */,
 				EAC5D7272A56AAB000FA2499 /* View */,
+				EAE51AAF2B9AC69100FCC355 /* ViewModel */,
 				EA60B8052A56991700B49641 /* WiDApp.swift */,
 				EA60B8092A56991800B49641 /* Assets.xcassets */,
 				EA60B80B2A56991800B49641 /* Preview Content */,
@@ -333,6 +332,15 @@
 				EA3BC0632B1AB9F1009467CA /* DiaryService.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		EAE51AAF2B9AC69100FCC355 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EA1A39C02B500B4C00C0D5AC /* StopwatchViewModel.swift */,
+				EAB438A52B5109A70029F640 /* TimerViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -581,7 +589,7 @@
 				EADF79162A583C8E000753B2 /* WiDService.swift in Sources */,
 				EA43E2782B7207CA00C9D8E9 /* DayDiaryView.swift in Sources */,
 				EA4EACF42B1EAA2900BB4681 /* LineGraphView.swift in Sources */,
-				EAB438A62B5109A70029F640 /* TimerPlayer.swift in Sources */,
+				EAB438A62B5109A70029F640 /* TimerViewModel.swift in Sources */,
 				EA18DCB62AE8CC5B00B88F30 /* BarChartView.swift in Sources */,
 				EA1AF4AC2AB55C5500BEBA93 /* SplashView.swift in Sources */,
 				EA1F446D2B72048D0028B9EC /* PomodoroView.swift in Sources */,
@@ -589,7 +597,7 @@
 				EA35F2DF2B71CE050033253D /* WiDDisplayView.swift in Sources */,
 				EA9D41742AB18B0D008D6DE2 /* TimerView.swift in Sources */,
 				EA7B66B02B7322AB00A159CD /* PieGraphView.swift in Sources */,
-				EA1A39C12B500B4C00C0D5AC /* StopwatchPlayer.swift in Sources */,
+				EA1A39C12B500B4C00C0D5AC /* StopwatchViewModel.swift in Sources */,
 				EA1AF4AA2AB54EBD00BEBA93 /* AppOpenAdUtil.swift in Sources */,
 				EAD98BB02B76501A004A1ECD /* HomeView.swift in Sources */,
 				EA215CDE2A60F9AF005C5D30 /* SearchDiaryView.swift in Sources */,

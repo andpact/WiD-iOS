@@ -57,7 +57,7 @@ struct SearchDiaryView: View {
                 }
             }
             .frame(maxHeight: 44)
-            .padding()
+            .padding(.horizontal)
             
             /**
              검색 결과

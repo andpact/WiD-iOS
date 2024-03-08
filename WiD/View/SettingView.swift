@@ -8,61 +8,16 @@
 import SwiftUI
 
 struct SettingView: View {
-    @Environment(\.presentationMode) var presentationMode
+//    @Environment(\.presentationMode) var presentationMode
     
     // 도구
-//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-//    @EnvironmentObject var timerPlayer: TimerPlayer
+//    @EnvironmentObject var stopwatchPlayer: StopwatchViewModel
+//    @EnvironmentObject var timerPlayer: TimerViewModel
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-//                Button(action: {
-//                    presentationMode.wrappedValue.dismiss()
-//                }) {
-//                    Image(systemName: "arrow.backward")
-//                        .font(.system(size: 24))
-//                }
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
-//                    HStack {
-//                        Text(stopwatchPlayer.title.koreanValue)
-//                            .bodyMedium()
-//
-//                        getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
-//                            .font(.custom("ChivoMono-Regular", size: 18))
-//                    }
-//                    .padding(.horizontal, 8)
-//                    .padding(.vertical, 4)
-//                    .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-//                    .foregroundColor(Color("White"))
-//                    .cornerRadius(8)
-//                } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
-//                    HStack {
-//                        Text(timerPlayer.title.koreanValue)
-//                            .bodyMedium()
-//
-//                        getHorizontalTimeView(Int(timerPlayer.remainingTime))
-//                            .font(.custom("ChivoMono-Regular", size: 18))
-//                    }
-//                    .padding(.horizontal, 8)
-//                    .padding(.vertical, 4)
-//                    .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-//                    .foregroundColor(Color("White"))
-//                    .cornerRadius(8)
-//                } else {
-                    Text("환경설정")
-                        .titleLarge()
-//                }
-                
-                Spacer()
-            }
-            .padding(.horizontal)
-            .frame(maxWidth: .infinity, maxHeight: 44)
-            
             ScrollView {
-                VStack(spacing: 32) {
+                VStack(spacing: 16) {
                     VStack(spacing: 4) {
                         Text("계정")
                             .bodyLarge()
@@ -71,7 +26,7 @@ struct SettingView: View {
                         VStack(spacing: 16) {
                             HStack {
                                 VStack(alignment: .leading) {
-                                    Text("ID")
+                                    Text("아이디")
                                         .titleMedium()
                                 }
                                 
@@ -281,13 +236,13 @@ struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             SettingView()
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .light)
             
             SettingView()
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

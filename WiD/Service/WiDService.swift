@@ -74,7 +74,7 @@ class WiDService {
             if sqlite3_step(statement) != SQLITE_DONE {
                 print("WiDService : createWiD failed")
             } else {
-                print("WiDService : createWiD success")
+//                print("WiDService : createWiD success")
             }
             
             sqlite3_finalize(statement)
@@ -170,7 +170,7 @@ class WiDService {
                 
                 sqlite3_finalize(statement)
                 
-                print("WiDService : readWiDByID success")
+//                print("WiDService : readWiDByID success")
                 
                 return wid
             }
@@ -215,7 +215,7 @@ class WiDService {
             
             sqlite3_finalize(statement)
             
-            print("WiDService : readWiDListByDate success")
+//            print("WiDService : readWiDListByDate success")
         }
         
         return wiDList
@@ -295,11 +295,42 @@ class WiDService {
             
             sqlite3_finalize(statement)
             
-            print("WiDService : readWiDListBetweenDates success")
+//            print("WiDService : readWiDListBetweenDates success")
         }
         
         return wiDList
     }
+    
+    func checkWiDExistence(startDate: Date, finishDate: Date) -> [Date: Bool] {
+        print("WiDService : checkWiDExistence executed")
+        
+        var result: [Date: Bool] = [:]
+        var currentDate = startDate
+        
+        while currentDate <= finishDate {
+            let dateString = dateFormatter.string(from: currentDate)
+            let query = "SELECT EXISTS (SELECT 1 FROM WiD WHERE date = ? LIMIT 1);"
+            var statement: OpaquePointer?
+
+            if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+                sqlite3_bind_text(statement, 1, (dateString as NSString).utf8String, -1, nil)
+
+                if sqlite3_step(statement) == SQLITE_ROW {
+                    let exists = sqlite3_column_int(statement, 0) != 0
+                    result[currentDate] = exists ? true : false
+                }
+
+                sqlite3_finalize(statement)
+            }
+
+            currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+        }
+
+//        print("WiDService : checkWiDExistence success")
+        
+        return result
+    }
+
     
 //    func getDailyTotalDictionary(forDate date: Date) -> [String: TimeInterval] {
 //        let dateFormatter = DateFormatter()
@@ -539,7 +570,7 @@ class WiDService {
             if sqlite3_step(statement) != SQLITE_DONE {
                 print("WiDService : updateWiD failed")
             } else {
-                print("WiDService : updateWiD success")
+//                print("WiDService : updateWiD success")
             }
 
             sqlite3_finalize(statement)
@@ -558,7 +589,7 @@ class WiDService {
             if sqlite3_step(statement) != SQLITE_DONE {
                 print("WiDService : deleteWiD failed")
             } else {
-                print("WiDService : deleteWiD success")
+//                print("WiDService : deleteWiD success")
             }
             
             sqlite3_finalize(statement)

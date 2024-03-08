@@ -65,7 +65,7 @@ class DiaryService {
             if sqlite3_step(statement) != SQLITE_DONE {
                 print("DiaryService : createDiary failed")
             } else {
-                print("DiaryService : createDiary success")
+//                print("DiaryService : createDiary success")
             }
             
             sqlite3_finalize(statement)
@@ -115,7 +115,7 @@ class DiaryService {
                 let diary = Diary(id: id, date: date, title: title, content: content)
                 sqlite3_finalize(statement)
 
-                print("DiaryService : readDiaryByDate success")
+//                print("DiaryService : readDiaryByDate success")
                 
                 return diary
             }
@@ -124,6 +124,67 @@ class DiaryService {
         return nil
     }
     
+    func checkDiaryExistence(startDate: Date, finishDate: Date) -> [Date: Bool] {
+        print("DiaryService : checkDiaryExistence executed")
+        
+        var result: [Date: Bool] = [:]
+        
+        let query = "SELECT date FROM Diary WHERE date BETWEEN ? AND ?;"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            let startDateString = dateFormatter.string(from: startDate)
+            let finishDateString = dateFormatter.string(from: finishDate)
+            
+            sqlite3_bind_text(statement, 1, (startDateString as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 2, (finishDateString as NSString).utf8String, -1, nil)
+            
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let dateString = String(cString: sqlite3_column_text(statement, 0))
+                if let date = dateFormatter.date(from: dateString) {
+                    result[date] = true
+                }
+            }
+            
+            sqlite3_finalize(statement)
+        }
+        
+        return result
+    }
+    
+    func addRandomDiaries(diaryList: inout [Diary]) {
+        print("DiaryService : addRandomDiaries executed")
+        
+        var trackedIds = Set<Int>() // 이미 추가된 다이어리의 ID를 추적하는 집합
+
+        // 이미 추가된 다이어리의 ID를 추적
+        for diary in diaryList {
+            trackedIds.insert(diary.id)
+        }
+
+        let query = "SELECT * FROM Diary WHERE id NOT IN (\(trackedIds.map { "\($0)" }.joined(separator: ","))) ORDER BY RANDOM() LIMIT 2;"
+        var statement: OpaquePointer?
+
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+                let dateText = String(cString: sqlite3_column_text(statement, 1))
+                let title = String(cString: sqlite3_column_text(statement, 2))
+                let content = String(cString: sqlite3_column_text(statement, 3))
+
+                if let date = dateFormatter.date(from: dateText) {
+                    let diary = Diary(id: id, date: date, title: title, content: content)
+                    diaryList.append(diary)
+                    
+                    // 방금 추가된 다이어리의 ID를 추가하여 중복을 방지
+                    trackedIds.insert(id)
+                }
+            }
+
+            sqlite3_finalize(statement)
+        }
+    }
+
 //    func selectDiaryByTitle(title: String) -> [Diary] {
 //        guard !title.isEmpty else {
 //            return []
@@ -226,7 +287,78 @@ class DiaryService {
         
         return diaryList
     }
-
+    
+//    func readDiaryByTitle(searchText: String) -> [Diary] {
+//        print("DiaryService : readDiaryByTitle executed")
+//
+//        guard !searchText.isEmpty else {
+//            return []
+//        }
+//
+//        let selectDiaryByTitleOrContentQuery = "SELECT id, date, title, content FROM Diary WHERE title LIKE ? ORDER BY date ASC"
+//
+//        var diaryList: [Diary] = []
+//
+//        var statement: OpaquePointer?
+//        if sqlite3_prepare_v2(db, selectDiaryByTitleOrContentQuery, -1, &statement, nil) == SQLITE_OK {
+//            let keywordCString = ("%\(searchText)%" as NSString).utf8String
+//            sqlite3_bind_text(statement, 1, keywordCString, -1, nil)
+//            sqlite3_bind_text(statement, 2, keywordCString, -1, nil)
+//
+//            while sqlite3_step(statement) == SQLITE_ROW {
+//                let id = Int(sqlite3_column_int(statement, 0))
+//
+//                let dateString = String(cString: sqlite3_column_text(statement, 1))
+//                let date = dateFormatter.date(from: dateString)!
+//
+//                let title = String(cString: sqlite3_column_text(statement, 2))
+//                let content = String(cString: sqlite3_column_text(statement, 3))
+//
+//                let diary = Diary(id: id, date: date, title: title, content: content)
+//                diaryList.append(diary)
+//            }
+//
+//            sqlite3_finalize(statement)
+//        }
+//
+//        return diaryList
+//    }
+//
+//    func readDiaryByContent(searchText: String) -> [Diary] {
+//        print("DiaryService : readDiaryByContent executed")
+//
+//        guard !searchText.isEmpty else {
+//            return []
+//        }
+//
+//        let selectDiaryByTitleOrContentQuery = "SELECT id, date, title, content FROM Diary WHERE content LIKE ? ORDER BY date ASC"
+//
+//        var diaryList: [Diary] = []
+//
+//        var statement: OpaquePointer?
+//        if sqlite3_prepare_v2(db, selectDiaryByTitleOrContentQuery, -1, &statement, nil) == SQLITE_OK {
+//            let keywordCString = ("%\(searchText)%" as NSString).utf8String
+//            sqlite3_bind_text(statement, 1, keywordCString, -1, nil)
+//            sqlite3_bind_text(statement, 2, keywordCString, -1, nil)
+//
+//            while sqlite3_step(statement) == SQLITE_ROW {
+//                let id = Int(sqlite3_column_int(statement, 0))
+//
+//                let dateString = String(cString: sqlite3_column_text(statement, 1))
+//                let date = dateFormatter.date(from: dateString)!
+//
+//                let title = String(cString: sqlite3_column_text(statement, 2))
+//                let content = String(cString: sqlite3_column_text(statement, 3))
+//
+//                let diary = Diary(id: id, date: date, title: title, content: content)
+//                diaryList.append(diary)
+//            }
+//
+//            sqlite3_finalize(statement)
+//        }
+//
+//        return diaryList
+//    }
     
     func updateDiary(withID id: Int, newTitle: String, newContent: String) {
         print("DiaryService : updateDiary executed")
@@ -242,7 +374,7 @@ class DiaryService {
             if sqlite3_step(statement) != SQLITE_DONE {
                 print("DiaryService : updateDiary failed")
             } else {
-                print("DiaryService : updateDiary success")
+//                print("DiaryService : updateDiary success")
             }
             
             sqlite3_finalize(statement)

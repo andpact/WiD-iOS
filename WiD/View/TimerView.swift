@@ -22,11 +22,11 @@ struct TimerView: View {
     // 제목
     @State private var isTitleMenuExpanded: Bool = false
     
-    // 타이머 Int 타입으로 선언해야 Picker에서 사용할 수 있다.
+    // 타이머, Int 타입으로 선언해야 Picker에서 사용할 수 있다.
     @State private var selectedHour: Int = 0
     @State private var selectedMinute: Int = 0
     @State private var selectedSecond: Int = 0
-    @EnvironmentObject var timerPlayer: TimerPlayer
+    @EnvironmentObject var timerViewModel: TimerViewModel
     
     var body: some View {
         ZStack {
@@ -34,7 +34,7 @@ struct TimerView: View {
                 /**
                  컨텐츠
                  */
-                if timerPlayer.timerState == PlayerState.STOPPED {
+                if timerViewModel.timerState == PlayerState.STOPPED {
                     HStack(spacing: 0) {
                         // 시간(Hour) 선택
                         Picker("", selection: $selectedHour) {
@@ -72,7 +72,7 @@ struct TimerView: View {
                     .padding(.horizontal)
                     .padding(.top, screenHeight / 10)
                 } else {
-                    getHorizontalTimeView(Int(timerPlayer.remainingTime))
+                    getHorizontalTimeView(Int(timerViewModel.remainingTime))
                         .font(.custom("ChivoMono-BlackItalic", size: 70))
                         .padding(.top, screenHeight / 5)
                 }
@@ -88,21 +88,21 @@ struct TimerView: View {
                             isTitleMenuExpanded.toggle()
                         }
                     }) {
-                        Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
+                        Image(systemName: titleImageDictionary[timerViewModel.title.rawValue] ?? "")
                             .font(.system(size: 32))
                     }
                     .frame(maxWidth: 40, maxHeight: 40)
                     .padding()
-                    .background(timerPlayer.timerState == PlayerState.STOPPED ? Color("AppIndigo") : Color("DarkGray"))
+                    .background(timerViewModel.timerState == PlayerState.STOPPED ? Color("AppIndigo") : Color("DarkGray"))
                     .foregroundColor(Color("White"))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .disabled(timerPlayer.timerState != PlayerState.STOPPED)
+                    .disabled(timerViewModel.timerState != PlayerState.STOPPED)
                     
                     Spacer()
                     
-                    if timerPlayer.timerState == PlayerState.PAUSED {
+                    if timerViewModel.timerState == PlayerState.PAUSED {
                         Button(action: {
-                            timerPlayer.stopTimer()
+                            timerViewModel.stopTimer()
                         }) {
                             Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 32))
@@ -115,24 +115,24 @@ struct TimerView: View {
                     }
                     
                     Button(action: {
-                        if timerPlayer.timerState == PlayerState.STARTED {
-                            timerPlayer.pauseTimer()
+                        if timerViewModel.timerState == PlayerState.STARTED {
+                            timerViewModel.pauseTimer()
                         } else {
-                            timerPlayer.startTimer()
+                            timerViewModel.startTimer()
                         }
                     }) {
-                        Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+                        Image(systemName: timerViewModel.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
                             .font(.system(size: 32))
                     }
                     .frame(maxWidth: 40, maxHeight: 40)
                     .padding()
-                    .background(timerPlayer.timerState == PlayerState.STARTED ? Color("OrangeRed") : (timerPlayer.timerState == PlayerState.PAUSED ? Color("LimeGreen") : (timerPlayer.selectedTime == 0 ? Color("DarkGray") : Color("Black-White"))))
-                    .foregroundColor(timerPlayer.timerState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
+                    .background(timerViewModel.timerState == PlayerState.STARTED ? Color("OrangeRed") : (timerViewModel.timerState == PlayerState.PAUSED ? Color("LimeGreen") : (timerViewModel.selectedTime == 0 ? Color("DarkGray") : Color("Black-White"))))
+                    .foregroundColor(timerViewModel.timerState == PlayerState.STOPPED ? Color("White-Black") : Color("White"))
                     .clipShape(Circle())
-                    .disabled(timerPlayer.selectedTime == 0)
+                    .disabled(timerViewModel.selectedTime == 0)
                 }
                 .padding()
-                .opacity(timerPlayer.timerTopBottomBarVisible ? 1 : 0)
+                .opacity(timerViewModel.timerTopBottomBarVisible ? 1 : 0)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
@@ -171,7 +171,7 @@ struct TimerView: View {
                             VStack(spacing: 0) {
                                 ForEach(Title.allCases) { menuTitle in
                                     Button(action: {
-                                        timerPlayer.title = menuTitle
+                                        timerViewModel.title = menuTitle
                                         withAnimation {
                                             isTitleMenuExpanded = false
                                         }
@@ -188,7 +188,7 @@ struct TimerView: View {
                                         
                                         Spacer()
                                         
-                                        if timerPlayer.title == menuTitle {
+                                        if timerViewModel.title == menuTitle {
                                             Text("선택됨")
                                                 .bodyMedium()
                                         }
@@ -198,9 +198,10 @@ struct TimerView: View {
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 3)
-                    .background(Color("White-Black"))
-                    .cornerRadius(16)
+                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
+                    .background(Color("LightGray-Gray"))
+                    .cornerRadius(8)
+                    .padding()
                 }
 //                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
@@ -211,21 +212,21 @@ struct TimerView: View {
 //        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
         .onAppear {
-            timerPlayer.inTimerView = true
+            timerViewModel.inTimerView = true
         }
         .onDisappear {
             withAnimation {
-                timerPlayer.inTimerView = false
+                timerViewModel.inTimerView = false
             }
         }
         .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
-            timerPlayer.selectedTime = TimeInterval(selectedHour * 3600 + selectedMinute * 60 + selectedSecond)
-            timerPlayer.remainingTime = TimeInterval(selectedHour * 3600 + selectedMinute * 60 + selectedSecond) // 시간을 선택할 때, 남은 시간을 최초 1회 할당해줌.
+            timerViewModel.selectedTime = TimeInterval(selectedHour * 3600 + selectedMinute * 60 + selectedSecond)
+            timerViewModel.remainingTime = TimeInterval(selectedHour * 3600 + selectedMinute * 60 + selectedSecond) // 시간을 선택할 때, 남은 시간을 최초 1회 할당해줌.
         }
         .onTapGesture {
-            if timerPlayer.timerState == PlayerState.STARTED {
+            if timerViewModel.timerState == PlayerState.STARTED {
                 withAnimation {
-                    timerPlayer.timerTopBottomBarVisible.toggle()
+                    timerViewModel.timerTopBottomBarVisible.toggle()
                 }
             }
         }
@@ -236,11 +237,11 @@ struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             TimerView()
-                .environmentObject(TimerPlayer())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .light)
             
             TimerView()
-                .environmentObject(TimerPlayer())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

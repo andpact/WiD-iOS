@@ -27,6 +27,7 @@ struct DayWiDView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) { // spacing: 0일 때, 상단 바에 그림자를 적용시키면 컨텐츠가 상단 바의 그림자를 덮어서 가림. (상단 바가 렌더링 된 후, 컨텐츠가 렌더링되기 때문)
+                // 상단 탭
                 HStack(spacing: 16) {
                     Button(action: {
                         expandDatePicker = true
@@ -55,7 +56,7 @@ struct DayWiDView: View {
                     .disabled(calendar.isDateInToday(currentDate))
                 }
                 .frame(maxHeight: 44)
-                .padding()
+                .padding(.horizontal)
                 
                 /**
                  컨텐츠
@@ -186,7 +187,7 @@ struct DayWiDView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
-//        .background(Color("White-Gray"))
+        .background(Color("White-Black"))
         .navigationBarHidden(true)
         .onAppear {
             self.wiDList = wiDService.readWiDListByDate(date: currentDate)

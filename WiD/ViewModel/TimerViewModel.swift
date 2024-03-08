@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class TimerPlayer: ObservableObject {
+class TimerViewModel: ObservableObject {
     // WiD
     private let wiDService = WiDService()
     
@@ -35,7 +35,7 @@ class TimerPlayer: ObservableObject {
     var finish: Date = Date()
     
     func startTimer() {
-        print("TimerPlayer : startTimer executed")
+        print("TimerViewModel : startTimer executed")
         
         timerState = PlayerState.STARTED
         
@@ -64,7 +64,7 @@ class TimerPlayer: ObservableObject {
     }
     
     func pauseTimer() {
-        print("TimerPlayer : pauseTimer executed")
+        print("TimerViewModel : pauseTimer executed")
         
         timerState = PlayerState.PAUSED
         
@@ -116,7 +116,7 @@ class TimerPlayer: ObservableObject {
     }
     
     func stopTimer() {
-        print("TimerPlayer : stopTimer executed")
+        print("TimerViewModel : stopTimer executed")
         
         timerState = PlayerState.STOPPED
         

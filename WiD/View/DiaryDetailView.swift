@@ -16,8 +16,8 @@ struct DiaryDetailView: View {
     private let wiDList: [WiD]
     
     // 도구
-    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-    @EnvironmentObject var timerPlayer: TimerPlayer
+    @EnvironmentObject var stopwatchPlayer: StopwatchViewModel
+    @EnvironmentObject var timerPlayer: TimerViewModel
     
     // 다이어리
     private let date: Date
@@ -183,13 +183,13 @@ struct DiaryView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             DiaryDetailView(date: Date())
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .light)
             
             DiaryDetailView(date: Date())
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

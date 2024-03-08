@@ -85,36 +85,8 @@ struct NewWiDView: View {
                     .tint(Color("Black-White"))
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-//                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
-//                        HStack {
-//                            Text(stopwatchPlayer.title.koreanValue)
-//                                .bodyMedium()
-//
-//                            getHorizontalTimeView(stopwatchPlayer.elapsedTime)
-//                                .font(.custom("ChivoMono-Regular", size: 18))
-//                        }
-//                        .padding(.horizontal, 8)
-//                        .padding(.vertical, 4)
-//                        .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-//                        .foregroundColor(Color("White"))
-//                        .cornerRadius(8)
-//                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
-//                        HStack {
-//                            Text(timerPlayer.title.koreanValue)
-//                                .bodyMedium()
-//
-//                            getHorizontalTimeView(timerPlayer.remainingTime)
-//                                .font(.custom("ChivoMono-Regular", size: 18))
-//                        }
-//                        .padding(.horizontal, 8)
-//                        .padding(.vertical, 4)
-//                        .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-//                        .foregroundColor(Color("White"))
-//                        .cornerRadius(8)
-//                    } else {
-                        Text("새로운 WiD")
-                            .titleLarge()
-//                    }
+                    Text("새로운 WiD")
+                        .titleLarge()
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)

@@ -116,8 +116,7 @@ struct TitleWiDView: View {
                               calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
                 }
                 .frame(maxHeight: 44)
-                .tint(Color("Black-White"))
-                .padding()
+                .padding(.horizontal)
                 
                 if filteredWiDListByTitle.isEmpty {
                     VStack {
@@ -506,7 +505,7 @@ struct TitleWiDView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
-//        .background(Color("White-Gray"))
+        .background(Color("White-Black"))
         .onAppear {
             self.startDate = getFirstDateOfWeek(for: today)
             self.finishDate = getLastDateOfWeek(for: today)

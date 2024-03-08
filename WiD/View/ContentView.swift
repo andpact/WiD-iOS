@@ -12,8 +12,8 @@ struct ContentView: View {
     // 화면
 //    @State private var selectedPicker: ContentViewTapInfo = .HOME
     
-    @StateObject private var stopwatch = StopwatchPlayer()
-    @StateObject private var timer = TimerPlayer()
+    @StateObject private var stopwatchViewModel = StopwatchViewModel()
+    @StateObject private var timerViewModel = TimerViewModel()
     
     var body: some View {
         // 전체 화면
@@ -27,8 +27,8 @@ struct ContentView: View {
 //        }
             
         MainView()
-            .environmentObject(stopwatch)
-            .environmentObject(timer)
+            .environmentObject(stopwatchViewModel)
+            .environmentObject(timerViewModel)
     }
     
 //    @ViewBuilder

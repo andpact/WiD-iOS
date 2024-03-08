@@ -21,71 +21,63 @@ struct WiDToolView: View {
     @Namespace private var animation
     
     // 도구
-    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-    @EnvironmentObject var timerPlayer: TimerPlayer
+    @EnvironmentObject var stopwatchViewModel: StopwatchViewModel
+    @EnvironmentObject var timerViewModel: TimerViewModel
     
     var body: some View {
         VStack(spacing: 0) {
             // 상단 바
             HStack {
-//                Button(action: {
-//                    presentationMode.wrappedValue.dismiss()
-//                }) {
-//                    Image(systemName: "arrow.backward")
-//                        .font(.system(size: 24))
-//                }
-                
-                Text("WiD 도구")
+                Text("도구")
                     .titleLarge()
                 
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
-//            .background(Color("LightGray-Black"))
-            .tint(Color("Black-White"))
-            .opacity(stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? 1 : 0)
+            .opacity(stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? 1 : 0)
             
             // 상단 탭
-            HStack(alignment: .top, spacing: 16) {
-                ForEach(WiDToolViewTapItem.allCases, id: \.self) { item in
-                    VStack(spacing: 8) {
-                        Text(item.rawValue)
-                            .bodyMedium()
-                            .foregroundColor(selectedTab == item ? Color("Black-White") : Color("DarkGray"))
+            ScrollView(.horizontal) {
+                HStack(alignment: .top, spacing: 16) {
+                    ForEach(WiDToolViewTapItem.allCases, id: \.self) { item in
+                        VStack(spacing: 8) {
+                            Text(item.rawValue)
+                                .bodyMedium()
+                                .foregroundColor(selectedTab == item ? Color("Black-White") : Color("DarkGray"))
 
-                        if selectedTab == item {
-                            Rectangle()
-                                .foregroundColor(Color("Black-White"))
-                                .frame(maxWidth: 40, maxHeight: 3)
-                                .matchedGeometryEffect(id: "STOPWATCH", in: animation)
+                            if selectedTab == item {
+                                Rectangle()
+                                    .foregroundColor(Color("Black-White"))
+                                    .frame(maxWidth: 40, maxHeight: 3)
+                                    .matchedGeometryEffect(id: "STOPWATCH", in: animation)
+                            }
+                                
                         }
-                            
-                    }
-                    .onTapGesture {
-                        withAnimation(.easeInOut) {
-                            self.selectedTab = item
+                        .onTapGesture {
+                            withAnimation(.easeInOut) {
+                                self.selectedTab = item
+                            }
                         }
                     }
+                    
+                    Spacer()
                 }
-                
-                Spacer()
+                .frame(maxWidth: .infinity, maxHeight: 44)
+                .padding(.horizontal)
+                .disabled(!(stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED))
+    //            .background(Color("White-Gray"))
+    //            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
+    //            .background(Color("LightGray-Black"))
+                .opacity(stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED ? 1 : 0)
             }
-            .frame(maxWidth: .infinity, maxHeight: 44)
-            .padding(.horizontal)
-            .disabled(!(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED))
-//            .background(Color("White-Gray"))
-//            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
-//            .background(Color("LightGray-Black"))
-            .opacity(stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED ? 1 : 0)
-            
          
             // 컨텐츠
             WiDToolHolderView(tabItem: selectedTab)
                 .gesture(
                     DragGesture()
                         .onEnded { value in
-                            if value.translation.width > 100 && (stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED) {
+                            if value.translation.width > 100 && (stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED) {
                                 if selectedTab == .TIMER {
                                     withAnimation {
                                         selectedTab = .STOPWATCH
@@ -111,7 +103,7 @@ struct WiDToolView: View {
 //                                }
                             }
                             
-                            if value.translation.width < -100 && (stopwatchPlayer.stopwatchState == PlayerState.STOPPED && timerPlayer.timerState == PlayerState.STOPPED) {
+                            if value.translation.width < -100 && (stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED) {
                                 if selectedTab == .STOPWATCH {
                                     withAnimation {
                                         selectedTab = .TIMER
@@ -141,9 +133,9 @@ struct WiDToolView: View {
         }
         .onAppear {
             // 스톱 워치나 타이머를 실행후, 이전 화면으로 전환 후 다시 돌아왔을 때 
-            if stopwatchPlayer.stopwatchState == PlayerState.STARTED || stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
+            if stopwatchViewModel.stopwatchState == PlayerState.STARTED || stopwatchViewModel.stopwatchState == PlayerState.PAUSED {
                 selectedTab = .STOPWATCH
-            } else if timerPlayer.timerState == PlayerState.STARTED || timerPlayer.timerState == PlayerState.PAUSED {
+            } else if timerViewModel.timerState == PlayerState.STARTED || timerViewModel.timerState == PlayerState.PAUSED {
                 selectedTab = .TIMER
             }
         }
@@ -173,13 +165,13 @@ struct WiDToolView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             WiDToolView()
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .light)
             
             WiDToolView()
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

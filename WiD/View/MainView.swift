@@ -9,445 +9,604 @@ import SwiftUI
 
 struct MainView: View {
     // 화면
-    @Environment(\.colorScheme) var colorScheme
-    @State private var selectedTabIndex = 0
+//    @Environment(\.colorScheme) var colorScheme
+//    @State private var selectedTabIndex = 0
     
-    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-    @EnvironmentObject var timerPlayer: TimerPlayer
+    // 화면
+    @State private var selectedTab: MainViewTap = .HOME
+    
+    @EnvironmentObject private var stopwatchViewModel: StopwatchViewModel
+    @EnvironmentObject private var timerViewModel: TimerViewModel
+    
+//    @StateObject private var stopwatchViewModel = StopwatchViewModel()
+//    @StateObject private var timerViewModel = TimerViewModel()
     
     var body: some View {
         NavigationView {
-            TabView(selection: $selectedTabIndex) {
-                VStack(spacing: 0) {
-                    HomeView()
-                    
-                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED {
-                        HStack(spacing: 16) {
-                            Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 24))
-                                .frame(maxWidth: 15, maxHeight: 15)
-                                .padding()
-                                .background(Color("White-Black"))
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
-                                Text(stopwatchPlayer.title.koreanValue)
-                                    .bodyMedium()
-                                
-                                getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
-                                    .font(.custom("ChivoMono-Regular", size: 18))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
-                            
-                            if stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
-                                // 정지 버튼
-                                Button(action: {
-                                    stopwatchPlayer.stopStopwatch()
-                                }) {
-                                    Image(systemName: "stop.fill")
-                                        .font(.system(size: 24))
-                                }
-                                .frame(maxWidth: 24, maxHeight: 24)
-                            }
-                            
-                            // 시작, 중지 선택 버튼
-                            Button(action: {
-                                if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
-                                    stopwatchPlayer.pauseStopwatch()
-                                } else {
-                                    stopwatchPlayer.startStopwatch()
-                                }
-                            }) {
-                                Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 24))
-                            }
-                            .frame(maxWidth: 24, maxHeight: 24)
-                        }
-                        .padding()
-//                        .tint(Color("Black-White"))
-                        .background(Color(stopwatchPlayer.title.rawValue))
-                    } else if timerPlayer.timerState != PlayerState.STOPPED {
-                        HStack(spacing: 16) {
-                            Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 24))
-                                .frame(maxWidth: 15, maxHeight: 15)
-                                .padding()
-                                .background(Color("White-Black"))
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
-                                Text(timerPlayer.title.koreanValue)
-                                    .bodyMedium()
-                                
-                                getHorizontalTimeView(Int(timerPlayer.remainingTime))
-                                    .font(.custom("ChivoMono-Regular", size: 18))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
-                            
-                            if timerPlayer.timerState == PlayerState.PAUSED {
-                                // 정지 버튼
-                                Button(action: {
-                                    timerPlayer.stopTimer()
-                                }) {
-                                    Image(systemName: "stop.fill")
-                                        .font(.system(size: 24))
-                                }
-                                .frame(maxWidth: 24, maxHeight: 24)
-                            }
-                            
-                            // 시작, 중지 선택 버튼
-                            Button(action: {
-                                if timerPlayer.timerState == PlayerState.STARTED {
-                                    timerPlayer.pauseTimer()
-                                } else {
-                                    timerPlayer.startTimer()
-                                }
-                            }) {
-                                Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 24))
-                            }
-                            .frame(maxWidth: 24, maxHeight: 24)
-                        }
-                        .padding()
-                        .background(Color(timerPlayer.title.rawValue))
-                    }
-                }
-                .tabItem {
-                    Image(systemName: stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? "house.fill" : "")
-                }
-                .tag(0)
+            VStack(spacing: 0) {
+                // 상단 바
+//                HStack {
+//                    switch selectedTab {
+//                        case .HOME:
+//                            Text("홈")
+//                        case .WiDTOOL:
+//                            Text("WiD 도구")
+//                        case .WiDDISPLAY:
+//                            Text("WiD 조회")
+//                        case .DIARYDISPLAY:
+//                            Text("다이어리 조회")
+////                        case .SETTING:
+////                            Text("환경설정")
+//                    }
+//
+//                    Spacer()
+//                }
+//                .frame(maxWidth: .infinity, maxHeight: 44)
+//                .padding(.horizontal)
+//                .titleLarge()
+//                .opacity(stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? 1 : 0)
                 
-                WiDToolView()
-                    .tabItem {
-                        Image(systemName: stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? "plus.app" : "")
-                    }
-                    .tag(1)
+                switch selectedTab {
+                    case .HOME:
+                        HomeView()
+                    case .WiDTOOL:
+                        WiDToolView()
+                    case .WiDDISPLAY:
+                        WiDDisplayView()
+                    case .DIARYDISPLAY:
+                        DiaryDisplayView()
+//                    case .SETTING:
+//                        SettingView()
+                }
                 
-                VStack(spacing: 0) {
-                    WiDDisplayView()
-                    
-                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED {
-                        HStack(spacing: 16) {
-                            Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 24))
-                                .frame(maxWidth: 15, maxHeight: 15)
-                                .padding()
-                                .background(Color("White-Black"))
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
-                                Text(stopwatchPlayer.title.koreanValue)
-                                    .bodyMedium()
-                                
-                                getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
-                                    .font(.custom("ChivoMono-Regular", size: 18))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
-                            
-                            if stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
-                                // 정지 버튼
-                                Button(action: {
-                                    stopwatchPlayer.stopStopwatch()
-                                }) {
-                                    Image(systemName: "stop.fill")
-                                        .font(.system(size: 24))
-                                }
-                                .frame(maxWidth: 24, maxHeight: 24)
-                            }
-                            
-                            // 시작, 중지 선택 버튼
+                if stopwatchViewModel.stopwatchState != PlayerState.STOPPED && selectedTab != .WiDTOOL{
+                    HStack(spacing: 16) {
+                        Image(systemName: titleImageDictionary[stopwatchViewModel.title.rawValue] ?? "")
+                            .font(.system(size: 24)) // large - 22, medium(기본) - 17, small - 14(정확하지 않음)
+                            .frame(maxWidth: 15, maxHeight: 15)
+                            .padding()
+                            .background(Color("White-Black"))
+                            .clipShape(Circle())
+
+                        VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+                            Text(stopwatchViewModel.title.koreanValue)
+                                .bodyMedium()
+
+                            getHorizontalTimeView(Int(stopwatchViewModel.totalDuration))
+                                .font(.custom("ChivoMono-Regular", size: 18))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+
+                        if stopwatchViewModel.stopwatchState == PlayerState.PAUSED {
+                            // 정지 버튼
                             Button(action: {
-                                if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
-                                    stopwatchPlayer.pauseStopwatch()
-                                } else {
-                                    stopwatchPlayer.startStopwatch()
-                                }
+                                stopwatchViewModel.stopStopwatch()
                             }) {
-                                Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+                                Image(systemName: "stop.fill")
                                     .font(.system(size: 24))
                             }
                             .frame(maxWidth: 24, maxHeight: 24)
                         }
-                        .padding()
-//                        .tint(Color("Black-White"))
-                        .background(Color(stopwatchPlayer.title.rawValue))
-                    } else if timerPlayer.timerState != PlayerState.STOPPED {
-                        HStack(spacing: 16) {
-                            Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
+
+                        // 시작, 중지 선택 버튼
+                        Button(action: {
+                            if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
+                                stopwatchViewModel.pauseStopwatch()
+                            } else {
+                                stopwatchViewModel.startStopwatch()
+                            }
+                        }) {
+                            Image(systemName: stopwatchViewModel.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
                                 .font(.system(size: 24))
-                                .frame(maxWidth: 15, maxHeight: 15)
-                                .padding()
-                                .background(Color("White-Black"))
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
-                                Text(timerPlayer.title.koreanValue)
-                                    .bodyMedium()
-                                
-                                getHorizontalTimeView(Int(timerPlayer.remainingTime))
-                                    .font(.custom("ChivoMono-Regular", size: 18))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
-                            
-                            if timerPlayer.timerState == PlayerState.PAUSED {
-                                // 정지 버튼
-                                Button(action: {
-                                    timerPlayer.stopTimer()
-                                }) {
-                                    Image(systemName: "stop.fill")
-                                        .font(.system(size: 24))
-                                }
-                                .frame(maxWidth: 24, maxHeight: 24)
-                            }
-                            
-                            // 시작, 중지 선택 버튼
-                            Button(action: {
-                                if timerPlayer.timerState == PlayerState.STARTED {
-                                    timerPlayer.pauseTimer()
-                                } else {
-                                    timerPlayer.startTimer()
-                                }
-                            }) {
-                                Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 24))
-                            }
-                            .frame(maxWidth: 24, maxHeight: 24)
                         }
-                        .padding()
-                        .background(Color(timerPlayer.title.rawValue))
+                        .frame(maxWidth: 24, maxHeight: 24)
                     }
+                    .padding()
+                    .tint(Color("Black-White"))
+                    .background(Color(stopwatchViewModel.title.rawValue))
+                } else if timerViewModel.timerState != PlayerState.STOPPED && selectedTab != .WiDTOOL{
+                    HStack(spacing: 16) {
+                        Image(systemName: titleImageDictionary[timerViewModel.title.rawValue] ?? "")
+                            .font(.system(size: 24))
+                            .frame(maxWidth: 15, maxHeight: 15)
+                            .padding()
+                            .background(Color("White-Black"))
+                            .clipShape(Circle())
+
+                        VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+                            Text(timerViewModel.title.koreanValue)
+                                .bodyMedium()
+
+                            getHorizontalTimeView(Int(timerViewModel.remainingTime))
+                                .font(.custom("ChivoMono-Regular", size: 18))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+
+                        if timerViewModel.timerState == PlayerState.PAUSED {
+                            // 정지 버튼
+                            Button(action: {
+                                timerViewModel.stopTimer()
+                            }) {
+                                Image(systemName: "stop.fill")
+                                    .font(.system(size: 24))
+                            }
+                            .frame(maxWidth: 24, maxHeight: 24)
+                        }
+
+                        // 시작, 중지 선택 버튼
+                        Button(action: {
+                            if timerViewModel.timerState == PlayerState.STARTED {
+                                timerViewModel.pauseTimer()
+                            } else {
+                                timerViewModel.startTimer()
+                            }
+                        }) {
+                            Image(systemName: timerViewModel.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+                                .font(.system(size: 24))
+                        }
+                        .frame(maxWidth: 24, maxHeight: 24)
+                    }
+                    .padding()
+                    .tint(Color("Black-White"))
+                    .background(Color(timerViewModel.title.rawValue))
                 }
-                .tabItem {
-                    Image(systemName: stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? "deskclock" : "")
-                }
-                .tag(2)
                 
-                VStack(spacing: 0) {
-                    DiaryDisplayView()
-                    
-                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED {
-                        HStack(spacing: 16) {
-                            Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 24))
-                                .frame(maxWidth: 15, maxHeight: 15)
-                                .padding()
-                                .background(Color("White-Black"))
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
-                                Text(stopwatchPlayer.title.koreanValue)
-                                    .bodyMedium()
-                                
-                                getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
-                                    .font(.custom("ChivoMono-Regular", size: 18))
+                HStack {
+                    ForEach(MainViewTap.allCases, id: \.self) { tabItem in
+                        Image(systemName: tabItem.rawValue)
+                            .frame(maxWidth: .infinity)
+                            .font(.system(size: 24))
+//                            .frame(width: 30, height: 30)
+                            .foregroundColor(selectedTab == tabItem ? Color("Black-White") : Color("DarkGray"))
+                            .onTapGesture {
+                                self.selectedTab = tabItem
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
-                            
-                            if stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
-                                // 정지 버튼
-                                Button(action: {
-                                    stopwatchPlayer.stopStopwatch()
-                                }) {
-                                    Image(systemName: "stop.fill")
-                                        .font(.system(size: 24))
-                                }
-                                .frame(maxWidth: 24, maxHeight: 24)
-                            }
-                            
-                            // 시작, 중지 선택 버튼
-                            Button(action: {
-                                if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
-                                    stopwatchPlayer.pauseStopwatch()
-                                } else {
-                                    stopwatchPlayer.startStopwatch()
-                                }
-                            }) {
-                                Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 24))
-                            }
-                            .frame(maxWidth: 24, maxHeight: 24)
-                        }
-                        .padding()
-//                        .tint(Color("Black-White"))
-                        .background(Color(stopwatchPlayer.title.rawValue))
-                    } else if timerPlayer.timerState != PlayerState.STOPPED {
-                        HStack(spacing: 16) {
-                            Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 24))
-                                .frame(maxWidth: 15, maxHeight: 15)
-                                .padding()
-                                .background(Color("White-Black"))
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
-                                Text(timerPlayer.title.koreanValue)
-                                    .bodyMedium()
-                                
-                                getHorizontalTimeView(Int(timerPlayer.remainingTime))
-                                    .font(.custom("ChivoMono-Regular", size: 18))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
-                            
-                            if timerPlayer.timerState == PlayerState.PAUSED {
-                                // 정지 버튼
-                                Button(action: {
-                                    timerPlayer.stopTimer()
-                                }) {
-                                    Image(systemName: "stop.fill")
-                                        .font(.system(size: 24))
-                                }
-                                .frame(maxWidth: 24, maxHeight: 24)
-                            }
-                            
-                            // 시작, 중지 선택 버튼
-                            Button(action: {
-                                if timerPlayer.timerState == PlayerState.STARTED {
-                                    timerPlayer.pauseTimer()
-                                } else {
-                                    timerPlayer.startTimer()
-                                }
-                            }) {
-                                Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 24))
-                            }
-                            .frame(maxWidth: 24, maxHeight: 24)
-                        }
-                        .padding()
-                        .background(Color(timerPlayer.title.rawValue))
                     }
                 }
-                .tabItem {
-                    Image(systemName: stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? "menucard" : "")
-                }
-                .tag(3)
-                
-                VStack(spacing: 0) {
-                    SettingView()
-                    
-                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED {
-                        HStack(spacing: 16) {
-                            Image(systemName: titleImageDictionary[stopwatchPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 24))
-                                .frame(maxWidth: 15, maxHeight: 15)
-                                .padding()
-                                .background(Color("White-Black"))
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
-                                Text(stopwatchPlayer.title.koreanValue)
-                                    .bodyMedium()
-                                
-                                getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
-                                    .font(.custom("ChivoMono-Regular", size: 18))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
-                            
-                            if stopwatchPlayer.stopwatchState == PlayerState.PAUSED {
-                                // 정지 버튼
-                                Button(action: {
-                                    stopwatchPlayer.stopStopwatch()
-                                }) {
-                                    Image(systemName: "stop.fill")
-                                        .font(.system(size: 24))
-                                }
-                                .frame(maxWidth: 24, maxHeight: 24)
-                            }
-                            
-                            // 시작, 중지 선택 버튼
-                            Button(action: {
-                                if stopwatchPlayer.stopwatchState == PlayerState.STARTED {
-                                    stopwatchPlayer.pauseStopwatch()
-                                } else {
-                                    stopwatchPlayer.startStopwatch()
-                                }
-                            }) {
-                                Image(systemName: stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 24))
-                            }
-                            .frame(maxWidth: 24, maxHeight: 24)
-                        }
-                        .padding()
-//                        .tint(Color("Black-White"))
-                        .background(Color(stopwatchPlayer.title.rawValue))
-                    } else if timerPlayer.timerState != PlayerState.STOPPED {
-                        HStack(spacing: 16) {
-                            Image(systemName: titleImageDictionary[timerPlayer.title.rawValue] ?? "")
-                                .font(.system(size: 24))
-                                .frame(maxWidth: 15, maxHeight: 15)
-                                .padding()
-                                .background(Color("White-Black"))
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
-                                Text(timerPlayer.title.koreanValue)
-                                    .bodyMedium()
-                                
-                                getHorizontalTimeView(Int(timerPlayer.remainingTime))
-                                    .font(.custom("ChivoMono-Regular", size: 18))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
-                            
-                            if timerPlayer.timerState == PlayerState.PAUSED {
-                                // 정지 버튼
-                                Button(action: {
-                                    timerPlayer.stopTimer()
-                                }) {
-                                    Image(systemName: "stop.fill")
-                                        .font(.system(size: 24))
-                                }
-                                .frame(maxWidth: 24, maxHeight: 24)
-                            }
-                            
-                            // 시작, 중지 선택 버튼
-                            Button(action: {
-                                if timerPlayer.timerState == PlayerState.STARTED {
-                                    timerPlayer.pauseTimer()
-                                } else {
-                                    timerPlayer.startTimer()
-                                }
-                            }) {
-                                Image(systemName: timerPlayer.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 24))
-                            }
-                            .frame(maxWidth: 24, maxHeight: 24)
-                        }
-                        .padding()
-                        .background(Color(timerPlayer.title.rawValue))
-                    }
-                }
-                .tabItem {
-                    Image(systemName: stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? "gearshape.fill" : "")
-                }
-                .tag(4)
+                .padding(.vertical)
+                .background(Color("White-Black"))
+                .opacity(stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? 1 : 0)
             }
-            .tint(
-                stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible ? Color("Black-White") : Color("White-Black")
-            )
+            
+//            TabView(selection: $selectedTabIndex) {
+//                VStack(spacing: 0) {
+//                    HomeView()
+//
+//                    if stopwatchViewModel.stopwatchState != PlayerState.STOPPED {
+//                        HStack(spacing: 16) {
+//                            Image(systemName: titleImageDictionary[stopwatchViewModel.title.rawValue] ?? "")
+//                                .font(.system(size: 24))
+//                                .frame(maxWidth: 15, maxHeight: 15)
+//                                .padding()
+//                                .background(Color("White-Black"))
+//                                .clipShape(Circle())
+//
+//                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+//                                Text(stopwatchViewModel.title.koreanValue)
+//                                    .bodyMedium()
+//
+//                                getHorizontalTimeView(Int(stopwatchViewModel.totalDuration))
+//                                    .font(.custom("ChivoMono-Regular", size: 18))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+//
+//                            if stopwatchViewModel.stopwatchState == PlayerState.PAUSED {
+//                                // 정지 버튼
+//                                Button(action: {
+//                                    stopwatchViewModel.stopStopwatch()
+//                                }) {
+//                                    Image(systemName: "stop.fill")
+//                                        .font(.system(size: 24))
+//                                }
+//                                .frame(maxWidth: 24, maxHeight: 24)
+//                            }
+//
+//                            // 시작, 중지 선택 버튼
+//                            Button(action: {
+//                                if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
+//                                    stopwatchViewModel.pauseStopwatch()
+//                                } else {
+//                                    stopwatchViewModel.startStopwatch()
+//                                }
+//                            }) {
+//                                Image(systemName: stopwatchViewModel.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+//                                    .font(.system(size: 24))
+//                            }
+//                            .frame(maxWidth: 24, maxHeight: 24)
+//                        }
+//                        .padding()
+////                        .tint(Color("Black-White"))
+//                        .background(Color(stopwatchViewModel.title.rawValue))
+//                    } else if timerViewModel.timerState != PlayerState.STOPPED {
+//                        HStack(spacing: 16) {
+//                            Image(systemName: titleImageDictionary[timerViewModel.title.rawValue] ?? "")
+//                                .font(.system(size: 24))
+//                                .frame(maxWidth: 15, maxHeight: 15)
+//                                .padding()
+//                                .background(Color("White-Black"))
+//                                .clipShape(Circle())
+//
+//                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+//                                Text(timerViewModel.title.koreanValue)
+//                                    .bodyMedium()
+//
+//                                getHorizontalTimeView(Int(timerViewModel.remainingTime))
+//                                    .font(.custom("ChivoMono-Regular", size: 18))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+//
+//                            if timerViewModel.timerState == PlayerState.PAUSED {
+//                                // 정지 버튼
+//                                Button(action: {
+//                                    timerViewModel.stopTimer()
+//                                }) {
+//                                    Image(systemName: "stop.fill")
+//                                        .font(.system(size: 24))
+//                                }
+//                                .frame(maxWidth: 24, maxHeight: 24)
+//                            }
+//
+//                            // 시작, 중지 선택 버튼
+//                            Button(action: {
+//                                if timerViewModel.timerState == PlayerState.STARTED {
+//                                    timerViewModel.pauseTimer()
+//                                } else {
+//                                    timerViewModel.startTimer()
+//                                }
+//                            }) {
+//                                Image(systemName: timerViewModel.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+//                                    .font(.system(size: 24))
+//                            }
+//                            .frame(maxWidth: 24, maxHeight: 24)
+//                        }
+//                        .padding()
+//                        .background(Color(timerViewModel.title.rawValue))
+//                    }
+//                }
+//                .tabItem {
+//                    Image(systemName: stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? "house.fill" : "")
+//                }
+//                .tag(0)
+//
+//                WiDToolView()
+//                    .tabItem {
+//                        Image(systemName: stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? "plus.app" : "")
+//                    }
+//                    .tag(1)
+//
+//                VStack(spacing: 0) {
+//                    WiDDisplayView()
+//
+//                    if stopwatchViewModel.stopwatchState != PlayerState.STOPPED {
+//                        HStack(spacing: 16) {
+//                            Image(systemName: titleImageDictionary[stopwatchViewModel.title.rawValue] ?? "")
+//                                .font(.system(size: 24))
+//                                .frame(maxWidth: 15, maxHeight: 15)
+//                                .padding()
+//                                .background(Color("White-Black"))
+//                                .clipShape(Circle())
+//
+//                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+//                                Text(stopwatchViewModel.title.koreanValue)
+//                                    .bodyMedium()
+//
+//                                getHorizontalTimeView(Int(stopwatchViewModel.totalDuration))
+//                                    .font(.custom("ChivoMono-Regular", size: 18))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+//
+//                            if stopwatchViewModel.stopwatchState == PlayerState.PAUSED {
+//                                // 정지 버튼
+//                                Button(action: {
+//                                    stopwatchViewModel.stopStopwatch()
+//                                }) {
+//                                    Image(systemName: "stop.fill")
+//                                        .font(.system(size: 24))
+//                                }
+//                                .frame(maxWidth: 24, maxHeight: 24)
+//                            }
+//
+//                            // 시작, 중지 선택 버튼
+//                            Button(action: {
+//                                if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
+//                                    stopwatchViewModel.pauseStopwatch()
+//                                } else {
+//                                    stopwatchViewModel.startStopwatch()
+//                                }
+//                            }) {
+//                                Image(systemName: stopwatchViewModel.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+//                                    .font(.system(size: 24))
+//                            }
+//                            .frame(maxWidth: 24, maxHeight: 24)
+//                        }
+//                        .padding()
+////                        .tint(Color("Black-White"))
+//                        .background(Color(stopwatchViewModel.title.rawValue))
+//                    } else if timerViewModel.timerState != PlayerState.STOPPED {
+//                        HStack(spacing: 16) {
+//                            Image(systemName: titleImageDictionary[timerViewModel.title.rawValue] ?? "")
+//                                .font(.system(size: 24))
+//                                .frame(maxWidth: 15, maxHeight: 15)
+//                                .padding()
+//                                .background(Color("White-Black"))
+//                                .clipShape(Circle())
+//
+//                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+//                                Text(timerViewModel.title.koreanValue)
+//                                    .bodyMedium()
+//
+//                                getHorizontalTimeView(Int(timerViewModel.remainingTime))
+//                                    .font(.custom("ChivoMono-Regular", size: 18))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+//
+//                            if timerViewModel.timerState == PlayerState.PAUSED {
+//                                // 정지 버튼
+//                                Button(action: {
+//                                    timerViewModel.stopTimer()
+//                                }) {
+//                                    Image(systemName: "stop.fill")
+//                                        .font(.system(size: 24))
+//                                }
+//                                .frame(maxWidth: 24, maxHeight: 24)
+//                            }
+//
+//                            // 시작, 중지 선택 버튼
+//                            Button(action: {
+//                                if timerViewModel.timerState == PlayerState.STARTED {
+//                                    timerViewModel.pauseTimer()
+//                                } else {
+//                                    timerViewModel.startTimer()
+//                                }
+//                            }) {
+//                                Image(systemName: timerViewModel.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+//                                    .font(.system(size: 24))
+//                            }
+//                            .frame(maxWidth: 24, maxHeight: 24)
+//                        }
+//                        .padding()
+//                        .background(Color(timerViewModel.title.rawValue))
+//                    }
+//                }
+//                .tabItem {
+//                    Image(systemName: stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? "deskclock" : "")
+//                }
+//                .tag(2)
+//
+//                VStack(spacing: 0) {
+//                    DiaryDisplayView()
+//
+//                    if stopwatchViewModel.stopwatchState != PlayerState.STOPPED {
+//                        HStack(spacing: 16) {
+//                            Image(systemName: titleImageDictionary[stopwatchViewModel.title.rawValue] ?? "")
+//                                .font(.system(size: 24))
+//                                .frame(maxWidth: 15, maxHeight: 15)
+//                                .padding()
+//                                .background(Color("White-Black"))
+//                                .clipShape(Circle())
+//
+//                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+//                                Text(stopwatchViewModel.title.koreanValue)
+//                                    .bodyMedium()
+//
+//                                getHorizontalTimeView(Int(stopwatchViewModel.totalDuration))
+//                                    .font(.custom("ChivoMono-Regular", size: 18))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+//
+//                            if stopwatchViewModel.stopwatchState == PlayerState.PAUSED {
+//                                // 정지 버튼
+//                                Button(action: {
+//                                    stopwatchViewModel.stopStopwatch()
+//                                }) {
+//                                    Image(systemName: "stop.fill")
+//                                        .font(.system(size: 24))
+//                                }
+//                                .frame(maxWidth: 24, maxHeight: 24)
+//                            }
+//
+//                            // 시작, 중지 선택 버튼
+//                            Button(action: {
+//                                if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
+//                                    stopwatchViewModel.pauseStopwatch()
+//                                } else {
+//                                    stopwatchViewModel.startStopwatch()
+//                                }
+//                            }) {
+//                                Image(systemName: stopwatchViewModel.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+//                                    .font(.system(size: 24))
+//                            }
+//                            .frame(maxWidth: 24, maxHeight: 24)
+//                        }
+//                        .padding()
+////                        .tint(Color("Black-White"))
+//                        .background(Color(stopwatchViewModel.title.rawValue))
+//                    } else if timerViewModel.timerState != PlayerState.STOPPED {
+//                        HStack(spacing: 16) {
+//                            Image(systemName: titleImageDictionary[timerViewModel.title.rawValue] ?? "")
+//                                .font(.system(size: 24))
+//                                .frame(maxWidth: 15, maxHeight: 15)
+//                                .padding()
+//                                .background(Color("White-Black"))
+//                                .clipShape(Circle())
+//
+//                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+//                                Text(timerViewModel.title.koreanValue)
+//                                    .bodyMedium()
+//
+//                                getHorizontalTimeView(Int(timerViewModel.remainingTime))
+//                                    .font(.custom("ChivoMono-Regular", size: 18))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+//
+//                            if timerViewModel.timerState == PlayerState.PAUSED {
+//                                // 정지 버튼
+//                                Button(action: {
+//                                    timerViewModel.stopTimer()
+//                                }) {
+//                                    Image(systemName: "stop.fill")
+//                                        .font(.system(size: 24))
+//                                }
+//                                .frame(maxWidth: 24, maxHeight: 24)
+//                            }
+//
+//                            // 시작, 중지 선택 버튼
+//                            Button(action: {
+//                                if timerViewModel.timerState == PlayerState.STARTED {
+//                                    timerViewModel.pauseTimer()
+//                                } else {
+//                                    timerViewModel.startTimer()
+//                                }
+//                            }) {
+//                                Image(systemName: timerViewModel.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+//                                    .font(.system(size: 24))
+//                            }
+//                            .frame(maxWidth: 24, maxHeight: 24)
+//                        }
+//                        .padding()
+//                        .background(Color(timerViewModel.title.rawValue))
+//                    }
+//                }
+//                .tabItem {
+//                    Image(systemName: stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? "menucard" : "")
+//                }
+//                .tag(3)
+//
+//                VStack(spacing: 0) {
+//                    SettingView()
+//
+//                    if stopwatchViewModel.stopwatchState != PlayerState.STOPPED {
+//                        HStack(spacing: 16) {
+//                            Image(systemName: titleImageDictionary[stopwatchViewModel.title.rawValue] ?? "")
+//                                .font(.system(size: 24))
+//                                .frame(maxWidth: 15, maxHeight: 15)
+//                                .padding()
+//                                .background(Color("White-Black"))
+//                                .clipShape(Circle())
+//
+//                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+//                                Text(stopwatchViewModel.title.koreanValue)
+//                                    .bodyMedium()
+//
+//                                getHorizontalTimeView(Int(stopwatchViewModel.totalDuration))
+//                                    .font(.custom("ChivoMono-Regular", size: 18))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+//
+//                            if stopwatchViewModel.stopwatchState == PlayerState.PAUSED {
+//                                // 정지 버튼
+//                                Button(action: {
+//                                    stopwatchViewModel.stopStopwatch()
+//                                }) {
+//                                    Image(systemName: "stop.fill")
+//                                        .font(.system(size: 24))
+//                                }
+//                                .frame(maxWidth: 24, maxHeight: 24)
+//                            }
+//
+//                            // 시작, 중지 선택 버튼
+//                            Button(action: {
+//                                if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
+//                                    stopwatchViewModel.pauseStopwatch()
+//                                } else {
+//                                    stopwatchViewModel.startStopwatch()
+//                                }
+//                            }) {
+//                                Image(systemName: stopwatchViewModel.stopwatchState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+//                                    .font(.system(size: 24))
+//                            }
+//                            .frame(maxWidth: 24, maxHeight: 24)
+//                        }
+//                        .padding()
+////                        .tint(Color("Black-White"))
+//                        .background(Color(stopwatchViewModel.title.rawValue))
+//                    } else if timerViewModel.timerState != PlayerState.STOPPED {
+//                        HStack(spacing: 16) {
+//                            Image(systemName: titleImageDictionary[timerViewModel.title.rawValue] ?? "")
+//                                .font(.system(size: 24))
+//                                .frame(maxWidth: 15, maxHeight: 15)
+//                                .padding()
+//                                .background(Color("White-Black"))
+//                                .clipShape(Circle())
+//
+//                            VStack(alignment: .leading, spacing: 4) { // 내용물이 앞쪽 정렬됨.
+//                                Text(timerViewModel.title.koreanValue)
+//                                    .bodyMedium()
+//
+//                                getHorizontalTimeView(Int(timerViewModel.remainingTime))
+//                                    .font(.custom("ChivoMono-Regular", size: 18))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading) // 프레임의 내용물이 앞쪽부터 채워짐.
+//
+//                            if timerViewModel.timerState == PlayerState.PAUSED {
+//                                // 정지 버튼
+//                                Button(action: {
+//                                    timerViewModel.stopTimer()
+//                                }) {
+//                                    Image(systemName: "stop.fill")
+//                                        .font(.system(size: 24))
+//                                }
+//                                .frame(maxWidth: 24, maxHeight: 24)
+//                            }
+//
+//                            // 시작, 중지 선택 버튼
+//                            Button(action: {
+//                                if timerViewModel.timerState == PlayerState.STARTED {
+//                                    timerViewModel.pauseTimer()
+//                                } else {
+//                                    timerViewModel.startTimer()
+//                                }
+//                            }) {
+//                                Image(systemName: timerViewModel.timerState == PlayerState.STARTED ? "pause.fill" : "play.fill")
+//                                    .font(.system(size: 24))
+//                            }
+//                            .frame(maxWidth: 24, maxHeight: 24)
+//                        }
+//                        .padding()
+//                        .background(Color(timerViewModel.title.rawValue))
+//                    }
+//                }
+//                .tabItem {
+//                    Image(systemName: stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? "gearshape.fill" : "")
+//                }
+//                .tag(4)
+//            }
+//            .tint(
+//                stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? Color("Black-White") : Color("White-Black")
+//            )
         }
-        .onChange(of: selectedTabIndex) { newIndex in
-            if stopwatchPlayer.stopwatchTopBottomBarVisible && timerPlayer.timerTopBottomBarVisible {
-                self.selectedTabIndex = newIndex
-            } else {
-                self.selectedTabIndex = 1 // 스톱 워치나 타이머 동작 시 탭을 클릭해도 '도구' 탭으로 오도록 해서 다른 탭을 사용하지 못하도록 함.
-            }
-        }
-        .onAppear {
-            UITabBar.appearance().backgroundColor = UIColor(Color("White-Black"))
-        }
+//        .onChange(of: selectedTabIndex) { newIndex in
+//            if stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible {
+//                self.selectedTabIndex = newIndex
+//            } else {
+//                self.selectedTabIndex = 1 // 스톱 워치나 타이머 동작 시 탭을 클릭해도 '도구' 탭으로 오도록 해서 다른 탭을 사용하지 못하도록 함.
+//            }
+//        }
+//        .onAppear {
+//            UITabBar.appearance().backgroundColor = UIColor(Color("White-Black"))
+//        }
     }
+}
+
+enum MainViewTap: String, CaseIterable {
+    case HOME = "house.fill"
+    case WiDTOOL = "plus.app.fill"
+    case WiDDISPLAY = "deskclock.fill"
+    case DIARYDISPLAY = "menucard.fill"
+//    case SETTING = "gearshape.fill"
 }
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MainView()
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .light)
             
             MainView()
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

@@ -51,7 +51,7 @@ struct WiDListView: View {
                     .disabled(calendar.isDateInToday(currentDate))
                 }
                 .frame(maxHeight: 44)
-                .padding()
+                .padding(.horizontal)
             
                 if wiDList.isEmpty {
                     VStack(spacing: 16) {

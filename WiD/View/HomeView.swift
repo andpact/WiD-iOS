@@ -8,139 +8,175 @@
 import SwiftUI
 
 struct HomeView: View {
+    // 화면
+//    private let screenHeight = UIScreen.main.bounds.height
+    
     // 날짜
-//    private let calendar = Calendar.current
+    private let calendar = Calendar.current
 //    @State private var remainingSeconds: Int = 0
 //    @State private var remainingPercentage: Float = 0
 //    private let totalSecondsInADay: Int = 24 * 60 * 60
+    private let today: Date = Calendar.current.startOfDay(for: Date()) // 시간을 오전 12:00:00으로 설정함.
+    @State private var startDate: Date = Date()
+    @State private var finishDate: Date = Date()
     
     // WiD
     private let wiDService = WiDService()
-    private let totalWiDCounts: Int
+    @State private var wiDExistenceList: [Date: Bool] = [:]
+//    private let totalWiDCounts: Int
     
     // 다이어리
     private let diaryService = DiaryService()
-    private let totalDiaryCounts: Int
+    @State private var diaryExistenceList: [Date: Bool] = [:]
+//    private let totalDiaryCounts: Int
     
-    init() {
-        self.totalWiDCounts = wiDService.readTotalWiDCount()
-        self.totalDiaryCounts = diaryService.readTotalDiaryCount()
-    }
+//    init() {
+//        self.totalWiDCounts = wiDService.readTotalWiDCount()
+//        self.totalDiaryCounts = diaryService.readTotalDiaryCount()
+//    }
     
     // 도구
-//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-//    @EnvironmentObject var timerPlayer: TimerPlayer
+//    @EnvironmentObject var stopwatchViewModel: StopwatchViewModel
+//    @EnvironmentObject var timerViewModel: TimerViewModel
     
     var body: some View {
-//        NavigationView { // 네비게이션 출발지는 무조건 네비게이션 뷰로 감싸야함.
-            VStack(spacing: 0) {
-//                ZStack {
-//                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
-//                        HStack {
-//                            Text(stopwatchPlayer.title.koreanValue)
-//                                .bodyMedium()
-//                            
-//                            getHorizontalTimeView(Int(stopwatchPlayer.totalDuration))
-//                                .font(.custom("ChivoMono-Regular", size: 18))
-//                        }
-//                        .padding(.horizontal, 8)
-//                        .padding(.vertical, 4)
-//                        .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-//                        .foregroundColor(Color("White"))
-//                        .cornerRadius(8)
-//                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
-//                        HStack {
-//                            Text(timerPlayer.title.koreanValue)
-//                                .bodyMedium()
-//                            
-//                            getHorizontalTimeView(Int(timerPlayer.remainingTime))
-//                                .font(.custom("ChivoMono-Regular", size: 18))
-//                        }
-//                        .padding(.horizontal, 8)
-//                        .padding(.vertical, 4)
-//                        .background(Color(timerPlayer.timerState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
-//                        .foregroundColor(Color("White"))
-//                        .cornerRadius(8)
-//                    } else {
-//                        Text("WiD")
-//                            .titleLarge()
-//                    }
-//                }
-//                .padding(.horizontal)
-//                .frame(maxWidth: .infinity, maxHeight: 44)
+        VStack(spacing: 0) {
+            // 상단 바
+            HStack {
+                Text("홈")
+                    .titleLarge()
                 
                 Spacer()
                 
-                HStack {
-                    Text("달력")
-                        .titleLarge()
+                NavigationLink(destination: SettingView()) {
+                    Image(systemName: "gearshape.fill")
+                        .font(.system(size: 24))
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color("LightGray-Gray"))
-                .cornerRadius(8)
-                .padding()
-                
-                Spacer()
-                
-                HStack {
-                    VStack(spacing: 16) {
-                        Text("총 WiD")
+            }
+            .frame(maxWidth: .infinity, maxHeight: 44)
+            .padding(.horizontal)
+            
+            ScrollView {
+                VStack(spacing: 0) {
+                    // 상단 탭
+                    HStack {
+        //                Button(action: {
+        //                        expandDatePicker = true
+        //                }) {
+                            getPeriodStringViewOfMonth(date: startDate)
+                                .titleLarge()
+                                .lineLimit(1)
+                                .truncationMode(.head)
+        //                }
+                        
+                        Spacer()
+                        
+                        Circle()
+                            .fill(Color("OrangeRed")) // .fill이 먼저 와야 함.
+                            .frame(maxWidth: 10, maxHeight: 10)
+
+                        Text("WiD")
                             .bodyMedium()
                         
-                        Text("\(totalWiDCounts)개")
-                            .titleLarge()
+                        Circle()
+                            .fill(Color("DeepSkyBlue"))
+                            .frame(maxWidth: 10, maxHeight: 10)
+                        
+                        Text("다이어리")
+                            .bodyMedium()
                     }
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
                     
                     VStack(spacing: 16) {
-                        Text("총 다이어리")
-                            .bodyMedium()
+                        HStack {
+                            ForEach(0...6, id: \.self) { index in
+                                let textColor = index == 0 ? Color("OrangeRed") : (index == 6 ? Color("DeepSkyBlue") : Color("Black-White"))
+                                
+                                Text(getStringOfDayOfWeekFromSunday(index))
+                                    .bodyMedium()
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundColor(textColor)
+                            }
+                        }
                         
-                        Text("\(totalDiaryCounts)개")
-                            .titleLarge()
+                        Divider()
+                            .background(Color("Black-White"))
+                        
+                        // Weekday 1 - 일, 2 - 월...
+                        let weekday = calendar.component(.weekday, from: startDate)
+                        
+                        let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
+                            ForEach(0..<(daysDifference + 1) + (weekday - 1), id: \.self) { gridIndex in
+                                if gridIndex < weekday - 1 {
+                                    Text("")
+                                } else {
+                                    let currentDate = calendar.date(byAdding: .day, value: gridIndex - (weekday - 1), to: startDate) ?? Date()
+                                    
+                                    VStack(spacing: 8) {
+                                        Text("\(calendar.component(.day, from: currentDate))")
+                                            .bodyMedium()
+                                        
+                                        HStack(spacing: 4) {
+        //                                    if wiDExistenceList[currentDate] ?? false {
+                                                Circle()
+                                                    .fill(wiDExistenceList[currentDate] ?? false ? Color("OrangeRed") : Color("White-Black")) // .fill이 먼저 작성해야 함.
+                                                    .frame(maxWidth: 10, maxHeight: 10)
+        //                                    }
+
+        //                                    if diaryExistenceList[currentDate] ?? false {
+                                                Circle()
+                                                    .fill(diaryExistenceList[currentDate] ?? false ? Color("DeepSkyBlue") : Color("White-Black"))
+                                                    .frame(maxWidth: 10, maxHeight: 10)
+        //                                    }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
+                    .padding(.vertical)
                     .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color("Black-White"), lineWidth: 0.5)
+                    )
+                    .background(Color("White-Black"))
+                    .padding(.horizontal)
+                    .gesture(
+                        DragGesture()
+                            .onEnded { value in
+                                if 100 < value.translation.width { // 전 달
+                                    startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
+                                    finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
+                                }
+                                
+                                if value.translation.width < -100 && !(calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
+                                                                       calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today))){ // 다음 달
+                                    startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
+                                    finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
+                                }
+                            }
+                    )
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color("LightGray-Gray"))
-                .cornerRadius(8)
-                .padding()
-                
-                Spacer()
-                
-//                HStack(spacing: 0) {
-//                    NavigationLink(destination: WiDToolView()) {
-//                        Image(systemName: "plus.app")
-//                            .frame(maxWidth: .infinity)
-//                            .font(.system(size: 36))
-//                    }
-//
-//                    NavigationLink(destination: WiDDisplayView()) {
-//                        Image(systemName: "deskclock")
-//                            .frame(maxWidth: .infinity)
-//                            .font(.system(size: 36))
-//                    }
-//
-//                    NavigationLink(destination: DiaryDisplayView()) {
-//                        Image(systemName: "square.text.square")
-//                            .frame(maxWidth: .infinity)
-//                            .font(.system(size: 36))
-//                    }
-//
-//                    NavigationLink(destination: SettingView()) {
-//                        Image(systemName: "gearshape")
-//                            .frame(maxWidth: .infinity)
-//                            .font(.system(size: 36))
-//                    }
-//                }
-//                .padding(.vertical)
-//                .cornerRadius(8)
             }
-//            .background(Color("White-Black"))
-            .tint(Color("Black-White"))
-//        }
+        }
+//        .padding(.top, screenHeight / 4)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(Color("White-Black"))
+        .tint(Color("Black-White"))
+        .onAppear {
+            self.startDate = getFirstDateOfMonth(for: today)
+            self.finishDate = getLastDateOfMonth(for: today)
+            
+            self.wiDExistenceList = wiDService.checkWiDExistence(startDate: startDate, finishDate: finishDate)
+            self.diaryExistenceList = diaryService.checkDiaryExistence(startDate: startDate, finishDate: finishDate)
+            
+//            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+//            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+        }
     }
 }
 
@@ -148,13 +184,13 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             HomeView()
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .light)
             
             HomeView()
-                .environmentObject(StopwatchPlayer())
-                .environmentObject(TimerPlayer())
+                .environmentObject(StopwatchViewModel())
+                .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

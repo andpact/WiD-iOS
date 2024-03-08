@@ -85,8 +85,7 @@ struct WeekWiDView: View {
                               calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)))
                 }
                 .frame(maxHeight: 44)
-                .tint(Color("Black-White"))
-                .padding()
+                .padding(.horizontal)
                 
                 VStack(spacing: 0) {
                     if wiDList.isEmpty {
@@ -396,7 +395,7 @@ struct WeekWiDView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
-//        .background(Color("White-Gray"))
+        .background(Color("White-Black"))
         .navigationBarHidden(true)
         .onAppear {
             self.startDate = getFirstDateOfWeek(for: today)
