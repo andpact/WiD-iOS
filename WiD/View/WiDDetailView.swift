@@ -372,7 +372,7 @@ struct WiDDetailView: View {
                         .background(Color("White-Black"))
                         .cornerRadius(8)
                         .padding()
-                        .shadow(color: Color("Black-White"), radius: 1)
+//                        .shadow(color: Color("Black-White"), radius: 1)
                     }
                     
                     // 시작 시간 선택
@@ -403,7 +403,7 @@ struct WiDDetailView: View {
                         .background(Color("White-Black"))
                         .cornerRadius(8)
                         .padding()
-                        .shadow(color: Color("Black-White"), radius: 1)
+//                        .shadow(color: Color("Black-White"), radius: 1)
                     }
                     
                     if expandFinishPicker {
@@ -433,7 +433,7 @@ struct WiDDetailView: View {
                         .background(Color("White-Black"))
                         .cornerRadius(8)
                         .padding()
-                        .shadow(color: Color("Black-White"), radius: 1)
+//                        .shadow(color: Color("Black-White"), radius: 1)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

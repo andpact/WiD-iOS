@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct WeekWiDView: View {
+    // 뷰 모델
+    @EnvironmentObject var weekWiDViewModel: WeekWiDViewModel
+    
     // 화면
 //    private let screenHeight = UIScreen.main.bounds.height
     
     // WiD
-    private let wiDService = WiDService()
-    @State private var wiDList: [WiD] = []
+//    private let wiDService = WiDService()
+//    @State private var wiDList: [WiD] = []
 //    @State private var filteredWiDListByTitle: [WiD] = []
     
     // 제목
@@ -23,37 +26,37 @@ struct WeekWiDView: View {
     // 날짜
     private let calendar = Calendar.current
     private let today: Date = Calendar.current.startOfDay(for: Date()) // 시간을 오전 12:00:00으로 설정함.
-    @State private var startDate: Date = Date()
-    @State private var finishDate: Date = Date()
-//    @State private var expandDatePicker: Bool = false
+//    @State private var startDate: Date = Date()
+//    @State private var finishDate: Date = Date()
+    @State private var expandDatePicker: Bool = false
     
     // 기간
 //    @State private var selectedPeriod: Period = Period.WEEK
     
     // 합계
-    @State private var totalDurationDictionary: [String: TimeInterval] = [:]
-    
-    // 평균
-    @State private var averageDurationDictionary: [String: TimeInterval] = [:]
-    
-    // 최저
-    @State private var minDurationDictionary: [String: TimeInterval] = [:]
-    
-    // 최고
-    @State private var maxDurationDictionary: [String: TimeInterval] = [:]
+//    @State private var totalDurationDictionary: [String: TimeInterval] = [:]
+//
+//    // 평균
+//    @State private var averageDurationDictionary: [String: TimeInterval] = [:]
+//
+//    // 최저
+//    @State private var minDurationDictionary: [String: TimeInterval] = [:]
+//
+//    // 최고
+//    @State private var maxDurationDictionary: [String: TimeInterval] = [:]
     
     // 딕셔너리
-    @State private var seletedDictionary: [String: TimeInterval] = [:]
-    @State private var seletedDictionaryType: DurationDictionary = .TOTAL
+//    @State private var seletedDictionary: [String: TimeInterval] = [:]
+//    @State private var seletedDictionaryType: DurationDictionary = .TOTAL
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 HStack(spacing: 16) {
                     Button(action: {
-//                        expandDatePicker = true
+                        expandDatePicker = true
                     }) {
-                        getPeriodStringViewOfWeek(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
+                        getPeriodStringViewOfWeek(firstDayOfWeek: weekWiDViewModel.startDate, lastDayOfWeek: weekWiDViewModel.finishDate)
                             .titleLarge()
                             .lineLimit(1)
                             .truncationMode(.head)
@@ -61,10 +64,11 @@ struct WeekWiDView: View {
                     }
                     
                     Button(action: {
-                        startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
-                        finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
+                        let newStartDate = calendar.date(byAdding: .day, value: -7, to: weekWiDViewModel.startDate) ?? Date()
+                        let newFinishDate = calendar.date(byAdding: .day, value: -7, to: weekWiDViewModel.finishDate) ?? Date()
 
-                        updateDataFromPeriod()
+                        weekWiDViewModel.setDates(startDate: newStartDate, finishDate: newFinishDate)
+//                        updateDataFromPeriod()
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
@@ -72,23 +76,25 @@ struct WeekWiDView: View {
                     }
 
                     Button(action: {
-                        startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
-                        finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
+                        let newStartDate = calendar.date(byAdding: .day, value: 7, to: weekWiDViewModel.startDate) ?? Date()
+                        let newFinishDate = calendar.date(byAdding: .day, value: 7, to: weekWiDViewModel.finishDate) ?? Date()
                         
-                        updateDataFromPeriod()
+                        weekWiDViewModel.setDates(startDate: newStartDate, finishDate: newFinishDate)
+                        
+//                        updateDataFromPeriod()
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
                             .frame(width: 24, height: 24)
                     }
-                    .disabled(calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
-                              calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)))
+                    .disabled(calendar.isDate(weekWiDViewModel.startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
+                              calendar.isDate(weekWiDViewModel.finishDate, inSameDayAs: getLastDateOfWeek(for: today)))
                 }
                 .frame(maxHeight: 44)
                 .padding(.horizontal)
                 
                 VStack(spacing: 0) {
-                    if wiDList.isEmpty {
+                    if weekWiDViewModel.wiDList.isEmpty {
 //                        getEmptyView(message: "표시할 데이터가 없습니다.")
 
                         Text("표시할\n기록이\n없습니다.")
@@ -110,13 +116,13 @@ struct WeekWiDView: View {
                                 }
                                 .padding(.horizontal)
                                 
-                                let daysDifference = calendar.dateComponents([.day], from: startDate, to: finishDate).day ?? 0
+                                let daysDifference = calendar.dateComponents([.day], from: weekWiDViewModel.startDate, to: weekWiDViewModel.finishDate).day ?? 0
                                 
                                 LazyVGrid(columns: Array(repeating: GridItem(), count: 7)) {
                                     ForEach(0..<daysDifference + 1, id: \.self) { gridIndex in
-                                        let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: startDate) ?? Date()
+                                        let currentDate = calendar.date(byAdding: .day, value: gridIndex, to: weekWiDViewModel.startDate) ?? Date()
                                         
-                                        let filteredWiDList = wiDList.filter { wiD in
+                                        let filteredWiDList = weekWiDViewModel.wiDList.filter { wiD in
                                             return calendar.isDate(wiD.date, inSameDayAs: currentDate)
                                         }
                                         
@@ -140,7 +146,7 @@ struct WeekWiDView: View {
                                 }
                                 .padding(.horizontal)
                                 
-                                Picker("", selection: $seletedDictionaryType) {
+                                Picker("", selection: $weekWiDViewModel.seletedDictionaryType) {
                                     ForEach(DurationDictionary.allCases) { dictionary in
                                         Text(dictionary.koreanValue)
                                             .bodyMedium()
@@ -148,8 +154,11 @@ struct WeekWiDView: View {
                                 }
                                 .pickerStyle(.segmented)
                                 .padding(.horizontal)
+                                .onChange(of: weekWiDViewModel.seletedDictionaryType) { newDictionaryType in
+                                    weekWiDViewModel.setDictionaryType(newDictionaryType: newDictionaryType)
+                                }
                                 
-                                ForEach(Array(seletedDictionary), id: \.key) { title, duration in
+                                ForEach(Array(weekWiDViewModel.seletedDictionary), id: \.key) { title, duration in
                                     HStack {
                                         Image(systemName: titleImageDictionary[title] ?? "") // (?? "") 반드시 붙혀야 함.
                                             .font(.system(size: 24))
@@ -323,125 +332,113 @@ struct WeekWiDView: View {
             /**
              대화 상자
              */
-//            if expandDatePicker {
-//                ZStack {
-//                    Color("Black-White")
-//                        .opacity(0.3)
-//                        .onTapGesture {
-//                            expandDatePicker = false
-//                        }
-//                    
-//                    // 날짜 선택
-//                    if expandDatePicker {
-//                        VStack(spacing: 0) {
-//                            ZStack {
-//                                Text("주 선택")
-//                                    .titleMedium()
-//                                
-//                                Button(action: {
-//                                    expandDatePicker = false
-//                                }) {
-//                                    Text("확인")
-//                                        .bodyMedium()
-//                                }
-//                                .frame(maxWidth: .infinity, alignment: .trailing)
-//                                .tint(Color("Black-White"))
-//                            }
-//                            .padding()
-//                            
-//                            Divider()
-//                                .background(Color("Black-White"))
-//
-//                            VStack(spacing: 0) {
-//                                ForEach(Period.allCases) { menuPeriod in
-//                                    Button(action: {
-//                                        // 주 선택하는 기능
-//                                        
-////                                        selectedPeriod = menuPeriod
-//                                        withAnimation {
-//                                            expandDatePicker.toggle()
-//                                        }
-//                                    }) {
-////                                            Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
-////                                                .font(.system(size: 25))
-////                                                .frame(maxWidth: 40, maxHeight: 40)
-////
-////                                            Spacer()
-////                                                .frame(maxWidth: 20)
-//                                        
-//                                        Text(menuPeriod.koreanValue)
-//                                            .labelMedium()
-//                                        
-//                                        Spacer()
-//                                        
-////                                        if selectedPeriod == menuPeriod {
-////                                            Text("선택됨")
-////                                                .bodyMedium()
-////                                        }
-//                                    }
-//                                    .padding()
-//                                }
-//                            }
-//                        }
-//                        .background(Color("White-Black"))
-//                        .cornerRadius(8)
-//                        .padding() // 바깥 패딩
+            if expandDatePicker {
+                ZStack {
+                    Color("Black-White")
+                        .opacity(0.3)
+                        .onTapGesture {
+                            expandDatePicker = false
+                        }
+                    
+                    // 날짜 선택
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            ForEach(-4..<1, id: \.self) { index in
+                                Button(action: {
+                                    let firstDayOfWeek = calendar.date(byAdding: .weekOfYear, value: index, to: getFirstDateOfWeek(for: today))!
+                                    let lastDayOfWeek = calendar.date(byAdding: .weekOfYear, value: index, to: getLastDateOfWeek(for: today))!
+                                    
+                                    weekWiDViewModel.setDates(startDate: firstDayOfWeek, finishDate: lastDayOfWeek)
+                                    
+                                    expandDatePicker = false
+                                }) {
+                                    HStack(spacing: 0) {
+                                        let firstDayOfWeek = calendar.date(byAdding: .weekOfYear, value: index, to: getFirstDateOfWeek(for: today))!
+                                        let lastDayOfWeek = calendar.date(byAdding: .weekOfYear, value: index, to: getLastDateOfWeek(for: today))!
+                                        
+                                        getPeriodStringViewOfWeek(firstDayOfWeek: firstDayOfWeek, lastDayOfWeek: lastDayOfWeek)
+                                            .bodyMedium()
+                                        
+                                        Spacer()
+                                        
+                                        if firstDayOfWeek == weekWiDViewModel.startDate && lastDayOfWeek == weekWiDViewModel.finishDate {
+                                             Image(systemName: "checkmark.circle.fill")
+                                                    .font(.system(size: 20))
+                                                    .frame(width: 20, height: 20)
+                                        } else {
+                                            Image(systemName: "circle")
+                                                   .font(.system(size: 20))
+                                                   .frame(width: 20, height: 20)
+                                        }
+                                    }
+                                }
+                                .padding()
+                            }
+                        }
+                        .padding()
+                    }
+                    .frame(maxHeight: 300)
+                    .background(Color("White-Black"))
+                    .cornerRadius(8)
+                    .padding() // 바깥 패딩
 //                        .shadow(color: Color("Black-White"), radius: 1)
-//                    }
-//                }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                .edgesIgnoringSafeArea(.all)
-//            }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
         .background(Color("White-Black"))
         .navigationBarHidden(true)
-        .onAppear {
-            self.startDate = getFirstDateOfWeek(for: today)
-            self.finishDate = getLastDateOfWeek(for: today)
-            
-//            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
-//            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
-            
-            updateDataFromPeriod()
-        }
-        .onChange(of: seletedDictionaryType) { newDictionaryType in
-            // 선택된 딕셔너리 유형에 따라 적절한 딕셔너리 업데이트
-            switch newDictionaryType {
-            case .TOTAL:
-                seletedDictionary = totalDurationDictionary
-            case .AVERAGE:
-                seletedDictionary = averageDurationDictionary
-            case .MIN:
-                seletedDictionary = minDurationDictionary
-            case .MAX:
-                seletedDictionary = maxDurationDictionary
-            }
-        }
+//        .onAppear {
+//            self.startDate = getFirstDateOfWeek(for: today)
+//            self.finishDate = getLastDateOfWeek(for: today)
+//
+////            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+////            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+//
+//            updateDataFromPeriod()
+//        }
+//        .onChange(of: seletedDictionaryType) { newDictionaryType in
+//            // 선택된 딕셔너리 유형에 따라 적절한 딕셔너리 업데이트
+//            switch newDictionaryType {
+//            case .TOTAL:
+//                seletedDictionary = totalDurationDictionary
+//            case .AVERAGE:
+//                seletedDictionary = averageDurationDictionary
+//            case .MIN:
+//                seletedDictionary = minDurationDictionary
+//            case .MAX:
+//                seletedDictionary = maxDurationDictionary
+//            }
+//        }
     }
     
     // startDate, finishDate 변경될 때 실행됨.
-    func updateDataFromPeriod() {
-        wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
-
-        totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-        averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
-        maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
-        minDurationDictionary = getMinDurationDictionaryByTitle(wiDList: wiDList)
-        
-        // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
-        seletedDictionary = totalDurationDictionary
-    }
+//    func updateDataFromPeriod() {
+//        wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
+//
+//        totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
+//        averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
+//        maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
+//        minDurationDictionary = getMinDurationDictionaryByTitle(wiDList: wiDList)
+//
+//        // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
+//        seletedDictionary = totalDurationDictionary
+//    }
 }
 
 struct PeriodBasedView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             WeekWiDView()
+                .environment(\.colorScheme, .light)
+                .environmentObject(WeekWiDViewModel())
             
             WeekWiDView()
                 .environment(\.colorScheme, .dark)
+                .environmentObject(WeekWiDViewModel())
         }
     }
 }

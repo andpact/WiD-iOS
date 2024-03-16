@@ -8,33 +8,39 @@
 import SwiftUI
 
 struct WiDListView: View {
+    // 뷰 모델
+    @EnvironmentObject var wiDListViewModel: WiDListViewModel
+    
     // WiD
-    private let wiDService = WiDService()
-    @State private var wiDList: [WiD] = []
-    @State private var fullWiDList: [WiD] = []
+//    private let wiDService = WiDService()
+//    @State private var wiDList: [WiD] = []
+//    @State private var fullWiDList: [WiD] = []
     
     // 날짜
-    private let now = Date()
+//    private let now = Date()
     private let today = Date()
     private let calendar = Calendar.current
-    @State private var currentDate: Date = Date()
-    @State private var expandDatePicker: Bool = false
+//    @State private var currentDate: Date = Date()
+    @State private var datePickerExpanded: Bool = false
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 HStack(spacing: 16) {
                     Button(action: {
-                        expandDatePicker = true
+                        datePickerExpanded = true
                     }) {
-                        getDateStringView(date: currentDate)
+                        getDateStringView(date: wiDListViewModel.currentDate)
                             .titleLarge()
                     }
                     
                     Spacer()
                     
                     Button(action: {
-                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+//                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+//                        wiDListViewModel.currentDate = calendar.date(byAdding: .day, value: -1, to: wiDListViewModel.currentDate)!
+                        let newDate = calendar.date(byAdding: .day, value: -1, to: wiDListViewModel.currentDate)!
+                        wiDListViewModel.setCurrentDate(to: newDate)
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
@@ -42,25 +48,30 @@ struct WiDListView: View {
                     }
 
                     Button(action: {
-                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+//                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+//                        wiDListViewModel.currentDate = calendar.date(byAdding: .day, value: 1, to: wiDListViewModel.currentDate)!
+                        let newDate = calendar.date(byAdding: .day, value: 1, to: wiDListViewModel.currentDate)!
+                        wiDListViewModel.setCurrentDate(to: newDate)
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
                             .frame(width: 24, height: 24)
                     }
-                    .disabled(calendar.isDateInToday(currentDate))
+//                    .disabled(calendar.isDateInToday(currentDate))
+                    .disabled(calendar.isDateInToday(wiDListViewModel.currentDate))
                 }
                 .frame(maxHeight: 44)
                 .padding(.horizontal)
             
-                if wiDList.isEmpty {
+                if wiDListViewModel.fullWiDList.isEmpty {
                     VStack(spacing: 16) {
                         Text("표시할\nWiD가\n없습니다.")
                             .bodyLarge()
                             .lineSpacing(10)
                             .multilineTextAlignment(.center)
                         
-                        NavigationLink(destination: NewWiDView(date: currentDate)) {
+//                        NavigationLink(destination: NewWiDView(date: currentDate)) {
+                        NavigationLink(destination: NewWiDView(date: wiDListViewModel.currentDate)) {
                             Text("새로운 WiD 만들기")
                                 .bodyMedium()
                             
@@ -74,7 +85,7 @@ struct WiDListView: View {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 8) {
-                                Text(getTimeString(fullWiDList.first!.start))
+                                Text(getTimeString(wiDListViewModel.fullWiDList.first!.start))
                                     .bodyMedium()
                              
                                 Rectangle()
@@ -83,7 +94,7 @@ struct WiDListView: View {
                             }
                             .padding(.horizontal)
                             
-                            ForEach(Array(fullWiDList), id: \.id) { wiD in
+                            ForEach(Array(wiDListViewModel.fullWiDList), id: \.id) { wiD in
                                 VStack(alignment: .leading, spacing: 8) {
                                     if 0 < wiD.id { // WiD
                                         NavigationLink(destination: WiDDetailView(clickedWiDId: wiD.id)) {
@@ -123,7 +134,8 @@ struct WiDListView: View {
                                         }
                                         .padding(.horizontal)
                                     } else { // Empty WiD
-                                        NavigationLink(destination: NewWiDView(date: currentDate, start: wiD.start, finish: wiD.finish, duration: wiD.finish.timeIntervalSince(wiD.start))) {
+//                                        NavigationLink(destination: NewWiDView(date: currentDate, start: wiD.start, finish: wiD.finish, duration: wiD.finish.timeIntervalSince(wiD.start))) {
+                                        NavigationLink(destination: NewWiDView(date: wiDListViewModel.currentDate, start: wiD.start, finish: wiD.finish, duration: wiD.finish.timeIntervalSince(wiD.start))) {
                                             HStack(spacing: 8) {
                                                 Image(systemName: "textformat")
                                                     .font(.system(size: 24))
@@ -175,40 +187,44 @@ struct WiDListView: View {
                 }
             }
             
-            if expandDatePicker {
+            if datePickerExpanded {
                 ZStack {
                     Color("Black-White")
                         .opacity(0.3)
                         .onTapGesture {
-                            expandDatePicker = false
+                            datePickerExpanded = false
                         }
 
                     VStack(spacing: 0) {
-                        ZStack {
-                            Button(action: {
-                                expandDatePicker = false
-                            }) {
-                                Text("확인")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+//                        ZStack {
+//                            Button(action: {
+//                                datePickerExpanded = false
+//                            }) {
+//                                Text("확인")
+//                                    .bodyMedium()
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .trailing)
+//
+//                            Text("날짜 선택")
+//                                .titleMedium()
+//                        }
+//                        .padding()
+//
+//                        Divider()
+//                            .background(Color("Black-White"))
 
-                            Text("날짜 선택")
-                                .titleMedium()
-                        }
-                        .padding()
-
-                        Divider()
-                            .background(Color("Black-White"))
-
-                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+//                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                        DatePicker("", selection: $wiDListViewModel.currentDate, in: ...today, displayedComponents: .date)
                             .datePickerStyle(.graphical)
                             .padding()
+                            .onChange(of: wiDListViewModel.currentDate) { newDate in
+                                wiDListViewModel.setCurrentDate(to: wiDListViewModel.currentDate)
+                            }
                     }
                     .background(Color("White-Black"))
                     .cornerRadius(8)
                     .padding() // 바깥 패딩
-                    .shadow(color: Color("Black-White"), radius: 1)
+//                    .shadow(color: Color("Black-White"), radius: 1)
                 }
                 .edgesIgnoringSafeArea(.all)
             }
@@ -217,16 +233,10 @@ struct WiDListView: View {
         .background(Color("White-Black"))
         .tint(Color("Black-White"))
         .navigationBarHidden(true)
-        .onAppear {
-            self.wiDList = wiDService.readWiDListByDate(date: currentDate)
-            self.fullWiDList = getFullWiDListFromWiDList(date: currentDate, currentTime: now, wiDList: wiDList)
-        }
-        .onChange(of: currentDate) { newDate in
-            withAnimation {
-                self.wiDList = wiDService.readWiDListByDate(date: newDate)
-                self.fullWiDList = getFullWiDListFromWiDList(date: newDate, currentTime: now, wiDList: wiDList)
-            }
-        }
+//        .onAppear {
+//            // WiD 생성 후 돌아왔을 때, WiDList가 갱신되도록.
+//            wiDListViewModel.setCurrentDate(to: wiDListViewModel.currentDate)
+//        }
     }
 }
 
@@ -235,9 +245,11 @@ struct WiDListView_Previews: PreviewProvider {
         Group {
             WiDListView()
                 .environment(\.colorScheme, .light)
+                .environmentObject(WiDListViewModel())
             
             WiDListView()
                 .environment(\.colorScheme, .dark)
+                .environmentObject(WiDListViewModel())
         }
     }
 }

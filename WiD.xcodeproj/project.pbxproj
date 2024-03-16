@@ -24,6 +24,9 @@
 		EA1BF4E02B04703D004DEBC4 /* WiDListUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1BF4DF2B04703D004DEBC4 /* WiDListUtil.swift */; };
 		EA1F446D2B72048D0028B9EC /* PomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1F446C2B72048D0028B9EC /* PomodoroView.swift */; };
 		EA215CDE2A60F9AF005C5D30 /* SearchDiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA215CDD2A60F9AF005C5D30 /* SearchDiaryView.swift */; };
+		EA2B14832B9E7E36008410DD /* MonthWiDViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2B14822B9E7E36008410DD /* MonthWiDViewModel.swift */; };
+		EA2B14852B9E8234008410DD /* TitleWiDViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2B14842B9E8234008410DD /* TitleWiDViewModel.swift */; };
+		EA2B4E0B2BA583B9002BC371 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2B4E0A2BA583B9002BC371 /* HomeViewModel.swift */; };
 		EA35F2DD2B71CA430033253D /* WiDListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA35F2DC2B71CA430033253D /* WiDListView.swift */; };
 		EA35F2DF2B71CE050033253D /* WiDDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA35F2DE2B71CE050033253D /* WiDDisplayView.swift */; };
 		EA3BC0642B1AB9F1009467CA /* DiaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3BC0632B1AB9F1009467CA /* DiaryService.swift */; };
@@ -43,12 +46,17 @@
 		EA663F0C2A5E74E200B51844 /* DataUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA663F0B2A5E74E200B51844 /* DataUtil.swift */; };
 		EA66D02A2B3D39190064483C /* ChivoMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA66D0292B3D39190064483C /* ChivoMono-Regular.ttf */; };
 		EA70DD742A59089D00B4B167 /* DayWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA70DD732A59089D00B4B167 /* DayWiDView.swift */; };
+		EA79E2692B9ECB650065B78C /* SearchDiaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA79E2682B9ECB650065B78C /* SearchDiaryViewModel.swift */; };
 		EA7B66B02B7322AB00A159CD /* PieGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7B66AF2B7322AB00A159CD /* PieGraphView.swift */; };
 		EA7B66B22B73268A00A159CD /* MonthWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7B66B12B73268A00A159CD /* MonthWiDView.swift */; };
 		EA8CBDDC2B71A84D00798E9D /* WiDToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8CBDDB2B71A84D00798E9D /* WiDToolView.swift */; };
+		EA9A92E02B9EA1EF0094FFA1 /* DayDiaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9A92DF2B9EA1EF0094FFA1 /* DayDiaryViewModel.swift */; };
+		EA9A92E22B9EA64E0094FFA1 /* RandomDiaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9A92E12B9EA64E0094FFA1 /* RandomDiaryViewModel.swift */; };
 		EA9D41742AB18B0D008D6DE2 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D41732AB18B0D008D6DE2 /* TimerView.swift */; };
 		EAA5E85C2B2FE6A8004DEA29 /* FontUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */; };
 		EAA83AA52B3D2864008CE95F /* ChivoMono-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */; };
+		EAACAE442B9D986E00898C74 /* DayWiDViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAACAE432B9D986E00898C74 /* DayWiDViewModel.swift */; };
+		EAACAE462B9D9E3500898C74 /* WeekWiDViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAACAE452B9D9E3500898C74 /* WeekWiDViewModel.swift */; };
 		EAB438A62B5109A70029F640 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB438A52B5109A70029F640 /* TimerViewModel.swift */; };
 		EAC5D7212A56A76E00FA2499 /* StopwatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5D7202A56A76E00FA2499 /* StopwatchView.swift */; };
 		EAC5E1582B19B35500AD8516 /* WeekWiDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC5E1572B19B35500AD8516 /* WeekWiDView.swift */; };
@@ -59,6 +67,7 @@
 		EADF79162A583C8E000753B2 /* WiDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADF79152A583C8E000753B2 /* WiDService.swift */; };
 		EAE85ED92B88B99D000DA267 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE85ED82B88B99D000DA267 /* MainView.swift */; };
 		EAF1D54C2B1AAAB000E26B2A /* Diary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF1D54B2B1AAAB000E26B2A /* Diary.swift */; };
+		EAFCB8A02B9D884B0047C14A /* WiDListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFCB89F2B9D884B0047C14A /* WiDListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +111,9 @@
 		EA1BF4DF2B04703D004DEBC4 /* WiDListUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDListUtil.swift; sourceTree = "<group>"; };
 		EA1F446C2B72048D0028B9EC /* PomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroView.swift; sourceTree = "<group>"; };
 		EA215CDD2A60F9AF005C5D30 /* SearchDiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDiaryView.swift; sourceTree = "<group>"; };
+		EA2B14822B9E7E36008410DD /* MonthWiDViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthWiDViewModel.swift; sourceTree = "<group>"; };
+		EA2B14842B9E8234008410DD /* TitleWiDViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleWiDViewModel.swift; sourceTree = "<group>"; };
+		EA2B4E0A2BA583B9002BC371 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		EA35F2DC2B71CA430033253D /* WiDListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDListView.swift; sourceTree = "<group>"; };
 		EA35F2DE2B71CE050033253D /* WiDDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDDisplayView.swift; sourceTree = "<group>"; };
 		EA3BC0632B1AB9F1009467CA /* DiaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryService.swift; sourceTree = "<group>"; };
@@ -124,12 +136,17 @@
 		EA663F0B2A5E74E200B51844 /* DataUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUtil.swift; sourceTree = "<group>"; };
 		EA66D0292B3D39190064483C /* ChivoMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChivoMono-Regular.ttf"; sourceTree = "<group>"; };
 		EA70DD732A59089D00B4B167 /* DayWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayWiDView.swift; sourceTree = "<group>"; };
+		EA79E2682B9ECB650065B78C /* SearchDiaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDiaryViewModel.swift; sourceTree = "<group>"; };
 		EA7B66AF2B7322AB00A159CD /* PieGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieGraphView.swift; sourceTree = "<group>"; };
 		EA7B66B12B73268A00A159CD /* MonthWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthWiDView.swift; sourceTree = "<group>"; };
 		EA8CBDDB2B71A84D00798E9D /* WiDToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDToolView.swift; sourceTree = "<group>"; };
+		EA9A92DF2B9EA1EF0094FFA1 /* DayDiaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayDiaryViewModel.swift; sourceTree = "<group>"; };
+		EA9A92E12B9EA64E0094FFA1 /* RandomDiaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomDiaryViewModel.swift; sourceTree = "<group>"; };
 		EA9D41732AB18B0D008D6DE2 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EAA5E85B2B2FE6A8004DEA29 /* FontUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontUtil.swift; sourceTree = "<group>"; };
 		EAA83AA42B3D2864008CE95F /* ChivoMono-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChivoMono-BlackItalic.ttf"; sourceTree = "<group>"; };
+		EAACAE432B9D986E00898C74 /* DayWiDViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayWiDViewModel.swift; sourceTree = "<group>"; };
+		EAACAE452B9D9E3500898C74 /* WeekWiDViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekWiDViewModel.swift; sourceTree = "<group>"; };
 		EAB438A52B5109A70029F640 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		EAC5D7202A56A76E00FA2499 /* StopwatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchView.swift; sourceTree = "<group>"; };
 		EAC5E1572B19B35500AD8516 /* WeekWiDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekWiDView.swift; sourceTree = "<group>"; };
@@ -141,6 +158,7 @@
 		EADF79152A583C8E000753B2 /* WiDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDService.swift; sourceTree = "<group>"; };
 		EAE85ED82B88B99D000DA267 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		EAF1D54B2B1AAAB000E26B2A /* Diary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diary.swift; sourceTree = "<group>"; };
+		EAFCB89F2B9D884B0047C14A /* WiDListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiDListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -339,6 +357,15 @@
 			children = (
 				EA1A39C02B500B4C00C0D5AC /* StopwatchViewModel.swift */,
 				EAB438A52B5109A70029F640 /* TimerViewModel.swift */,
+				EAFCB89F2B9D884B0047C14A /* WiDListViewModel.swift */,
+				EAACAE432B9D986E00898C74 /* DayWiDViewModel.swift */,
+				EAACAE452B9D9E3500898C74 /* WeekWiDViewModel.swift */,
+				EA2B14822B9E7E36008410DD /* MonthWiDViewModel.swift */,
+				EA2B14842B9E8234008410DD /* TitleWiDViewModel.swift */,
+				EA9A92DF2B9EA1EF0094FFA1 /* DayDiaryViewModel.swift */,
+				EA9A92E12B9EA64E0094FFA1 /* RandomDiaryViewModel.swift */,
+				EA79E2682B9ECB650065B78C /* SearchDiaryViewModel.swift */,
+				EA2B4E0A2BA583B9002BC371 /* HomeViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -584,8 +611,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAACAE442B9D986E00898C74 /* DayWiDViewModel.swift in Sources */,
 				EA43E2742B72077B00C9D8E9 /* TitleWiDView.swift in Sources */,
 				EAF1D54C2B1AAAB000E26B2A /* Diary.swift in Sources */,
+				EA2B4E0B2BA583B9002BC371 /* HomeViewModel.swift in Sources */,
 				EADF79162A583C8E000753B2 /* WiDService.swift in Sources */,
 				EA43E2782B7207CA00C9D8E9 /* DayDiaryView.swift in Sources */,
 				EA4EACF42B1EAA2900BB4681 /* LineGraphView.swift in Sources */,
@@ -593,6 +622,8 @@
 				EA18DCB62AE8CC5B00B88F30 /* BarChartView.swift in Sources */,
 				EA1AF4AC2AB55C5500BEBA93 /* SplashView.swift in Sources */,
 				EA1F446D2B72048D0028B9EC /* PomodoroView.swift in Sources */,
+				EA79E2692B9ECB650065B78C /* SearchDiaryViewModel.swift in Sources */,
+				EAFCB8A02B9D884B0047C14A /* WiDListViewModel.swift in Sources */,
 				EA663F0C2A5E74E200B51844 /* DataUtil.swift in Sources */,
 				EA35F2DF2B71CE050033253D /* WiDDisplayView.swift in Sources */,
 				EA9D41742AB18B0D008D6DE2 /* TimerView.swift in Sources */,
@@ -604,19 +635,24 @@
 				EAE85ED92B88B99D000DA267 /* MainView.swift in Sources */,
 				EA60B8082A56991700B49641 /* ContentView.swift in Sources */,
 				EA181F372A624F1F006EAF72 /* TimeUtil.swift in Sources */,
+				EA2B14832B9E7E36008410DD /* MonthWiDViewModel.swift in Sources */,
 				EA70DD742A59089D00B4B167 /* DayWiDView.swift in Sources */,
 				EA43E2762B7207A700C9D8E9 /* DiaryDisplayView.swift in Sources */,
 				EA40A95D2B7B436600DA9827 /* SettingView.swift in Sources */,
 				EA0458232A625C0C0065B98E /* WiD.swift in Sources */,
+				EA9A92E22B9EA64E0094FFA1 /* RandomDiaryViewModel.swift in Sources */,
 				EA35F2DD2B71CA430033253D /* WiDListView.swift in Sources */,
 				EA3BC0642B1AB9F1009467CA /* DiaryService.swift in Sources */,
 				EAD531ED2B1E862700E3C78B /* WiDDetailView.swift in Sources */,
+				EAACAE462B9D9E3500898C74 /* WeekWiDViewModel.swift in Sources */,
 				EA1BF4E02B04703D004DEBC4 /* WiDListUtil.swift in Sources */,
 				EAA5E85C2B2FE6A8004DEA29 /* FontUtil.swift in Sources */,
 				EA05E95C2B1CA6B800A0DF42 /* DiaryDetailView.swift in Sources */,
+				EA2B14852B9E8234008410DD /* TitleWiDViewModel.swift in Sources */,
 				EAC5D7212A56A76E00FA2499 /* StopwatchView.swift in Sources */,
 				EA60B8062A56991700B49641 /* WiDApp.swift in Sources */,
 				EA1B5BE02B22AF5800E1BC87 /* ViewUtil.swift in Sources */,
+				EA9A92E02B9EA1EF0094FFA1 /* DayDiaryViewModel.swift in Sources */,
 				EA43E27A2B72081800C9D8E9 /* RandomDiaryView.swift in Sources */,
 				EA0C270C2B19AAB200AB2FBD /* DurationUtil.swift in Sources */,
 				EA8CBDDC2B71A84D00798E9D /* WiDToolView.swift in Sources */,

@@ -81,6 +81,37 @@ class WiDService {
         }
     }
     
+    func fetchMostRecentWiD() -> WiD? {
+        var mostRecentWiD: WiD?
+
+        // Query to select the WiD with the maximum id (which corresponds to the most recent WiD)
+        let query = "SELECT id, date, title, start, finish, duration FROM WiD ORDER BY id DESC LIMIT 1;"
+
+        var statement: OpaquePointer?
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            if sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+                let dateText = String(cString: sqlite3_column_text(statement, 1))
+                let title = String(cString: sqlite3_column_text(statement, 2)) // Error Here!!
+                let startText = String(cString: sqlite3_column_text(statement, 3))
+                let finishText = String(cString: sqlite3_column_text(statement, 4))
+                let duration = Double(sqlite3_column_double(statement, 5))
+
+                if let date = dateFormatter.date(from: dateText),
+                   let start = timeFormatter.date(from: startText),
+                   let finish = timeFormatter.date(from: finishText) {
+                    mostRecentWiD = WiD(id: id, date: date, title: title, start: start, finish: finish, duration: duration)
+                }
+            }
+            sqlite3_finalize(statement)
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("WiDService : Error preparing statement: \(errmsg)")
+        }
+
+        return mostRecentWiD
+    }
+    
 //    func getUniqueYears() -> [String] {
 //        let selectYearsQuery = "SELECT DISTINCT strftime('%Y', date) FROM WiD"
 //
@@ -121,25 +152,25 @@ class WiDService {
 //        return years
 //    }
     
-    func readTotalWiDCount() -> Int {
-        print("WiDService: getTotalWiDCount executed")
-        
-        let query = "SELECT COUNT(*) FROM WiD"
-        var statement: OpaquePointer?
-        var totalWiDCount = 0
-        
-        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
-            if sqlite3_step(statement) == SQLITE_ROW {
-                totalWiDCount = Int(sqlite3_column_int(statement, 0))
-            }
-            sqlite3_finalize(statement)
-        } else {
-            let errmsg = String(cString: sqlite3_errmsg(db)!)
-            print("WiDService: Error preparing total WiD count query: \(errmsg)")
-        }
-        
-        return totalWiDCount
-    }
+//    func readTotalWiDCount() -> Int {
+//        print("WiDService: getTotalWiDCount executed")
+//
+//        let query = "SELECT COUNT(*) FROM WiD"
+//        var statement: OpaquePointer?
+//        var totalWiDCount = 0
+//
+//        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+//            if sqlite3_step(statement) == SQLITE_ROW {
+//                totalWiDCount = Int(sqlite3_column_int(statement, 0))
+//            }
+//            sqlite3_finalize(statement)
+//        } else {
+//            let errmsg = String(cString: sqlite3_errmsg(db)!)
+//            print("WiDService: Error preparing total WiD count query: \(errmsg)")
+//        }
+//
+//        return totalWiDCount
+//    }
 
     func readWiDByID(id: Int) -> WiD? {
         print("WiDService : readWiDByID executed")
@@ -331,7 +362,6 @@ class WiDService {
         return result
     }
 
-    
 //    func getDailyTotalDictionary(forDate date: Date) -> [String: TimeInterval] {
 //        let dateFormatter = DateFormatter()
 //        dateFormatter.dateFormat = "yyyy-MM-dd"

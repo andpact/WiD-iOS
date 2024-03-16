@@ -8,17 +8,20 @@
 import SwiftUI
 
 struct SearchDiaryView: View {
+    // 뷰 모델
+    @EnvironmentObject var searchDiaryViewModel: SearchDiaryViewModel
+    
     // 화면
-    @Environment(\.presentationMode) var presentationMode
+//    @Environment(\.presentationMode) var presentationMode
     
     // WiD
-    private let wiDService = WiDService()
+//    private let wiDService = WiDService()
 //    @State private var wiDList: [WiD] = []
     
     // 다이어리
-    private let diaryService = DiaryService()
-    @State private var diaryList: [Diary] = []
-    @State private var searchText: String = ""
+//    private let diaryService = DiaryService()
+//    @State private var diaryList: [Diary] = []
+//    @State private var searchText: String = ""
     @State private var searchComplete: Bool = false
     
     // 날짜
@@ -37,7 +40,7 @@ struct SearchDiaryView: View {
 //                        .font(.system(size: 24)) // large - 22, medium(기본) - 17, small - 14(정확하지 않음)
 //                }
                 
-                TextField("제목 또는 내용으로 검색..", text: $searchText)
+                TextField("\(searchDiaryViewModel.searchFilter.koreanValue)으로 검색..", text: $searchDiaryViewModel.searchText)
                     .bodyMedium()
                     .padding(8)
                     .background(Color("White-Black"))
@@ -46,7 +49,9 @@ struct SearchDiaryView: View {
                 
                 Button(action: {
                     withAnimation {
-                        diaryList = diaryService.readDiaryByTitleOrContent(searchText: searchText)
+//                        diaryList = diaryService.readDiaryByTitleOrContent(searchText: searchText)
+                        
+                        searchDiaryViewModel.addDiaries()
                         
                         searchComplete = true
                     }
@@ -62,8 +67,9 @@ struct SearchDiaryView: View {
             /**
              검색 결과
              */
-            if diaryList.isEmpty {
-                VStack {
+//            if diaryList.isEmpty {
+            if searchDiaryViewModel.dateList.isEmpty {
+                VStack(spacing: 0) {
                     if searchComplete {
 //                        getEmptyView(message: "검색 결과가 없습니다.")
                         
@@ -107,24 +113,37 @@ struct SearchDiaryView: View {
             } else {
                 ScrollView {
                     VStack(spacing: 8) { // 스크롤 뷰 안에 자동으로 수직 수택(spacing: 8)이 생성되는 듯.
-                        ForEach(Array(diaryList), id: \.id) { diary in
-                            VStack(spacing: 0) {
-                                getDateStringView(date: diary.date)
-                                    .titleMedium()
+//                        ForEach(Array(diaryList), id: \.id) { diary in
+                            ForEach(searchDiaryViewModel.dateList.indices, id: \.self) { index in
+                                let date = searchDiaryViewModel.dateList[index]
                                 
-                                NavigationLink(destination: DiaryDetailView(date: diary.date)) {
-                                    HStack(spacing: 8) {
-                                        let wiDList = wiDService.readWiDListByDate(date: diary.date)
+                                VStack(spacing: 0) {
+                                    HStack(spacing: 0) {
+                                        getDateStringView(date: date)
+                                            .titleMedium()
                                         
-                                        PeriodPieChartView(date: diary.date, wiDList: wiDList)
-                                            .frame(maxWidth: 60)
+                                        Spacer()
+                                    }
+                                    .padding(.horizontal)
+                                
+                                NavigationLink(destination: DiaryDetailView(date: date)) {
+                                    HStack(spacing: 8) {
+//                                        let wiDList = wiDService.readWiDListByDate(date: diary.date)
+                                        let wiDList = searchDiaryViewModel.wiDList[date]
+                                        
+//                                        if wiDList?.isEmpty == true {
+//                                            getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+//                                        } else {
+                                            PeriodPieChartView(date: date, wiDList: wiDList ?? [])
+                                                .frame(maxWidth: 60)
+//                                        }
                                         
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text(diary.title)
+                                            Text(searchDiaryViewModel.diaryList[date]?.title ?? "")
                                                 .bodyMedium()
                                                 .lineLimit(1)
                                             
-                                            Text(diary.content)
+                                            Text(searchDiaryViewModel.diaryList[date]?.content ?? "")
                                                 .bodyMedium()
                                                 .lineLimit(1)
                                         }

@@ -20,7 +20,7 @@ struct WiDToolView: View {
     @State private var selectedTab: WiDToolViewTapItem = .STOPWATCH
     @Namespace private var animation
     
-    // 도구
+    // 뷰 모델
     @EnvironmentObject var stopwatchViewModel: StopwatchViewModel
     @EnvironmentObject var timerViewModel: TimerViewModel
     

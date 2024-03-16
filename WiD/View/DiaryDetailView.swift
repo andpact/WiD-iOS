@@ -52,7 +52,8 @@ struct DiaryDetailView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+//                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
+                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED {
                         HStack {
                             Text(stopwatchPlayer.title.koreanValue)
                                 .bodyMedium()
@@ -65,7 +66,8 @@ struct DiaryDetailView: View {
                         .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
                         .foregroundColor(Color("White"))
                         .cornerRadius(8)
-                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+//                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
+                    } else if timerPlayer.timerState != PlayerState.STOPPED {
                         HStack {
                             Text(timerPlayer.title.koreanValue)
                                 .bodyMedium()
@@ -117,11 +119,11 @@ struct DiaryDetailView: View {
                             .font(.system(size: 22, weight: .bold))
 
                         ZStack {
-                            if wiDList.isEmpty {
-                                getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-                            } else {
+//                            if wiDList.isEmpty {
+//                                getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+//                            } else {
                                 DatePieChartView(wiDList: wiDList)
-                            }
+//                            }
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }

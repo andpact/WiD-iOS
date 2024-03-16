@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+enum MainViewTap: String, CaseIterable {
+    case HOME = "house.fill"
+    case WiDTOOL = "plus.app.fill"
+    case WiDDISPLAY = "deskclock.fill"
+    case DIARYDISPLAY = "menucard.fill"
+//    case SETTING = "gearshape.fill"
+}
+
 struct MainView: View {
     // 화면
 //    @Environment(\.colorScheme) var colorScheme
@@ -586,14 +594,6 @@ struct MainView: View {
 //            UITabBar.appearance().backgroundColor = UIColor(Color("White-Black"))
 //        }
     }
-}
-
-enum MainViewTap: String, CaseIterable {
-    case HOME = "house.fill"
-    case WiDTOOL = "plus.app.fill"
-    case WiDDISPLAY = "deskclock.fill"
-    case DIARYDISPLAY = "menucard.fill"
-//    case SETTING = "gearshape.fill"
 }
 
 struct MainView_Previews: PreviewProvider {

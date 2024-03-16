@@ -9,8 +9,9 @@ import Foundation
 import SwiftUI
 
 /**
- 렌더링이 필요한 프로퍼티(제목, 소요 시간)만 @Published 사용함.
+ ui 렌더링이 필요한 프로퍼티(제목, 소요 시간)만 @Published 사용함.
  값만 사용하는 프로퍼티는 @Published 사용 안 함.
+ 뷰 모델 내의 프로퍼티는 일단 프로 퍼티 외부에서 직접 변경하는 걸로 함.
  */
 class StopwatchViewModel: ObservableObject {
     // WiD
@@ -18,25 +19,35 @@ class StopwatchViewModel: ObservableObject {
     
     // 스톱 워치
     private var timer: Timer?
-    private var prevDuration = TimeInterval.zero
-    @Published var totalDuration = TimeInterval.zero
     @Published var stopwatchState: PlayerState = PlayerState.STOPPED
-    @Published var inStopwatchView = false // 현재 스톱 워치 뷰 안에 있는지?
+//    @Published var inStopwatchView = false // 현재 스톱 워치 뷰 안에 있는지?
     @Published var stopwatchTopBottomBarVisible: Bool = true
     
     // 날짜
     private let calendar = Calendar.current
-    var date: Date = Date()
+    private var date: Date = Date()
     
     // 제목
     @Published var title: Title = .STUDY
     
     // 시작 시간
-    var start: Date = Date()
+    private var start: Date = Date()
     
     // 종료 시간
-    var finish: Date = Date()
-
+    private var finish: Date = Date()
+    
+    // 소요 시간
+    private var prevDuration = TimeInterval.zero
+    @Published var totalDuration = TimeInterval.zero
+    
+    func setStopwatchTopBottomBarVisible(to isVisible: Bool) {
+        self.stopwatchTopBottomBarVisible = isVisible
+    }
+    
+    func setTitle(to newTitle: Title) {
+        self.title = newTitle
+    }
+    
     // 스톱 워치 플레이어 시작
     func startStopwatch() {
         print("StopwatchViewModel : startStopwatch executed")
@@ -122,4 +133,6 @@ class StopwatchViewModel: ObservableObject {
         self.totalDuration = TimeInterval.zero
         self.prevDuration = self.totalDuration
     }
+    
+    // stopwatchTopBottomBarVisible 상태 변경하는 메서드
 }

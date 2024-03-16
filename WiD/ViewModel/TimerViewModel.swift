@@ -18,21 +18,29 @@ class TimerViewModel: ObservableObject {
     @Published var selectedTime = TimeInterval.zero // 시간 선택용
     private var currentTime = TimeInterval.zero // 시간 선택용
     @Published var timerState: PlayerState = PlayerState.STOPPED
-    @Published var inTimerView = false // 현재 타이머 뷰 안에 있는지?
+//    @Published var inTimerView = false // 현재 타이머 뷰 안에 있는지?
     @Published var timerTopBottomBarVisible: Bool = true
     
     // 날짜
     private let calendar = Calendar.current
-    var date: Date = Date()
+    private var date: Date = Date()
     
     // 제목
     @Published var title: Title = .STUDY
     
     // 시작 시간
-    var start: Date = Date()
+    private var start: Date = Date()
     
     // 종료 시간
-    var finish: Date = Date()
+    private var finish: Date = Date()
+    
+    func setTimerTopBottomBarVisible(to isVisible: Bool) {
+        self.timerTopBottomBarVisible = isVisible
+    }
+    
+    func setTitle(to newTitle: Title) {
+        self.title = newTitle
+    }
     
     func startTimer() {
         print("TimerViewModel : startTimer executed")

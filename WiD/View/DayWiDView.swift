@@ -8,20 +8,23 @@
 import SwiftUI
 
 struct DayWiDView: View {
+    // 뷰 모델
+    @EnvironmentObject var dayWiDViewModel: DayWiDViewModel
+    
     // 화면
-    @Environment(\.presentationMode) var presentationMode
+//    @Environment(\.presentationMode) var presentationMode
     
     // WiD
-    private let wiDService = WiDService()
-    @State private var wiDList: [WiD] = []
+//    private let wiDService = WiDService()
+//    @State private var wiDList: [WiD] = []
     
     // 합계
-    @State private var totalDurationDictionary: [String: TimeInterval] = [:]
+//    @State private var totalDurationDictionary: [String: TimeInterval] = [:]
     
     // 날짜
     private let today = Date()
     private let calendar = Calendar.current
-    @State private var currentDate: Date = Date()
+//    @State private var currentDate: Date = Date()
     @State private var expandDatePicker: Bool = false
     
     var body: some View {
@@ -32,14 +35,16 @@ struct DayWiDView: View {
                     Button(action: {
                         expandDatePicker = true
                     }) {
-                        getDateStringView(date: currentDate)
+                        getDateStringView(date: dayWiDViewModel.currentDate)
                             .titleLarge()
                     }
                     
                     Spacer()
                     
                     Button(action: {
-                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+//                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+                        let newDate = calendar.date(byAdding: .day, value: -1, to: dayWiDViewModel.currentDate)!
+                        dayWiDViewModel.setCurrentDate(to: newDate)
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
@@ -47,13 +52,15 @@ struct DayWiDView: View {
                     }
 
                     Button(action: {
-                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+//                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+                        let newDate = calendar.date(byAdding: .day, value: 1, to: dayWiDViewModel.currentDate)!
+                        dayWiDViewModel.setCurrentDate(to: newDate)
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
                             .frame(width: 24, height: 24)
                     }
-                    .disabled(calendar.isDateInToday(currentDate))
+                    .disabled(calendar.isDateInToday(dayWiDViewModel.currentDate))
                 }
                 .frame(maxHeight: 44)
                 .padding(.horizontal)
@@ -64,7 +71,7 @@ struct DayWiDView: View {
                 
                 VStack(spacing: 0) {
                     // 합계 기록
-                    if wiDList.isEmpty {
+                    if dayWiDViewModel.wiDList.isEmpty {
 //                        getEmptyView(message: "표시할 기록이 없습니다.")
 
                         Text("표시할\n기록이\n없습니다.")
@@ -78,7 +85,7 @@ struct DayWiDView: View {
                             
                             GeometryReader { geo in
 //                                LargePieGraphView(wiDList: wiDList)
-                                DatePieChartView(wiDList: wiDList)
+                                DatePieChartView(wiDList: dayWiDViewModel.wiDList)
 //                                LargePieGraphView(wiDList: getRandomWiDList(days: 1))
                                 
 //                                ForEach(1...24, id: \.self) { number in
@@ -109,7 +116,7 @@ struct DayWiDView: View {
                             .padding(.horizontal, 32)
                             .padding()
                             
-                            ForEach(Array(totalDurationDictionary), id: \.key) { title, duration in
+                            ForEach(Array(dayWiDViewModel.totalDurationDictionary), id: \.key) { title, duration in
                                 HStack(spacing: 8) {
                                     Image(systemName: titleImageDictionary[title] ?? "")
                                         .font(.system(size: 24))
@@ -154,32 +161,35 @@ struct DayWiDView: View {
 
                     // 날짜 선택
                     VStack(spacing: 0) {
-                        ZStack {
-                            Text("날짜 선택")
-                                .titleMedium()
+//                        ZStack {
+//                            Text("날짜 선택")
+//                                .titleMedium()
+//
+//                            Button(action: {
+//                                expandDatePicker = false
+//                            }) {
+//                                Text("확인")
+//                                    .bodyMedium()
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .trailing)
+//                            .tint(Color("Black-White"))
+//                        }
+//                        .padding()
+//
+//                        Divider()
+//                            .background(Color("Black-White"))
 
-                            Button(action: {
-                                expandDatePicker = false
-                            }) {
-                                Text("확인")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .tint(Color("Black-White"))
-                        }
-                        .padding()
-
-                        Divider()
-                            .background(Color("Black-White"))
-
-                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                        DatePicker("", selection: $dayWiDViewModel.currentDate, in: ...today, displayedComponents: .date)
                             .datePickerStyle(.graphical)
                             .padding()
+                            .onChange(of: dayWiDViewModel.currentDate) { newDate in
+                                dayWiDViewModel.setCurrentDate(to: dayWiDViewModel.currentDate)
+                            }
                     }
                     .background(Color("White-Black"))
                     .cornerRadius(8)
                     .padding() // 바깥 패딩
-                    .shadow(color: Color("Black-White"), radius: 1)
+//                    .shadow(color: Color("Black-White"), radius: 1)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
@@ -188,17 +198,10 @@ struct DayWiDView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
         .background(Color("White-Black"))
-        .navigationBarHidden(true)
-        .onAppear {
-            self.wiDList = wiDService.readWiDListByDate(date: currentDate)
-            self.totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-        }
-        .onChange(of: currentDate) { newDate in
-            withAnimation {
-                wiDList = wiDService.readWiDListByDate(date: newDate)
-                totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-            }
-        }
+//        .navigationBarHidden(true)
+//        .onAppear {
+//            dayWiDViewModel.setCurrentDate(to: dayWiDViewModel.currentDate)
+//        }
     }
 }
 

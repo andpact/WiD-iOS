@@ -20,10 +20,17 @@ struct WiDDisplayView: View {
     @State private var selectedTab: WiDDisplayViewTapItem = .DAY
     @Namespace private var animation
     
-    // 도구
+    // 뷰 모델
 //    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
 //    @EnvironmentObject var timerPlayer: TimerPlayer
+    @EnvironmentObject var titleWiDViewModel: TitleWiDViewModel
     
+    // 제목(타이틀 뷰)
+//    @State private var selectedTitle: Title = .STUDY
+    
+    // 기간(타이틀 뷰)
+//    @State private var selectedPeriod: Period = .WEEK
+
     var body: some View {
         VStack(spacing: 0) {
             // 상단 바
@@ -32,6 +39,40 @@ struct WiDDisplayView: View {
                     .titleLarge()
                 
                 Spacer()
+                
+                if selectedTab == .TITLE {
+                    Picker("", selection: $titleWiDViewModel.selectedPeriod) {
+                        ForEach(Period.allCases) { period in
+                            Text(period.koreanValue)
+                                .bodyMedium()
+                            
+//                            Image(systemName: titleImageDictionary[title.rawValue] ?? "")
+//                                .font(.system(size: 20))
+//                                .frame(width: 20, height: 20)
+                        }
+                    }
+                    .labelsHidden()
+                    .onChange(of: titleWiDViewModel.selectedPeriod) { newPeriod in
+//                        dayWiDViewModel.setCurrentDate(to: dayWiDViewModel.currentDate)
+                        titleWiDViewModel.setPeriod(to: newPeriod)
+                    }
+                    
+                    Picker("", selection: $titleWiDViewModel.selectedTitle) {
+                        ForEach(Title.allCases) { title in
+                            Text(title.koreanValue)
+                                .bodyMedium()
+                            
+//                            Image(systemName: titleImageDictionary[title.rawValue] ?? "")
+//                                .font(.system(size: 20))
+//                                .frame(width: 20, height: 20)
+                        }
+                    }
+//                    .pickerStyle(WheelPickerStyle())
+                    .labelsHidden()
+                    .onChange(of: titleWiDViewModel.selectedTitle) { newTitle in
+                        titleWiDViewModel.setTitle(to: newTitle)
+                    }
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
@@ -135,11 +176,13 @@ struct WiDDisplayView_Previews: PreviewProvider {
             WiDDisplayView()
 //                .environmentObject(StopwatchPlayer())
 //                .environmentObject(TimerPlayer())
+//                .environmentObject(TitleWiDViewModel())
                 .environment(\.colorScheme, .light)
             
             WiDDisplayView()
 //                .environmentObject(StopwatchPlayer())
 //                .environmentObject(TimerPlayer())
+//                .environmentObject(TitleWiDViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

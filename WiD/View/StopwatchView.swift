@@ -13,13 +13,13 @@ import SwiftUI
  */
 struct StopwatchView: View {
     // 화면
-    @Environment(\.presentationMode) var presentationMode
+//    @Environment(\.presentationMode) var presentationMode
     private let screenHeight = UIScreen.main.bounds.height
     
     // 제목
     @State private var isTitleMenuExpanded: Bool = false
     
-    // 스톱 워치
+    // 뷰 모델
     @EnvironmentObject var stopwatchViewModel: StopwatchViewModel
     
     var body: some View {
@@ -28,10 +28,14 @@ struct StopwatchView: View {
                 /**
                  컨텐츠
                  */
-                getVerticalTimeView(Int(stopwatchViewModel.totalDuration))
-                    .padding(.top, screenHeight / 5)
+                ZStack {
+                    getVerticalTimeView(Int(stopwatchViewModel.totalDuration))
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                Spacer()
+//                    .padding(.top, screenHeight / 5)
+                
+//                Spacer()
                 
                 /**
                  하단 바
@@ -103,9 +107,19 @@ struct StopwatchView: View {
                         }
                     
                     VStack(spacing: 0) {
-                        Text("제목 선택")
-                            .titleMedium()
-                            .padding()
+                        ZStack {
+                            Text("제목 선택")
+                                .titleMedium()
+                            
+                            Button(action: {
+                                isTitleMenuExpanded = false
+                            }) {
+                                Text("확인")
+                                    .bodyMedium()
+                            }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
+                        .padding()
                         
                         Divider()
                             .background(Color("Black-White"))
@@ -114,7 +128,8 @@ struct StopwatchView: View {
                             VStack(spacing: 0) {
                                 ForEach(Title.allCases) { menuTitle in
                                     Button(action: {
-                                        stopwatchViewModel.title = menuTitle
+//                                        stopwatchViewModel.title = menuTitle
+                                        stopwatchViewModel.setTitle(to: menuTitle)
                                         
                                         withAnimation {
                                             isTitleMenuExpanded = false
@@ -142,8 +157,9 @@ struct StopwatchView: View {
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
-                    .background(Color("LightGray-Gray"))
+                    .frame(maxWidth: .infinity, maxHeight: screenHeight / 3)
+//                    .background(Color("LightGray-Gray"))
+                    .background(Color("White-Black"))
                     .cornerRadius(8)
                     .padding()
                 }
@@ -158,17 +174,18 @@ struct StopwatchView: View {
         .onTapGesture {
             if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
                 withAnimation {
-                    stopwatchViewModel.stopwatchTopBottomBarVisible.toggle()
+//                    stopwatchViewModel.stopwatchTopBottomBarVisible.toggle()
+                    stopwatchViewModel.setStopwatchTopBottomBarVisible(to: !stopwatchViewModel.stopwatchTopBottomBarVisible)
                 }
             }
         }
         .onAppear {
-            stopwatchViewModel.inStopwatchView = true // onAppear에 애니메이션을 적용하면 스톰 워치 뷰로 화면 전환 시 화면이 상하로 움직임.
+//            stopwatchViewModel.inStopwatchView = true // onAppear에 애니메이션을 적용하면 스톰 워치 뷰로 화면 전환 시 화면이 상하로 움직임.
         }
         .onDisappear {
-            withAnimation {
-                stopwatchViewModel.inStopwatchView = false
-            }
+//            withAnimation {
+//                stopwatchViewModel.inStopwatchView = false
+//            }
         }
     }
 }

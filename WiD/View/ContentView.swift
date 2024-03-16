@@ -12,8 +12,21 @@ struct ContentView: View {
     // 화면
 //    @State private var selectedPicker: ContentViewTapInfo = .HOME
     
+    // 뷰 모델
+    @StateObject private var homeViewModel = HomeViewModel()
+    
     @StateObject private var stopwatchViewModel = StopwatchViewModel()
     @StateObject private var timerViewModel = TimerViewModel()
+    @StateObject private var wiDListViewModel = WiDListViewModel()
+    
+    @StateObject private var dayWiDViewModel = DayWiDViewModel()
+    @StateObject private var weekWiDViewModel = WeekWiDViewModel()
+    @StateObject private var monthWiDViewModel = MonthWiDViewModel()
+    @StateObject private var titleWiDViewModel = TitleWiDViewModel()
+    
+    @StateObject private var dayDiaryViewModel = DayDiaryViewModel()
+//    @StateObject private var randomDiaryViewModel = RandomDiaryViewModel() // 구현하기 어려워서 일단 제외함.
+    @StateObject private var searchDiaryViewModel = SearchDiaryViewModel()
     
     var body: some View {
         // 전체 화면
@@ -27,8 +40,17 @@ struct ContentView: View {
 //        }
             
         MainView()
+            .environmentObject(homeViewModel)
             .environmentObject(stopwatchViewModel)
             .environmentObject(timerViewModel)
+            .environmentObject(wiDListViewModel)
+            .environmentObject(dayWiDViewModel)
+            .environmentObject(weekWiDViewModel)
+            .environmentObject(monthWiDViewModel)
+            .environmentObject(titleWiDViewModel)
+            .environmentObject(dayDiaryViewModel)
+//            .environmentObject(randomDiaryViewModel)
+            .environmentObject(searchDiaryViewModel)
     }
     
 //    @ViewBuilder

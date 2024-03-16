@@ -7,8 +7,12 @@
 
 import SwiftUI
 
+/**
+ username 프로퍼티 추가해야 할 듯.
+ */
 struct WiD {
     var id: Int
+//    var username: String
     var date: Date
     var title: String
     var start: Date

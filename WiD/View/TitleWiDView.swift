@@ -8,55 +8,58 @@
 import SwiftUI
 
 struct TitleWiDView: View {
+    // 뷰 모델
+    @EnvironmentObject var titleWiDViewModel: TitleWiDViewModel
+    
     // 화면
     private let screenHeight = UIScreen.main.bounds.height
     
     // WiD
-    private let wiDService = WiDService()
-    @State private var wiDList: [WiD] = []
-    @State private var filteredWiDListByTitle: [WiD] = []
+//    private let wiDService = WiDService()
+//    @State private var wiDList: [WiD] = []
+//    @State private var filteredWiDListByTitle: [WiD] = []
     
     // 제목
-    @State private var selectedTitle: Title = .STUDY
-    @State private var expandTitleMenu: Bool = false
+//    @State private var selectedTitle: Title = .STUDY
+//    @State private var expandTitleMenu: Bool = false
     
     // 기간
-    @State private var selectedPeriod: Period = Period.WEEK
+//    @State private var selectedPeriod: Period = Period.WEEK
     
     // 날짜
     private let calendar = Calendar.current
     private let today: Date = Calendar.current.startOfDay(for: Date()) // 시간을 오전 12:00:00으로 설정함.
-    @State private var startDate: Date = Date()
-    @State private var finishDate: Date = Date()
+//    @State private var startDate: Date = Date()
+//    @State private var finishDate: Date = Date()
     @State private var expandDatePicker: Bool = false
     
     // 합계
-    @State private var totalDurationDictionary: [String: TimeInterval] = [:]
-    
-    // 평균
-    @State private var averageDurationDictionary: [String: TimeInterval] = [:]
-    
-    // 최저
-    @State private var minDurationDictionary: [String: TimeInterval] = [:]
-    
-    // 최고
-    @State private var maxDurationDictionary: [String: TimeInterval] = [:]
+//    @State private var totalDurationDictionary: [String: TimeInterval] = [:]
+//
+//    // 평균
+//    @State private var averageDurationDictionary: [String: TimeInterval] = [:]
+//
+//    // 최저
+//    @State private var minDurationDictionary: [String: TimeInterval] = [:]
+//
+//    // 최고
+//    @State private var maxDurationDictionary: [String: TimeInterval] = [:]
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 HStack(spacing: 16) {
                     Button(action: {
-//                        expandDatePicker = true
+                        expandDatePicker = true
                     }) {
-                        if selectedPeriod == Period.WEEK {
-                            getPeriodStringViewOfWeek(firstDayOfWeek: startDate, lastDayOfWeek: finishDate)
+                        if titleWiDViewModel.selectedPeriod == Period.WEEK {
+                            getPeriodStringViewOfWeek(firstDayOfWeek: titleWiDViewModel.startDate, lastDayOfWeek: titleWiDViewModel.finishDate)
                                 .titleLarge()
                                 .lineLimit(1)
                                 .truncationMode(.head)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                        } else if selectedPeriod == Period.MONTH {
-                            getPeriodStringViewOfMonth(date: startDate)
+                        } else if titleWiDViewModel.selectedPeriod == Period.MONTH {
+                            getPeriodStringViewOfMonth(date: titleWiDViewModel.startDate)
                                 .titleLarge()
                                 .lineLimit(1)
                                 .truncationMode(.head)
@@ -64,28 +67,32 @@ struct TitleWiDView: View {
                         }
                     }
                     
-                    Button(action: {
-                        expandTitleMenu = true
-                    }) {
-                        Image(systemName: titleImageDictionary[selectedTitle.rawValue] ?? "")
-                            .font(.system(size: 20))
-                            .frame(width: 20, height: 20)
-                    }
-                    .padding(8)
-                    .background(Color("AppIndigo-AppYellow"))
-                    .foregroundColor(Color("White-Black"))
-                    .cornerRadius(8)
+//                    Button(action: {
+//                        expandTitleMenu = true
+//                    }) {
+//                        Image(systemName: titleImageDictionary[titleWiDViewModel.selectedTitle.rawValue] ?? "")
+//                            .font(.system(size: 20))
+//                            .frame(width: 20, height: 20)
+//                    }
+//                    .padding(8)
+//                    .background(Color("AppIndigo-AppYellow"))
+//                    .foregroundColor(Color("White-Black"))
+//                    .cornerRadius(8)
                     
                     Button(action: {
-                        if selectedPeriod == Period.WEEK {
-                            startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
-                            finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
+                        if titleWiDViewModel.selectedPeriod == Period.WEEK {
+                            let newStartDate = calendar.date(byAdding: .day, value: -7, to: titleWiDViewModel.startDate) ?? Date()
+                            let newFinishDate = calendar.date(byAdding: .day, value: -7, to: titleWiDViewModel.finishDate) ?? Date()
+                            
+                            titleWiDViewModel.setDates(startDate: newStartDate, finishDate: newFinishDate)
                         } else {
-                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
-                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
+                            let newStartDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: titleWiDViewModel.startDate) ?? Date())
+                            let newFinishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: titleWiDViewModel.finishDate) ?? Date())
+                            
+                            titleWiDViewModel.setDates(startDate: newStartDate, finishDate: newFinishDate)
                         }
                         
-                        updateDataFromPeriod()
+//                        updateDataFromPeriod()
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
@@ -93,32 +100,36 @@ struct TitleWiDView: View {
                     }
 
                     Button(action: {
-                        if selectedPeriod == Period.WEEK {
-                            startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
-                            finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
+                        if titleWiDViewModel.selectedPeriod == Period.WEEK {
+                            let newStartDate = calendar.date(byAdding: .day, value: 7, to: titleWiDViewModel.startDate) ?? Date()
+                            let newFinishDate = calendar.date(byAdding: .day, value: 7, to: titleWiDViewModel.finishDate) ?? Date()
+                            
+                            titleWiDViewModel.setDates(startDate: newStartDate, finishDate: newFinishDate)
                         } else {
-                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
-                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
+                            let newStartDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: titleWiDViewModel.startDate) ?? Date())
+                            let newFinishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: titleWiDViewModel.finishDate) ?? Date())
+                            
+                            titleWiDViewModel.setDates(startDate: newStartDate, finishDate: newFinishDate)
                         }
                         
-                        updateDataFromPeriod()
+//                        updateDataFromPeriod()
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
                             .frame(width: 24, height: 24)
                     }
-                    .disabled(selectedPeriod == Period.WEEK &&
-                              calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
-                              calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
+                    .disabled(titleWiDViewModel.selectedPeriod == Period.WEEK &&
+                              calendar.isDate(titleWiDViewModel.startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
+                              calendar.isDate(titleWiDViewModel.finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
 
-                              selectedPeriod == Period.MONTH &&
-                              calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-                              calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
+                              titleWiDViewModel.selectedPeriod == Period.MONTH &&
+                              calendar.isDate(titleWiDViewModel.startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
+                              calendar.isDate(titleWiDViewModel.finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
                 }
                 .frame(maxHeight: 44)
                 .padding(.horizontal)
                 
-                if filteredWiDListByTitle.isEmpty {
+                if titleWiDViewModel.filteredWiDListByTitle.isEmpty {
                     VStack {
                         Text("표시할\n기록이\n없습니다.")
                             .bodyLarge()
@@ -129,9 +140,14 @@ struct TitleWiDView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 8) {
-                            LineGraphView(title: selectedTitle.rawValue, wiDList: filteredWiDListByTitle, startDate: startDate, finishDate: finishDate)
-                                .aspectRatio(1.0 / 1.0, contentMode: .fit) // 가로 1, 세로 1 비율
-                                .padding(.horizontal)
+                            LineGraphView(
+                                title: titleWiDViewModel.selectedTitle.rawValue,
+                                wiDList: titleWiDViewModel.filteredWiDListByTitle,
+                                startDate: titleWiDViewModel.startDate,
+                                finishDate: titleWiDViewModel.finishDate
+                            )
+                            .aspectRatio(1.0 / 1.0, contentMode: .fit) // 가로 1, 세로 1 비율
+                            .padding(.horizontal)
                             
                             ZStack {
                                 VStack(spacing :16) {
@@ -140,7 +156,7 @@ struct TitleWiDView: View {
                                             Text("합계")
                                                 .bodyMedium()
                                             
-                                            Text(getDurationString(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                            Text(getDurationString(titleWiDViewModel.totalDurationDictionary[titleWiDViewModel.selectedTitle.rawValue] ?? 0, mode: 3))
                                                 .titleLarge()
                                                 .lineLimit(1)
                                         }
@@ -155,7 +171,7 @@ struct TitleWiDView: View {
                                             Text("평균")
                                                 .bodyMedium()
                                         
-                                            Text(getDurationString(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                            Text(getDurationString(titleWiDViewModel.averageDurationDictionary[titleWiDViewModel.selectedTitle.rawValue] ?? 0, mode: 3))
                                                 .titleLarge()
                                                 .lineLimit(1)
                                         }
@@ -177,7 +193,7 @@ struct TitleWiDView: View {
                                             Text("최저")
                                                 .bodyMedium()
                                         
-                                            Text(getDurationString(minDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                            Text(getDurationString(titleWiDViewModel.minDurationDictionary[titleWiDViewModel.selectedTitle.rawValue] ?? 0, mode: 3))
                                                 .titleLarge()
                                                 .lineLimit(1)
                                         }
@@ -192,7 +208,7 @@ struct TitleWiDView: View {
                                             Text("최고")
                                                 .bodyMedium()
                                         
-                                            Text(getDurationString(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
+                                            Text(getDurationString(titleWiDViewModel.maxDurationDictionary[titleWiDViewModel.selectedTitle.rawValue] ?? 0, mode: 3))
                                                 .titleLarge()
                                                 .lineLimit(1)
                                         }
@@ -200,10 +216,10 @@ struct TitleWiDView: View {
                                     }
                                 }
                                 
-                                Text(selectedTitle.koreanValue)
+                                Text(titleWiDViewModel.selectedTitle.koreanValue)
                                     .bodyLarge()
                                     .padding(16)
-                                    .background(Color(selectedTitle.rawValue))
+                                    .background(Color(titleWiDViewModel.selectedTitle.rawValue))
                                     .clipShape(Circle())
                             }
                             .frame(maxWidth: .infinity)
@@ -374,129 +390,89 @@ struct TitleWiDView: View {
                 }
             }
             
-            if expandDatePicker || expandTitleMenu {
+            if expandDatePicker {
                 ZStack {
                     Color("Black-White")
                         .opacity(0.3)
                         .onTapGesture {
                             expandDatePicker = false
-                            expandTitleMenu = false
                         }
 
                     // 날짜 선택
-                    if expandDatePicker {
+                    ScrollView {
                         VStack(spacing: 0) {
-                            ZStack {
-                                Text("기간 선택")
-                                    .titleMedium()
-
-                                Button(action: {
-                                    expandDatePicker = false
-                                }) {
-                                    Text("확인")
-                                        .bodyMedium()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .tint(Color("Black-White"))
-                            }
-                            .padding()
-
-                            Divider()
-                                .background(Color("Black-White"))
-
-                            VStack(spacing: 0) {
-                                ForEach(Period.allCases) { menuPeriod in
+                            ForEach(-4..<1, id: \.self) { index in
+                                if titleWiDViewModel.selectedPeriod == .WEEK {
                                     Button(action: {
-                                        // 주 선택하는 기능
-
-                                        selectedPeriod = menuPeriod
-                                        withAnimation {
-                                            expandDatePicker.toggle()
-                                        }
+                                        let firstDayOfWeek = calendar.date(byAdding: .weekOfYear, value: index, to: getFirstDateOfWeek(for: today))!
+                                        let lastDayOfWeek = calendar.date(byAdding: .weekOfYear, value: index, to: getLastDateOfWeek(for: today))!
+                                        
+                                        titleWiDViewModel.setDates(startDate: firstDayOfWeek, finishDate: lastDayOfWeek)
+                                        
+                                        expandDatePicker = false
                                     }) {
-//                                        Image(systemName: titleImageDictionary[menuPeriod.rawValue] ?? "")
-//                                            .font(.system(size: 25))
-//                                            .frame(maxWidth: 40, maxHeight: 40)
-//
-//                                        Spacer()
-//                                            .frame(maxWidth: 20)
-
-                                        Text(menuPeriod.koreanValue)
-                                            .labelMedium()
-
-                                        Spacer()
-
-                                        if selectedPeriod == menuPeriod {
-                                            Text("선택됨")
+                                        HStack(spacing: 0) {
+                                            let firstDayOfWeek = calendar.date(byAdding: .weekOfYear, value: index, to: getFirstDateOfWeek(for: today))!
+                                            let lastDayOfWeek = calendar.date(byAdding: .weekOfYear, value: index, to: getLastDateOfWeek(for: today))!
+                                            
+                                            getPeriodStringViewOfWeek(firstDayOfWeek: firstDayOfWeek, lastDayOfWeek: lastDayOfWeek)
                                                 .bodyMedium()
+                                            
+                                            Spacer()
+                                            
+                                            if firstDayOfWeek == titleWiDViewModel.startDate && lastDayOfWeek == titleWiDViewModel.finishDate {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .font(.system(size: 20))
+                                                    .frame(width: 20, height: 20)
+                                            } else {
+                                                Image(systemName: "circle")
+                                                    .font(.system(size: 20))
+                                                    .frame(width: 20, height: 20)
+                                            }
+                                        }
+                                    }
+                                    .padding()
+                                } else if titleWiDViewModel.selectedPeriod == .MONTH {
+                                    Button(action: {
+                                        let firstDayOfMonth = calendar.date(byAdding: .month, value: index, to: getFirstDateOfMonth(for: today))!
+                                        let lastDayOfMonth = calendar.date(byAdding: .month, value: index, to: getLastDateOfMonth(for: today))!
+                                         
+                                        titleWiDViewModel.setDates(startDate: firstDayOfMonth, finishDate: lastDayOfMonth)
+                                         
+                                        expandDatePicker = false
+                                    }) {
+                                        HStack(spacing: 0) {
+                                            let firstDayOfMonth = calendar.date(byAdding: .month, value: index, to: getFirstDateOfMonth(for: today))!
+                                            let lastDayOfMonth = calendar.date(byAdding: .month, value: index, to: getLastDateOfMonth(for: today))!
+                                            
+                                            getPeriodStringViewOfMonth(date: firstDayOfMonth)
+                                                .bodyMedium()
+                                            
+                                            Spacer()
+                                            
+                                            if firstDayOfMonth == titleWiDViewModel.startDate && lastDayOfMonth == titleWiDViewModel.finishDate {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .font(.system(size: 20))
+                                                    .frame(width: 20, height: 20)
+                                            } else {
+                                                Image(systemName: "circle")
+                                                    .font(.system(size: 20))
+                                                    .frame(width: 20, height: 20)
+                                            }
                                         }
                                     }
                                     .padding()
                                 }
+
                             }
                         }
-                        .background(Color("White-Black"))
-                        .cornerRadius(8)
-                        .padding() // 바깥 패딩
-                        .shadow(color: Color("Black-White"), radius: 1)
-                    }
-
-                    if expandTitleMenu {
-                        VStack(spacing: 0) {
-                            ZStack {
-                                Text("제목 선택")
-                                    .titleLarge()
-
-                                Button(action: {
-                                    expandTitleMenu = false
-                                }) {
-                                    Text("확인")
-                                        .bodyMedium()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                            }
-                            .padding()
-
-                            Divider()
-                                .background(Color("Black-White"))
-
-                            ScrollView {
-                                VStack(spacing: 0) {
-                                    ForEach(Title.allCases) { menuTitle in
-                                        Button(action: {
-                                            selectedTitle = menuTitle
-                                            withAnimation {
-                                                expandTitleMenu.toggle()
-                                            }
-                                        }) {
-                                            Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
-                                                .font(.system(size: 24))
-                                                .frame(maxWidth: 40, maxHeight: 40)
-
-                                            Spacer()
-                                                .frame(maxWidth: 20)
-
-                                            Text(menuTitle.koreanValue)
-                                                .labelMedium()
-
-                                            Spacer()
-
-                                            if selectedTitle == menuTitle {
-                                                Text("선택됨")
-                                                    .bodyMedium()
-                                            }
-                                        }
-                                        .padding()
-                                    }
-                                }
-                            }
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
-                        .background(Color("White-Black"))
-                        .cornerRadius(8)
                         .padding()
-                        .shadow(color: Color("Black-White"), radius: 1)
                     }
+                    .frame(maxHeight: 300)
+                    .background(Color("White-Black"))
+                    .cornerRadius(8)
+                    .padding() // 바깥 패딩
+//                        .shadow(color: Color("Black-White"), radius: 1)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
@@ -506,28 +482,28 @@ struct TitleWiDView: View {
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
         .background(Color("White-Black"))
-        .onAppear {
-            self.startDate = getFirstDateOfWeek(for: today)
-            self.finishDate = getLastDateOfWeek(for: today)
-            
-            updateDataFromPeriod()
-        }
-        .onChange(of: selectedTitle) { newTitle in
-            filteredWiDListByTitle = wiDList.filter { wiD in
-                return wiD.title == newTitle.rawValue
-            }
-        }
-        .onChange(of: selectedPeriod) { newPeriod in
-            if (newPeriod == Period.WEEK) {
-                startDate = getFirstDateOfWeek(for: today)
-                finishDate = getLastDateOfWeek(for: today)
-            } else if (newPeriod == Period.MONTH) {
-                startDate = getFirstDateOfMonth(for: today)
-                finishDate = getLastDateOfMonth(for: today)
-            }
-
-            updateDataFromPeriod()
-        }
+//        .onAppear {
+//            self.startDate = getFirstDateOfWeek(for: today)
+//            self.finishDate = getLastDateOfWeek(for: today)
+//
+//            updateDataFromPeriod()
+//        }
+//        .onChange(of: selectedTitle) { newTitle in
+//            filteredWiDListByTitle = wiDList.filter { wiD in
+//                return wiD.title == newTitle.rawValue
+//            }
+//        }
+//        .onChange(of: selectedPeriod) { newPeriod in
+//            if (newPeriod == Period.WEEK) {
+//                startDate = getFirstDateOfWeek(for: today)
+//                finishDate = getLastDateOfWeek(for: today)
+//            } else if (newPeriod == Period.MONTH) {
+//                startDate = getFirstDateOfMonth(for: today)
+//                finishDate = getLastDateOfMonth(for: today)
+//            }
+//
+//            updateDataFromPeriod()
+//        }
 //        .gesture(
 //            DragGesture()
 //                .onEnded { value in
@@ -569,22 +545,22 @@ struct TitleWiDView: View {
     }
     
     // startDate, finishDate 변경될 때 실행됨.
-    func updateDataFromPeriod() {
-        wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
-        
-        filteredWiDListByTitle = wiDList.filter { wiD in
-            return wiD.title == selectedTitle.rawValue
-        }
-
-        totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-        averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
-        maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
-        minDurationDictionary = getMinDurationDictionaryByTitle(wiDList: wiDList)
-        
-        // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
-//        seletedDictionary = totalDurationDictionary
-//        seletedDictionaryText = "합계"
-    }
+//    func updateDataFromPeriod() {
+//        wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
+//
+////        filteredWiDListByTitle = wiDList.filter { wiD in
+////            return wiD.title == selectedTitle.rawValue
+////        }
+//
+//        totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
+//        averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
+//        maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
+//        minDurationDictionary = getMinDurationDictionaryByTitle(wiDList: wiDList)
+//
+//        // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
+////        seletedDictionary = totalDurationDictionary
+////        seletedDictionaryText = "합계"
+//    }
 }
 
 struct TitleWiDView_Previews: PreviewProvider {
@@ -592,9 +568,11 @@ struct TitleWiDView_Previews: PreviewProvider {
         Group {
             TitleWiDView()
                 .environment(\.colorScheme, .light)
+                .environmentObject(TitleWiDViewModel()) // 이 뷰에 선언된 환경변수를 꼭 넣어줘야함.
             
             TitleWiDView()
                 .environment(\.colorScheme, .dark)
+                .environmentObject(TitleWiDViewModel())
         }
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingView: View {
-//    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.presentationMode) var presentationMode
     
     // 도구
 //    @EnvironmentObject var stopwatchPlayer: StopwatchViewModel
@@ -17,6 +17,25 @@ struct SettingView: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
+                /**
+                 상단 바
+                 */
+                ZStack {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "arrow.backward")
+                            .font(.system(size: 24))
+                    }
+                    .tint(Color("Black-White"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Text("환경 설정")
+                        .titleLarge()
+                }
+                .frame(maxWidth: .infinity, maxHeight: 44)
+                .padding(.horizontal)
+                
                 VStack(spacing: 16) {
                     VStack(spacing: 4) {
                         Text("계정")

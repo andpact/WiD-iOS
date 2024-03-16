@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct DayDiaryView: View {
+    // 뷰 모델
+    @EnvironmentObject var dayDiaryViewModel: DayDiaryViewModel
+    
     // WiD
-    private let wiDService = WiDService()
-    @State private var wiDList: [WiD] = []
+//    private let wiDService = WiDService()
+//    @State private var wiDList: [WiD] = []
     
     // 다이어리
-    private let diaryService = DiaryService()
-    @State private var diary: Diary = Diary(id: -1, date: Date(), title: "", content: "")
+//    private let diaryService = DiaryService()
+//    @State private var diary: Diary = Diary(id: -1, date: Date(), title: "", content: "")
 //    @State private var expandDiary: Bool = false
 //    @State private var diaryTitleOverflow: Bool = false
 //    @State private var diaryContentOverflow: Bool = false
@@ -22,14 +25,14 @@ struct DayDiaryView: View {
     // 날짜
     private let today = Date()
     private let calendar = Calendar.current
-    @State private var currentDate: Date = Date()
+//    @State private var currentDate: Date = Date()
     @State private var expandDatePicker: Bool = false
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 HStack(spacing: 16) {
-                    NavigationLink(destination: DiaryDetailView(date: currentDate)) { // 네비게이션 링크안에 HStack(spacing: 8)이 포함되어 있음.
+                    NavigationLink(destination: DiaryDetailView(date: dayDiaryViewModel.currentDate)) { // 네비게이션 링크안에 HStack(spacing: 8)이 포함되어 있음.
                         HStack {
                             Image(systemName: "square.and.pencil")
                                 .font(.system(size: 20))
@@ -47,7 +50,9 @@ struct DayDiaryView: View {
                     Spacer()
                     
                     Button(action: {
-                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
+                        let newDate = calendar.date(byAdding: .day, value: -1, to: dayDiaryViewModel.currentDate)!
+                        
+                        dayDiaryViewModel.setCurrentDate(to: newDate)
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
@@ -55,40 +60,39 @@ struct DayDiaryView: View {
                     }
 
                     Button(action: {
-                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
+                        let newDate = calendar.date(byAdding: .day, value: 1, to: dayDiaryViewModel.currentDate)!
+                        
+                        dayDiaryViewModel.setCurrentDate(to: newDate)
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
                             .frame(maxWidth: 24, maxHeight: 24)
                     }
-                    .disabled(calendar.isDateInToday(currentDate))
+                    .disabled(calendar.isDateInToday(dayDiaryViewModel.currentDate))
                 }
                 .frame(maxHeight: 44)
                 .padding(.horizontal)
                 
                 ScrollView {
                     VStack(spacing: 16) {
-//                        GeometryReader { geo in
-                            HStack {
-                                getDateStringViewWith3Lines(date: currentDate)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .font(.system(size: 22, weight: .bold))
-                                    .onTapGesture {
-                                        expandDatePicker = true
-                                    }
-
-                                ZStack {
-                                    if wiDList.isEmpty {
-                                        getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-                                    } else {
-                                        DiaryPieChartView(wiDList: wiDList)
-                                    }
-                                }
+                        HStack(spacing: 0) {
+                            getDateStringViewWith3Lines(date: dayDiaryViewModel.currentDate)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .font(.system(size: 22, weight: .bold))
+                                .onTapGesture {
+                                    expandDatePicker = true
+                                }
+
+                            ZStack {
+//                                    if dayDiaryViewModel.wiDList.isEmpty {
+//                                        getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+//                                    } else {
+                                    DiaryPieChartView(wiDList: dayDiaryViewModel.wiDList)
+//                                    }
                             }
-                            .padding(.horizontal)
-                            .aspectRatio(2.5 / 1, contentMode: .fit)
-//                        }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                        .padding(.horizontal)
                         
                         
 //                        Rectangle()
@@ -97,7 +101,7 @@ struct DayDiaryView: View {
 //                            .padding(.horizontal)
 
                         VStack(spacing: 16) {
-                            if diary.id < 0 { // 다이어리가 없을 때
+                            if dayDiaryViewModel.diary.id < 0 { // 다이어리가 없을 때
 //                                VStack(spacing: 0) {
                                     Text("당신이 이 날 무엇을 하고,\n그 속에서 어떤 생각과 감정을 느꼈는지\n주체적으로 기록해보세요.")
                                         .bodyMedium()
@@ -112,7 +116,7 @@ struct DayDiaryView: View {
 //                                .frame(maxWidth: .infinity, minHeight: .infinity)
 //                                .padding()
                             } else {
-                                Text(diary.title)
+                                Text(dayDiaryViewModel.diary.title)
                                     .bodyLarge()
                                     .frame(maxWidth: .infinity, alignment: .leading)
 //                                    .frame(maxWidth: .infinity, minHeight: 20, maxHeight: expandDiary ? nil : 20, alignment: .topLeading)
@@ -123,7 +127,7 @@ struct DayDiaryView: View {
 //                                        }
 //                                    }
 
-                                Text(diary.content)
+                                Text(dayDiaryViewModel.diary.content)
                                     .bodyMedium()
                                     .frame(maxWidth: .infinity, alignment: .leading)
 //                                    .frame(maxWidth: .infinity, minHeight: 200, maxHeight: expandDiary ? nil : 200, alignment: .topLeading)
@@ -225,35 +229,35 @@ struct DayDiaryView: View {
                     // 날짜 선택
                     if expandDatePicker {
                         VStack(spacing: 0) {
-                            ZStack {
-                                Text("날짜 선택")
-                                    .titleMedium()
+//                            ZStack {
+//                                Text("날짜 선택")
+//                                    .titleMedium()
+//
+//                                Button(action: {
+//                                    expandDatePicker = false
+//                                }) {
+//                                    Text("확인")
+//                                        .bodyMedium()
+//                                }
+//                                .frame(maxWidth: .infinity, alignment: .trailing)
+//                                .tint(Color("Black-White"))
+//                            }
+//                            .padding()
+//
+//                            Divider()
+//                                .background(Color("Black-White"))
 
-                                Button(action: {
-                                    expandDatePicker = false
-                                }) {
-                                    Text("확인")
-                                        .bodyMedium()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .tint(Color("Black-White"))
-                            }
-                            .padding()
-
-                            Divider()
-                                .background(Color("Black-White"))
-
-                            DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
+                            DatePicker("", selection: $dayDiaryViewModel.currentDate, in: ...today, displayedComponents: .date)
                                 .datePickerStyle(.graphical)
                                 .padding()
                         }
                         .background(Color("White-Black"))
                         .cornerRadius(8)
                         .padding() // 바깥 패딩
-                        .shadow(color: Color("Black-White"), radius: 1)
+//                        .shadow(color: Color("Black-White"), radius: 1)
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
             }
         }
@@ -261,16 +265,16 @@ struct DayDiaryView: View {
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
         .background(Color("White-Black"))
-        .onAppear {
-            self.wiDList = wiDService.readWiDListByDate(date: currentDate)
-            self.diary = diaryService.readDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
-        }
-        .onChange(of: currentDate) { newDate in
-            withAnimation {
-                self.wiDList = wiDService.readWiDListByDate(date: newDate)
-                self.diary = diaryService.readDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
-            }
-        }
+//        .onAppear {
+//            self.wiDList = wiDService.readWiDListByDate(date: currentDate)
+//            self.diary = diaryService.readDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
+//        }
+//        .onChange(of: currentDate) { newDate in
+//            withAnimation {
+//                self.wiDList = wiDService.readWiDListByDate(date: newDate)
+//                self.diary = diaryService.readDiaryByDate(date: newDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
+//            }
+//        }
     }
 }
 
@@ -279,9 +283,11 @@ struct DayDiaryView_Previews: PreviewProvider {
         Group {
             DayDiaryView()
                 .environment(\.colorScheme, .light)
+                .environmentObject(DayDiaryViewModel())
             
             DayDiaryView()
                 .environment(\.colorScheme, .dark)
+                .environmentObject(DayDiaryViewModel())
         }
     }
 }
