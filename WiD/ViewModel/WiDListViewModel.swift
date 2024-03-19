@@ -12,7 +12,7 @@ import Foundation
  */
 class WiDListViewModel: ObservableObject {
     // 날짜
-    private let now = Date()
+//    private let now = Date()
     @Published var currentDate: Date = Date()
     
     // WiD
@@ -21,7 +21,11 @@ class WiDListViewModel: ObservableObject {
     @Published var fullWiDList: [WiD] = []
     
     init() {
-        setCurrentDate(to: currentDate)
+        print("WiDListViewModel initialized")
+    }
+    
+    deinit {
+        print("WiDListViewModel deinitialized")
     }
     
     func setCurrentDate(to date: Date) {
@@ -30,6 +34,8 @@ class WiDListViewModel: ObservableObject {
         
         // 새로운 날짜에 따라 wiDList 및 fullWiDList 업데이트
         self.wiDList = wiDService.readWiDListByDate(date: date)
+        
+        let now = Date() // 메서드가 실행 될때마다 갱신되어야 함.
         self.fullWiDList = getFullWiDListFromWiDList(date: date, currentTime: now, wiDList: wiDList)
     }
 }

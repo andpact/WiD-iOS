@@ -9,15 +9,7 @@ import SwiftUI
 
 struct TimerView: View {
     // 화면
-    @Environment(\.presentationMode) var presentationMode
-//    @State private var timerTopBottomBarVisible: Bool = true
     private let screenHeight = UIScreen.main.bounds.height
-    
-    // WiD
-//    private let wiDService = WiDService()
-    
-    // 날짜
-//    private let calendar = Calendar.current
     
     // 제목
     @State private var isTitleMenuExpanded: Bool = false
@@ -73,11 +65,9 @@ struct TimerView: View {
                             .pickerStyle(.inline)
                         }
                         .padding(.horizontal)
-//                        .padding(.top, screenHeight / 10)
                     } else {
                         getHorizontalTimeView(Int(timerViewModel.remainingTime))
                             .font(.custom("ChivoMono-BlackItalic", size: 70))
-//                            .padding(.top, screenHeight / 5)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -90,9 +80,7 @@ struct TimerView: View {
                  */
                 HStack {
                     Button(action: {
-                        withAnimation {
-                            isTitleMenuExpanded.toggle()
-                        }
+                        isTitleMenuExpanded.toggle()
                     }) {
                         Image(systemName: titleImageDictionary[timerViewModel.title.rawValue] ?? "")
                             .font(.system(size: 32))
@@ -110,7 +98,7 @@ struct TimerView: View {
                         Button(action: {
                             timerViewModel.stopTimer()
                         }) {
-                            Image(systemName: "arrow.clockwise")
+                            Image(systemName: "stop.fill")
                                 .font(.system(size: 32))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
@@ -147,86 +135,64 @@ struct TimerView: View {
              */
             if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
-                    Color("Black-White")
-                        .opacity(0.3)
+                    Color("Transparent")
+                        .contentShape(Rectangle())
                         .onTapGesture {
-                            withAnimation {
-                                isTitleMenuExpanded = false
-                            }
+                            isTitleMenuExpanded = false
                         }
                     
-                    VStack(spacing: 0) {
-                        ZStack {
-                            Text("제목 선택")
-                                .titleMedium()
-                            
-                            Button(action: {
-                                isTitleMenuExpanded = false
-                            }) {
-                                Text("확인")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                        }
-                        .padding()
-                        
-                        Divider()
-                            .background(Color("Black-White"))
-                        
-                        ScrollView {
-                            VStack(spacing: 0) {
-                                ForEach(Title.allCases) { menuTitle in
-                                    Button(action: {
-//                                        timerViewModel.title = menuTitle
-                                        timerViewModel.setTitle(to: menuTitle)
-                                        
-                                        withAnimation {
-                                            isTitleMenuExpanded = false
-                                        }
-                                    }) {
-                                        Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
-                                            .font(.system(size: 24))
-                                            .frame(maxWidth: 40, maxHeight: 40)
-                                        
-                                        Spacer()
-                                            .frame(maxWidth: 20)
-                                        
-                                        Text(menuTitle.koreanValue)
-                                            .labelMedium()
-                                        
-                                        Spacer()
-                                        
-                                        if timerViewModel.title == menuTitle {
-                                            Text("선택됨")
-                                                .bodyMedium()
-                                        }
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            ForEach(Title.allCases) { menuTitle in
+                                Button(action: {
+                                    timerViewModel.setTitle(to: menuTitle)
+                                    
+                                    isTitleMenuExpanded = false
+                                }) {
+                                    Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
+                                        .font(.system(size: 24))
+                                        .frame(maxWidth: 40, maxHeight: 40)
+                                    
+                                    Spacer()
+                                        .frame(maxWidth: 20)
+                                    
+                                    Text(menuTitle.koreanValue)
+                                        .labelMedium()
+                                    
+                                    Spacer()
+                                    
+                                    if timerViewModel.title == menuTitle {
+                                        Image(systemName: "checkmark.circle.fill")
+                                               .font(.system(size: 20))
+                                               .frame(width: 20, height: 20)
+                                    } else {
+                                        Image(systemName: "circle")
+                                               .font(.system(size: 20))
+                                               .frame(width: 20, height: 20)
                                     }
-                                    .padding()
                                 }
+                                .padding()
                             }
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: screenHeight / 3)
-//                    .background(Color("LightGray-Gray"))
-                    .background(Color("White-Black"))
+                    .background(Color("LightGray-Gray"))
                     .cornerRadius(8)
                     .padding()
+                    .shadow(color: Color("Black-White"), radius: 1)
                 }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .edgesIgnoringSafeArea(.all)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
         .onAppear {
-//            timerViewModel.inTimerView = true
+            print("TimerView appeared")
         }
         .onDisappear {
-//            withAnimation {
-//                timerViewModel.inTimerView = false
-//            }
+            print("TimerView disappeared")
         }
         .onChange(of: [selectedHour, selectedMinute, selectedSecond]) { _ in
             timerViewModel.selectedTime = TimeInterval(selectedHour * 3600 + selectedMinute * 60 + selectedSecond)
@@ -234,10 +200,7 @@ struct TimerView: View {
         }
         .onTapGesture {
             if timerViewModel.timerState == PlayerState.STARTED {
-                withAnimation {
-//                    timerViewModel.timerTopBottomBarVisible.toggle()
-                    timerViewModel.setTimerTopBottomBarVisible(to: !timerViewModel.timerTopBottomBarVisible)
-                }
+                timerViewModel.setTimerTopBottomBarVisible(to: !timerViewModel.timerTopBottomBarVisible)
             }
         }
     }

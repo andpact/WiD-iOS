@@ -21,9 +21,12 @@ class HomeViewModel: ObservableObject {
     private let diaryService = DiaryService()
     var diary: Diary = Diary(id: -1, date: Date(), title: "", content: "")
     
-    init() {
-        fetchMostRecentWiD()
-        fetchMostRecentDiary()
+    init() { // 뷰 모델이 생성될 떄
+        print("HomeViewModel initialized")
+    }
+    
+    deinit { // 뷰 모델이 제거될 떄
+        print("HomeViewModel deinitialized")
     }
     
     // 가장 최근의 WiD를 wiD에 할당하는 메서드

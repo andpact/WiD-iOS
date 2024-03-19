@@ -34,6 +34,14 @@ class TimerViewModel: ObservableObject {
     // 종료 시간
     private var finish: Date = Date()
     
+    init() {
+        print("TimerViewModel initialized")
+    }
+    
+    deinit {
+        print("TimerViewModel deinitialized")
+    }
+    
     func setTimerTopBottomBarVisible(to isVisible: Bool) {
         self.timerTopBottomBarVisible = isVisible
     }
@@ -77,47 +85,47 @@ class TimerViewModel: ObservableObject {
         timerState = PlayerState.PAUSED
         
         currentTime = self.finish.timeIntervalSince(self.start)
-//        
-//        // Check if the duration spans across multiple days
-//        if calendar.isDate(start, inSameDayAs: finish) {
-//            guard 0 <= currentDuration else {
-//                return
-//            }
-//            
-//            // WiD duration is within the same day
-//            let wiD = WiD(
-//                id: 0,
-//                date: start,
-//                title: title.rawValue,
-//                start: start,
-//                finish: finish,
-//                duration: currentTime
-//            )
-//            wiDService.createWiD(wid: wiD)
-//        } else {
-//            // WiD duration spans across multiple days
-//            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
-//            let firstDayWiD = WiD(
-//                id: 0,
-//                date: start,
-//                title: title.rawValue,
-//                start: start,
-//                finish: finishOfStart,
-//                duration: finishOfStart.timeIntervalSince(start)
-//            )
-//            wiDService.createWiD(wid: firstDayWiD)
-//
-//            let startOfFinish = calendar.startOfDay(for: finish)
-//            let secondDayWiD = WiD(
-//                id: 0,
-//                date: finish,
-//                title: title.rawValue,
-//                start: startOfFinish,
-//                finish: finish,
-//                duration: finish.timeIntervalSince(startOfFinish)
-//            )
-//            wiDService.createWiD(wid: secondDayWiD)
-//        }
+        
+        // Check if the duration spans across multiple days
+        if calendar.isDate(start, inSameDayAs: finish) {
+            guard 0 <= currentTime else {
+                return
+            }
+            
+            // WiD duration is within the same day
+            let wiD = WiD(
+                id: 0,
+                date: start,
+                title: title.rawValue,
+                start: start,
+                finish: finish,
+                duration: currentTime
+            )
+            wiDService.createWiD(wid: wiD)
+        } else {
+            // WiD duration spans across multiple days
+            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
+            let firstDayWiD = WiD(
+                id: 0,
+                date: start,
+                title: title.rawValue,
+                start: start,
+                finish: finishOfStart,
+                duration: finishOfStart.timeIntervalSince(start)
+            )
+            wiDService.createWiD(wid: firstDayWiD)
+
+            let startOfFinish = calendar.startOfDay(for: finish)
+            let secondDayWiD = WiD(
+                id: 0,
+                date: finish,
+                title: title.rawValue,
+                start: startOfFinish,
+                finish: finish,
+                duration: finish.timeIntervalSince(startOfFinish)
+            )
+            wiDService.createWiD(wid: secondDayWiD)
+        }
         
         self.timer?.invalidate()
         self.timer = nil

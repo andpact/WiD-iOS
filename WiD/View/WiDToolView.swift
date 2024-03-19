@@ -10,6 +10,7 @@ import SwiftUI
 enum WiDToolViewTapItem : String, CaseIterable {
     case STOPWATCH = "스톱 워치"
     case TIMER = "타이머"
+    // 포모 도로 기능, 뷰 구성 후 활성화하자.
 //    case POMODORO = "포모 도로"
     case WiDLIST = "WiD 리스트"
 }
@@ -35,7 +36,9 @@ struct WiDToolView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
+            .background(Color("LightGray-Gray"))
             .opacity(stopwatchViewModel.stopwatchTopBottomBarVisible && timerViewModel.timerTopBottomBarVisible ? 1 : 0)
+            
             
             // 상단 탭
             ScrollView(.horizontal) {
@@ -65,12 +68,12 @@ struct WiDToolView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-                .disabled(!(stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED))
-    //            .background(Color("White-Gray"))
-    //            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
-    //            .background(Color("LightGray-Black"))
-                .opacity(stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED ? 1 : 0)
             }
+            .background(Color("White-Black"))
+            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
+            .background(Color("LightGray-Gray"))
+            .disabled(!(stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED))
+            .opacity(stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED ? 1 : 0)
          
             // 컨텐츠
             WiDToolHolderView(tabItem: selectedTab)
@@ -79,65 +82,50 @@ struct WiDToolView: View {
                         .onEnded { value in
                             if value.translation.width > 100 && (stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED) {
                                 if selectedTab == .TIMER {
-                                    withAnimation {
-                                        selectedTab = .STOPWATCH
-                                    }
+                                    selectedTab = .STOPWATCH
                                 } else if selectedTab == .WiDLIST {
-                                    withAnimation {
-                                        selectedTab = .TIMER
-                                    }
+                                    selectedTab = .TIMER
                                 }
                                 
 //                                if selectedTab == .TIMER {
-//                                    withAnimation {
-//                                        selectedTab = .STOPWATCH
-//                                    }
+//                                    selectedTab = .STOPWATCH
 //                                } else if selectedTab == .POMODORO {
-//                                    withAnimation {
-//                                        selectedTab = .TIMER
-//                                    }
+//                                    selectedTab = .TIMER
 //                                } else if selectedTab == .WiDLIST {
-//                                    withAnimation {
-//                                        selectedTab = .POMODORO
-//                                    }
+//                                    selectedTab = .POMODORO
 //                                }
                             }
                             
                             if value.translation.width < -100 && (stopwatchViewModel.stopwatchState == PlayerState.STOPPED && timerViewModel.timerState == PlayerState.STOPPED) {
                                 if selectedTab == .STOPWATCH {
-                                    withAnimation {
-                                        selectedTab = .TIMER
-                                    }
+                                    selectedTab = .TIMER
                                 } else if selectedTab == .TIMER {
-                                    withAnimation {
-                                        selectedTab = .WiDLIST
-                                    }
+                                    selectedTab = .WiDLIST
                                 }
                                 
 //                                if selectedTab == .STOPWATCH {
-//                                    withAnimation {
-//                                        selectedTab = .TIMER
-//                                    }
+//                                    selectedTab = .TIMER
 //                                } else if selectedTab == .TIMER {
-//                                    withAnimation {
-//                                        selectedTab = .POMODORO
-//                                    }
+//                                    selectedTab = .POMODORO
 //                                } else if selectedTab == .POMODORO {
-//                                    withAnimation {
-//                                        selectedTab = .WiDLIST
-//                                    }
+//                                    selectedTab = .WiDLIST
 //                                }
                             }
                         }
                 )
         }
         .onAppear {
+            print("WiDToolView appeared")
+            
             // 스톱 워치나 타이머를 실행후, 이전 화면으로 전환 후 다시 돌아왔을 때 
             if stopwatchViewModel.stopwatchState == PlayerState.STARTED || stopwatchViewModel.stopwatchState == PlayerState.PAUSED {
                 selectedTab = .STOPWATCH
             } else if timerViewModel.timerState == PlayerState.STARTED || timerViewModel.timerState == PlayerState.PAUSED {
                 selectedTab = .TIMER
             }
+        }
+        .onDisappear {
+            print("WiDToolView disappeared")
         }
     }
 }
@@ -174,31 +162,5 @@ struct WiDToolView_Previews: PreviewProvider {
                 .environmentObject(TimerViewModel())
                 .environment(\.colorScheme, .dark)
         }
-    }
-}
-
-//step 1 -- Create a shape view which can give shape
-struct CornerRadiusShape: Shape {
-    var radius = CGFloat.infinity
-    var corners = UIRectCorner.allCorners
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
-}
-
-//step 2 - embed shape in viewModifier to help use with ease
-struct CornerRadiusStyle: ViewModifier {
-    var radius: CGFloat
-    var corners: UIRectCorner
-    func body(content: Content) -> some View {
-        content
-            .clipShape(CornerRadiusShape(radius: radius, corners: corners))
-    }
-}
-//step 3 - crate a polymorphic view with same name as swiftUI's cornerRadius
-extension View {
-    func cornerRadius(radius: CGFloat, corners: UIRectCorner) -> some View {
-        ModifiedContent(content: self, modifier: CornerRadiusStyle(radius: radius, corners: corners))
     }
 }

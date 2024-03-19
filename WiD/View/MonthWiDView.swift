@@ -11,38 +11,15 @@ struct MonthWiDView: View {
     // 뷰 모델
     @EnvironmentObject var monthWiDViewModel: MonthWiDViewModel
     
-    // WiD
-//    private let wiDService = WiDService()
-//    @State private var wiDList: [WiD] = []
-    
     // 날짜
     private let calendar = Calendar.current
     private let today: Date = Calendar.current.startOfDay(for: Date()) // 시간을 오전 12:00:00으로 설정함.
-//    @State private var startDate: Date = Date()
-//    @State private var finishDate: Date = Date()
     @State private var expandDatePicker: Bool = false
-    
-//    // 합계
-//    @State private var totalDurationDictionary: [String: TimeInterval] = [:]
-//
-//    // 평균
-//    @State private var averageDurationDictionary: [String: TimeInterval] = [:]
-//
-//    // 최저
-//    @State private var minDurationDictionary: [String: TimeInterval] = [:]
-//
-//    // 최고
-//    @State private var maxDurationDictionary: [String: TimeInterval] = [:]
-    
-    // 딕셔너리
-//    @State private var seletedDictionary: [String: TimeInterval] = [:]
-//    @State private var seletedDictionaryText: String = ""
-//    @State private var seletedDictionaryType: DurationDictionary = .TOTAL
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack(spacing: 16) {
+                HStack(spacing: 24) {
                     Button(action: {
                         expandDatePicker = true
                     }) {
@@ -50,8 +27,9 @@ struct MonthWiDView: View {
                             .titleLarge()
                             .lineLimit(1)
                             .truncationMode(.head)
-                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    
+                    Spacer()
                     
                     Button(action: {
                         let newStartDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: monthWiDViewModel.startDate) ?? Date())
@@ -84,12 +62,8 @@ struct MonthWiDView: View {
                 
                 VStack(spacing: 0) {
                     if monthWiDViewModel.wiDList.isEmpty {
-//                        getEmptyView(message: "표시할 타임라인이 없습니다.")
-                        
-                        Text("표시할\n기록이\n없습니다.")
+                        Text("표시할 기록이 없습니다.")
                             .bodyLarge()
-                            .lineSpacing(10)
-                            .multilineTextAlignment(.center)
                     } else {
                         ScrollView {
                             VStack(spacing: 8) {
@@ -187,8 +161,8 @@ struct MonthWiDView: View {
             
             if expandDatePicker {
                 ZStack {
-                    Color("Black-White")
-                        .opacity(0.3)
+                    Color("Transparent")
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             expandDatePicker = false
                         }
@@ -231,55 +205,29 @@ struct MonthWiDView: View {
                         .padding()
                     }
                     .frame(maxHeight: 300)
-                    .background(Color("White-Black"))
+                    .background(Color("LightGray-Gray"))
                     .cornerRadius(8)
                     .padding() // 바깥 패딩
+                    .shadow(color: Color("Black-White"), radius: 1)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .edgesIgnoringSafeArea(.all)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(Color("Black-White"))
         .background(Color("White-Black"))
         .navigationBarHidden(true)
-//        .onAppear {
-//            self.startDate = getFirstDateOfMonth(for: today)
-//            self.finishDate = getLastDateOfMonth(for: today)
-//
-////            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
-////            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
-//
-//            updateDataFromPeriod()
-//        }
-//        .onChange(of: seletedDictionaryType) { newDictionaryType in
-//            // 선택된 딕셔너리 유형에 따라 적절한 딕셔너리 업데이트
-//            switch newDictionaryType {
-//            case .TOTAL:
-//                seletedDictionary = totalDurationDictionary
-//            case .AVERAGE:
-//                seletedDictionary = averageDurationDictionary
-//            case .MIN:
-//                seletedDictionary = minDurationDictionary
-//            case .MAX:
-//                seletedDictionary = maxDurationDictionary
-//            }
-//        }
+        .onAppear {
+            print("MonthWiDView appeared")
+//            print("onAppear - startDate : \(formatDate(startDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+//            print("onAppear - finishDate : \(formatDate(finishDate, format: "yyyy-MM-dd a HH:mm:ss"))")
+            
+            monthWiDViewModel.setDates(startDate: monthWiDViewModel.startDate, finishDate: monthWiDViewModel.finishDate)
+        }
+        .onDisappear {
+            print("MonthWiDView disappeared")
+        }
     }
-    
-    // startDate, finishDate 변경될 때 실행됨.
-//    func updateDataFromPeriod() {
-//        wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
-//
-//        totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-//        averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
-//        maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
-//        minDurationDictionary = getMinDurationDictionaryByTitle(wiDList: wiDList)
-//
-//        // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
-//        seletedDictionary = totalDurationDictionary
-//        seletedDictionaryText = "합계"
-//    }
 }
 
 struct MonthWiDView_Previews: PreviewProvider {

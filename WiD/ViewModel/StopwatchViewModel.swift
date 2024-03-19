@@ -40,6 +40,14 @@ class StopwatchViewModel: ObservableObject {
     private var prevDuration = TimeInterval.zero
     @Published var totalDuration = TimeInterval.zero
     
+    init() {
+        print("StopwatchViewModel initialized")
+    }
+    
+    deinit {
+        print("StopwatchViewModel deinitialized")
+    }
+    
     func setStopwatchTopBottomBarVisible(to isVisible: Bool) {
         self.stopwatchTopBottomBarVisible = isVisible
     }
@@ -80,43 +88,43 @@ class StopwatchViewModel: ObservableObject {
         
         let currentDuration = self.finish.timeIntervalSince(self.start)
 
-//        if calendar.isDate(start, inSameDayAs: finish) {
-//            guard 0 <= currentDuration else {
-//                return
-//            }
-//
-//            let wiD = WiD(
-//                id: 0,
-//                date: start,
-//                title: title.rawValue,
-//                start: start,
-//                finish: finish,
-//                duration: currentDuration
-//            )
-//            wiDService.createWiD(wid: wiD)
-//        } else { // 자정 넘어가는 경우
-//            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
-//            let firstDayWiD = WiD(
-//                id: 0,
-//                date: start,
-//                title: title.rawValue,
-//                start: start,
-//                finish: finishOfStart,
-//                duration: finishOfStart.timeIntervalSince(start)
-//            )
-//            wiDService.createWiD(wid: firstDayWiD)
-//
-//            let startOfFinish = calendar.startOfDay(for: finish)
-//            let secondDayWiD = WiD(
-//                id: 0,
-//                date: finish,
-//                title: title.rawValue,
-//                start: startOfFinish,
-//                finish: finish,
-//                duration: finish.timeIntervalSince(startOfFinish)
-//            )
-//            wiDService.createWiD(wid: secondDayWiD)
-//        }
+        if calendar.isDate(start, inSameDayAs: finish) {
+            guard 0 <= currentDuration else {
+                return
+            }
+
+            let wiD = WiD(
+                id: 0,
+                date: start,
+                title: title.rawValue,
+                start: start,
+                finish: finish,
+                duration: currentDuration
+            )
+            wiDService.createWiD(wid: wiD)
+        } else { // 자정 넘어가는 경우
+            let finishOfStart = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
+            let firstDayWiD = WiD(
+                id: 0,
+                date: start,
+                title: title.rawValue,
+                start: start,
+                finish: finishOfStart,
+                duration: finishOfStart.timeIntervalSince(start)
+            )
+            wiDService.createWiD(wid: firstDayWiD)
+
+            let startOfFinish = calendar.startOfDay(for: finish)
+            let secondDayWiD = WiD(
+                id: 0,
+                date: finish,
+                title: title.rawValue,
+                start: startOfFinish,
+                finish: finish,
+                duration: finish.timeIntervalSince(startOfFinish)
+            )
+            wiDService.createWiD(wid: secondDayWiD)
+        }
         
         prevDuration = totalDuration
         

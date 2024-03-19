@@ -17,18 +17,26 @@ class SearchDiaryViewModel: ObservableObject {
     
     // 다이어리
     private let diaryService = DiaryService()
-    var totalDiaryCounts: Int = 0
+//    var totalDiaryCounts: Int = 0
     var diaryList: [Date: Diary] = [:]
     var searchText: String = ""
     @Published var searchFilter: SearchFilter = .BYTITLEORCONTENT
     
     init() {
-        totalDiaryCounts = diaryService.readTotalDiaryCount()
-        
-        addDiaries()
+        print("SearchDiaryViewModel initialized")
     }
     
-    func addDiaries() {
+    deinit {
+        print("SearchDiaryViewModel deinitialized")
+    }
+    
+//    init() {
+//        totalDiaryCounts = diaryService.readTotalDiaryCount()
+//
+//        addDiaries()
+//    }
+    
+    func searchDiary(searchText: String) {
         if searchFilter == SearchFilter.BYTITLEORCONTENT { // 제목 및 내용으로 검색
             self.diaryList = diaryService.readDiaryByTitleOrContent(searchText: searchText)
         } else if searchFilter == SearchFilter.BYTITLE { // 제목으로 검색

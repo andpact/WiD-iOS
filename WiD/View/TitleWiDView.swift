@@ -14,41 +14,15 @@ struct TitleWiDView: View {
     // 화면
     private let screenHeight = UIScreen.main.bounds.height
     
-    // WiD
-//    private let wiDService = WiDService()
-//    @State private var wiDList: [WiD] = []
-//    @State private var filteredWiDListByTitle: [WiD] = []
-    
-    // 제목
-//    @State private var selectedTitle: Title = .STUDY
-//    @State private var expandTitleMenu: Bool = false
-    
-    // 기간
-//    @State private var selectedPeriod: Period = Period.WEEK
-    
     // 날짜
     private let calendar = Calendar.current
     private let today: Date = Calendar.current.startOfDay(for: Date()) // 시간을 오전 12:00:00으로 설정함.
-//    @State private var startDate: Date = Date()
-//    @State private var finishDate: Date = Date()
     @State private var expandDatePicker: Bool = false
-    
-    // 합계
-//    @State private var totalDurationDictionary: [String: TimeInterval] = [:]
-//
-//    // 평균
-//    @State private var averageDurationDictionary: [String: TimeInterval] = [:]
-//
-//    // 최저
-//    @State private var minDurationDictionary: [String: TimeInterval] = [:]
-//
-//    // 최고
-//    @State private var maxDurationDictionary: [String: TimeInterval] = [:]
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack(spacing: 16) {
+                HStack(spacing: 24) {
                     Button(action: {
                         expandDatePicker = true
                     }) {
@@ -57,27 +31,15 @@ struct TitleWiDView: View {
                                 .titleLarge()
                                 .lineLimit(1)
                                 .truncationMode(.head)
-                                .frame(maxWidth: .infinity, alignment: .leading)
                         } else if titleWiDViewModel.selectedPeriod == Period.MONTH {
                             getPeriodStringViewOfMonth(date: titleWiDViewModel.startDate)
                                 .titleLarge()
                                 .lineLimit(1)
                                 .truncationMode(.head)
-                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                     
-//                    Button(action: {
-//                        expandTitleMenu = true
-//                    }) {
-//                        Image(systemName: titleImageDictionary[titleWiDViewModel.selectedTitle.rawValue] ?? "")
-//                            .font(.system(size: 20))
-//                            .frame(width: 20, height: 20)
-//                    }
-//                    .padding(8)
-//                    .background(Color("AppIndigo-AppYellow"))
-//                    .foregroundColor(Color("White-Black"))
-//                    .cornerRadius(8)
+                    Spacer()
                     
                     Button(action: {
                         if titleWiDViewModel.selectedPeriod == Period.WEEK {
@@ -91,8 +53,6 @@ struct TitleWiDView: View {
                             
                             titleWiDViewModel.setDates(startDate: newStartDate, finishDate: newFinishDate)
                         }
-                        
-//                        updateDataFromPeriod()
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
@@ -111,8 +71,6 @@ struct TitleWiDView: View {
                             
                             titleWiDViewModel.setDates(startDate: newStartDate, finishDate: newFinishDate)
                         }
-                        
-//                        updateDataFromPeriod()
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
@@ -131,10 +89,8 @@ struct TitleWiDView: View {
                 
                 if titleWiDViewModel.filteredWiDListByTitle.isEmpty {
                     VStack {
-                        Text("표시할\n기록이\n없습니다.")
+                        Text("표시할 기록이 없습니다.")
                             .bodyLarge()
-                            .lineSpacing(10)
-                            .multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
@@ -229,171 +185,15 @@ struct TitleWiDView: View {
                                     .stroke(Color("Black-White"), lineWidth: 0.5)
                             )
                             .padding()
-                            
-//                            VStack(spacing: 0) {
-//                                HStack {
-//                                    Spacer()
-//
-//                                    Text(selectedTitle.koreanValue)
-//                                        .bodyMedium()
-//                                        .padding(8)
-//                                        .background(Color(selectedTitle.rawValue))
-//                                        .cornerRadius(radius: 8, corners: [.topLeft, .topRight])
-//
-//                                    Spacer()
-//                                }
-//                                .padding(.horizontal)
-//
-//                                HStack {
-//                                    Text("합계")
-//                                        .bodyLarge()
-//
-//                                    Spacer()
-//
-//                                    Text(getDurationString(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-//                                        .titleLarge()
-//                                }
-//                                .padding()
-//    //                            .background(Color("White-Black"))
-//    //                            .cornerRadius(8)
-//    //                            .shadow(color: Color("Black-White"), radius: 1)
-//                                .padding(.horizontal)
-//
-//                                HStack {
-//                                    Text("평균")
-//                                        .bodyLarge()
-//
-//                                    Spacer()
-//
-//                                    Text(getDurationString(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-//                                        .titleLarge()
-//                                }
-//                                .padding()
-//    //                            .background(Color("White-Black"))
-//    //                            .cornerRadius(8)
-//    //                            .shadow(color: Color("Black-White"), radius: 1)
-//                                .padding(.horizontal)
-//
-//                                HStack {
-//                                    Text("최저")
-//                                        .bodyLarge()
-//
-//                                    Spacer()
-//
-//                                    Text(getDurationString(minDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-//                                        .titleLarge()
-//                                }
-//                                .padding()
-//    //                            .background(Color("White-Black"))
-//    //                            .cornerRadius(8)
-//    //                            .shadow(color: Color("Black-White"), radius: 1)
-//                                .padding(.horizontal)
-//
-//                                HStack {
-//                                    Text("최고")
-//                                        .bodyLarge()
-//
-//                                    Spacer()
-//
-//                                    Text(getDurationString(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-//                                        .titleLarge()
-//                                }
-//                                .padding()
-//    //                            .background(Color("White-Black"))
-//    //                            .cornerRadius(8)
-//    //                            .shadow(color: Color("Black-White"), radius: 1)
-//                                .padding(.horizontal)
-//                            }
                         }
                     }
-//                }
-//                ScrollView {
-//                    VStack(spacing: 16) {
-//                        // 그래프
-//                        if filteredWiDListByTitle.isEmpty {
-////                            getEmptyView(message: "표시할 그래프가 없습니다.")
-//
-//                        } else {
-//
-//                        }
-//
-////                        // 시간 기록
-////                        if filteredWiDListByTitle.isEmpty {
-//////                            getEmptyView(message: "표시할 기록이 없습니다.")
-////
-////                            Text("표시할\n기록이\n없습니다.")
-////                                .bodyLarge()
-////                                .lineSpacing(10)
-////                                .multilineTextAlignment(.center)
-////                        } else {
-////                            HStack {
-////                                Text("합계")
-////                                    .bodyLarge()
-////
-////                                Spacer()
-////
-////                                Text(getDurationString(totalDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-////                                    .titleLarge()
-////                            }
-////                            .padding()
-////                            .background(Color("White-Black"))
-////                            .cornerRadius(8)
-////                            .shadow(color: Color("Black-White"), radius: 1)
-////                            .padding(.horizontal)
-////
-////                            HStack {
-////                                Text("평균")
-////                                    .bodyLarge()
-////
-////                                Spacer()
-////
-////                                Text(getDurationString(averageDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-////                                    .titleLarge()
-////                            }
-////                            .padding()
-////                            .background(Color("White-Black"))
-////                            .cornerRadius(8)
-////                            .shadow(color: Color("Black-White"), radius: 1)
-////                            .padding(.horizontal)
-////
-////                            HStack {
-////                                Text("최저")
-////                                    .bodyLarge()
-////
-////                                Spacer()
-////
-////                                Text(getDurationString(minDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-////                                    .titleLarge()
-////                            }
-////                            .padding()
-////                            .background(Color("White-Black"))
-////                            .cornerRadius(8)
-////                            .shadow(color: Color("Black-White"), radius: 1)
-////                            .padding(.horizontal)
-////
-////                            HStack {
-////                                Text("최고")
-////                                    .bodyLarge()
-////
-////                                Spacer()
-////
-////                                Text(getDurationString(maxDurationDictionary[selectedTitle.rawValue] ?? 0, mode: 3))
-////                                    .titleLarge()
-////                            }
-////                            .padding()
-////                            .background(Color("White-Black"))
-////                            .cornerRadius(8)
-////                            .shadow(color: Color("Black-White"), radius: 1)
-////                            .padding(.horizontal)
-////                        }
-//                    }
                 }
             }
             
             if expandDatePicker {
                 ZStack {
-                    Color("Black-White")
-                        .opacity(0.3)
+                    Color("Transparent")
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             expandDatePicker = false
                         }
@@ -469,98 +269,27 @@ struct TitleWiDView: View {
                         .padding()
                     }
                     .frame(maxHeight: 300)
-                    .background(Color("White-Black"))
+                    .background(Color("LightGray-Gray"))
                     .cornerRadius(8)
                     .padding() // 바깥 패딩
-//                        .shadow(color: Color("Black-White"), radius: 1)
+                    .shadow(color: Color("Black-White"), radius: 1)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .edgesIgnoringSafeArea(.all)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
         .background(Color("White-Black"))
-//        .onAppear {
-//            self.startDate = getFirstDateOfWeek(for: today)
-//            self.finishDate = getLastDateOfWeek(for: today)
-//
-//            updateDataFromPeriod()
-//        }
-//        .onChange(of: selectedTitle) { newTitle in
-//            filteredWiDListByTitle = wiDList.filter { wiD in
-//                return wiD.title == newTitle.rawValue
-//            }
-//        }
-//        .onChange(of: selectedPeriod) { newPeriod in
-//            if (newPeriod == Period.WEEK) {
-//                startDate = getFirstDateOfWeek(for: today)
-//                finishDate = getLastDateOfWeek(for: today)
-//            } else if (newPeriod == Period.MONTH) {
-//                startDate = getFirstDateOfMonth(for: today)
-//                finishDate = getLastDateOfMonth(for: today)
-//            }
-//
-//            updateDataFromPeriod()
-//        }
-//        .gesture(
-//            DragGesture()
-//                .onEnded { value in
-//                    // 오른쪽 스와이프
-//                    if value.translation.width > 100 {
-//                        if selectedPeriod == Period.WEEK {
-//                            startDate = calendar.date(byAdding: .day, value: -7, to: startDate) ?? Date()
-//                            finishDate = calendar.date(byAdding: .day, value: -7, to: finishDate) ?? Date()
-//                        } else {
-//                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: -15, to: startDate) ?? Date())
-//                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: -45, to: finishDate) ?? Date())
-//                        }
-//
-//                        updateDataFromPeriod()
-//                    }
-//
-//                    // 왼쪽 스와이프
-//                    if value.translation.width < -100 &&
-//                        !(selectedPeriod == Period.WEEK &&
-//                            calendar.isDate(startDate, inSameDayAs: getFirstDateOfWeek(for: today)) &&
-//                            calendar.isDate(finishDate, inSameDayAs: getLastDateOfWeek(for: today)) ||
-//
-//                            selectedPeriod == Period.MONTH &&
-//                            calendar.isDate(startDate, inSameDayAs: getFirstDateOfMonth(for: today)) &&
-//                            calendar.isDate(finishDate, inSameDayAs: getLastDateOfMonth(for: today)))
-//                    {
-//                        if selectedPeriod == Period.WEEK {
-//                            startDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
-//                            finishDate = calendar.date(byAdding: .day, value: 7, to: finishDate) ?? Date()
-//                        } else {
-//                            startDate = getFirstDateOfMonth(for: calendar.date(byAdding: .day, value: 45, to: startDate) ?? Date())
-//                            finishDate = getLastDateOfMonth(for: calendar.date(byAdding: .day, value: 15, to: finishDate) ?? Date())
-//                        }
-//
-//                        updateDataFromPeriod()
-//                    }
-//                }
-//        )
+        .onAppear {
+            print("TitleWiDView appeared")
+            
+            titleWiDViewModel.setDates(startDate: titleWiDViewModel.startDate, finishDate: titleWiDViewModel.finishDate)
+        }
+        .onDisappear {
+            print("TitleWiDView disappeared")
+        }
     }
-    
-    // startDate, finishDate 변경될 때 실행됨.
-//    func updateDataFromPeriod() {
-//        wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
-//
-////        filteredWiDListByTitle = wiDList.filter { wiD in
-////            return wiD.title == selectedTitle.rawValue
-////        }
-//
-//        totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-//        averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
-//        maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
-//        minDurationDictionary = getMinDurationDictionaryByTitle(wiDList: wiDList)
-//
-//        // startDate, finishDate를 변경하면 합계 딕셔너리로 초기화함.
-////        seletedDictionary = totalDurationDictionary
-////        seletedDictionaryText = "합계"
-//    }
 }
 
 struct TitleWiDView_Previews: PreviewProvider {

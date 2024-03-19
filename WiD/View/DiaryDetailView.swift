@@ -52,7 +52,6 @@ struct DiaryDetailView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
-//                    if stopwatchPlayer.stopwatchState != PlayerState.STOPPED && !stopwatchPlayer.inStopwatchView {
                     if stopwatchPlayer.stopwatchState != PlayerState.STOPPED {
                         HStack {
                             Text(stopwatchPlayer.title.koreanValue)
@@ -66,7 +65,6 @@ struct DiaryDetailView: View {
                         .background(Color(stopwatchPlayer.stopwatchState == PlayerState.STARTED ? "LimeGreen" : "OrangeRed"))
                         .foregroundColor(Color("White"))
                         .cornerRadius(8)
-//                    } else if timerPlayer.timerState != PlayerState.STOPPED && !timerPlayer.inTimerView {
                     } else if timerPlayer.timerState != PlayerState.STOPPED {
                         HStack {
                             Text(timerPlayer.title.koreanValue)
@@ -110,33 +108,29 @@ struct DiaryDetailView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-//                .background(Color("LightGray-Black"))
                 
-                GeometryReader { geo in
-                    HStack {
-                        getDateStringViewWith3Lines(date: date)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .font(.system(size: 22, weight: .bold))
-
-                        ZStack {
-//                            if wiDList.isEmpty {
-//                                getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
-//                            } else {
-                                DatePieChartView(wiDList: wiDList)
-//                            }
-                        }
+                HStack(spacing: 0) {
+                    getDateStringViewWith3Lines(date: date)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .font(.system(size: 22, weight: .bold))
+
+                    ZStack {
+                        if wiDList.isEmpty {
+                            getEmptyViewWithMultipleLines(message: "표시할\n타임라인이\n없습니다.")
+                        } else {
+                            DiaryPieChartView(wiDList: wiDList)
+                        }
                     }
-                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .aspectRatio(2 / 1, contentMode: .fit)
+                .aspectRatio(2.5 / 1, contentMode: .fit)
+                .padding(.horizontal)
                 
                 ZStack {
                     // Title Place holder
                     TextEditor(text: $titlePlaceHolder)
                         .bodyLarge()
                         .cornerRadius(8)
-//                        .cornerRadius(radius: 16, corners: [.topLeft, .topRight])
                         .padding(.horizontal)
                         .disabled(true)
                         .frame(minHeight: 40)
@@ -145,7 +139,6 @@ struct DiaryDetailView: View {
                     TextEditor(text: $diaryTitle)
                         .bodyLarge()
                         .cornerRadius(8)
-//                        .cornerRadius(radius: 16, corners: [.topLeft, .topRight])
                         .padding(.horizontal)
                         .opacity(diaryTitle.isEmpty ? 0.5 : 1)
                         .frame(minHeight: 40)
@@ -155,17 +148,14 @@ struct DiaryDetailView: View {
                 ZStack {
                     // Content Place holder
                     TextEditor(text: $contentPlaceHolder)
-                        .bodyMedium()
+                        .bodyLarge()
                         .cornerRadius(8)
-//                        .cornerRadius(radius: 16, corners: [.bottomLeft, .bottomRight])
                         .padding(.horizontal)
                         .disabled(true)
                         
-                    
                     TextEditor(text: $diaryContent)
-                        .bodyMedium()
+                        .bodyLarge()
                         .cornerRadius(8)
-//                        .cornerRadius(radius: 16, corners: [.bottomLeft, .bottomRight])
                         .padding(.horizontal)
                         .opacity(diaryContent.isEmpty ? 0.5 : 1)
                 }
@@ -173,8 +163,13 @@ struct DiaryDetailView: View {
             .tint(Color("Black-White"))
             .background(Color("White-Black"))
             .onAppear {
+                print("DiaryDetailView appeared")
+                
                 self.diaryTitle = diary.title
                 self.diaryContent = diary.content
+            }
+            .onDisappear {
+                print("DiaryDetailView disappeared")
             }
         }
         .navigationBarHidden(true)

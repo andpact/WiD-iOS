@@ -15,119 +15,109 @@ enum DiaryDisplayViewTapItem : String, CaseIterable {
 
 struct DiaryDisplayView: View {
     // 화면
-//    @Environment(\.presentationMode) var presentationMode
     @State private var selectedTab: DiaryDisplayViewTapItem = .DAY
     @Namespace private var animation
     
     // 도구
-//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-//    @EnvironmentObject var timerPlayer: TimerPlayer
     @EnvironmentObject var searchDiaryViewModel: SearchDiaryViewModel
     
     var body: some View {
-//        NavigationView {
-            VStack(spacing: 0) {
-                // 상단 바
-                HStack {
-                    Text("다이어리")
-                        .titleLarge()
-                    
-                    Spacer()
-                    
-                    if selectedTab == .SEARCH {
-                        Picker("", selection: $searchDiaryViewModel.searchFilter) {
-                            ForEach(SearchFilter.allCases) { filter in
-                                Text(filter.koreanValue)
-                                    .bodyMedium()
-                            }
-                        }
-                        .labelsHidden()
-                        .onChange(of: searchDiaryViewModel.searchFilter) { newFilter in
-                            searchDiaryViewModel.changeSearchFilter(to: newFilter)
+        VStack(spacing: 0) {
+            // 상단 바
+            HStack {
+                Text("다이어리")
+                    .titleLarge()
+                
+                Spacer()
+                
+                if selectedTab == .SEARCH {
+                    Picker("", selection: $searchDiaryViewModel.searchFilter) {
+                        ForEach(SearchFilter.allCases) { filter in
+                            Text(filter.koreanValue)
+                                .bodyMedium()
                         }
                     }
+                    .labelsHidden()
+                    .onChange(of: searchDiaryViewModel.searchFilter) { newFilter in
+                        searchDiaryViewModel.changeSearchFilter(to: newFilter)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: 44)
+            .padding(.horizontal)
+            .background(Color("LightGray-Gray"))
+            
+            // 상단 탭
+            ScrollView(.horizontal) {
+                HStack(alignment: .top, spacing: 16) {
+                    ForEach(DiaryDisplayViewTapItem.allCases, id: \.self) { item in
+                        VStack(spacing: 8) {
+                            Text(item.rawValue)
+                                .bodyMedium()
+                                .foregroundColor(selectedTab == item ? Color("Black-White") : Color("DarkGray"))
+
+                            if selectedTab == item {
+                                Rectangle()
+                                    .foregroundColor(Color("Black-White"))
+                                    .frame(maxWidth: 50, maxHeight: 3)
+                                    .matchedGeometryEffect(id: "", in: animation)
+                            }
+                                
+                        }
+                        .onTapGesture {
+                            withAnimation(.easeInOut) {
+                                self.selectedTab = item
+                            }
+                        }
+                    }
+                    
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-                
-                // 상단 탭
-                ScrollView(.horizontal) {
-                    HStack(alignment: .top, spacing: 16) {
-                        ForEach(DiaryDisplayViewTapItem.allCases, id: \.self) { item in
-                            VStack(spacing: 8) {
-                                Text(item.rawValue)
-                                    .bodyMedium()
-                                    .foregroundColor(selectedTab == item ? Color("Black-White") : Color("DarkGray"))
-
-                                if selectedTab == item {
-                                    Rectangle()
-                                        .foregroundColor(Color("Black-White"))
-                                        .frame(maxWidth: 50, maxHeight: 3)
-                                        .matchedGeometryEffect(id: "", in: animation)
-                                }
-                                    
-                            }
-                            .onTapGesture {
-                                withAnimation(.easeInOut) {
-                                    self.selectedTab = item
-                                }
-                            }
-                        }
-                        
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 44)
-                    .padding(.horizontal)
-    //                .background(Color("White-Gray"))
-    //                .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
-    //                .background(Color("LightGray-Black"))
-                }
-                
-                DiaryDisplayHolderView(tabItem: selectedTab)
-                    .gesture(
-                        DragGesture()
-                            .onEnded { value in
-                                if value.translation.width > 100 {
-                                    if selectedTab == .SEARCH {
-                                        withAnimation {
-                                            selectedTab = .DAY
-                                        }
-                                    }
-                                    
-//                                    if selectedTab == .RANDOM {
-//                                        withAnimation {
-//                                            selectedTab = .DAY
-//                                        }
-//                                    } else if selectedTab == .SEARCH {
-//                                        withAnimation {
-//                                            selectedTab = .RANDOM
-//                                        }
-//                                    }
+            }
+            .background(Color("White-Black"))
+            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
+            .background(Color("LightGray-Gray"))
+            
+            DiaryDisplayHolderView(tabItem: selectedTab)
+                .gesture(
+                    DragGesture()
+                        .onEnded { value in
+                            if value.translation.width > 100 {
+                                if selectedTab == .SEARCH {
+                                    selectedTab = .DAY
                                 }
                                 
-                                if value.translation.width < -100 {
-                                    if selectedTab == .DAY {
-                                        withAnimation {
-                                            selectedTab = .SEARCH
-                                        }
-                                    }
-                                    
-//                                    if selectedTab == .DAY {
-//                                        withAnimation {
-//                                            selectedTab = .RANDOM
-//                                        }
-//                                    } else if selectedTab == .RANDOM {
-//                                        withAnimation {
-//                                            selectedTab = .SEARCH
-//                                        }
-//                                    }
-                                }
+//                                if selectedTab == .RANDOM {
+//                                    selectedTab = .DAY
+//                                } else if selectedTab == .SEARCH {
+//                                    selectedTab = .RANDOM
+//                                }
                             }
-                    )
-            }
-//        }
+                            
+                            if value.translation.width < -100 {
+                                if selectedTab == .DAY {
+                                    selectedTab = .SEARCH
+                                }
+                                
+//                                if selectedTab == .DAY {
+//                                    selectedTab = .RANDOM
+//                                } else if selectedTab == .RANDOM {
+//                                    selectedTab = .SEARCH
+//                                }
+                            }
+                        }
+                )
+        }
         .navigationBarHidden(true)
         .tint(Color("Black-White"))
+        .onAppear {
+            print("DiaryDisplayView appeared")
+        }
+        .onDisappear {
+            print("DiaryDisplayView disappeared")
+        }
     }
 }
 
@@ -152,13 +142,9 @@ struct DiaryDisplayView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             DiaryDisplayView()
-//                .environmentObject(StopwatchPlayer())
-//                .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .light)
             
             DiaryDisplayView()
-//                .environmentObject(StopwatchPlayer())
-//                .environmentObject(TimerPlayer())
                 .environment(\.colorScheme, .dark)
         }
     }

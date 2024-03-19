@@ -9,9 +9,6 @@ import SwiftUI
 //import GoogleMobileAds
 
 struct ContentView: View {
-    // 화면
-//    @State private var selectedPicker: ContentViewTapInfo = .HOME
-    
     // 뷰 모델
     @StateObject private var homeViewModel = HomeViewModel()
     
@@ -29,77 +26,28 @@ struct ContentView: View {
     @StateObject private var searchDiaryViewModel = SearchDiaryViewModel()
     
     var body: some View {
-        // 전체 화면
-//        NavigationView {
-//            VStack(spacing: 0) {
-//                ContentHolderView(currentTab: selectedPicker)
-//
-//                bottomNavigationBar()
-//            }
-//            .tint(.black)
-//        }
-            
-        MainView()
-            .environmentObject(homeViewModel)
-            .environmentObject(stopwatchViewModel)
-            .environmentObject(timerViewModel)
-            .environmentObject(wiDListViewModel)
-            .environmentObject(dayWiDViewModel)
-            .environmentObject(weekWiDViewModel)
-            .environmentObject(monthWiDViewModel)
-            .environmentObject(titleWiDViewModel)
-            .environmentObject(dayDiaryViewModel)
-//            .environmentObject(randomDiaryViewModel)
-            .environmentObject(searchDiaryViewModel)
+        ZStack {
+            MainView()
+                .environmentObject(homeViewModel)
+                .environmentObject(stopwatchViewModel)
+                .environmentObject(timerViewModel)
+                .environmentObject(wiDListViewModel)
+                .environmentObject(dayWiDViewModel)
+                .environmentObject(weekWiDViewModel)
+                .environmentObject(monthWiDViewModel)
+                .environmentObject(titleWiDViewModel)
+                .environmentObject(dayDiaryViewModel)
+    //            .environmentObject(randomDiaryViewModel)
+                .environmentObject(searchDiaryViewModel)
+        }
+        .onAppear {
+            print("ContentView appeared")
+        }
+        .onDisappear {
+            print("ContentView disappeared")
+        }
     }
-    
-//    @ViewBuilder
-//    private func bottomNavigationBar() -> some View {
-//        HStack {
-//            ForEach(ContentViewTapInfo.allCases, id: \.self) { item in
-//                Image(systemName: item.rawValue)
-//                    .frame(maxWidth: .infinity)
-//                    .imageScale(.large)
-//                    .background(.clear)
-//                    .foregroundColor(selectedPicker == item ? .black : .gray)
-//                    .onTapGesture {
-//                        self.selectedPicker = item
-//                    }
-//            }
-//        }
-//        .padding(.vertical)
-//        .background(.white)
-//        .compositingGroup() // 자식 뷰에 그림자 적용 방지
-//        .shadow(radius: 1)
-//    }
 }
-
-//enum ContentViewTapInfo: String, CaseIterable {
-//    case HOME = "house.fill" // 홈
-////    case LIST = "list.bullet" // 조회
-//    case DATE = "list.bullet" // 날짜
-//    case PERIOD = "square.grid.2x2.fill" // 기간
-//    case SEARCH = "magnifyingglass" // 검색
-//}
-//
-//struct ContentHolderView: View {
-//    var currentTab: ContentViewTapInfo
-//
-//    var body: some View {
-//        switch currentTab {
-//        case .HOME:
-//            HomeView()
-////        case .LIST:
-////            ListView()
-//        case .DATE:
-//            DateBasedView()
-//        case .PERIOD:
-//            PeriodBasedView()
-//        case .SEARCH:
-//            SearchView()
-//        }
-//    }
-//}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

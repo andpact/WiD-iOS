@@ -355,6 +355,7 @@
 		EAE51AAF2B9AC69100FCC355 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				EA2B4E0A2BA583B9002BC371 /* HomeViewModel.swift */,
 				EA1A39C02B500B4C00C0D5AC /* StopwatchViewModel.swift */,
 				EAB438A52B5109A70029F640 /* TimerViewModel.swift */,
 				EAFCB89F2B9D884B0047C14A /* WiDListViewModel.swift */,
@@ -365,7 +366,6 @@
 				EA9A92DF2B9EA1EF0094FFA1 /* DayDiaryViewModel.swift */,
 				EA9A92E12B9EA64E0094FFA1 /* RandomDiaryViewModel.swift */,
 				EA79E2682B9ECB650065B78C /* SearchDiaryViewModel.swift */,
-				EA2B4E0A2BA583B9002BC371 /* HomeViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -820,7 +820,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WiD/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6HAZ636CW5;
@@ -841,7 +841,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = andpact.project.WiD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -864,7 +864,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WiD/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6HAZ636CW5;
@@ -885,7 +885,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = andpact.project.WiD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

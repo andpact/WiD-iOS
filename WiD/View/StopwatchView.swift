@@ -13,7 +13,6 @@ import SwiftUI
  */
 struct StopwatchView: View {
     // 화면
-//    @Environment(\.presentationMode) var presentationMode
     private let screenHeight = UIScreen.main.bounds.height
     
     // 제목
@@ -33,19 +32,13 @@ struct StopwatchView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-//                    .padding(.top, screenHeight / 5)
-                
-//                Spacer()
-                
                 /**
                  하단 바
                  */
                 HStack(spacing: 16) {
                     // 제목 선택 버튼
                     Button(action: {
-                        withAnimation {
-                            isTitleMenuExpanded.toggle()
-                        }
+                        isTitleMenuExpanded.toggle()
                     }) {
                         Image(systemName: titleImageDictionary[stopwatchViewModel.title.rawValue] ?? "")
                             .font(.system(size: 32))
@@ -64,7 +57,7 @@ struct StopwatchView: View {
                         Button(action: {
                             stopwatchViewModel.stopStopwatch()
                         }) {
-                            Image(systemName: "arrow.clockwise")
+                            Image(systemName: "stop.fill")
                                 .font(.system(size: 32))
                         }
                         .frame(maxWidth: 40, maxHeight: 40)
@@ -100,71 +93,53 @@ struct StopwatchView: View {
              */
             if isTitleMenuExpanded {
                 ZStack(alignment: .bottom) {
-                    Color("Black-White")
-                        .opacity(0.3)
+                    Color("Transparent")
+                        .contentShape(Rectangle()) // 배경 색 없어도 클릭할 수 있도록 함.
                         .onTapGesture {
                             isTitleMenuExpanded = false
                         }
                     
-                    VStack(spacing: 0) {
-                        ZStack {
-                            Text("제목 선택")
-                                .titleMedium()
-                            
-                            Button(action: {
-                                isTitleMenuExpanded = false
-                            }) {
-                                Text("확인")
-                                    .bodyMedium()
-                            }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                        }
-                        .padding()
-                        
-                        Divider()
-                            .background(Color("Black-White"))
-                        
-                        ScrollView {
-                            VStack(spacing: 0) {
-                                ForEach(Title.allCases) { menuTitle in
-                                    Button(action: {
-//                                        stopwatchViewModel.title = menuTitle
-                                        stopwatchViewModel.setTitle(to: menuTitle)
-                                        
-                                        withAnimation {
-                                            isTitleMenuExpanded = false
-                                        }
-                                    }) {
-                                        Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
-                                            .font(.system(size: 24))
-                                            .frame(maxWidth: 40, maxHeight: 40)
-                                        
-                                        Spacer()
-                                            .frame(maxWidth: 20)
-                                        
-                                        Text(menuTitle.koreanValue)
-                                            .labelMedium()
-                                        
-                                        Spacer()
-                                        
-                                        if stopwatchViewModel.title == menuTitle {
-                                            Text("선택됨")
-                                                .bodyMedium()
-                                        }
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            ForEach(Title.allCases) { menuTitle in
+                                Button(action: {
+                                    stopwatchViewModel.setTitle(to: menuTitle)
+                                    
+                                    isTitleMenuExpanded = false
+                                }) {
+                                    Image(systemName: titleImageDictionary[menuTitle.rawValue] ?? "")
+                                        .font(.system(size: 24))
+                                        .frame(maxWidth: 40, maxHeight: 40)
+                                    
+                                    Spacer()
+                                        .frame(maxWidth: 20)
+                                    
+                                    Text(menuTitle.koreanValue)
+                                        .labelMedium()
+                                    
+                                    Spacer()
+                                    
+                                    if stopwatchViewModel.title == menuTitle {
+                                        Image(systemName: "checkmark.circle.fill")
+                                               .font(.system(size: 20))
+                                               .frame(width: 20, height: 20)
+                                    } else {
+                                        Image(systemName: "circle")
+                                               .font(.system(size: 20))
+                                               .frame(width: 20, height: 20)
                                     }
-                                    .padding()
                                 }
+                                .padding()
                             }
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: screenHeight / 3)
-//                    .background(Color("LightGray-Gray"))
-                    .background(Color("White-Black"))
+                    .background(Color("LightGray-Gray"))
                     .cornerRadius(8)
                     .padding()
+                    .shadow(color: Color("Black-White"), radius: 1)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .edgesIgnoringSafeArea(.all)
             }
         }
         .navigationBarHidden(true)
@@ -173,19 +148,14 @@ struct StopwatchView: View {
         .background(Color("White-Black")) // 배경 색 없으면 탭 제스처 동작 안함.!!
         .onTapGesture {
             if stopwatchViewModel.stopwatchState == PlayerState.STARTED {
-                withAnimation {
-//                    stopwatchViewModel.stopwatchTopBottomBarVisible.toggle()
-                    stopwatchViewModel.setStopwatchTopBottomBarVisible(to: !stopwatchViewModel.stopwatchTopBottomBarVisible)
-                }
+                stopwatchViewModel.setStopwatchTopBottomBarVisible(to: !stopwatchViewModel.stopwatchTopBottomBarVisible)
             }
         }
         .onAppear {
-//            stopwatchViewModel.inStopwatchView = true // onAppear에 애니메이션을 적용하면 스톰 워치 뷰로 화면 전환 시 화면이 상하로 움직임.
+            print("StopwatchView appeared")
         }
         .onDisappear {
-//            withAnimation {
-//                stopwatchViewModel.inStopwatchView = false
-//            }
+            print("StopwatchView disappeared")
         }
     }
 }

@@ -248,6 +248,12 @@ struct SettingView: View {
         .navigationBarHidden(true)
         .background(Color("White-Black"))
         .tint(Color("Black-White"))
+        .onAppear {
+            print("SettingView appeared")
+        }
+        .onDisappear {
+            print("SettingView disappeared")
+        }
     }
 }
 

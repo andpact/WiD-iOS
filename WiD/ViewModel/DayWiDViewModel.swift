@@ -20,7 +20,11 @@ class DayWiDViewModel: ObservableObject {
     @Published var totalDurationDictionary: [String: TimeInterval] = [:]
     
     init() {
-        setCurrentDate(to: currentDate)
+        print("DayWiDViewModel initialized")
+    }
+    
+    deinit {
+        print("DayWiDViewModel deinitialized")
     }
     
     func setCurrentDate(to date: Date) {

@@ -19,10 +19,6 @@ struct WiDDetailView: View {
     private let clickedWiDId: Int
     private let clickedWiD: WiD?
     
-    // 도구
-//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-//    @EnvironmentObject var timerPlayer: TimerPlayer
-    
     // 날짜
     private let calendar = Calendar.current
     private let today = Date()
@@ -134,9 +130,7 @@ struct WiDDetailView: View {
                     }
                     .background(Color("White-Black"))
                     .onTapGesture {
-                        withAnimation {
-                            expandTitleMenu.toggle()
-                        }
+                        expandTitleMenu.toggle()
                     }
                     
                     Divider()
@@ -169,9 +163,7 @@ struct WiDDetailView: View {
                     }
                     .background(Color("White-Black"))
                     .onTapGesture {
-                        withAnimation {
-                            expandStartPicker.toggle()
-                        }
+                        expandStartPicker.toggle()
                     }
                     
                     Divider()
@@ -204,9 +196,7 @@ struct WiDDetailView: View {
                     }
                     .background(Color("White-Black"))
                     .onTapGesture {
-                        withAnimation {
-                            expandFinishPicker.toggle()
-                        }
+                        expandFinishPicker.toggle()
                     }
                     
                     Divider()
@@ -254,9 +244,7 @@ struct WiDDetailView: View {
                             isDeleteButtonPressed = true
                             
                             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                withAnimation {
-                                    isDeleteButtonPressed = false
-                                }
+                                isDeleteButtonPressed = false
                             }
                         }
                     }) {
@@ -321,23 +309,6 @@ struct WiDDetailView: View {
                     // 제목 선택
                     if expandTitleMenu {
                         VStack(spacing: 0) {
-                            ZStack {
-                                Text("제목 선택")
-                                    .titleMedium()
-                                
-                                Button(action: {
-                                    expandTitleMenu = false
-                                }) {
-                                    Text("확인")
-                                        .bodyMedium()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                            }
-                            .padding()
-                            
-                            Divider()
-                                .background(Color("Black-White"))
-                            
                             ScrollView {
                                 VStack(spacing: 0) {
                                     ForEach(Title.allCases) { menuTitle in
@@ -358,8 +329,13 @@ struct WiDDetailView: View {
                                             Spacer()
                                             
                                             if title == menuTitle {
-                                                Text("선택됨")
-                                                    .bodyMedium()
+                                                Image(systemName: "checkmark.circle.fill")
+                                                       .font(.system(size: 20))
+                                                       .frame(width: 20, height: 20)
+                                            } else {
+                                                Image(systemName: "circle")
+                                                       .font(.system(size: 20))
+                                                       .frame(width: 20, height: 20)
                                             }
                                         }
                                         .padding()
@@ -368,72 +344,34 @@ struct WiDDetailView: View {
                             }
                         }
                         .tint(Color("Black-White"))
-                        .frame(maxWidth: .infinity, maxHeight: screenHeight / 2)
+                        .frame(maxWidth: .infinity, maxHeight: screenHeight / 3)
                         .background(Color("White-Black"))
                         .cornerRadius(8)
                         .padding()
-//                        .shadow(color: Color("Black-White"), radius: 1)
+                        .shadow(color: Color("Black-White"), radius: 1)
                     }
                     
                     // 시작 시간 선택
                     if expandStartPicker {
-                        VStack(spacing: 0) {
-                            ZStack {
-                                Button(action: {
-                                    expandStartPicker = false
-                                }) {
-                                    Text("확인")
-                                        .bodyMedium()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .tint(Color("Black-White"))
-                                
-                                Text("시작 시간 선택")
-                                    .titleMedium()
-                            }
+                        DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .labelsHidden()
                             .padding()
-                            
-                            Divider()
-                                .background(Color("Black-White"))
-                            
-                            DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
-                                .datePickerStyle(.wheel)
-                                .labelsHidden()
-                        }
-                        .background(Color("White-Black"))
-                        .cornerRadius(8)
-                        .padding()
-//                        .shadow(color: Color("Black-White"), radius: 1)
+                            .background(Color("White-Black"))
+                            .cornerRadius(8)
+                            .padding()
+                            .shadow(color: Color("Black-White"), radius: 1)
                     }
                     
                     if expandFinishPicker {
-                        VStack(spacing: 0) {
-                            ZStack {
-                                Button(action: {
-                                    expandFinishPicker = false
-                                }) {
-                                    Text("확인")
-                                        .bodyMedium()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .tint(Color("Black-White"))
-                                
-                                Text("종료 시간 선택")
-                                    .titleMedium()
-                            }
+                        DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .labelsHidden()
                             .padding()
-                            
-                            Divider()
-                                .background(Color("Black-White"))
-                            
-                            DatePicker("", selection: $finish, displayedComponents: .hourAndMinute)
-                                .datePickerStyle(.wheel)
-                                .labelsHidden()
-                        }
-                        .background(Color("White-Black"))
-                        .cornerRadius(8)
-                        .padding()
-//                        .shadow(color: Color("Black-White"), radius: 1)
+                            .background(Color("White-Black"))
+                            .cornerRadius(8)
+                            .padding()
+                            .shadow(color: Color("Black-White"), radius: 1)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -444,6 +382,8 @@ struct WiDDetailView: View {
         .navigationBarHidden(true)
         .background(Color("White-Black"))
         .onAppear {
+            print("WiDDetailView appeared")
+            
             self.date = clickedWiD!.date
             self.title = Title(rawValue: clickedWiD!.title) ?? .STUDY
             
@@ -478,15 +418,16 @@ struct WiDDetailView: View {
                 }
             }
         }
+        .onDisappear {
+            print("WiDDetailView disappeared")
+        }
         .onChange(of: start) { newStart in
             duration = finish.timeIntervalSince(newStart)
             // DB의 newStart는 date가 아니라 2000-01-01 날짜를 가진다.
             // 데이터베이스에서 "HH:mm:ss" 형식의 데이터를 가져와서 Date타입으로 변경하면 "2000-01-01 HH:mm:ss" 형식이 된다.
 //                print("new Start : \(formatTime(newStart, format: "yyyy-MM-dd a h:mm:ss"))")
             
-            withAnimation {
-                durationExist = 0 < duration
-            }
+            durationExist = 0 < duration
             
             isStartOverlap = newStart < startLimit
 //                print(isStartOverlap ? "start overlap" : "")
@@ -498,9 +439,7 @@ struct WiDDetailView: View {
             duration = newFinish.timeIntervalSince(start)
 //                print("new Finish : \(formatTime(newFinish, format: "yyyy-MM-dd a h:mm:ss"))")
             
-            withAnimation {
-                durationExist = 0 < duration
-            }
+            durationExist = 0 < duration
             
             isFinishOverlap = finishLimit < newFinish
 //                print(isFinishOverlap ? "finish overlap" : "")

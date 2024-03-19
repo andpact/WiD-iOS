@@ -37,10 +37,14 @@ class TitleWiDViewModel: ObservableObject {
     var maxDurationDictionary: [String: TimeInterval] = [:]
     
     init() {
-        let startDate = getFirstDateOfWeek(for: today)
-        let finishDate = getLastDateOfWeek(for: today)
+        print("MonthWiDViewModel initialized")
         
-        setDates(startDate: startDate, finishDate: finishDate)
+        self.startDate = getFirstDateOfWeek(for: today)
+        self.finishDate = getLastDateOfWeek(for: today)
+    }
+    
+    deinit {
+        print("MonthWiDViewModel deinitialized")
     }
     
     func setTitle(to newTitle: Title) {

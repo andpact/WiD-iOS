@@ -26,6 +26,12 @@ struct SplashView: View {
 //            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            print("SplashView appeared")
+        }
+        .onDisappear {
+            print("SplashView disappeared")
+        }
     }
 }
 

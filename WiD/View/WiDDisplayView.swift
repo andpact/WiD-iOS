@@ -16,20 +16,11 @@ enum WiDDisplayViewTapItem : String, CaseIterable {
 
 struct WiDDisplayView: View {
     // 화면
-//    @Environment(\.presentationMode) var presentationMode
     @State private var selectedTab: WiDDisplayViewTapItem = .DAY
     @Namespace private var animation
     
     // 뷰 모델
-//    @EnvironmentObject var stopwatchPlayer: StopwatchPlayer
-//    @EnvironmentObject var timerPlayer: TimerPlayer
     @EnvironmentObject var titleWiDViewModel: TitleWiDViewModel
-    
-    // 제목(타이틀 뷰)
-//    @State private var selectedTitle: Title = .STUDY
-    
-    // 기간(타이틀 뷰)
-//    @State private var selectedPeriod: Period = .WEEK
 
     var body: some View {
         VStack(spacing: 0) {
@@ -45,29 +36,23 @@ struct WiDDisplayView: View {
                         ForEach(Period.allCases) { period in
                             Text(period.koreanValue)
                                 .bodyMedium()
-                            
-//                            Image(systemName: titleImageDictionary[title.rawValue] ?? "")
-//                                .font(.system(size: 20))
-//                                .frame(width: 20, height: 20)
                         }
                     }
                     .labelsHidden()
                     .onChange(of: titleWiDViewModel.selectedPeriod) { newPeriod in
-//                        dayWiDViewModel.setCurrentDate(to: dayWiDViewModel.currentDate)
                         titleWiDViewModel.setPeriod(to: newPeriod)
                     }
                     
                     Picker("", selection: $titleWiDViewModel.selectedTitle) {
                         ForEach(Title.allCases) { title in
-                            Text(title.koreanValue)
-                                .bodyMedium()
-                            
 //                            Image(systemName: titleImageDictionary[title.rawValue] ?? "")
 //                                .font(.system(size: 20))
 //                                .frame(width: 20, height: 20)
+                                
+                            Text(title.koreanValue)
+                                .bodyMedium()
                         }
                     }
-//                    .pickerStyle(WheelPickerStyle())
                     .labelsHidden()
                     .onChange(of: titleWiDViewModel.selectedTitle) { newTitle in
                         titleWiDViewModel.setTitle(to: newTitle)
@@ -76,6 +61,7 @@ struct WiDDisplayView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 44)
             .padding(.horizontal)
+            .background(Color("LightGray-Gray"))
             
             // 상단 탭
             ScrollView(.horizontal, showsIndicators: false) {
@@ -104,10 +90,10 @@ struct WiDDisplayView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 44)
                 .padding(.horizontal)
-    //            .background(Color("White-Gray"))
-    //            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
-    //            .background(Color("LightGray-Black"))
             }
+            .background(Color("White-Black"))
+            .cornerRadius(radius: 32, corners: [.topLeft, .topRight])
+            .background(Color("LightGray-Gray"))
             
             WiDDisplayHolderView(tabItem: selectedTab)
                 .gesture(
@@ -115,39 +101,33 @@ struct WiDDisplayView: View {
                         .onEnded { value in
                             if value.translation.width > 100 {
                                 if selectedTab == .WEEK {
-                                    withAnimation {
-                                        selectedTab = .DAY
-                                    }
+                                    selectedTab = .DAY
                                 } else if selectedTab == .MONTH {
-                                    withAnimation {
-                                        selectedTab = .WEEK
-                                    }
+                                    selectedTab = .WEEK
                                 } else if selectedTab == .TITLE {
-                                    withAnimation {
-                                        selectedTab = .MONTH
-                                    }
+                                    selectedTab = .MONTH
                                 }
                             }
                             
                             if value.translation.width < -100 {
                                 if selectedTab == .DAY {
-                                    withAnimation {
-                                        selectedTab = .WEEK
-                                    }
+                                    selectedTab = .WEEK
                                 } else if selectedTab == .WEEK {
-                                    withAnimation {
-                                        selectedTab = .MONTH
-                                    }
+                                    selectedTab = .MONTH
                                 } else if selectedTab == .MONTH {
-                                    withAnimation {
-                                        selectedTab = .TITLE
-                                    }
+                                    selectedTab = .TITLE
                                 }
                             }
                         }
                 )
         }
         .tint(Color("Black-White"))
+        .onAppear {
+            print("WiDDisplay appeared")
+        }
+        .onDisappear {
+            print("WiDDisplay disappeared")
+        }
     }
 }
 
@@ -174,15 +154,11 @@ struct WiDDisplayView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             WiDDisplayView()
-//                .environmentObject(StopwatchPlayer())
-//                .environmentObject(TimerPlayer())
-//                .environmentObject(TitleWiDViewModel())
+                .environmentObject(TitleWiDViewModel())
                 .environment(\.colorScheme, .light)
             
             WiDDisplayView()
-//                .environmentObject(StopwatchPlayer())
-//                .environmentObject(TimerPlayer())
-//                .environmentObject(TitleWiDViewModel())
+                .environmentObject(TitleWiDViewModel())
                 .environment(\.colorScheme, .dark)
         }
     }

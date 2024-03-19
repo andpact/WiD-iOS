@@ -34,10 +34,14 @@ class MonthWiDViewModel: ObservableObject {
     @Published var seletedDictionaryType: DurationDictionary = .TOTAL
     
     init() {
-        let startDate = getFirstDateOfMonth(for: today)
-        let finishDate = getLastDateOfMonth(for: today)
+        print("MonthWiDViewModel initialized")
         
-        setDates(startDate: startDate, finishDate: finishDate)
+        self.startDate = getFirstDateOfMonth(for: today)
+        self.finishDate = getLastDateOfMonth(for: today)
+    }
+    
+    deinit {
+        print("MonthWiDViewModel deinitialized")
     }
     
     func setDates(startDate: Date, finishDate: Date) {

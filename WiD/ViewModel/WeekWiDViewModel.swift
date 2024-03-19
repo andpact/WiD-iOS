@@ -34,22 +34,14 @@ class WeekWiDViewModel: ObservableObject {
     @Published var seletedDictionaryType: DurationDictionary = .TOTAL
     
     init() {
-//        self.startDate = getFirstDateOfWeek(for: today)
-//        self.finishDate = getLastDateOfWeek(for: today)
-//
-//        self.wiDList = wiDService.readWiDListBetweenDates(startDate: startDate, finishDate: finishDate)
-//
-//        self.totalDurationDictionary = getTotalDurationDictionaryByTitle(wiDList: wiDList)
-//        self.averageDurationDictionary = getAverageDurationDictionaryByTitle(wiDList: wiDList)
-//        self.maxDurationDictionary = getMaxDurationDictionaryByTitle(wiDList: wiDList)
-//        self.minDurationDictionary = getMinDurationDictionaryByTitle(wiDList: wiDList)
-//
-//        self.seletedDictionary = totalDurationDictionary
-
-        let startDate = getFirstDateOfWeek(for: today)
-        let finishDate = getLastDateOfWeek(for: today)
+        print("DayWiDViewModel initialized")
         
-        setDates(startDate: startDate, finishDate: finishDate)
+        self.startDate = getFirstDateOfWeek(for: today)
+        self.finishDate = getLastDateOfWeek(for: today)
+    }
+    
+    deinit {
+        print("DayWiDViewModel deinitialized")
     }
     
     func setDates(startDate: Date, finishDate: Date) {

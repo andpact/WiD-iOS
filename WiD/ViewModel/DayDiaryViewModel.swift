@@ -20,8 +20,11 @@ class DayDiaryViewModel: ObservableObject {
     @Published var currentDate: Date = Date()
     
     init() {
-        self.wiDList = wiDService.readWiDListByDate(date: currentDate)
-        self.diary = diaryService.readDiaryByDate(date: currentDate) ?? Diary(id: -1, date: Date(), title: "", content: "")
+        print("DayDiaryViewModel initialized")
+    }
+    
+    deinit {
+        print("DayDiaryViewModel deinitialized")
     }
     
     func setCurrentDate(to date: Date) {

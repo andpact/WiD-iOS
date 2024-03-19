@@ -11,22 +11,15 @@ struct WiDListView: View {
     // 뷰 모델
     @EnvironmentObject var wiDListViewModel: WiDListViewModel
     
-    // WiD
-//    private let wiDService = WiDService()
-//    @State private var wiDList: [WiD] = []
-//    @State private var fullWiDList: [WiD] = []
-    
     // 날짜
-//    private let now = Date()
     private let today = Date()
     private let calendar = Calendar.current
-//    @State private var currentDate: Date = Date()
     @State private var datePickerExpanded: Bool = false
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack(spacing: 16) {
+                HStack(spacing: 24) {
                     Button(action: {
                         datePickerExpanded = true
                     }) {
@@ -37,8 +30,6 @@ struct WiDListView: View {
                     Spacer()
                     
                     Button(action: {
-//                        self.currentDate = calendar.date(byAdding: .day, value: -1, to: self.currentDate)!
-//                        wiDListViewModel.currentDate = calendar.date(byAdding: .day, value: -1, to: wiDListViewModel.currentDate)!
                         let newDate = calendar.date(byAdding: .day, value: -1, to: wiDListViewModel.currentDate)!
                         wiDListViewModel.setCurrentDate(to: newDate)
                     }) {
@@ -48,8 +39,6 @@ struct WiDListView: View {
                     }
 
                     Button(action: {
-//                        self.currentDate = calendar.date(byAdding: .day, value: 1, to: self.currentDate)!
-//                        wiDListViewModel.currentDate = calendar.date(byAdding: .day, value: 1, to: wiDListViewModel.currentDate)!
                         let newDate = calendar.date(byAdding: .day, value: 1, to: wiDListViewModel.currentDate)!
                         wiDListViewModel.setCurrentDate(to: newDate)
                     }) {
@@ -57,7 +46,6 @@ struct WiDListView: View {
                             .font(.system(size: 24))
                             .frame(width: 24, height: 24)
                     }
-//                    .disabled(calendar.isDateInToday(currentDate))
                     .disabled(calendar.isDateInToday(wiDListViewModel.currentDate))
                 }
                 .frame(maxHeight: 44)
@@ -65,17 +53,14 @@ struct WiDListView: View {
             
                 if wiDListViewModel.fullWiDList.isEmpty {
                     VStack(spacing: 16) {
-                        Text("표시할\nWiD가\n없습니다.")
+                        Text("표시할 WiD가 없습니다.")
                             .bodyLarge()
-                            .lineSpacing(10)
-                            .multilineTextAlignment(.center)
                         
-//                        NavigationLink(destination: NewWiDView(date: currentDate)) {
-                        NavigationLink(destination: NewWiDView(date: wiDListViewModel.currentDate)) {
+                        NavigationLink(destination: NewWiDView(date: calendar.startOfDay(for: wiDListViewModel.currentDate))) {
                             Text("새로운 WiD 만들기")
                                 .bodyMedium()
                             
-                            Image(systemName: "chevron.right")
+                            Image(systemName: "plus.app")
                                 .font(.system(size: 16))
                         }
                         .foregroundColor(Color("DeepSkyBlue"))
@@ -134,7 +119,6 @@ struct WiDListView: View {
                                         }
                                         .padding(.horizontal)
                                     } else { // Empty WiD
-//                                        NavigationLink(destination: NewWiDView(date: currentDate, start: wiD.start, finish: wiD.finish, duration: wiD.finish.timeIntervalSince(wiD.start))) {
                                         NavigationLink(destination: NewWiDView(date: wiDListViewModel.currentDate, start: wiD.start, finish: wiD.finish, duration: wiD.finish.timeIntervalSince(wiD.start))) {
                                             HStack(spacing: 8) {
                                                 Image(systemName: "textformat")
@@ -143,10 +127,6 @@ struct WiDListView: View {
                                                     .padding()
                                                     .background(Color("White-Black"))
                                                     .clipShape(Circle())
-//                                                    .background(
-//                                                        Circle()
-//                                                            .stroke(Color("Black-White"), lineWidth: 0.5)
-//                                                    )
                                                 
                                                 VStack(alignment: .leading, spacing: 4) {
                                                     Text(titleDictionary[wiD.title] ?? "기록 없음")
@@ -163,10 +143,6 @@ struct WiDListView: View {
                                             .padding()
                                             .background(Color("LightGray-Gray"))
                                             .cornerRadius(8)
-//                                            .background(
-//                                                RoundedRectangle(cornerRadius: 8)
-//                                                    .stroke(Color("Black-White"), lineWidth: 0.5)
-//                                            )
                                             .padding(.horizontal)
                                         }
                                         
@@ -189,54 +165,40 @@ struct WiDListView: View {
             
             if datePickerExpanded {
                 ZStack {
-                    Color("Black-White")
-                        .opacity(0.3)
+                    Color("Transparent")
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             datePickerExpanded = false
                         }
 
-                    VStack(spacing: 0) {
-//                        ZStack {
-//                            Button(action: {
-//                                datePickerExpanded = false
-//                            }) {
-//                                Text("확인")
-//                                    .bodyMedium()
-//                            }
-//                            .frame(maxWidth: .infinity, alignment: .trailing)
-//
-//                            Text("날짜 선택")
-//                                .titleMedium()
-//                        }
-//                        .padding()
-//
-//                        Divider()
-//                            .background(Color("Black-White"))
-
-//                        DatePicker("", selection: $currentDate, in: ...today, displayedComponents: .date)
-                        DatePicker("", selection: $wiDListViewModel.currentDate, in: ...today, displayedComponents: .date)
-                            .datePickerStyle(.graphical)
-                            .padding()
-                            .onChange(of: wiDListViewModel.currentDate) { newDate in
-                                wiDListViewModel.setCurrentDate(to: wiDListViewModel.currentDate)
-                            }
-                    }
-                    .background(Color("White-Black"))
-                    .cornerRadius(8)
-                    .padding() // 바깥 패딩
-//                    .shadow(color: Color("Black-White"), radius: 1)
+                    DatePicker("", selection: $wiDListViewModel.currentDate, in: ...today, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .padding()
+                        .background(Color("LightGray-Gray"))
+                        .cornerRadius(8)
+                        .padding() // 바깥 패딩
+                        .shadow(color: Color("Black-White"), radius: 1)
+                        .onChange(of: wiDListViewModel.currentDate) { newDate in
+                            wiDListViewModel.setCurrentDate(to: wiDListViewModel.currentDate)
+                        }
                 }
-                .edgesIgnoringSafeArea(.all)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("White-Black"))
         .tint(Color("Black-White"))
         .navigationBarHidden(true)
-//        .onAppear {
-//            // WiD 생성 후 돌아왔을 때, WiDList가 갱신되도록.
-//            wiDListViewModel.setCurrentDate(to: wiDListViewModel.currentDate)
-//        }
+        .onAppear {
+            print("WiDListView appeared")
+            
+            // WiD 생성 혹은 삭제 후 돌아왔을 때, WiDList가 갱신되도록.
+            wiDListViewModel.setCurrentDate(to: wiDListViewModel.currentDate)
+        }
+        .onDisappear {
+            print("WiDListView disappeared")
+        }
     }
 }
 
